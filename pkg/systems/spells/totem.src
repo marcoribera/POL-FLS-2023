@@ -1,0 +1,42 @@
+use uo;
+use cfgfile;
+
+include ":gumps:yesno";     
+include ":gumps:requestgump";
+
+program totem(who, wand)
+
+	var kit := GetObjProperty(who, "kit");
+	if (kit != "Totemista")
+		return;
+	endif 
+
+	var gump := GFCreateGump();
+        GFDisposable(gump, 0);
+	GFResizePic(gump, 0, 25, 3600, 270, 400);	
+	GFResizePic(gump, 15, 40, 0x13BE, 240, 370);
+	GFTextLine(gump, 95, 50, 1153, "Totemistas");
+
+	var spells := GetObjProperty(wand, "spells");
+	var x := 70;
+	var index := 1;
+	var cfg := ReadConfigFile(":spells:allspells");
+	foreach spell in spells
+		var elem := FindConfigElem(cfg, spell);
+		if (elem != error)
+			GFTextLine(gump, 40, x, 1153, GetConfigString(elem, "Name"));
+			GFAddButton(gump, 20, x+4, 2103, 2104, GF_CLOSE_BTN, index);
+			x := x +15;
+			index := index +1;
+		endif
+	endforeach
+
+	var input := GFSendGump(who, gump);
+	
+	if (input[0] >= 1)
+		var spellid := struct;
+		spellid.+id := spells[input[0]];
+		Start_Script("cast_spell", {who, spellid, 0});
+	endif
+
+endprogram

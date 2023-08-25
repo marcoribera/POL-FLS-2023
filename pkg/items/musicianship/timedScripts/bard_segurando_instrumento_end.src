@@ -1,0 +1,9 @@
+use uo;
+use os;
+
+include ":attributes:attributes";
+include ":musicianship:bardmusic";
+
+program TimedScript_Bard_segurando_instrumento_end(params)
+	return 1;
+endprogram

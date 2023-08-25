@@ -1,0 +1,13 @@
+use util;
+use os;
+
+
+include "include/say";
+
+
+program backstab(who)
+	
+	SendSysMessageEx(who, "Voce nao sera revelado no seu proximo ataque furtivo.", SSM_INFO);
+	SetObjProperty(who, "ataquefurtivoaprimorado", 1);
+
+endprogram 

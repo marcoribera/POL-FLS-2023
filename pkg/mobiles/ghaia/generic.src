@@ -1,0 +1,201 @@
+use uo;
+use os;
+use npc;
+use cfgfile;
+
+include ":ghaia:generic";
+include ":ghaia:ghaia";
+include ":ghaia:objective";
+
+var npccfgfile := ReadConfigFile( ":brainai:npcdesc" );
+var me := self();
+var idlesnd1; 
+var idlesnd2;
+var areasize;
+var alert_allies := 0;
+var flee_point := 0.1;
+var mystate := INITIALIZING;
+var align;
+var mytemplate;
+var throwinfo;
+var propallies;
+
+program KillPlayers()
+
+	var ev;
+	var wanders;
+	propallies := dictionary;
+
+	set_critical(1);
+	//printtextabove(me, "vai inicializr");
+	InitializeNPC(me);
+	set_critical(0);
+	//printtextabove(me, "done");
+	SetWarMode( 0 );
+	ev := os::wait_for_event(0);
+	wanders := 0;
+	EnableMainEvents();
+	Set_Event_Queue_Size(1000);
+
+    	while(me)
+	
+		//se tem objetivo, anda na direcao dele, se nao tem so wander
+		if (GetObjProperty(me, "objloc") != error)
+			wanders := 0;
+			DoObjective();
+		else
+			MoveAround();
+		endif
+		
+		wanders := wanders +1;
+		if(wanders >= 30)
+			wanders := 0;
+			look_around();
+			ev := sleepmode();
+		else
+			ev := os::wait_for_event(10);
+		endif
+		
+		
+		if(ev)
+			case(ev.type)
+				SYSEVENT_ENTEREDAREA:   
+					if (CheckLineOfSight(me, ev.source))
+						if(CanFight(me, ev.source, align)) //verifica se eh inimigo
+							wanders := 0;
+							Fight(ev.source);
+						endif
+					endif
+				SYSEVENT_ENGAGED:	wanders := 0; Fight(ev.source);
+				SYSEVENT_DAMAGED:	wanders := 0; Fight(ev.source);
+				EVID_ALERT_ALLIES:	wanders := 0; Fight(ev.opponent, 1);
+				EVID_HERDING:		herd(ev);
+				EVID_TAUNT:
+							if(ev.source)
+								wanders := 0; Fight(ev.opponent, 1);
+							endif
+				EVID_FLEE:
+							if (ev.source)
+								flee(ev.source);
+							endif
+			endcase
+		endif	
+
+		look_around();
+		sleepms(2);
+	endwhile
+
+endprogram
+
+function CloseDistance( opponent )
+
+	if ( GetObjProperty(me, "noclosecombat") == 1)
+		return 0;
+	endif
+
+var sleepdelay := 275 - me.run_speed;//(CInt(GetDexterity(me)) * 1.5);
+
+	if (sleepdelay < 0)
+		sleepdelay := 0;
+	endif
+
+
+    case (CoordinateDistance( me.x, me.y, opponent.x, opponent.y ))
+        1:              
+        0:
+            return 1;
+        default:
+		if (!CheckLineofSight(me, opponent)) //se nao consegue ver
+			var path := GetObjProperty(me, "path"); //procura se ja calculou o path
+			if (path == error) //se nao calculou
+				var flags := FP_IGNORE_MOBILES;
+				if ( cint(GetObjProperty(me, "ignoredoor")) || cint(GetObjProperty(me, "opendoor")) )
+					flags := flags| FP_IGNORE_DOORS;
+				endif
+				path := FindPath(  me.x, me.y, me.z, opponent.x, opponent.y, opponent.z, me.realm, flags, 10); //calcula o path
+				if (path == error) //TODO: se nao tiver outro inimigo correr ?
+					ChooseAnotherOpponent(me);
+				else
+					SetObjProperty(me, "path", path);
+				endif
+			else //se calculou o path
+				var coord := path[1]; //pega a primeira coordenada
+				if (coord) 
+					SetObjProperty(me, "#coordtry", ReadGameClock()); 
+					RunTowardLocation( coord.x, coord.y ); //anda na direcao
+					sleepms(sleepdelay);
+					Opendoors(me, opponent); //tenta abrir possiveis portas
+					if (CoordinateDistance(me.x, me.y, coord.x, coord.y) <= 1) //se chegou onde devia 
+						path.erase(1); //deleta a coordenada e vai pra proxima
+						if (path.size() > 0)
+							SetObjProperty(me, "path", path);
+						else
+							EraseObjProperty(me, "path");
+						endif
+					else // se nao consegue chegar na coord 
+						if ( cint(GetObjProperty(me, "#coordtry")) > ReadGameClock()+5) //se ta tentando chegar la a mais de 5 segundos
+							EraseObjProperty(me, "path"); //deleta o path atual
+							ChooseAnotherOpponent(me); //procura outro oponente TODO: se nao tiver outro oponente?
+						endif
+					endif
+				else
+					RunToward( opponent );
+					sleepms(sleepdelay);				
+				endif
+			endif
+		else
+			EraseObjProperty(me, "path");
+			RunToward( opponent );
+			sleepms(sleepdelay);
+		endif
+		RunToward( opponent );
+		sleepms(sleepdelay);
+
+            return 0;
+    endcase
+
+endfunction
+
+function ChooseAnotherOpponent(me)
+
+	var otherTarget := ListMobilesNearLocationEx( me.x, me.y, me.z, 8, LISTEX_FLAG_NORMAL, me.realm );
+	if  (otherTarget.size() > 0)
+		foreach mob in otherTarget
+			if(CanFight(me, mob, align)) //verifica se eh inimigo
+				Fight(mob);
+			endif
+		endforeach
+	else
+	endif
+
+endfunction
+
+function Opendoors(me, opponent)
+
+  foreach door in (ListItemsNearLocation(me.x, me.y, me.z, 1))
+    if  ((door.isa(POLCLASS_DOOR)) and (!door.locked)) //se nao ta trancada
+
+//	if (CheckLosBetween( door.x, door.y, door.z, opponent.x, opponent.y, opponent.z, me.realm )) // se a porta vai me levar ate o oponente
+
+		if ( cint(GetObjProperty(me, "ignoredoor")) == 1)
+			PrintText(me, "*atravessa a porta*");
+			MoveObjectToLocation(me, door.x, door.y, door.z, door.realm, MOVEOBJECT_FORCELOCATION);
+		elseif (cint(GetObjProperty(me, "opendoor")) == 1)
+			PrintText(me, "*abre a porta*");
+			door.Open();
+		endif
+//	else
+//		printtextabove(me, "a porta nao ajudara");
+//	endif
+	endif
+  endforeach
+endfunction
+
+function look_around()
+  foreach npc in ListMobilesInLineOfSight(me, areasize)
+    if( CanFight(me, npc, align) )
+         Fight(npc);
+    endif
+    sleepms(2);
+  endforeach
+endfunction

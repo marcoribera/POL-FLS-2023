@@ -1,0 +1,21 @@
+    use uo;
+use os;
+
+include ":spells:tnmagery";
+include "include/client";
+include "include/sounds";
+include "include/say";
+include ":timedScripts:timedScripts";
+include ":attributes:attributes";
+
+program SpellScript(params)
+	var who := params[1];
+	var targ := params[2];
+	params := 0; // No longer needed
+
+	TS_StartTimer(who, "atrasarmagias", cint(AP_GetSkill(who, MAGICLORE)) / 2, AP_GetSkill(who, MAGICLORE)*20, who, 0); //20 min
+	PlaySoundEffect(who, 385);
+	Corromper(who, 17, targ);
+	
+	return 1;
+endprogram 

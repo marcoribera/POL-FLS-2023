@@ -1,0 +1,63 @@
+use uo;
+use cfgfile;
+use util;
+
+program cria(item)
+
+	if (GetObjProperty(item, "spellinfo") != error)
+		return 1;
+	endif
+
+	var spellinfo := struct;
+
+	//pega o level do scroll
+	var scrollcfg := ReadConfigFile(":spells:itemdesc");
+	var lvl :=  GetConfigInt(FindconfigElem(scrollcfg, item.objtype), "Circle" );
+
+	if (!lvl)
+		lvl := 1;
+	endif
+
+	//pega todas magias do cfg com esse level e armazena no array
+	var spellcfg := ReadConfigFile(":spells:config/allspells");
+	var keys := GetConfigIntKeys(spellcfg);
+	var randomspells := array;
+	foreach key in keys
+		var spelllvl := GetConfigInt( FindconfigElem(spellcfg, key), "Circle" );
+		var spelltype := GetConfigString( FindconfigElem(spellcfg, key), "Type" );
+		if ( (spelllvl == lvl) && ( spelltype == "Mesum")) //so mesum tem scroll
+			var unico := GetConfigInt( FindConfigElem(spellcfg, key), "Unico" );
+			if (!unico)
+				randomspells.append(key);
+			endif
+		endif
+	endforeach
+
+
+	spellinfo.+id := randomspells[RandomInt(randomspells.size())+1];
+	SetObjProperty(item, "spellinfo", spellinfo);
+
+
+	return 1;	
+
+	//isso aqui eh so pra lemmbrar como era =[
+	if (item.objtype == 63892)
+		spellinfo.+name := "Teia";
+		spellinfo.+powerwords := "Cress Orbb";
+		spellinfo.+alvo := "Unico";
+		spellinfo.+type := "Outro";
+		spellinfo.+range := "Distancia";
+		spellinfo.+targtype := "Animados";
+		spellinfo.+power := 3;
+		spellinfo.+mana := Cint(spellinfo.power)*10;
+		spellinfo.+delay := Cint(spellinfo.power)*300;
+		spellinfo.+difficulty := 50;
+		spellinfo.+description := "Dizem que esta magia foi ensinada diretamente por Loth para os elfos negros. Outros dizem que essa magia foi criada por civilizacoes aracnideas inteligentes. Seu efeito faz com que uma teia pegajosa seja criada onde o alvo esta impedindo seus movimentos.";
+		SetObjProperty(item, "spellinfo", spellinfo);
+		return 1;
+	endif
+
+
+			
+
+endprogram

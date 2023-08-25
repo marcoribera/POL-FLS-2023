@@ -1,0 +1,34 @@
+use uo;
+use math;
+use polsys;
+use file;
+use util;
+include "include/say";
+include ":charactercreation:habilidades";
+
+program checkeventsonwalk()
+	Print( "INSTALLING: checkeventsonwalk..." );
+	return 1;
+endprogram
+
+
+exported function CheckEventsWalk( who, byref packet )
+	if (who.hidden == 1)
+		if (who.stealthsteps >= 1)
+			SendSysMessage(who, "Ainda lhe restam "+who.stealthsteps-1+" passos.");
+		endif
+	endif
+	if (GetObjProperty(who, "neve") && who.concealed == 0 && !GetObjProperty(who, "noprints") && TemHabilidade(who, "Movimento Livre") == 0)
+		if (who.facing == 0 || who.facing == 7);
+			CreateItemAtLocation(who.x, who.y, who.z+1, 0x1E04, 1, who.realm);
+		elseif (who.facing == 1 || who.facing == 2);
+			CreateItemAtLocation(who.x, who.y, who.z+1, 0x1E05, 1, who.realm);
+		elseif (who.facing == 3 || who.facing == 4);
+			CreateItemAtLocation(who.x, who.y, who.z+1, 0x1E06, 1, who.realm);
+		elseif (who.facing == 5 || who.facing == 6);
+			CreateItemAtLocation(who.x, who.y, who.z+1, 0x1E03, 1, who.realm);
+		endif
+	endif
+
+	return 0;
+endfunction

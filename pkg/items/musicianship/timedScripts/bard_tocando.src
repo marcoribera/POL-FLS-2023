@@ -1,0 +1,27 @@
+use uo;
+use os;
+
+include ":attributes:attributes";
+include ":musicianship:bardmusic";
+include "include/damage";
+
+program TimedScript_Bard_tocando(params)
+	var alvo := params[1];
+	var caster := params[2];
+	var custo := params[3];
+	var stamina;
+	Set_Critical(1);
+	SetObjProperty(alvo, "#Bard_tocando",1);
+	while(GetObjProperty(alvo, "#Bard_tocando"))
+		stamina := CInt(AP_GetVital(alvo, "Stamina"));
+		if (stamina >= custo)
+			AP_SetVital(alvo, "Stamina", (stamina-custo));
+		else
+			AP_SetVital(alvo, "Stamina", 0);
+			damageFLS(alvo, cint(custo*2), DMG_FORCED, 0);
+			PrintTextAbovePrivate(alvo, "Voce esta tocando alem do seu limite fisico.", alvo, BARD_FONT, BARD_FONT_COLOR_BAD);
+		endif
+		Sleepms(2000);
+	endwhile
+	Set_Critical(0);
+endprogram

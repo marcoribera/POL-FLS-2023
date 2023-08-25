@@ -1,0 +1,82 @@
+use uo;
+use os;
+use cfgfile;
+
+include ":spells:tnmagery";
+include "include/client";
+include "include/sounds";
+include "include/say";
+include ":timedScripts:timedScripts";
+include ":attributes:attributes";
+include ":tn:npcutil";
+include ":brainAI:npcUtil";
+include ":ghaia:ghaia";
+include ":spells:summon";
+include ":taming:taming";
+include ":charactercreation:habilidades";
+
+program summontotem(params)
+
+	var who := params[1];
+	var targ := params[2];
+	var spellid := params[3];
+	params := 0; // No longer needed
+
+
+
+
+	//Efeito da magia
+	PlaySoundEffect(targ, SFX_SPELL_HEAL);
+
+	var cfg  :=  ReadConfigFile(":spells:allspells");
+	var elem := FindConfigElem(cfg, spellid);
+	var template := getConfigString(elem, "npcTemplate");
+	var cfg2 := ReadConfigFile(":brainAI:npcdesc");
+	var npctemplate := template;
+	npctemplate := npctemplate[10, len(npctemplate)-9];
+	cfg2 := cfg2[npctemplate];
+	var petcost := 0;
+	if (!Cint(cfg2.petslot))
+		petcost := 1;
+	else
+		petcost := Cint(cfg2.petslot);
+	endif
+
+		//sendsysmessage(who, " " + GetNumPets(who) );
+	if (GetMaxPets(who) < GetNumPets(who) + petcost )
+		SendSysMessageEx(who, "Voce tem " + GetNumPets(who) + " criaturas sob seu comando e o maximo sao : " + GetMaxPets(who)  + "  . "  , SSM_FAIL);
+		return;
+	endif
+
+
+	if (template == error)
+			SendSysMessage(who, "erro ao ler o template" + template);
+			return;
+	endif
+
+	var undead :=   summon(template, targ, who);
+
+	if (temHabilidade(who, "Espirito Protetor"))
+		SetObjProperty(undead, "#ReflexosMod", 50);
+		SetObjProperty(undead, "#ReflexosMod", 50);
+		SetObjProperty(undead, "#VontadeMod", 50);
+	endif
+
+	if (undead)
+		SendSysMessageEx(who, "Voce teve sucesso em invocar  a criatura.", SSM_INFO);
+		AddPet(who, undead.serial);
+	endif
+
+
+	var duracao := CInt(AP_GetSkill(who, MAGICLORE))*3 + 180;
+
+	if (temHabilidade(who, "Invocacao Duradoura"))
+		duracao := duracao*2;
+	endif
+
+	TS_StartTimer(undead, "summon", duracao );
+
+	return 1;
+
+endprogram
+

@@ -1,0 +1,25 @@
+use uo;
+include ":tn:tngumps";
+include ":attributes:attributes";
+include "include/say";
+
+program lingua(who)
+
+	var linguas := GetObjProperty(who, "linguas");
+	
+	if (linguas != error)
+		return;
+	endif
+	
+	var qt := cint((AP_GetTrueStat(who, INTELLIGENCE)-60)/10);
+	
+	if (qt > 0)
+		var minhaslinguas := CheckBoxGump(who, 200, 180, "Escolha " + qt + "linguas. ", array{"Silvestre", "Draconiano", "Antigo Comum", "Lambion", "Lingua dos Mortos", "Abissal"});
+		if (minhaslinguas.size() > qt)
+			SendSysMessageEx(who, "Voce escolheu mais do que devia.", SSM_FAIL);
+			return;
+		endif
+		SetObjProperty(who, "linguas", minhaslinguas);
+	endif
+
+endprogram

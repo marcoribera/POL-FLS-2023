@@ -1,0 +1,75 @@
+///////////////////////////////////////////////
+// npc.src
+//
+// Created 7/26/2002 11:31AM
+// Updated 2/14/2003 9:04AM
+//
+// By Austin Heilman
+// http://www.tsse.net
+//
+///////////////////////////////////////////////
+//
+// This init script will give a npc a random
+// gender and replace <random> in its name with
+// a real name using functions from NPC_Setup.inc
+//
+///////////////////////////////////////////////
+use uo;
+use util;
+use os;
+
+include ":brainAI:include/npcInit";
+include ":dyes:include/dyes";
+
+program InitScript(params)
+	var npc := params[1];
+	var settings := params[2];
+
+	npc.color := 1056 - RandomInt(55); // 1002-1056
+	npc.truecolor := npc.color;
+
+	var result;
+	case( RandomInt(1) )
+		0: // Male
+			npc.gender := 0;
+			npc.graphic := 400;
+			result := NPC_SetupName(npc, "Human_Male");
+		1: //Female
+			npc.gender := 1;
+			npc.graphic := 401;
+			result := NPC_SetupName(npc, "Human_Female");
+	endcase	
+	
+	if (npc.npctemplate == ":merchants:estalagem")
+		var innkeepers := getglobalproperty("InnKeeper");
+		if (innkeepers == error)
+			innkeepers := array;
+		endif
+		if (npc.serial in innkeepers)
+		else
+			innkeepers.Append(npc.serial);
+			setglobalproperty("InnKeeper",innkeepers);
+		endif
+	endif
+	
+	
+	if ( result.errortext )
+		return result;
+	endif
+
+	result := NPC_SetupRandomEquipment(npc);
+	if ( result.errortext )
+		PrintTextAbove(npc, result.errortext);
+		return 0;
+	endif
+	
+	foreach item in ( ListEquippedItems(npc) )
+		if ( CanDye(item) )
+			item.color := RandomDyeColor();
+		endif
+
+		SleepMS(2);
+	endforeach
+	
+	return 1;
+endprogram

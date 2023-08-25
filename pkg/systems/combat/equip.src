@@ -1,0 +1,104 @@
+use uo;
+use os;
+use cfgfile;
+
+include ":tn:equipment";
+include ":tn:cooldown";
+include "include/say";
+
+program equipweapon(who, item)
+
+var descmod_item:=GetObjProperty(item,"descmod");
+var descmod:={};
+
+	if(descmod_item != error)
+		if(GetObjProperty(who,"descmod") == error)
+			descmod.append(descmod_item);
+			SetObjProperty(who,"descmod",descmod);
+		else
+			descmod:=GetObjProperty(who,"descmod");
+			if (descmod_item in descmod)
+			else
+				descmod.append(descmod_item);
+				SetObjProperty(who,"descmod",descmod);
+			endif
+		endif
+
+		var ori_name:=who.name;
+		SetName(who, " ");
+		SetName(who, ori_name);	
+	endif
+				
+	
+	if (who.npctemplate)
+		return 1;
+	endif
+
+	if (GetObjProperty(who, "desarmar") == 1)
+		SendSysMessageEx(who, "Voce nao consegue se armar.", SSM_FAIL);
+		return 0;
+	endif
+
+	if (GetObjProperty(who, "metamorfose") != error)
+		if (TemHabilidade(who, "Adornos da Besta"))
+			if (item.isa(POLCLASS_WEAPON) || item.isa(POLCLASS_ARMOR))	
+				SendSysMessageEx(who, "Voce nao pode equipar nada nessa forma.");
+				return 0;
+			endif
+		else
+			SendSysMessageEx(who, "Voce nao pode equipar nada nessa forma.");
+			return 0;
+		endif
+	endif
+
+	if ( !GetCooldown(item, "blessweapon") && GetObjProperty(item, "armaSagradaOriginalColor") != error )
+		item.color := Cint(GetObjProperty(item, "armaSagradaOriginalColor"));
+		EraseObjProperty(item, "armaSagradaOriginalColor");
+	endif
+
+	var elementalWeapon := GetObjProperty(item, "#elementalweapon");
+	if ( elementalWeapon != error)
+		if (ReadGameClock() > elementalWeapon.endtime)
+			EraseObjProperty(item, "#elementalweapon");
+			item.color := cint(GetObjProperty(item, "elementalWeaponOriginalColor"));
+			EraseObjProperty(item, "elementalWeaponOriginalColor");
+		endif
+		if (who.serial != elementalWeapon.serial)
+			set_critical(1);
+			SendSysMessageEx(who, "Voce nao consegue manter a magia na arma.", SSM_FAIL);
+			EraseObjProperty(item, "#elementalweapon");
+			item.color := cint(GetObjProperty(item, "elementalWeaponOriginalColor"));
+			var p := GetProcess( cint(GetObjProperty(item, "pid") ) );
+			p.kill();
+			set_critical(0);
+		endif
+	endif
+
+	if (GetObjProperty(item, "armaespiritual"))
+		if (GetObjProperty(item, "swordmage") != who.serial)
+			SendSysMessageEx(who, "Voce nao pode usar esta arma.", SSM_FAIL);
+			return 0;
+		endif
+	endif
+
+	if (GetObjProperty(item, "swordmage") == who.serial)
+		var pid := GetObjProperty(item, "#swordmagepid");
+		if (pid)
+			var script := GetProcess(pid);
+			script.kill();
+		endif
+		start_script (":spells:swordmage", {who, item});
+	endif
+
+	set_critical(1);
+
+	var ret := SetEquipmentMods(who, item);
+
+	var cfg := readconfigfile(":combat:itemdesc");
+	if ( cint(cfg[item.objtype].parrybonus) > 0 )
+		EraseObjProperty(who, "twohanded");
+	endif
+	set_critical(0);
+
+	return ret;
+endprogram

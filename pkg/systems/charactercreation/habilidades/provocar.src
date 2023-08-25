@@ -1,0 +1,28 @@
+ use uo;
+
+include ":attributes:attributes";
+include ":timedScripts:timedScripts";
+include "include/sysEvent";
+include "include/client";
+include "include/say";
+include "include/sysEvent";
+include ":tn:cooldown";
+
+program taunt(who)
+
+	PrintText(who, "*urra*");
+	if (who.graphic == 401)
+		PlaySoundEffect( who, 0x339 );
+	else
+		PlaySoundEffect( who, 0x44B );
+	endif
+	PerformAction(who, ANIM_HIT);
+        var nearby := ListMobilesNearLocation( who.x ,who.y, who.z, 8);
+        foreach char in nearby
+			var event := struct{"type":=EVID_TAUNT, "source":=who};
+			SendEvent(char, event);
+        endforeach
+	//TS_StartTimer(who, "provocar", 10); //bonus de parry e de reduzir hit_chance
+	SetCooldown(who, "resistenciaheroica", 60);
+
+endprogram

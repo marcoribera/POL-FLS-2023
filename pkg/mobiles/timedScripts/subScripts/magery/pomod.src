@@ -1,0 +1,21 @@
+ 
+use uo;
+use os;
+
+include ":attributes:attributes";
+
+program TimedScript_Clumsy(params)
+	var mobile := params[1];
+	var attacker := params[2];
+	var level := params[3];
+
+	var points := level;
+	
+	SetObjProperty(mobile, "poMod", points);
+	mobile.resist_poison_mod := mobile.resist_poison_mod + points;
+
+	//SetObjProperty(mobile, "PoisonResistMod", (cint(GetObjProperty(mobile, "PoisonResistMod" )) + points));
+	
+	return 1;
+endprogram
+

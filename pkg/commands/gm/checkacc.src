@@ -1,0 +1,69 @@
+/*
+ * $Id: checkacc.src 87 2012-04-02 19:04:43Z Duttones $
+ *
+ */
+use uo;
+use os;
+
+include ":accounts:settings";
+
+program textcmd_checkacc(who, contas)
+	contas := SplitWords(contas);
+	var conta1 := contas[1];
+	var conta2 := contas[2];
+	if ( !conta1 )
+		SendSysMessage(who, "Digite a conta do primeiro jogador: .checkacc <conta1> <conta2>");
+		return 0;
+	endif
+	if ( !conta2 )
+		SendSysMessage(who, "Digite a conta do segundo jogador: .checkacc <conta1> <conta2>");
+		return 0;
+	endif
+
+	if ((conta1 == "gmduttonesomg") || (conta2 == "gmduttonesomg"))
+		sendsysmessage(who, "Este usuário tem muitas accs para eu conseguir checar. Procedimento abortado.");
+		return 1;
+	endif
+	
+	conta1 := FindAccount(conta1);
+	conta2 := FindAccount(conta2);
+	if ( conta1.errortext )
+		SendSysMessage(who, "Error with account name "+conta1+" [P] "+conta1.errortext);
+		return 0;
+	elseif( conta2.errortext )
+		SendSysMessage(who, "Error with account name "+conta2+" [P] "+conta2.errortext);
+		return 0;
+	endif
+	var iptest := conta1.GetProp("IP");
+	var iptest2 := conta2.GetProp("IP");
+	var ip;
+	var ip2;
+	
+	if (iptest.size() <= iptest2.size())
+		ip := iptest;
+		ip2 := iptest2;
+	else
+		ip2 := iptest;
+		ip := iptest2;
+	endif
+	
+	var size := ip.Size();
+	var x := 1;
+	SendSysMessage(who, "Aguarde enquanto o sistema checa o ip entre as duas contas. Isso pode levar alguns minutos...");
+	var contachecada := 0;
+	while (x <= size)
+		if ( cstr(ip[x]) in ip2)
+			SendSysMessage(who, "" + conta1.name + " e " + conta2.name + " ja logaram no IP: " + ip[x]);
+			contachecada := contachecada + 1;
+		endif
+		x := x +1;
+		sleepms(50);
+	endwhile
+	
+	if (!contachecada)
+		SendSysMessage(who, "Nenhum IP igual foi encontrado entre " + conta1.name + " e " + conta2.name + ".");
+	else
+		SendSysMessage(who, "Foram encontrado o total de: " + contachecada + " Ips iguais entre " + conta1.name + " e " + conta2.name + ".");
+	endif
+	return 1;
+endprogram

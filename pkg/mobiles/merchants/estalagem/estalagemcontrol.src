@@ -1,0 +1,232 @@
+use uo;
+use os;
+use util;
+
+include ":datafile:datafile";
+include ":containers:storageAreas";
+include ":containers:containers";
+include "include/say";   
+include ":keys:key";
+include "include/client";
+include ":itemutils:itemdesc";
+
+CONST CYCLE_WAIT := 60 * 180;
+
+program GlobalInnControl()
+	//set_priority(1);
+	while(1)
+		InnKeeperChecks();
+		sleep(CYCLE_WAIT);
+	endwhile
+endprogram
+
+function InnKeeperChecks()
+	var innkeeper := getglobalproperty("InnKeeper");
+
+	if (innkeeper[1] == error)
+		return 1;
+	endif
+	
+	var x := 1;
+	while (x <= innkeeper.size())
+		var npc := SystemFindObjectBySerial(cint(innkeeper[x]));
+		if (npc.errortext)
+			innkeeper.erase(x);
+			SetGlobalProperty("InnKeeper", innkeeper);
+		endif
+		var quartos := GetObjProperty(npc, "quartos");
+		var mural := GetObjProperty(npc, "mural");
+		
+		if (!mural && !SystemFindObjectBySerial(cint(mural)) && !GetObjProperty(npc, "noglobalmsg"))
+			var players := EnumerateOnlineCharacters();
+			foreach player in players
+				if (player.cmdlevel > 2 )
+					SendSysMessageEx(player, "Bulletin Board: "+npc.name+" em '"+npc.x+" "+npc.y+" "+npc.z+"' nao possui Mural!", SSM_FAIL); 
+				endif
+			endforeach
+		endif
+		
+		var i := 1;
+		foreach quarto in quartos
+			if (quartos[i].inquilino && quartos[i].inquilino != error)
+				var rentdate := quartos[i].data;
+
+				if (rentdate == error)
+					quartos[i].data := polcore().systime;
+					SetObjProperty(npc, "quartos", quartos);
+				endif
+
+				var ticks := CalcularDias(rentdate);
+				var renttime := GetObjProperty(npc, "tempoalugado");
+				if (!renttime || renttime.errortext)
+					renttime := 7;
+				endif
+				
+				if (ticks >= renttime)
+					var bank_region := GetObjProperty(npc, "City");
+					if ( !bank_region )
+						bank_region := CP_DEFAULT_AREA;
+					endif
+					var player2 := SystemFindObjectBySerial(quartos[i].inquilino, SYSFIND_SEARCH_OFFLINE_MOBILES);
+
+					if ( !debitoEmConta(bank_region, player2, quartos[i].custo) )
+						var door := SystemFindObjectBySerial(quarto.door);
+						Eraseobjproperty(door, "LockId");
+						quartos[i].inquilino := 0;
+						SetObjProperty(npc, "quartos", quartos);
+						if (mural && player2 != error)
+							mural := SystemFindObjectBySerial(cint(mural));
+							if (mural)
+								BulletinReport(player2, mural, npc);
+							endif
+						endif
+						var cent := quartos[i].centro;
+						if (cent[1])
+							DestroyRentItens(cent[1], cent[2], cent[3], npc.realm, player2, npc);
+							ChecarMobileQuarto(player2, cent[1], cent[2], cent[3], npc);
+							if (cent[4])
+								DestroyRentItens(cent[4], cent[5], cent[6], npc.realm, player2, npc);
+								ChecarMobileQuarto(player2, cent[4], cent[5], cent[6], npc);
+							endif
+						endif
+					else
+						quartos[i].data := polcore().systime;
+						SetObjProperty(npc, "quartos", quartos);
+					endif
+				endif
+			endif
+			i := i +1;
+			sleepms(20);
+		endforeach
+		x := x+1;
+		sleepms(20);
+	endwhile
+	return 1;
+endfunction
+
+function DestroyRentItens(x, y, z, r, player, npc)
+	var objects := ListItemsNearLocation( x, y, z, 10, r);
+	var backpack;
+	if (player && player != error)
+		backpack := CreateItemAtLocation( x, y, z, hex(3701), 1, r);
+		backpack.desc := player.name;
+	endif
+	foreach obj in objects
+		if (CheckLosBetween( x, y, z, obj.x, obj.y, obj.z, r))
+			if (GetObjProperty(obj, "crafterserial"))
+				if (player && player != error)
+					obj.movable := 1;
+					MoveItemToContainer( obj, backpack);
+				else
+					DestroyItem(obj);
+				endif
+				
+				
+			elseif (obj.IsA(POLCLASS_CONTAINER))
+				var container := EnumerateItemsInContainer( obj, ENUMERATE_IGNORE_LOCKED );
+				foreach item in container
+				if (player && player != error)
+					item.movable := 1;
+					MoveItemToContainer( item, backpack);
+				else
+					DestroyItem(item);
+				endif
+					sleepms(20);
+				endforeach
+			endif
+		endif
+		sleepms(20);
+	endforeach
+	if (player && player != error)
+		if ( !npc.backpack )
+			Set_Critical(1);
+			var newpack := CreateItemAtLocation(npc.x, npc.y, npc.z, "backpack", 1, npc.realm);
+			if ( !EquipItem(npc, newpack) )
+				DestroyItem(newpack);
+				return 0;
+			endif
+		endif
+		MoveItemToContainer( backpack, npc.backpack);
+		var confiscado := GetObjProperty(npc, "confiscados");
+		if (!confiscado || confiscado == error)
+			confiscado := struct;
+		endif
+		confiscado.insert(""+player.serial, backpack.serial);
+		SetObjProperty(npc, "confiscados", confiscado);
+	endif
+	return 1;
+endfunction
+
+function debitoEmConta(banco, player, amount)
+
+	var bank_box := CP_GetStorageContainerForMobile(player,  banco, CP_NOCREATE);
+	if (!bank_box)
+		return 0;
+	endif
+	
+	if (!CheckGoldAmount(bank_box, amount))
+		return 0;
+	endif
+	
+	ConsumeSubstance(bank_box, 47715, amount);
+	return 1;
+
+endfunction
+
+function CheckGoldAmount(bank_box, amount)
+
+	var prop := dictionary;
+	prop["objtype"] := 47715;
+	var total_gold := AmountInContainer(bank_box, prop );
+	if ( amount == 0 )
+		return 0;
+	elseif ( amount > total_gold )
+		return 0;
+	else
+		return 1;
+	endif
+	
+endfunction
+function ChecarMobileQuarto(who, x, y, z, npc)
+	if ( CheckLosAt( who, x, y, z ) )
+		if (!MoveObjectToLocation(who, npc.x, npc.y+3, npc.z, npc.realm))
+			if (!MoveObjectToLocation(who, npc.x, npc.y-3, npc.z, npc.realm))
+				if (!MoveObjectToLocation(who, npc.x+3, npc.y, npc.z, npc.realm))
+					MoveObjectToLocation(who, npc.x-3, npc.y, npc.z, npc.realm);
+				endif
+			endif
+		endif
+	endif
+endfunction
+
+
+function BulletinReport(who, board, npc)
+	var board_data_file := DFOpenDataFile(":bulletinboard:MessageBoards", DF_CREATE);
+	var board_elem := DFFindElement(board_data_file, hex(board.serial), DF_CREATE);
+	var msg_string := "O pagamento da sua estalagem nao foi efetuado como esperado. Estarei colocando a estalagem de novo a disposicao de novos moradores, e armazenarei seus objetos ate que pague uma pequena taxa. Me procure.";
+	var post_num := CInt(board_elem.GetProp("NextPost"));
+	var new_num := CInt(board_elem.GetProp("NextPost"))+1;
+	if (new_num > 50)
+		//Were on post 50, reset the counter.
+		new_num := 1;
+	endif
+	board_elem.SetProp("NextPost", new_num);
+	
+	var post_info := struct;
+	post_info.+Name := " " + npc.name;
+	post_info.+Subject := "Aviso de Despejo: " +who.name;
+	post_info.+Message := msg_string;
+	post_info.+Data := polcore().systime;
+	post_info.+Serial := who.serial;
+	post_info.+GMPage := 0;
+	
+	return board_elem.SetProp(hex(post_num), post_info);
+endfunction
+
+function CalcularDias(data)
+    var criadoEm := cint(data);
+    var tempoAgora := polcore().systime;// segundos
+    var tempoDevida:= tempoAgora - criadoEm;
+    var dias := cint(tempoDevida/(86400));//24horas*60minutos*60segundos = 86400 segundos
+    return dias;
+endfunction

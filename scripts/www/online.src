@@ -1,0 +1,17 @@
+use http;
+use uo;
+
+  var chars := EnumerateOnlineCharacters();
+  WriteHtml( "<html><head><title>POL On-Line Characters</title></head>" +
+             "<body>" +
+             "<center>:</center>" + chars.size() +
+             "<div align=center>" +
+             "<table border=1 cellspacing=0 cellpadding=5>" +
+             "  <tr bgcolor=#99CCFF><td>Characters Currently On-Line</td></tr>"  );
+  foreach chr in chars
+    //if(chr.cmdlevel < 2)
+      WriteHtml( "<tr><td>" + chr.name + " [" + chr.acctname + "]"+  "</td></tr>" );
+   // endif
+  endforeach
+  WriteHtml( "</table></div>" );
+  WriteHtml( "</BODY></HTML>" );

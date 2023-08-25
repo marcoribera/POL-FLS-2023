@@ -1,0 +1,23 @@
+	
+use uo;
+
+program Install( )
+	
+	return 1;
+	
+endprogram
+
+exported function UpdatePlayer( who, byref packet )
+	
+	var mobile := SystemFindObjectBySerial(packet.GetInt32(1));
+
+	if (mobile)
+		if (!CheckLineOfSight(who, mobile))
+			return 1;
+		endif
+	
+	endif
+	
+	return 0;
+	
+endfunction

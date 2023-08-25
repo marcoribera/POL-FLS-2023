@@ -1,0 +1,66 @@
+use uo;
+use os;
+use util;
+use cfgfile;
+
+include "include/say";
+
+program use_explosion(who, potion)
+	EraseObjProperty(who, "IsMeditating");
+	EraseObjProperty(who, "HealTimer");
+	if(!Accessible(who, potion))
+		return;
+	endif
+	if(potion.movable == 0)
+		SendSysMessage(who, "Voce nao pode usar isto.");
+		return;
+	endif
+	if(!Accessible( who, potion))
+		SendSysMessage(who,"Voce nao pode pegar isto!");
+		return;
+	endif
+	who.hidden := 0;
+
+	var bomba;
+	if(potion.amount > 1)
+		Set_Critical(1);
+		bomba := CreateItemCopyAtLocation(who.x, who.y, who.z, potion);
+		SubtractAmount(bomba, potion.amount-1);
+		SubtractAmount(potion, 1);
+		Set_Critical(0);
+	else
+		bomba := potion;
+	endif
+
+	SendSysMessage(who, "Escolha o alvo " );
+	if( !Cint(GetObjProperty(bomba, "#bomb")))
+		var parms := {};
+		parms[1] := bomba;
+		parms[2] := who;
+		var t := start_script("potions/explosionTimer", parms);
+	endif
+	SetObjProperty(bomba, "#bomb", 1);
+	MoveItemToContainer(bomba, who.backpack);
+	var cast_on := TargetCoordinates( who );
+	if(!cast_on)
+		return;
+	endif
+	if(!bomba)
+		return;
+	endif
+	PrintText(who, "*joga um frasco*");
+	if(!CheckLosAt(who, cast_on.x, cast_on.y, cast_on.z))
+		SendSysMessage(who, "Voce nao consegue ver o alvo!");
+		MoveObjectToLocation(bomba, who.x, who.y, who.z, who.realm, MOVEOBJECT_FORCELOCATION);
+		return;
+	endif
+	if(!bomba)
+		return;
+	endif
+	Detach();
+	PlayMovingEffectXYZ( who.x, who.y, who.z+15, cast_on.x, cast_on.y, cast_on.z, 0x0f09, 8, 0, 0 );
+	if(!bomba)
+		return;
+	endif
+	MoveObjectToLocation(bomba, cast_on.x, cast_on.y, cast_on.z, cast_on.realm, MOVEOBJECT_FORCELOCATION );
+endprogram
