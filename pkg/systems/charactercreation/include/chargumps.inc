@@ -506,7 +506,7 @@ function KitGump(who)
         AP_SetTrueStat(who, STRENGTH, AP_GetTrueStat(who, STRENGTH)+10);
         AP_SetTrueStat(who, DEXTERITY, AP_GetTrueStat(who, DEXTERITY)+10);
         AP_SetTrueStat(who, INTELLIGENCE, AP_GetTrueStat(who, INTELLIGENCE)+10);
-	SetObjProperty(who, "dpmod", -30);
+	    SetObjProperty(who, "dpmod", -30);
       elseif ( key == 110 )
         SetObjProperty(who, "kit", "herança");
         AP_SetTrueStat(who, INTELLIGENCE, AP_GetTrueStat(who, INTELLIGENCE)-10);
