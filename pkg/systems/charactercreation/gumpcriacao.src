@@ -1298,14 +1298,18 @@ program createchar(who)
 		SetObjProperty(ring, "description", "Anel Da Família: " + NomeDaFamilia + "<br> Vassala Dos: " + FamiliaVassala);
 		SetName(ring, "Anel com Símbolo de Familia");
 	elseif (chardata.kit == "Corpulento")
-		AP_SetTrueStat(who, STRENGTH, chardata.str+10);
+		AP_SetTrueStat(who, STRENGTH, chardata.str+20);
 		AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
+        AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
+        SetObjProperty(who, "hitsmod", 20)
 	elseif (chardata.kit == "Genio")
 		AP_SetTrueStat(who, STRENGTH, chardata.str-10);
 		AP_SetTrueStat(who, INTELLIGENCE, chardata.int+10);
 	elseif (chardata.kit == "Agil")
 		AP_SetTrueStat(who, STRENGTH, chardata.str-10);
-		AP_SetTrueStat(who, DEXTERITY, chardata.dex+10);
+        AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
+		AP_SetTrueStat(who, DEXTERITY, chardata.dex+20);
+        SetObjProperty(who, "stammod", 20);
 	elseif (chardata.kit == "Escravo Vanirio")
 		setObjProperty(who, "description", "Marca de escravo no rosto");
 		setObjProperty(who, "hitsmod", 20);
@@ -1313,13 +1317,8 @@ program createchar(who)
 		AP_SetTrueStat(who, STRENGTH, chardata.str-10);
 		AP_SetTrueStat(who, INTELLIGENCE, chardata.int+20);
 		AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
-	elseif (chardata.kit == "Duro de Matar")
-		AP_SetTrueStat(who, STRENGTH, chardata.str-10);
-		AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
-		AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
+	elseif (chardata.kit == "Pacto com Asan" || chardata.kit == "Duro de Matar")
 		SetObjProperty(who, "dpmod", 20);
-	elseif (chardata.kit == "Pacto com Asan")
-		SetObjProperty(who, "dpmod", 10);
 	elseif (chardata.kit == "Totemista")
 		var totem := CreateItemInBackpack(who, "totem", 1);
 		var s1 := CreateItemInBackpack(who, "invocarespiritolobo", 1);
