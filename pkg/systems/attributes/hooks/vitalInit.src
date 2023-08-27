@@ -38,9 +38,9 @@ exported function GetHitsMaximumValue(mobile)
     if (!mobile.npctemplate)
 		var hunger := CInt(AP_GetVital(mobile, "Hunger") / 60);
 		if (hunger == 5)
-			vital_points := vital_points - 2000;
+			vital_points := vital_points - 4000;
 		elseif (hunger == 4)
-			vital_points := vital_points - 1000;
+			vital_points := vital_points - 2000;
 		endif
 	endif
 
@@ -77,9 +77,9 @@ exported function GetManaMaximumValue(mobile)
     if (!mobile.npctemplate)
 		var hunger := CInt(AP_GetVital(mobile, "Hunger") / 60);
 		if (hunger == 5)
-			vital_points := vital_points - 2000;
+			vital_points := vital_points - 4000;
 		elseif (hunger == 4)
-			vital_points := vital_points - 1000;
+			vital_points := vital_points - 2000;
 		endif
 	endif
 
@@ -109,9 +109,9 @@ exported function GetStaminaMaximumValue(mobile)
 	if (!mobile.npctemplate)
 		var hunger := CInt(AP_GetVital(mobile, "Hunger") / 60);
 		if (hunger == 5)
-			vital_points := vital_points - 2000;
+			vital_points := vital_points - 4000;
 		elseif (hunger == 4)
-			vital_points := vital_points - 1000;
+			vital_points := vital_points - 2000;
 		endif
 	endif
 
