@@ -228,14 +228,7 @@ exported function GetSkillCapRegenRate(mobile)
 endfunction
 
 exported function GetSkillCapMaximumValue(mobile)
-	var chardata := GetObjProperty(mobile, "chardata");
-	var vantagem := chardata.vantagemracial;
-
-	if (vantagem == "Aprendiz Rapido")
-		return 24*100;
-	else
-		return 20*100;
-	endif
+    return 100*100;
 endfunction
 
 exported function GetVicioRegenRate(mobile)

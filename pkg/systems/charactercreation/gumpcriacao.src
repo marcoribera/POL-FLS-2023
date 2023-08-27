@@ -275,9 +275,6 @@ var gfdata := array{
 	elseif (3 in ret.keys)
 		chardata.+classe := "Sabio";
 	endif
-
-
-
 endfunction
 
 function buyskillsgump(who, byref chardata)
@@ -1452,7 +1449,7 @@ program createchar(who)
 	ExibeGumpAparencia(who, chardata);
 
 	MoveObjectToLocation( who, 4230, 25, 1, who.realm, MOVEOBJECT_FORCELOCATION);
-
+    AP_SetVital(who, "Hunger", 0);
 	HealDamage(who, 200);
 	RecalcVitals(who);
 
