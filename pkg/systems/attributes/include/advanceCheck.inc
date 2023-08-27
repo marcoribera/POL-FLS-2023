@@ -357,27 +357,7 @@ function CheckVitalSkillCap(mobile, skill)
 endfunction
 
 function costSkill(value)
-	if (value > 90)
-		return 20;
-	elseif (value > 80)
-		return 18;
-	elseif (value > 70)
-		return 14;
-	elseif (value > 60)
-		return 10;
-	elseif (value > 50)
-		return 6;
-	elseif (value > 40)
-		return 5;
-	elseif (value > 30)
-		return 3;
-	elseif (value > 20)
-		return 2;
-	elseif (value > 10)
 		return 1;
-	else
-		return 0;
-	endif
 endfunction
 
 function AwardPoints(who, skill, points)
