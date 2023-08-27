@@ -1207,9 +1207,24 @@ program createchar(who)
 	foreach terciaria in terciarias
 		AP_setTrueSkill(who, terciaria, tercvalue);
 	endforeach
-
+/**
+		
+		AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
+        AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
+        
+*/
 	if (chardata.povo == "Asanita")
 		SetObjProperty(who, "dpmod", 10);
+	endif
+
+    if (chardata.povo == "Thuriao")
+        AP_SetTrueStat(who, STRENGTH, chardata.str+20);
+        SetObjProperty(who, "hitsmod", 20)
+	endif
+
+    if (chardata.povo == "Aquilrano")
+        AP_SetTrueStat(who, DEXTERITY, chardata.DEX+20);
+        SetObjProperty(who, "stammod", 20)
 	endif
 
 	//SETA O KIT
