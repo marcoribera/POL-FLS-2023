@@ -80,9 +80,9 @@ function GetBuffIcon(name)
 	elseif ( name == "Paralysis")
 		return 1037;
 	elseif ( name == "PhysicalResist")
-		return 1029; 
+		return 1029;
 	elseif ( name == "MagicResist")
-		return 1031; 
+		return 1031;
 	elseif (name == "bless")
 		return 1048;
 	elseif (name == "curse")
@@ -149,12 +149,12 @@ endfunction
 function SetInt32( int32)
 
 	var int1, int2, int3, int4;
-	int1 = (int32 > 24) & 0xFF;
-	int2 = (int32 > 16) & 0xFF;
-	int3 = (int32 > 8)  & 0xFF;
-	int4 = (int32 > 0)  & 0xFF;
+	int1 := (int32 > 24) & 0xFF;
+	int2 := (int32 > 16) & 0xFF;
+	int3 := (int32 > 8)  & 0xFF;
+	int4 := (int32 > 0)  & 0xFF;
 
-	var str = cstr(int1) + cstr(int2) + cstr(int3) + cstr(int4);
+	var str := cstr(int1) + cstr(int2) + cstr(int3) + cstr(int4);
 	return str;
 
 endfunction
@@ -162,8 +162,8 @@ endfunction
 function SetInt16 (int16)
 
 	var int1, int2;
-	int1 = (int16 > 8) & 0xFF;
-	int2 = (int16 > 0) & 0xFF;
+	int1 := (int16 > 8) & 0xFF;
+	int2 := (int16 > 0) & 0xFF;
 
 	var str := cstr(int1) + cstr(int2);
 
@@ -175,10 +175,10 @@ endfunction
 // Close Gump
 ///////////////////////////////////////////////////////////
 
-function CloseGumpPacket(user, gump_pid, ret_val) 
-	var packet:="BF" + "000D" + "0004" + MyHex(gump_pid) + FixPacketLength(ret_val, 4); 
+function CloseGumpPacket(user, gump_pid, ret_val)
+	var packet:="BF" + "000D" + "0004" + MyHex(gump_pid) + FixPacketLength(ret_val, 4);
 	return SendPacket(user, packet);
-endfunction 
+endfunction
 
 ///////////////////////////////////////////////////////////
 // Speed Boost
@@ -237,7 +237,7 @@ function UpdatePlayer( who, forwho, graphic )
     if( !graphic )
         graphic := who.graphic;
     endif
-    
+
     var packetString := "77";
     packetString := packetString + fixPacketLength(hex(who.serial),4);
     packetString := packetString + fixPacketLength(hex(graphic),2);
@@ -352,12 +352,12 @@ function SetWeatherForAll( type, num, temp := 0 )
     if( num > 70 )
         num := 70;
     endif
-    
+
     var packetString := "65";
     packetString := packetString + fixPacketLength(hex(type),1);
     packetString := packetString + fixPacketLength(hex(num),1);
     packetString := packetString + fixPacketLength(hex(temp),1);
-    
+
     foreach chr in EnumerateOnlineCharacters()
         SendPacket( chr, packetString );
     endforeach
@@ -373,7 +373,7 @@ function SetWeatherForPlayer( who, type, num, temp := 0 )
     if( num > 70 )
         num := 70;
     endif
-    
+
     var packetString := "65";
     packetString := packetString + fixPacketLength(hex(type),1);
     packetString := packetString + fixPacketLength(hex(num),1);
@@ -491,29 +491,28 @@ function fixPacketLength( packetString, byteLength )
         packetString := 0;
     endif
     packetString := cStr(packetString);
-    
+
     if( packetString[1,2] == "0x" )
         packetString := cStr(packetString[3,len(packetString)]);
     endif
-    
+
     if( len(packetString) > byteLength * 2 )
 //		var extraBytes := (byteLength*2) - len(packetString);
 		var extraBytes := len(packetString) - (byteLength*2) + 1;
 		return cStr(packetString[extraBytes,len(packetString)]);
     endif
-    
+
     while( len(packetString) < byteLength * 2 )
         packetString := "0" + packetString;
     endwhile
-    
+
     return packetString;
 endfunction
 
 
-function PlayObjectCenteredEffectHuefx( center, effect, speed, 
-loop := 0, color := 0, translucent := 0 )
+function PlayObjectCenteredEffectHuefx( center, effect, speed, loop := 0, color := 0, translucent := 0)
 var packetString := "C0";
-packetString := packetString + "03"; 
+packetString := packetString + "03";
 packetString := packetString + fixPacketLength(hex
 (center.serial),4);
 packetString := packetString + fixPacketLength(hex(0),4);
@@ -529,16 +528,15 @@ packetString := packetString + fixPacketLength(hex
 packetString := packetString + "000000";
 packetString := packetString + fixPacketLength(hex
 (translucent),1); //tran
-foreach chr in ListMobilesNearLocation( center.x, center.y, 
+foreach chr in ListMobilesNearLocation( center.x, center.y,
 center.z, 16 );
 SendPacket( chr, packetString );
 endforeach
 endfunction
 
-function PlayMovingEffectHuefx( source, dest, effect, speed, loop := 
-0, explode := 0, color := 0, translucent := 0)
+function PlayMovingEffectHuefx( source, dest, effect, speed, loop := 0, explode := 0, color := 0, translucent := 0)
 var packetString := "C0";
-packetString := packetString + "00"; 
+packetString := packetString + "00";
 packetString := packetString + fixPacketLength(hex
 (source.serial),4);
 packetString := packetString + fixPacketLength(hex
@@ -558,17 +556,15 @@ packetString := packetString + fixPacketLength(hex
 packetString := packetString + "000000";
 packetString := packetString + fixPacketLength(hex
 (translucent),1); //tran
-foreach chr in ListMobilesNearLocation( source.x, source.y, 
+foreach chr in ListMobilesNearLocation( source.x, source.y,
 source.z, 16 );
 SendPacket( chr, packetString );
 endforeach
 endfunction
 
-function PlayMovingEffectXYZHuefx(source, sourcex, sourcey, sourcez, 
-destx, desty, destz, effect, speed, loop := 0, explode := 0, color := 
-0, translucent := 0)
+function PlayMovingEffectXYZHuefx(source, sourcex, sourcey, sourcez, destx, desty, destz, effect, speed, loop := 0, explode := 0, color := 0, translucent := 0)
 var packetString := "C0";
-packetString := packetString + "00"; 
+packetString := packetString + "00";
 packetString := packetString + fixPacketLength(hex(0),8);
 packetString := packetString + fixPacketLength(hex(effect),2);
 packetString := packetString + fixPacketLength(hex(sourcex),2);
@@ -590,16 +586,15 @@ packetString := packetString + fixPacketLength(hex
 packetString := packetString + "000000";
 packetString := packetString + fixPacketLength(hex
 (translucent),1); //tran
-foreach chr in ListMobilesNearLocation( source.x, source.y, 
+foreach chr in ListMobilesNearLocation( source.x, source.y,
 source.z, 16 );
 SendPacket( chr, packetString );
 endforeach
 endfunction
 
-function PlayStationaryEffectHuefx( x, y, z, effect, speed, loop := 
-0, explode := 0, color := 0,translucent := 0)
+function PlayStationaryEffectHuefx( x, y, z, effect, speed, loop := 0, explode := 0, color := 0,translucent := 0)
 var packetString := "C0";
-packetString := packetString + "02"; 
+packetString := packetString + "02";
 packetString := packetString + fixPacketLength(hex(0),8);
 packetString := packetString + fixPacketLength(hex(effect),2);
 packetString := packetString + fixPacketLength(hex(x),2);
@@ -733,81 +728,81 @@ endfunction
 // Taken from MyHex.inc by Assargadon on polserver.com
 //////////////////////////////////////////////////////////////
 
-function MyHex(i) 
-//convert i to 8-symbols hex form 
+function MyHex(i)
+//convert i to 8-symbols hex form
 
-	var dig:=i/(16*16*16*16*16*16*16); 
-	i:=i%(16*16*16*16*16*16*16); 
-	
-	if (dig>=10) 
-		dig:=65+dig-10; 
-	else 
-		dig:=48+dig; 
-	endif 
+	var dig:=i/(16*16*16*16*16*16*16);
+	i:=i%(16*16*16*16*16*16*16);
 
-	var res:=CChr(dig); 
-
-	dig:=i/(16*16*16*16*16*16); 
-	i:=i%(16*16*16*16*16*16); 
-	if (dig>=10) 
-		dig:=65+dig-10; 
-	else 
-		dig:=48+dig; 
-	endif 
-	res:=res+CChr(dig); 
-	
-	dig:=i/(16*16*16*16*16); 
-	i:=i%(16*16*16*16*16); 
-	if (dig>=10) 
-		dig:=65+dig-10; 
-	else 
-		dig:=48+dig; 
-	endif 
-	res:=res+CChr(dig); 
-	
-	dig:=i/(16*16*16*16); 
-	i:=i%(16*16*16*16); 
-	if (dig>=10) 
-		dig:=65+dig-10; 
-	else 
-		dig:=48+dig; 
-	endif 
-	res:=res+CChr(dig); 
-	
-	dig:=i/(16*16*16); 
-	i:=i%(16*16*16); 
-	if (dig>=10) 
-		dig:=65+dig-10; 
-	else 
-		dig:=48+dig; 
-	endif 
-	res:=res+CChr(dig); 
-	
-	dig:=i/(16*16); 
-	i:=i%(16*16); 
-	if (dig>=10) 
-		dig:=65+dig-10; 
-	else 
+	if (dig>=10)
+		dig:=65+dig-10;
+	else
 		dig:=48+dig;
-	endif 
-	res:=res+CChr(dig); 
-	
-	dig:=i/(16); 
-	i:=i%(16); 
-	if (dig>=10) 
-		dig:=65+dig-10; 
-	else 
-		dig:=48+dig; 
-	endif 
-	res:=res+CChr(dig); 
-	
-	dig:=i; 
-	if (dig>=10) 
-		dig:=65+dig-10; 
-	else 
-		dig:=48+dig; 
-	endif 
-	res:=res+CChr(dig); 
-	
-	return res; 
+	endif
+
+	var res:=CChr(dig);
+
+	dig:=i/(16*16*16*16*16*16);
+	i:=i%(16*16*16*16*16*16);
+	if (dig>=10)
+		dig:=65+dig-10;
+	else
+		dig:=48+dig;
+	endif
+	res:=res+CChr(dig);
+
+	dig:=i/(16*16*16*16*16);
+	i:=i%(16*16*16*16*16);
+	if (dig>=10)
+		dig:=65+dig-10;
+	else
+		dig:=48+dig;
+	endif
+	res:=res+CChr(dig);
+
+	dig:=i/(16*16*16*16);
+	i:=i%(16*16*16*16);
+	if (dig>=10)
+		dig:=65+dig-10;
+	else
+		dig:=48+dig;
+	endif
+	res:=res+CChr(dig);
+
+	dig:=i/(16*16*16);
+	i:=i%(16*16*16);
+	if (dig>=10)
+		dig:=65+dig-10;
+	else
+		dig:=48+dig;
+	endif
+	res:=res+CChr(dig);
+
+	dig:=i/(16*16);
+	i:=i%(16*16);
+	if (dig>=10)
+		dig:=65+dig-10;
+	else
+		dig:=48+dig;
+	endif
+	res:=res+CChr(dig);
+
+	dig:=i/(16);
+	i:=i%(16);
+	if (dig>=10)
+		dig:=65+dig-10;
+	else
+		dig:=48+dig;
+	endif
+	res:=res+CChr(dig);
+
+	dig:=i;
+	if (dig>=10)
+		dig:=65+dig-10;
+	else
+		dig:=48+dig;
+	endif
+	res:=res+CChr(dig);
+
+	return res;
 endfunction
