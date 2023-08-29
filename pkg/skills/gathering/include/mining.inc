@@ -10,7 +10,7 @@ const MAX_RESOURCE_AMOUNT := 10;
 
 function Garimpeiro(who)
 
-	if (randomint(200) <= 1)	
+	if (randomint(200) <= 1)
 
 		var cfg := ReadConfigFile(":gems:itemdesc");
 		var keys := GetConfigStringKeys( cfg );
@@ -232,71 +232,71 @@ endfunction
 
 function SetOreAmount(realm, x_pos, y_pos, amount)
 	var pos_string := CStr(realm+" "+x_pos+"x"+y_pos);
-	
+
 	var data_elem := GetDataElem(pos_string);
-	
+
 	data_elem.SetProp("Amount", CInt(amount));
 endfunction
 
 function GetOreAmount(realm, x_pos, y_pos)
 
 	var pos_string := CStr(realm+" "+x_pos+"x"+y_pos);
-	
+
 	var data_elem := GetDataElem(pos_string);
-	
+
 	var amount := data_elem.GetProp("Amount");
 	if ( amount == error )
 		SetOreAmount(realm, x_pos, y_pos, MAX_RESOURCE_AMOUNT);
 		amount := MAX_RESOURCE_AMOUNT;
 	endif
-	
+
 	return CInt(amount);
 endfunction
 
 function GetResourceId(oreToSearch)
 
 	case (oreToSearch)
-	
+
 		"areia": return 0x6075;
-		
+
 		"argila": return 0x6074;
-		
+
 		"ferro": return 0x6300; //TN USED
-		
+
 		"lithtan": return 0x6301;
-		
+
 		"helce": return 0x6302;
-		
+
 		"sinque": return 0x6303;
-		
+
 		"figin": return 0x6304;
-		
+
 		"ouro": return 0x6305;
-		
+
 		//"durang": return 0x6306;
-		
+
 		"galvorn": return 0x6307; //TN USED
-		
+
 		"mithril": return 0x6308; //TN USED
 
 		"argonil": return 0x6451; //TN USED
- 
+
 		//"gromril": return 0x6452; //TN USED
 
 		//"cobre": return 0x6450; //TN USED
 
 		"prata": return 0x6992; //TN USED
- 
+
 		"estanho": return 0x6990; //TN USED
-		
+
 		//"ario": return 0x6312;
-		
+
 		"pedras": return 0x6666;
 
 		"marmore": return 0x8850;
 
-		"arenito": return 0x8852;				
-	
+		"arenito": return 0x8852;
+
 	endcase
 
 endfunction
@@ -318,13 +318,13 @@ function DetermineOreType(who, where)
 	var chance := RandomInt(1000);
 	var oreToSearch;
 	var skill := AP_GetSkill(who, GATHERING);
-	
+
 	if (GetObjProperty(who, "searchore") == error)
 		oreToSearch := "pedras";
 	else
 		oreToSearch := GetObjProperty(who, "searchore");
 	endif
-	
+
 	var achou := 0;
 	foreach ore in ores
 		if (ore == oreToSearch)
@@ -334,12 +334,12 @@ function DetermineOreType(who, where)
 			i := i + 1;
 		endif
 	endforeach
-	
+
 	if (!achou)
 		SendSysMessage(who, "Nao tem o minerio que voce procura aqui.");
 		return 0;
 	endif
-	
+
 	if ( chance <= Cint(percent[i]))
 		var oreid := GetResourceId(oreToSearch);
 		//var oreid := GetResourceId("ario");
@@ -359,10 +359,10 @@ endfunction
 function DetermineMiningDifficulty(oretype)
 
 	case (oretype)
-	
+
 		0xBD11: return 0;  //pedra pequena
-		0xBD11: return 0;  //pedra media
-		0xBD11: return 0;  //pedra grande
+		0xBD12: return 0;  //pedra media
+		0xBD13: return 0;  //pedra grande
 		0xee99: return 0;  //calcario
 
 		0x6300: return 0;  //iron ore
@@ -374,18 +374,18 @@ function DetermineMiningDifficulty(oretype)
 		0x6307: return 90; //galvorn
 		0x6308: return 90; //mithril
 
-		0x6992: return 50; //prata 
- 		0x6990: return 30; //estanho 
+		0x6992: return 50; //prata
+ 		0x6990: return 30; //estanho
 
 		0x6075:  return 5; //areia
-		
+
 		0x6666: return 0; //id falso de pedra
 		0x8850: return 40; //marmore
 		0x8852: return 30; //arenito
 		0x5001: return 5; //id de stone
 
 		0x6305: return 40; //golden <- nao faz nada
-		
+
 		default: return 100;
 	endcase
 
@@ -403,7 +403,7 @@ function GetOreRarityDesc(rarity)
 		return "comum";
 	else
 		return "muito comum";
-	endif 
+	endif
 
 endfunction
 
@@ -420,13 +420,13 @@ function GetMiningRegion(x, y)
 
   var df := opendatafile(":gathering:miningspots");
   foreach elem in (df.Keys())
-  
+
     var region := df.FindElement(elem);
     var rect := region.getProp("Rect");
     if (inrect(x, y, SplitWords(rect)))
       return elem;
     endif
-  
+
   endforeach
 
 	return "Whole_World";
@@ -445,13 +445,13 @@ function CanMine(targ, type)
 	elseif ( land_scape in GetConfigStringArray(config, "landscape") )
 		return 1;
 	endif
-	
-	return 0;	
+
+	return 0;
 endfunction
 
 function ResourceAmount(resource_type, byref elem)
 	var amount := DFGetProp(elem, resource_type, DF_CREATE, CStr(MAX_RESOURCE_AMOUNT));
-	
+
 	return CInt(amount);
 endfunction
 
@@ -476,6 +476,6 @@ function CheckLoop(who, tool, my_x, my_y, my_facing)
 	elseif (!tool)
 		return 0;
 	else
-		return 1;	
+		return 1;
 	endif
 endfunction
