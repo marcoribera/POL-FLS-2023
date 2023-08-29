@@ -18,7 +18,7 @@ program cast_spell(who, text)
 	var spellid;
 	case (lower(text))
 		"encanto de protecao": spellid := 1; break;
-		"encanto de protecao": spellid := 1; break;
+		"encantodeprotecao": spellid := 1; break;
 		"bola de fogo": spellid := 2; break;
 		"boladefogo": spellid := 2; break;
 		"invisibilidade": spellid := 3; break;
