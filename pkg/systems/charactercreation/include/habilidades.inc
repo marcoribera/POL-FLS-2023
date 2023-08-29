@@ -28,6 +28,14 @@ function TemRequisito(who, habilidade, msg := 1)
 				endif
 				return 0;
 			endif
+        elseif (req["povo"]) // Adiciona busca por povos
+            req["povo"] := "";
+            if ((!GetObjProperty(who, "chardata")).povo in (req))
+				if (msg == 1)
+					SendSysMessageEx(who, "Voce nao pertence ao povo: " + req, SSM_FAIL);
+				endif
+				return 0;
+			endif
 		elseif ( !TemHabilidade(who, req) )
 			if (msg == 1)
 				SendSysMessageEx(who, "Voce nao possui o pre requisito: " + req, SSM_FAIL);
