@@ -149,7 +149,7 @@ function FLHairGump(who, byref new_look)
 
 	GFTextMid(hairgump, 15, 25, 270, 1890, "Escolha seu Cabelo");
 	GFAddButton(hairgump, 220, 370, 2128, 2129, 1, OK_BUTTON);
-	
+
 	GFResizePic(hairgump, 220, 55, 2620, 50, 310);
 
 	var config := ReadConfigFile(":fls_core:config/hairtypes");
@@ -216,7 +216,7 @@ function FLBeardGump(who, byref new_look)
 
 	GFTextMid(beardgump, 15, 25, 270, 1890, "Escolha sua barba");
 	GFAddButton(beardgump, 220, 370, 2128, 2129, 1, OK_BUTTON);
-	
+
 	GFResizePic(beardgump, 220, 55, 2620, 50, 280);
 
 	var config := ReadConfigFile(":fls_core:config/hairtypes");
@@ -273,7 +273,8 @@ function FLBeardGump(who, byref new_look)
 				break;
 			endif
 		endforeach
-	endif
+	endif
+
 endfunction
 
 
@@ -323,7 +324,6 @@ function FL_GetSkillID(skillname)
 		"Masonry": 		return 41;
 		"Staff": 		return 42;
 		"ResistingSpells": 	return 43;
-		"Magery": 		return 44;
 	endcase
 
 
@@ -337,7 +337,7 @@ function FL_GetSkillName(skill)
 		3: return "AnimalLore";
 		4: return "Archery";
 		5: return "ItemLore";
-		6: return "Axe"; 
+		6: return "Axe";
 		7: return "Backstab";
 		8: return "Blacksmithy";
 		9: return "BowCraft";
@@ -375,7 +375,6 @@ function FL_GetSkillName(skill)
 		41: return "Masonry";
 		42: return "Staff";
 		43: return "ResistingSpells";
-		44: return "Magery";
 	endcase
 
 endfunction
@@ -394,7 +393,7 @@ function GetSkillPrice(skillid, byref primarias, byref secundarias, byref tercia
 		if (skill == skillname)
 			return 2;
 		endif
-	endforeach	
+	endforeach
 
 	foreach skill in terciarias
 		if (skill == skillname)
@@ -436,6 +435,6 @@ function GetSkillDescValue(skill)
 		return "Sec";
 	elseif (skill == 3)
 		return "Pri";
-	endif	
+	endif
 
 endfunction
