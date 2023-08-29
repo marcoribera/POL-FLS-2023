@@ -14,7 +14,7 @@ program SpawnThatStuff( me, region )
 
 	SetGlobalProperty("reagentspawnerwipe",1);
 	SetGlobalProperty("#reagentspawnerisrunning",1 );
-	
+
 	UnloadConfigFile( ":reagentspawn:reagentspawn" );
 
 	reagspawn := ReadConfigFile( ":reagentspawn:reagentspawn" );
@@ -23,10 +23,10 @@ program SpawnThatStuff( me, region )
 
 	var i := cint(region);
 	var elem;
-	for (i := 1; i<=numregions; i := i+1); 
+	for (i := 1; i<=numregions; i := i+1);
         	var spawnregion := reagspawn[ i ];
 
-		
+
 		elem := FindConfigElem(reagspawn, i);
 		var spawngroups := GetConfigStringArray( spawnregion, "group" );
 		var realm := cstr(GetConfigStringArray( elem, "realm" ));
@@ -38,7 +38,7 @@ program SpawnThatStuff( me, region )
 			var groupname := groupstring[1];
 			var groupdensity := cint(groupstring[2]);
 			var groupamt := cint(groupstring[3]);
-			
+
 			spawnthisgroup(me, i, spawnregion, groupname, groupdensity, groupamt, split[2]);
 			sleep(1);
 		endforeach
@@ -47,8 +47,8 @@ program SpawnThatStuff( me, region )
 
 	UnloadConfigFile( "reagentspawn" );
 	EraseGlobalProperty("#reagentspawnerisrunning");
-	
-	
+
+
 endprogram
 
 function gmreport(text)
@@ -72,7 +72,7 @@ function spawnthisgroup(me, regionnum, spawnregion, groupname, groupdensity, gro
 	var y2 := cint(coords[4]);
 
 	var spawngroup := FindConfigElem( reagspawn, groupname );
-	
+
 	var itemlist := GetConfigStringArray( spawngroup, "item" );
 
 	var sizeofregion := (x2 - x1) * (y2 - y1);
@@ -87,7 +87,7 @@ function spawnthisgroup(me, regionnum, spawnregion, groupname, groupdensity, gro
 	endif
 
 	var SpawnName := "r"+regionnum+"g"+groupname;
-	
+
 
 	if (numtospawn < 1)
 		return;
@@ -100,7 +100,7 @@ function spawnthisgroup(me, regionnum, spawnregion, groupname, groupdensity, gro
 	var i;
 	var sh;
 	var objtype;
-	
+
 	for( i := 1; i <= numtospawn; i := i + 1 )
 		itemnum := RandomInt(len(itemlist))+1;
 
@@ -110,8 +110,8 @@ function spawnthisgroup(me, regionnum, spawnregion, groupname, groupdensity, gro
 		y := RandomInt (y2-y1)+y1;
 
 		sh := GetWorldHeight( x, y, realm );
-					
-		theitem := createitematlocation(x, y, sh, objtype, groupamt, realm); 
+
+		theitem := createitematlocation(x, y, sh, objtype, groupamt, realm);
 		theitem.movable := 1;
 		sleepms(100);
 		if (theitem)
@@ -144,8 +144,8 @@ function nukethisgroup(me, regionnum, spawnregion, groupname)
 	for( x := x2 ; x > x1 ; x := x  - 16)
     	  for( y := y1; y < y2; y := y + 16 )
 	    for( z := -60; z <= 60; z := z + 16 )
-		foreach item in ListItemsNearLocation( x, y, z, 32)  
-			if ( GetObjProperty( item, "regspawn" ) = SpawnName )
+		foreach item in ListItemsNearLocation( x, y, z, 32)
+			if ( GetObjProperty( item, "regspawn" ) == SpawnName )
 				DestroyItem(item);
 				sleep(2);
 				kills := kills + 1;
@@ -155,7 +155,7 @@ function nukethisgroup(me, regionnum, spawnregion, groupname)
 	  endfor
 		sleep(1);
 	endfor
-	
+
 	SetGlobalProperty(SpawnName,0);
 
 endfunction
