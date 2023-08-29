@@ -139,7 +139,7 @@ function SendBuff(mobile, show,  icon, duration := 0, cliloc1 := 0, cliloc2 := 0
    packet.sendpacket(mobile);
 endfunction
 
-function NewCreatePacket( id, )
+function NewCreatePacket( id )
 
 	var packet := cstr(id);
 	return packet;
