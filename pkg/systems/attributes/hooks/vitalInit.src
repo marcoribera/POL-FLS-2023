@@ -19,7 +19,7 @@ exported function GetHitsRegenRate(mobile)
 	var regen := base_regen + AP_GetVitalRegenRateMod(mobile, "hits");
 
 	if (isBloodied(mobile) && (!mobile.npctemplate)  ) // Nao regenera se tiver sangrando
-		return 0;
+		return regen/5; //reduz a regeneração bloodied para 1/5
 	endif
 
 	return regen;
@@ -72,6 +72,11 @@ exported function GetManaMaximumValue(mobile)
 
 	if ( !vital_points )
 		vital_points := CInt(AP_GetTrueStat(mobile, "Intelligence")) * 100;
+		if (GetObjProperty(mobile, "kit") == "Genio")
+			vital_points := vital_points + 2000;
+		elseif (GetObjProperty(mobile, "kit") == "Afogado em Mana")
+			vital_points := vital_points + 8000;
+		endif
 	endif
 
     if (!mobile.npctemplate)
@@ -102,6 +107,9 @@ exported function GetStaminaMaximumValue(mobile)
 	vital_points := GetNPCVitalSetting(mobile, "STAM");
 	if (!vital_points);
 		vital_points := CInt(AP_GetTrueStat(mobile, "Dexterity")) * 100;
+		if (GetObjProperty(mobile, "kit") == "Agil")
+			vital_points := vital_points + 2000;
+		endif
 	endif
 
 	vital_points := vital_points + (( Cint( GetObjProperty(mobile, "stammod") ) + Cint( GetObjProperty(mobile, "#stammod") ) )*100);

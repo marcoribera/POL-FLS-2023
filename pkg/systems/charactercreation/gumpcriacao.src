@@ -438,6 +438,77 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 
 	endif
 
+if (chardata.kit == "Aprendiz de Ferreiro")
+
+		var i := 1;
+		//sobe as quaternarias
+		foreach skill in quaternarias //reduz as primarias
+			if ( skill == "MetalWorking")
+				quaternarias.erase(i);
+				secundarias.append("MetalWorking");
+			endif
+			i := i + 1;
+		endforeach
+
+		i := 1;
+		foreach skill in terciarias //reduz as primarias
+			if ( skill == "Gathering")
+				terciarias.erase(i);
+				secundarias.append("Gathering");;
+			endif
+			i := i + 1;
+		endforeach
+	endif
+
+		if (chardata.kit == "Aprendiz de Trabalhador Domestico")
+
+		var i := 1;
+		//sobe as quaternarias
+		foreach skill in quaternarias //reduz as primarias
+			if ( skill == "DomesticWork")
+				quaternarias.erase(i);
+				secundarias.append("DomesticWork");
+			endif
+			i := i + 1;
+		endforeach
+	endif
+
+	if (chardata.kit == "Aprendiz de Carpinteiro")
+
+		var i := 1;
+		//sobe as quaternarias
+		foreach skill in quaternarias //reduz as primarias
+			if ( skill == "WoodWorking")
+				quaternarias.erase(i);
+				secundarias.append("WoodWorking");
+			endif
+			i := i + 1;
+		endforeach
+
+		i := 1;
+		foreach skill in terciarias //reduz as primarias
+			if ( skill == "Gathering")
+				terciarias.erase(i);
+				secundarias.append("Gathering");;
+			endif
+			i := i + 1;
+		endforeach
+	endif
+
+	if (chardata.kit == "Alquimista Combatente")
+
+		var novasquaternarias := array;
+
+		foreach skill in quaternarias
+			if (skill != "Alchemy")
+				novasquaternarias.append(skill);
+			endif
+
+		endforeach
+		quaternarias := novasquaternarias;
+		quaternarias.append("Alchemy");
+
+	endif
 
 	if (chardata.kit == "Ranger")
 
@@ -1212,7 +1283,7 @@ program createchar(who)
     if (chardata.povo == "Thuriao")
         AP_SetTrueStat(who, STRENGTH, chardata.str+10);
     endif
- 
+
     if (chardata.povo == "Aquilrano")
         AP_SetTrueStat(who, DEXTERITY, chardata.dex+10);
 	endif
@@ -1303,24 +1374,20 @@ program createchar(who)
 		SetObjProperty(ring, "description", "Anel Da Família: " + NomeDaFamilia + "<br> Vassala Dos: " + FamiliaVassala);
 		SetName(ring, "Anel com Símbolo de Familia");
 	elseif (chardata.kit == "Corpulento")
-        if (chardata.povo == "Thuriao")
-            AP_SetTrueStat(who, STRENGTH, chardata.str+20);
-		else
-            AP_SetTrueStat(who, STRENGTH, chardata.str+10);
-        endif
+        AP_SetTrueStat(who, STRENGTH, chardata.str+30);
         AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
         AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
 	elseif (chardata.kit == "Genio")
+		AP_SetTrueStat(who, INTELLIGENCE, chardata.int+20);
+		AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
 		AP_SetTrueStat(who, STRENGTH, chardata.str-10);
-		AP_SetTrueStat(who, INTELLIGENCE, chardata.int+10);
 	elseif (chardata.kit == "Agil")
-        if (chardata.povo == "Aquilrano")
-            AP_SetTrueStat(who, DEXTERITY, chardata.DEX+20);
-        else
-            AP_SetTrueStat(who, DEXTERITY, chardata.dex+10);
-        endif
+        AP_SetTrueStat(who, DEXTERITY, chardata.dex+20);
 		AP_SetTrueStat(who, STRENGTH, chardata.str-10);
         AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
+    elseif (chardata.kit == "Afogado em Mana")
+		AP_SetTrueStat(who, DEXTERITY, chardata.dex-30);
+		AP_SetTrueStat(who, STRENGTH, chardata.str-30);
 	elseif (chardata.kit == "Escravo Vanirio")
 		setObjProperty(who, "description", "Marca de escravo no rosto");
 		setObjProperty(who, "hitsmod", 20);
@@ -1328,12 +1395,6 @@ program createchar(who)
 		AP_SetTrueStat(who, STRENGTH, chardata.str-10);
 		AP_SetTrueStat(who, INTELLIGENCE, chardata.int+20);
 		AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
-	elseif (chardata.kit == "Pacto com Asan" || chardata.kit == "Duro de Matar")
-        if (chardata.povo == "Asanita")
-            SetObjProperty(who, "dpmod", 20);
-        else
-		    SetObjProperty(who, "dpmod", 10);
-        endif
 	elseif (chardata.kit == "Totemista")
 		var totem := CreateItemInBackpack(who, "totem", 1);
 		var s1 := CreateItemInBackpack(who, "invocarespiritolobo", 1);
@@ -1343,6 +1404,14 @@ program createchar(who)
 		ganheispell:=1;
 		chardata.+magia := "Totemista";
 	endif
+	if (chardata.povo == "Asanita")
+        SetObjProperty(who, "dpmod", 10);
+        if (chardata.kit == "Duro de Matar")
+            SetObjProperty(who, "dpmod", 30);
+        endif
+    elseif (chardata.kit == "Duro de Matar")
+        SetObjProperty(who, "dpmod", 20);
+    endif
 
 	if (chardata.classe == "Sabio")
 		if (chardata.povo == "Asanita") //asanita eh sempre mesum
