@@ -10,9 +10,8 @@ program fix(who, param)
 		SendSysMessage(who, "\".fix\" Personagem fixa ou desfixa itens.");
 		SendSysMessage(who, "\".fix transferir\" Personagem passa controle do item para outro.");
 		if(who.cmdlevel)
-			SendSysMessage(who, "\".fix 1\" GM fixa ou desfixa itens sem Delay (Player pode usar .fix).");
-			SendSysMessage(who, "\".fix 2\" GM fixa ou desfixa itens (Player NAO PODE mais usar .fix).");
-			SendSysMessage(who, "\".fix 3\" GM fixa ou desfixa itens (Qualquer Player pode tomar controle do item com .fix).");
+			SendSysMessage(who, "\".fix travar\" GM fixa ou desfixa itens (Player NAO PODE mais usar .fix).");
+			SendSysMessage(who, "\".fix liberar\" GM fixa ou desfixa itens (Qualquer Player pode tomar controle do item com .fix).");
 		endif
 		return 0;
 	endif
@@ -35,7 +34,16 @@ program fix(who, param)
 	endif
 	var fixer := GetObjProperty(alvo, "fixer");
 	if(!param)
-		if (GetObjProperty(alvo, "crafterserial") == error)
+		if(who.cmdlevel)
+			if (alvo.movable == 0)
+				alvo.movable := 1;
+				SendSysMEssage(who, "O item esta solto.");
+			else
+				alvo.movable := 0;
+				SendSysMessage(who, "O item esta imovel.");
+			endif
+			return 1;
+		elseif (GetObjProperty(alvo, "crafterserial") == error)
 			SendSysMessageEx(who, "Esse item so pode ser fixado ou desfixado pela Staff.", SSM_FAIL);
 			return 0;
 /*
@@ -96,20 +104,8 @@ program fix(who, param)
 			SendSysMessageEx(who, "Esse item so pode ser fixado ou desfixado por comando exclusivo da Staff.", SSM_FAIL);
 			return 0;
 		endif
-	elseif (Cint(param) == 1)
-		if(who.cmdlevel)
-			if (alvo.movable == 0)
-				alvo.movable := 1;
-				SendSysMEssage(who, "O item esta solto.");
-			else
-				alvo.movable := 0;
-				SendSysMessage(who, "O item esta imovel.");
-			endif
-		else
-			return 0;
-	  	endif
-	   	return 1;
-	elseif (Cint(param) == 2)
+
+	elseif (Cint(param) == "travar")
 		if(who.cmdlevel)
 			if (alvo.movable == 0)
 				EraseObjProperty(alvo, "crafterserial");
@@ -124,7 +120,7 @@ program fix(who, param)
 			return 0;
 	  	endif
 	   	return 1;
-	elseif (Cint(param) == 3)
+	elseif (Cint(param) == "liberar")
 		if(who.cmdlevel)
 			SetObjProperty(alvo, "crafterserial",who.serial);
 			EraseObjProperty(alvo, "fixer");

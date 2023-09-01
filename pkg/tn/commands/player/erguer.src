@@ -40,12 +40,15 @@ program erguer(who,param)
 	endif
 
 	var fixer := GetObjProperty(alvo, "fixer");
-	if (who.serial != fixer)
+	if ((who.serial != fixer) && (!who.cmdlevel))
 		SendSysMessageEx(who, "Esse item precisa ser transferido para voce antes de usar esse comando.", SSM_FAIL);
 		return 0;
 	endif
 
 	var alturaDesejada := who.z + Min(ALTURA_MAX, Max(ALTURA_MIN, CInt(param))); //garante que o valor está entre 0 e 9
+	if (who.cmdlevel)
+		alturaDesejada := who.z + CInt(param); //GM pode colocar alturas maiores
+	endif
 	var direcao;
 	var altura := alvo.z;
 	if (altura == alturaDesejada)
@@ -58,6 +61,11 @@ program erguer(who,param)
 	endif
 
 	PrintTextAbove(who, "*Ajustando a altura de "+alvo.name+"*");
+	if (who.cmdlevel)
+		alvo.z := who.z + alturaDesejada;
+		return 1;
+	endif
+
 	while(altura != alturaDesejada)
 		if (direcao == CIMA)
 			PrintTextAbove(alvo, "*^*");
