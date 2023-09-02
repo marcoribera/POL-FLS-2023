@@ -26,7 +26,7 @@ program rope(who, item)
 		diff := 100;
 	endif
 	var mod := 0;
-	if (TemHabilidade(who, "Maos Habilidosas"))
+	if (TemHabilidade(who, "Prestidigitador"))
 		mod := 20;
 	endif
 
@@ -35,7 +35,7 @@ program rope(who, item)
 
 		if (!char)
 			SendSysMessage(who, "Voce nao pode usar corda nesse corpo!");
-			return;	
+			return;
 		endif
 
 		PrintText(who, "*amarra "+char.name+"*");

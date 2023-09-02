@@ -81,11 +81,11 @@ exported function Attack(attacker, defender)
 	wpn_d_elem := GetWpnCfgInfo(defender, wpn_d);
 
 var anim := wpn_a_elem.Anim;
-    	
+
 	if ( attacker.graphic != 400 || attacker.graphic != 401)
        		anim := 0x0c;
     	endif
-	
+
 
 	if ( (attacker.paralyzed) || (attacker.frozen) )
 		SendSysMessage(attacker, "Voce nao consegue atacar.");
@@ -543,13 +543,14 @@ function CalculateHitChance(attacker, defender)
 		hit_chance := hit_chance + 100.0;
 	endif
 
+/*
 	if (TemHabilidade(defender, "Luta Defensiva"))
 		var cajados := array{ 0x0df0, 0x13f9, 0x0e8a, 0x0e81};
 		if ( defender.weapon.objtype in cajados)
 			hit_chance := hit_chance -15;
 		endif
 	endif
-
+*/
 	if (hit_chance < 5.0)
 		hit_chance := 5.0;
 	endif
@@ -590,18 +591,18 @@ function AmmoCheck(attacker, defender)
 		SendSysMessage(attacker, "Voce nao definiu o tipo de flecha que vai usar. [clique 2x no arco e na flecha]");
 		return 0;
 	endif
-    
-   
+
+
     var in_aljava := 0;
     foreach arrow in (EnumerateItemsInContainer(aljava))
 		if (arrow.serial == ammo)
 			in_aljava := 1;
         endif
     endforeach
-    if (in_aljava == 0) 
+    if (in_aljava == 0)
         return 0;
     endif
-    
+
 	if ( SubtractAmount( ammo, 1 ) )
 		var cfg:=ReadConfigFile(":woodworking:itemdesc");
 		var elem := FindConfigElem(cfg, GetObjType( ammo ));

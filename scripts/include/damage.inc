@@ -286,7 +286,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 	if (temHabilidade(who, "Ataques Precisos"))
 		stat := DEXTERITY;
 	endif
-	if (temHabilidade(who, "Taticas Arcanas"))
+	if (temHabilidade(who, "Ataques Oportunistas"))
 		stat := INTELLIGENCE;
 	endif
 	var strBonus := 0.0;

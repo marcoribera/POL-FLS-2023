@@ -6,7 +6,7 @@ include ":charactercreation:habilidades";
 include "include/say";
 
 program skill_Stealth( who )
-	
+
 	EraseObjProperty(who, "IsMeditating");
 	EraseObjProperty(who, "HealTimer");
 
@@ -31,7 +31,7 @@ program skill_Stealth( who )
 	*/
 
 	var skill := AP_GetSkill(who, SNEAK);
-	if (!temHabilidade(who, "Furtividade Aprimorada"))
+	if (!temHabilidade(who, "Espionagem"))
 		if (skill < 50)
 			SendSysMessageEx(who, "Voce nao consegue se mover furtivamente!", SSM_FAIL);
 			return 0;
@@ -42,7 +42,7 @@ program skill_Stealth( who )
 	var baseSteps := qtdSteps(who, skill);
 	var atualStep := CInt(GetObjProperty(who, "#steathsteps"));
 	var diff := 15 + atualStep * 10;
-	if (!temHabilidade(who, "Furtividade Aprimorada"))
+	if (!temHabilidade(who, "Espionagem"))
 		diff := diff + 50;
 	endif
 	if (temHabilidade(who, "Misturar-se na Selva"))
