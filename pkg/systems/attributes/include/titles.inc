@@ -24,33 +24,34 @@ include ":attributes:attributes";
  *
  */
 function AP_GetLevelTitle(skill_level)
-	if (skill_level >= 110)
-		return "Lendário";
-	elseif (skill_level >= 100)
-		return "Grão Mestre";
-	elseif (skill_level >= 90)
-		return "Mestre";
-	elseif (skill_level >= 80)
-		return "Experiente";
-	elseif (skill_level >= 70)
-		return "Competente";
-	elseif (skill_level >= 60)
-		return "Treinado";
-	elseif (skill_level >= 50)
-		return "Habilidoso";
-	elseif (skill_level >= 40)
-		return "Aprendiz";
-	elseif (skill_level >= 30)
-		return "Iniciante";
-	elseif (skill_level >= 20)
-		return "Inexperiente";
-	elseif (skill_level >= 10)
-		return "Incompetente";
-	elseif (skill_level >= 5)
-		return "Destreinado";
-	else
-		return "Inábil";
-	endif
+    return skill_level;
+	//if (skill_level >= 110)
+	//	return "Lendário";
+	//elseif (skill_level >= 100)
+	//	return "Grão Mestre";
+	//elseif (skill_level >= 90)
+	//	return "Mestre";
+	//elseif (skill_level >= 80)
+	//	return "Experiente";
+	//elseif (skill_level >= 70)
+	//	return "Competente";
+	//elseif (skill_level >= 60)
+	//	return "Treinado";
+	//elseif (skill_level >= 50)
+	//	return "Habilidoso";
+	//elseif (skill_level >= 40)
+	//	return "Aprendiz";
+	//elseif (skill_level >= 30)
+	//	return "Iniciante";
+	//elseif (skill_level >= 20)
+	//	return "Inexperiente";
+	//elseif (skill_level >= 10)
+	//	return "Incompetente";
+	//elseif (skill_level >= 5)
+	//	return "Destreinado";
+	//else
+	//	return "Inábil";
+	//endif
 /*	
 	skill_level := Cdbl(skill_level);
 

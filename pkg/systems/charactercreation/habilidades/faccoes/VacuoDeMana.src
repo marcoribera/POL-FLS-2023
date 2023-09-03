@@ -33,9 +33,9 @@ program vacuodemana(params)
 	
 	PlayAttackAnimation(attacker);
 	PlayHitSounds(attacker, defender);
+	SendSysMessageEx(attacker, "O panteão zharkiano testemunha sua fé", SSM_INFO);
+	SetObjProperty(attacker, "#golpeceleste", 1);
 	var danomana := (AP_GetVitalMaximumValue(defender, "mana") - AP_GetVital(defender, "mana")) * 1.2;
-	PrintText(defender, "Vacuo de Mana: " + danomana);
 	DamageFLS(defender, danomana, DMG_FORCED, attacker);
 
 endprogram 
-
