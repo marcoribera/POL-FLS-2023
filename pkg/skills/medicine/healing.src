@@ -252,12 +252,12 @@ program UseBandage(mobile, bandage)
 			SendSysMessage(mobile, "Voce parou de usar ataduras.");
 		endif
 		EraseObjProperty(targ, "curando");
-		var chance := 3;
+		var chance := 30;
 		//deixa isso pode ser util
 		if ( temHabilidade(mobile, "Conservar Bandagens") )
-			chance := 15;
+			chance := 90;
 		endif
-		if (RandomInt(10) < chance)
+		if (RandomInt(100) < chance)
 			CreateItemInBackpack(mobile, 0xE20, 1);
 		endif
 	endif

@@ -4,14 +4,14 @@ use uo;
 include ":brainai:npcUtil";
 include ":tn:tngumps";
 include "include/say";
-include ":gumps:yesno";     
+include ":gumps:yesno";
 include ":gumps:requestgump";
 include ":combat:weaponInfo";
 include ":charactercreation:habilidades";
 
 program menumagery(who)
 
-	if (TemHabilidade(who, "Espada Arcana"))
+	if (TemHabilidade(who, "Concentracao Aprimorada"))
 		SendGumpEspadaArcana(who);
 	elseif (TemHabilidade(who, "Magia Divina"))
 		SendGumpMagiaDivina(who);
@@ -19,12 +19,12 @@ program menumagery(who)
 		SendGumpDruida(who);
 	endif
 
-	
 
-endprogram 
+
+endprogram
 
 function SendGumpDruida(who)
-	
+
 	if (!who.cmdlevel)
 	        return;
 	endif
@@ -36,7 +36,7 @@ function SendGumpDruida(who)
 
 	var gump := GFCreateGump();
         GFDisposable(gump, 0);
-	GFResizePic(gump, 0, 25, 3600, 170, 200);	
+	GFResizePic(gump, 0, 25, 3600, 170, 200);
 	GFResizePic(gump, 15, 40, 0x13BE, 140, 170);
 	GFTextLine(gump, 45, 50, 1153, "Magias de Druida");
 
@@ -88,7 +88,7 @@ function SendGumpDruida(who)
 				return 1;
 			else
 				spells.append(animalspell);
-				//spells[i] := animalspell;				
+				//spells[i] := animalspell;
 				SetObjProperty(who, "druidspells", spells);
 				SendSysMessageEx(who, "Voce aprendeu a magia.", SSM_INFO);
 			endif
@@ -103,7 +103,7 @@ function SendGumpDruida(who)
 			SendSysMessageEx(who, "Voce esqueceu a magia.", SSM_INFO);
 		else
 			return;
-		endif		
+		endif
 	else
 		var selectedSpell := struct;
 	       //selectedSpell.id := input[0];
@@ -119,7 +119,7 @@ endfunction
 function SendGumpEspadaArcana(who)
 	var gump := GFCreateGump();
         GFDisposable(gump, 0);
-	GFResizePic(gump, 0, 25, 3600, 170, 200);	
+	GFResizePic(gump, 0, 25, 3600, 170, 200);
 	GFResizePic(gump, 15, 40, 0x13BE, 140, 170);
 	GFTextLine(gump, 45, 50, 1153, "Espada Arcana");
 
@@ -159,7 +159,7 @@ function SendGumpEspadaArcana(who)
 			return;
 		endif
 		if ( CS_GetWeaponInfo(targ, "TwoHanded") == 1)
-			if (!TemHabilidade(who, "Guerreiro Arcano"))
+			if (!TemHabilidade(who, "Maestria de Devastacao"))
 				SendSysMessageEx(who, "Voce precisa usar uma arma de uma mao.", SSM_FAIL);
 				return;
 			endif
@@ -228,10 +228,10 @@ function SendGumpEspadaArcana(who)
 	endif
 endfunction
 
-function SendGumpMagiaDivina(who)	
+function SendGumpMagiaDivina(who)
 	var gump := GFCreateGump();
         GFDisposable(gump, 0);
-	GFResizePic(gump, 0, 25, 3600, 170, 200);	
+	GFResizePic(gump, 0, 25, 3600, 170, 200);
 	GFResizePic(gump, 15, 40, 0x13BE, 140, 170);
 	GFTextLine(gump, 45, 50, 2770, "Magia Divina");
 
@@ -246,17 +246,17 @@ function SendGumpMagiaDivina(who)
 	var input := GFSendGump(who, gump);
 
 
-	if (input[0] == 10)		
+	if (input[0] == 10)
 		SendGumpAuras(who);
 	endif
 endfunction
 
 function SendGumpAuras(who)
 	var virtuoso := 1;
-	
+
 	var gump := GFCreateGump();
         GFDisposable(gump, 0);
-	GFResizePic(gump, 0, 25, 3600, 310, 350);	
+	GFResizePic(gump, 0, 25, 3600, 310, 350);
 	GFResizePic(gump, 15, 40, 0x13BE, 280, 320);
 
 	GFTextLine(gump, 45, 50, 2770, "Auras");
@@ -272,7 +272,7 @@ function SendGumpAuras(who)
 	GFTextLine(gump, 40, 90, 1153, "Protecao" );
 	if (GetObjProperty(who, "auraProtecao"))
 		GFTextLine(gump, 100, 90, 2964, "Ligada" );
-	else 
+	else
 		GFTextLine(gump, 100, 90, 2959, "Desligada" );
 	endif
 	GfAddButton(gump, 20, 93, 2117, 2118, GF_CLOSE_BTN,  10);
@@ -280,7 +280,7 @@ function SendGumpAuras(who)
 	GFTextLine(gump, 40, 130, 1153, "Protecao contra o frio" );
 	if (GetObjProperty(who, "auraProtecaoFrio"))
 		GFTextLine(gump, 190, 130, 2964, "Ligada" );
-	else 
+	else
 		GFTextLine(gump, 190, 130, 2959, "Desligada" );
 	endif
 	GfAddButton(gump, 20, 133, 2117, 2118, GF_CLOSE_BTN,  11);
@@ -288,7 +288,7 @@ function SendGumpAuras(who)
 	GFTextLine(gump, 40, 170, 1153, "Protecao contra o fogo" );
 	if (GetObjProperty(who, "auraProtecaoFogo"))
 		GFTextLine(gump, 190, 170, 2964, "Ligada" );
-	else 
+	else
 		GFTextLine(gump, 190, 170, 2959, "Desligada" );
 	endif
 	GfAddButton(gump, 20, 173, 2117, 2118, GF_CLOSE_BTN,  12);
@@ -296,7 +296,7 @@ function SendGumpAuras(who)
 	GFTextLine(gump, 40, 210, 1153, "Protecao contra energia" );
 	if (GetObjProperty(who, "auraProtecaoEnergia"))
 		GFTextLine(gump, 190, 210, 2964, "Ligada" );
-	else 
+	else
 		GFTextLine(gump, 190, 210, 2959, "Desligada" );
 	endif
 	GfAddButton(gump, 20, 213, 2117, 2118, GF_CLOSE_BTN,  13);
@@ -305,7 +305,7 @@ function SendGumpAuras(who)
 		GFTextLine(gump, 40, 250, 1153, "Cicatrizacao" );
 		if (GetObjProperty(who, "auraHpRegen"))
 			GFTextLine(gump, 190, 250, 2964, "Ligada" );
-		else 
+		else
 			GFTextLine(gump, 190, 250, 2959, "Desligada" );
 		endif
 		GfAddButton(gump, 20, 253, 2117, 2118, GF_CLOSE_BTN,  15);
@@ -313,7 +313,7 @@ function SendGumpAuras(who)
 		GFTextLine(gump, 40, 290, 1153, "Vigor" );
 		if (GetObjProperty(who, "auraStamRegen"))
 			GFTextLine(gump, 190, 290, 2964, "Ligada" );
-		else 
+		else
 			GFTextLine(gump, 190, 290, 2959, "Desligada" );
 		endif
 		GfAddButton(gump, 20, 293, 2117, 2118, GF_CLOSE_BTN,  16);
@@ -321,7 +321,7 @@ function SendGumpAuras(who)
 		GFTextLine(gump, 40, 330, 1153, "Mana" );
 		if (GetObjProperty(who, "auraManaRegen"))
 			GFTextLine(gump, 190, 330, 2964, "Ligada" );
-		else 
+		else
 			GFTextLine(gump, 190, 330, 2959, "Desligada" );
 		endif
 		GfAddButton(gump, 20, 333, 2117, 2118, GF_CLOSE_BTN,  17);
@@ -329,7 +329,7 @@ function SendGumpAuras(who)
 		GFTextLine(gump, 40, 250, 1153, "Dor" );
 		if (GetObjProperty(who, "auraHpSap"))
 			GFTextLine(gump, 190, 250, 2964, "Ligada" );
-		else 
+		else
 			GFTextLine(gump, 190, 250, 2959, "Desligada" );
 		endif
 		GfAddButton(gump, 20, 253, 2117, 2118, GF_CLOSE_BTN,  15);
@@ -337,7 +337,7 @@ function SendGumpAuras(who)
 		GFTextLine(gump, 40, 290, 1153, "Cansaco" );
 		if (GetObjProperty(who, "auraStamSap"))
 			GFTextLine(gump, 190, 290, 2964, "Ligada" );
-		else 
+		else
 			GFTextLine(gump, 190, 290, 2959, "Desligada" );
 		endif
 		GfAddButton(gump, 20, 293, 2117, 2118, GF_CLOSE_BTN,  16);
@@ -345,16 +345,16 @@ function SendGumpAuras(who)
 		GFTextLine(gump, 40, 330, 1153, "Mana" );
 		if (GetObjProperty(who, "auraManaSap"))
 			GFTextLine(gump, 190, 330, 2964, "Ligada" );
-		else 
+		else
 			GFTextLine(gump, 190, 330, 2959, "Desligada" );
 		endif
-		GfAddButton(gump, 20, 333, 2117, 2118, GF_CLOSE_BTN,  17);		
-	endif	
+		GfAddButton(gump, 20, 333, 2117, 2118, GF_CLOSE_BTN,  17);
+	endif
 
 	GFTextLine(gump, 40, 370, 1153, "Protecao contra o mal" );
 	if (GetObjProperty(who, "auraProtectionFromEvil"))
 		GFTextLine(gump, 190, 370, 2964, "Ligada" );
-	else 
+	else
 		GFTextLine(gump, 190, 370, 2959, "Desligada" );
 	endif
 	GfAddButton(gump, 20, 373, 2117, 2118, GF_CLOSE_BTN,  18);
@@ -362,114 +362,114 @@ function SendGumpAuras(who)
 
 	var input := GFSendGump(who, gump);
 
-	if (input[0] == 14)		
+	if (input[0] == 14)
 		if (GetObjProperty(who, "partyAura"))
 			SetObjProperty(who, "partyAura", 0);
-		else 
+		else
 			SetObjProperty(who, "partyAura", 1);
 		endif
 		SendGumpAuras(who);
 	endif
 
 
-	if (input[0] == 10)		
+	if (input[0] == 10)
 		if (GetObjProperty(who, "auraProtecao"))
 			SetObjProperty(who, "auraProtecao", 0);
-		else 
+		else
 			SetObjProperty(who, "auraProtecao", 1);
 		endif
 		SendGumpAuras(who);
 	endif
 
-	if (input[0] == 11)		
+	if (input[0] == 11)
 		if (GetObjProperty(who, "auraProtecaoFrio"))
 			SetObjProperty(who, "auraProtecaoFrio", 0);
-		else 
+		else
 			SetObjProperty(who, "auraProtecaoFrio", 1);
 		endif
 		SendGumpAuras(who);
 	endif
 
-	if (input[0] == 12)		
+	if (input[0] == 12)
 		if (GetObjProperty(who, "auraProtecaoFogo"))
 			SetObjProperty(who, "auraProtecaoFogo", 0);
-		else 
+		else
 			SetObjProperty(who, "auraProtecaoFogo", 1);
 		endif
 		SendGumpAuras(who);
 	endif
 
-	if (input[0] == 13)		
+	if (input[0] == 13)
 		if (GetObjProperty(who, "auraProtecaoEnergia"))
 			SetObjProperty(who, "auraProtecaoEnergia", 0);
-		else 
+		else
 			SetObjProperty(who, "auraProtecaoEnergia", 1);
 		endif
 		SendGumpAuras(who);
 	endif
 
-	if (virtuoso) 
-		if (input[0] == 15)		
+	if (virtuoso)
+		if (input[0] == 15)
 			if (GetObjProperty(who, "auraHpRegen"))
 				SetObjProperty(who, "auraHpRegen", 0);
-			else 
+			else
 				SetObjProperty(who, "auraHpRegen", 1);
 			endif
 			SendGumpAuras(who);
 		endif
 
-		if (input[0] == 16)		
+		if (input[0] == 16)
 			if (GetObjProperty(who, "auraStamRegen"))
 				SetObjProperty(who, "auraStamRegen", 0);
-			else 
+			else
 				SetObjProperty(who, "auraStamRegen", 1);
 			endif
 			SendGumpAuras(who);
 		endif
 
 
-		if (input[0] == 17)		
+		if (input[0] == 17)
 			if (GetObjProperty(who, "auraManaRegen"))
 				SetObjProperty(who, "auraManaRegen", 0);
-			else 
+			else
 				SetObjProperty(who, "auraManaRegen", 1);
 			endif
 			SendGumpAuras(who);
 		endif
 	else
-		if (input[0] == 15)		
+		if (input[0] == 15)
 			if (GetObjProperty(who, "auraHpSap"))
 				SetObjProperty(who, "auraHpSap", 0);
-			else 
+			else
 				SetObjProperty(who, "auraHpSap", 1);
 			endif
 			SendGumpAuras(who);
 		endif
 
-		if (input[0] == 16)		
+		if (input[0] == 16)
 			if (GetObjProperty(who, "auraStamSap"))
 				SetObjProperty(who, "auraStamSap", 0);
-			else 
+			else
 				SetObjProperty(who, "auraStamSap", 1);
 			endif
 			SendGumpAuras(who);
 		endif
 
 
-		if (input[0] == 17)		
+		if (input[0] == 17)
 			if (GetObjProperty(who, "auraManaSap"))
 				SetObjProperty(who, "auraManaSap", 0);
-			else 
+			else
 				SetObjProperty(who, "auraManaSap", 1);
 			endif
 			SendGumpAuras(who);
 		endif
 	endif
 
-	if (input[0] == 18)		
+	if (input[0] == 18)
 		if (GetObjProperty(who, "auraProtectionFromEvil"))
 			SetObjProperty(who, "auraProtectionFromEvil", 0);
-		else 
+		else
 			SetObjProperty(who, "auraProtectionFromEvil", 1);
 		endif
 		SendGumpAuras(who);

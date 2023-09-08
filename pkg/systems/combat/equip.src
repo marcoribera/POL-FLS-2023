@@ -26,10 +26,10 @@ var descmod:={};
 
 		var ori_name:=who.name;
 		SetName(who, " ");
-		SetName(who, ori_name);	
+		SetName(who, ori_name);
 	endif
-				
-	
+
+
 	if (who.npctemplate)
 		return 1;
 	endif
@@ -40,8 +40,8 @@ var descmod:={};
 	endif
 
 	if (GetObjProperty(who, "metamorfose") != error)
-		if (TemHabilidade(who, "Adornos da Besta"))
-			if (item.isa(POLCLASS_WEAPON) || item.isa(POLCLASS_ARMOR))	
+		if (TemHabilidade(who, "Treinamento Druidico"))
+			if (item.isa(POLCLASS_WEAPON) || item.isa(POLCLASS_ARMOR))
 				SendSysMessageEx(who, "Voce nao pode equipar nada nessa forma.");
 				return 0;
 			endif

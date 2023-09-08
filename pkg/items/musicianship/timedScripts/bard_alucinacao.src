@@ -14,7 +14,7 @@ program TimedScript_bard_alucinacao(params)
 		PrintTextAbovePrivate(alvo, "*Alucinado*", caster, BARD_FONT, BARD_FONT_COLOR_BAD);
 		while (GetObjProperty(alvo, "#Alucinado"))
 			Hallucinate(alvo);
-    		Sleepms(3000-(modificador*5));
+    		Sleepms(3000);
 	  	endwhile
 	endif
 	return 1;
@@ -25,12 +25,12 @@ function Hallucinate(who)
 		return 0;
 	endif
 	var graphicarray;
-	var chardata := GetObjProperty(who, "chardata");
+	/*var chardata := GetObjProperty(who, "chardata");
 	var povo := chardata.povo;
 	case (povo)
-		"Asanita":
-			graphicarray := {102,306,311,174}; //DEMONIO, IMPALADOR, CAVALEIRO SOMBRIO, SUCUBBUS.
-			break;
+		"Asanita": */
+			graphicarray := {102,306,311,174,3,7,17,26,38,69,76,77,72,87,250,271,59,281,788,787,3,7,17,26,1,2,49,55}; //DEMONIO, IMPALADOR, CAVALEIRO SOMBRIO, SUCUBBUS.
+	/*		break;
 		"Thuriao":
 			graphicarray := {1,2,49,55}; //OGRO, ETTIN, DRAGÃO WYRM, TROLL DO GELO.
 			break;
@@ -51,7 +51,7 @@ function Hallucinate(who)
 			break;
 		break;
 	endcase
-
+	*/
 	var graphic := graphicarray[RandomInt(len(graphicarray)) + 1];
 	var color := RandomInt(99) + 2;
 	DrawGamePlayer(who, graphic, color);

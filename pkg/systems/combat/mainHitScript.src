@@ -107,7 +107,7 @@ program MainHitScript( params )
 	endif
 	if(TemHabilidade(attacker, "Flanquear"))
 		if(IsBehind(defender,attacker.x, attacker.y))
-			basedamage := basedamage + basedamage * 0.1;
+			basedamage := basedamage + basedamage * 0.2; //+20% de dano
 		endif
 	endif
 	WeaponHitScripts(attacker, defender, weapon, armor, basedamage, rawdamage);
@@ -683,10 +683,13 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 
 	if (GetObjProperty(attacker, "kit") == "Mago de Combate")
 		skillCriticalBonus := CInt(AP_GetSkill(attacker, MAGICLORE)/20); //Aplica bonus de magiclore na chance de critico quando é Mago de Combate
-	elseif(categoriaDefender == "GiantAnimal" || categoriaDefender == "Animal" || categoriaDefender == "EvilAnimal" || categoriaDefender == "Snow" || categoriaDefender == "Mount" || categoriaDefender == "Plantas" || categoriaDefender == "Terathan" || categoriaDefender == "Dragon")
-		skillCriticalBonus := CInt(AP_GetSkill(attacker, SURVIVAL)/20); //Aplica bonus de Survival se forem criaturas selvagens ou dragões
+	elseif (GetObjProperty(attacker, "kit") == "Medico de Combate")
+		skillCriticalBonus := CInt(AP_GetSkill(attacker, MEDICINE)/20); //Aplica bonus de medicine na chance de critico quando é Medico de Combate
 	else
 		skillCriticalBonus := CInt(AP_GetSkill(attacker, TACTICS)/20); //Aplica bonus de tactics na chance de critico quando não é nenhum caso específico
+		if(categoriaDefender == "GiantAnimal" || categoriaDefender == "Animal" || categoriaDefender == "EvilAnimal" || categoriaDefender == "Snow" || categoriaDefender == "Mount" || categoriaDefender == "Plantas" || categoriaDefender == "Terathan" || categoriaDefender == "Dragon")
+			skillCriticalBonus := skillCriticalBonus + CInt(AP_GetSkill(attacker, SURVIVAL)/10); //Aplica bonus de Survival se forem criaturas selvagens ou dragões
+		endif
 	endif
 
 	//critico base da arma, critico extra da CProp da da arma, critico extra do CProp do personagem, critico extra da skill do personagem, critico extra de Habilidade especial do personagem

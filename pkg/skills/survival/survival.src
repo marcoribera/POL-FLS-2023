@@ -46,11 +46,11 @@ function InitGump(who)
 	GFTextLine(gump, 47, 100, 800, "Rastreamento de Itens");
 	GFAddButton(gump, 30, 104,  2103, 2104, GF_CLOSE_BTN, 2 );
 
-	var ifres := GFSendGump(who, gump);	
+	var ifres := GFSendGump(who, gump);
 
 	if (ifres[0] != 0)
 		if (ifres[0] == 1)
-			MobileTracking(who);	
+			MobileTracking(who);
 		endif
 		if (ifres[0] == 2)
 			ItemTracking(who);
@@ -61,7 +61,7 @@ endfunction
 
 function MobileTracking(who)
 	var diff := 1;
-	if (TemHabilidade(who, "Rastrear Aprimorado"))
+	if (TemHabilidade(who, "Sobrevivencia do Grupo"))
 		diff := -30;
 	endif
 	SendSysMessage(who, "dif: "+diff);
@@ -72,7 +72,7 @@ function MobileTracking(who)
 		if (range< 25)
 			range:= 25;
 		endif
-		if (TemHabilidade(who, "Rastrear Aprimorado"))
+		if (TemHabilidade(who, "Sobrevivencia do Grupo"))
 			range := range + 15;
 		endif
 		var nmobiles := ListMobilesNearLocationEX(who.x,who.y, LIST_IGNORE_Z, range, 0x03, who.realm);
@@ -170,7 +170,7 @@ function TrackGump(who, mobiles)
 	   endif
 	endforeach
 
-	var ifres := GFSendGump(who, gump);	
+	var ifres := GFSendGump(who, gump);
 
 	if (ifres[0] != 0)
 		var mobontrack := mobiles[ifres[0]];
@@ -207,10 +207,10 @@ function ItemTrackGump(who, items)
 		b := b + 1;
 		if (y > 380)
 			x := x + 150;
-			y := 0;		
+			y := 0;
 		endif
 		temcoisa := 1;
-		
+
 		elseif(item.objtype == 0xa5a)
 				itemarray.append(item);
 				GFTextLine(gump, (47 + x), (70 + y), 800, "Oasis");
@@ -219,11 +219,11 @@ function ItemTrackGump(who, items)
 				b := b + 1;
 					if (y > 380)
 						x := x + 150;
-						y := 0;		
+						y := 0;
 					endif
 				temcoisa := 1;
-				
-				
+
+
      	   elseif(item.isa(POLCLASS_CORPSE))
 		itemarray.append(item);
 		GFTextLine(gump, (47 + x), (70 + y), 800, "Corpo");
@@ -232,7 +232,7 @@ function ItemTrackGump(who, items)
 		b := b + 1;
 		if (y > 380)
 			x := x + 150;
-			y := 0;		
+			y := 0;
 		endif
 		temcoisa := 1;
 	   endif
@@ -242,7 +242,7 @@ function ItemTrackGump(who, items)
 		SendSysMessage(who, "Nao ha itens para serem rastreados", 3, 660);
 		return;
 	endif
-	var ifres := GFSendGump(who, gump);	
+	var ifres := GFSendGump(who, gump);
 
 	if (ifres[0] != 0)
 		var mobname := 0;
@@ -256,7 +256,7 @@ endfunction
 
 //gump individual
 function CreatureTrack(who, mobontrack, mobname)
-	
+
 	var local;
 	var end := 0;
 
@@ -292,7 +292,7 @@ function CreatureTrack(who, mobontrack, mobname)
 	GFTextLine(gump, 47, 200, 800, "Marcar no mapa");
 	GFAddButton(gump, 30, 204,  2103, 2104, GF_CLOSE_BTN, 6 );
 
-	var ifres := GFSendGump(who, gump);	
+	var ifres := GFSendGump(who, gump);
 
 
 	if (ifres[0] == 1)
@@ -462,13 +462,13 @@ function GetMobDesc(who, mobile)
 if ((mobile.graphic == 400) || (mobile.graphic == 401))
 	var itemonmobile := ListEquippedItems( mobile );
 	foreach item in itemonmobile
-		if (item.graphic == 5903) 
+		if (item.graphic == 5903)
 			if (CheckLineOfSight( who, mobile ) && (mobile.hidden == 0))
 				return mobile.name + " [" + MobLocalizateSigla(who, mobile) + "]";
 			else
 				return "Humanoide com Sapatos" + " [" + MobLocalizateSigla(who, mobile) + "]";
 			endif
-		elseif (item.graphic == 5901) 
+		elseif (item.graphic == 5901)
 			if (CheckLineOfSight( who, mobile ) && (!mobile.hidden))
 				return mobile.name + " [" + MobLocalizateSigla(who, mobile) + "]";
 			else
@@ -479,8 +479,8 @@ if ((mobile.graphic == 400) || (mobile.graphic == 401))
 				return mobile.name+ " [" + MobLocalizateSigla(who, mobile) + "]";
 			else
 				return "Humanoide com Botas"+ " [" + MobLocalizateSigla(who, mobile) + "]";
-			endif		
-		elseif (item.graphic == 5905) 
+			endif
+		elseif (item.graphic == 5905)
 			if (CheckLineOfSight( who, mobile ) && (mobile.hidden == 0))
 				return mobile.name+ " [" + MobLocalizateSigla(who, mobile) + "]";
 			else
@@ -498,8 +498,8 @@ if ((mobile.graphic == 400) || (mobile.graphic == 401))
 			return mobile.name+ " [" + MobLocalizateSigla(who, mobile) + "]";
 		else
 			return "Humanoide Descalco"+ " [" + MobLocalizateSigla(who, mobile) + "]";
-		endif	
-	
+		endif
+
 elseif (mobile.graphic == 1) return "Ogro" + " [" + MobLocalizateSigla(who, mobile) + "]";;
 elseif (mobile.graphic == 776) return "Sahagin Pequeno" + " [" + MobLocalizateSigla(who, mobile) + "]";;
 elseif (mobile.graphic == 795) return "Sahagin" + " [" + MobLocalizateSigla(who, mobile) + "]";;

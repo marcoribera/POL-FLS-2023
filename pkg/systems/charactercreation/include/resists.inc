@@ -37,35 +37,32 @@ function GetResist(who, resist)
 	// Aplica os bonus e redutores dos Kits
 	if (kit == "Fortitude do Urso")
 		if (resist == FORTITUDE)
-			valor := valor + 20; // +200% do VALOR_REFERENCIA
-		else
-			valor := valor - 10; // -100% do VALOR_REFERENCIA
+			valor := valor + 30;
 		endif
 	elseif (kit == "Reflexos de Pantera")
 		if (resist == REFLEXOS)
-			valor := valor + 20; // +200% do VALOR_REFERENCIA
-		else
-			valor := valor - 10; // -100% do VALOR_REFERENCIA
+			valor := valor + 30;
 		endif
 	elseif (kit == "Vontade da Aguia")
 		if (resist == VONTADE)
-			valor := valor + 20; // +200% do VALOR_REFERENCIA
-		else
-			valor := valor - 10; // -100% do VALOR_REFERENCIA
+			valor := valor + 30;
 		endif
 	endif
 
 	if (resist == FORTITUDE)
+		if (TemHabilidade(who, "Grande Fortitude"))
+			valor := valor + 30;
+		endif
 
 		// Aplica os bonus base do Caminho para a resistência
 		if (classe == "Guerreiro")
-			valor := valor + 30; // +300% do VALOR_REFERENCIA
+			valor := valor + 20;
 		else
-			valor := valor + 15; // +150% do VALOR_REFERENCIA
+			valor := valor + 10;
 		endif
 
 		// Aplica bonus de Atributo atual para a resistência
-		valor := valor + CInt(AP_GetStat(who, STRENGTH)/10); // STRENGTH % do VALOR_REFERENCIA
+		valor := valor + CInt(AP_GetStat(who, STRENGTH)/4); // STRENGTH % do VALOR_REFERENCIA
 
 		// Aplica os modificadores temporários para a resistência
 		valor := valor + CInt(GetObjProperty(who, "#FortitudeMod"));
@@ -74,13 +71,13 @@ function GetResist(who, resist)
 
 		// Aplica os bonus base do Caminho para a resistência
 		if (classe == "Ladino")
-			valor := valor + 30; // +300% do VALOR_REFERENCIA
+			valor := valor + 20;
 		else
-			valor := valor + 15; // +150% do VALOR_REFERENCIA
+			valor := valor + 10;
 		endif
 
 		// Aplica bonus de Atributo atual para a resistência
-		valor := valor + CInt(AP_GetStat(who, DEXTERITY)/10); // DEXTERITY % do VALOR_REFERENCIA
+		valor := valor + CInt(AP_GetStat(who, DEXTERITY)/4); // DEXTERITY % do VALOR_REFERENCIA
 
 
 		// Aplica os modificadores temporários para a resistência
@@ -90,13 +87,13 @@ function GetResist(who, resist)
 
 		// Aplica os bonus base do Caminho para a resistência
 		if (classe == "Sabio")
-			valor := valor + 30; // +300% do VALOR_REFERENCIA
+			valor := valor + 20; // +300% do VALOR_REFERENCIA
 		else
-			valor := valor + 15; // +150% do VALOR_REFERENCIA
+			valor := valor + 10; // +150% do VALOR_REFERENCIA
 		endif
 
 		// Aplica bonus de Atributo atual para a resistência
-		valor := valor + CInt(AP_GetStat(who, INTELLIGENCE)/10); // INTELLIGENCE % do VALOR_REFERENCIA
+		valor := valor + CInt(AP_GetStat(who, INTELLIGENCE)/4); // INTELLIGENCE % do VALOR_REFERENCIA
 
 		// Aplica os modificadores temporários para a resistência
 		valor := valor + CInt(GetObjProperty(who, "#VontadeMod"));

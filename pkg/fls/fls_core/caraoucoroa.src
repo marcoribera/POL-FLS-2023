@@ -16,7 +16,7 @@ program cara_ou_coroa(who,item)
 
 	EraseObjProperty(who, "IsMeditating");
 	var cara;
-	if (TemHabilidade(who, "Maos Habilidosas"))
+	if (TemHabilidade(who, "Prestidigitador"))
 		var usarhab := YesNo(who, "Deseja usar sua habilidade de roubar o resultado?" , "Sim.", "Não.");
 
 		if (usarhab)

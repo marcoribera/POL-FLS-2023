@@ -33,7 +33,7 @@ program SpellScript(params)
 		endif
 	endif
 
-	if (temHabilidade(who, "Maldicao do Sangue de Asan"))
+	if (temHabilidade(who, "Tocado por Asan"))
 		if (isBloodied(who))
 			dmg := CInt(dmg*1.5);
 		endif

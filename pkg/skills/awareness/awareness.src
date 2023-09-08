@@ -22,22 +22,27 @@ program skill_Alertness(who)
 
 	var menu := choose(who);
 	if (menu == 1)
-		return examinarAlvo(who);
+		if (!examinarAlvo(who))
+			SendSysMessageEx(who, "Voce nao encontrou nada de diferente.", SSM_INFO);
+			return 1;
+		endif
 	elseif (menu == 2)
 		if(who.hidden)
-			SendSysMessageEx(who, "Procurando algo. [furtivamente]", SSM_INFO);
+			SendSysMessageEx(who, "Procurando algo", SSM_INFO);
 		else
 			PrintTextAbove(who, "*Procurando algo*");
-			SendSysMessageEx(who, "Procurando algo.", SSM_INFO);
 		endif
-		return examinarArea(who);
+		if ( !examinarArea(who) )
+			SendSysMessageEx(who, "Voce nao encontrou nada de diferente.", SSM_INFO);
+			return 1;
+		endif
 	else
 		var ignore := GetObjProperty(who, "IgnoreHidden");
 		if (ignore)
-			SendSysMessageEx(who, "Modo Passivo Ligado!", SSM_INFO);
+			SendSysMessageEx(who, "Modo Passivo Ligado. Procure e revela passivamente!", SSM_INFO);
 			EraseObjProperty(who, "IgnoreHidden");
 		else
-			SendSysMessageEx(who, "Modo Passivo Desligado!", SSM_FAIL);
+			SendSysMessageEx(who, "Modo Passivo Desligado. Percebe, mas não revela passivamente!", SSM_FAIL);
 			SetObjProperty(who, "IgnoreHidden", 1);
 		endif
 	endif

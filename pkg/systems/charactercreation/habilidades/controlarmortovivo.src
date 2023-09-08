@@ -1,0 +1,25 @@
+use uo;
+
+include ":timedScripts:timedScripts";
+include "include/say";
+include ":taming:taming";
+include "include/client";
+include ":brainai:npcUtil";
+
+program controlar(who)
+
+    var cfg := ReadConfigFile(":brainai:npcdesc");
+
+	SendSysMessageEx(who, "Escolha o morto para controlar.", SSM_REQUEST);
+	var targ := Target(who);
+    var npctemplate := NPC_ParseTemplateName(targ.npctemplate);
+
+	if (cfg[npctemplate.template].Category != "Undead")
+		SendSysMessage(who, "Este nao e um alvo valido");
+		return 1;
+	endif
+
+	
+	TS_StartTimer(targ, "controlarmortovivo", 120, 1, who);
+
+endprogram 

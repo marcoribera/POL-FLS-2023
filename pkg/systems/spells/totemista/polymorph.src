@@ -34,15 +34,21 @@ program summontotem(params)
 	var cfg  :=  ReadConfigFile(":spells:allspells");
 	var elem := FindConfigElem(cfg, spellid);
 	var graphic := getConfigInt(elem, "graphic");
-	
+
 	var skill_a := getConfigInt(elem, "skill_a");
 	var skill_d := getConfigInt(elem, "skill_d");
+	if (temHabilidade(who, "Forma Atroz"))
+		var bonus := CINT(AP_GetSkill(who, MAGICLORE)/5);
+		skill_a := skill_a + bonus;
+		skill_d := skill_d + bonus;
+	endif
+
 
 	var dicedmg := getConfigString(elem, "dicedmg");
 	var hitsmod := getConfigInt(elem, "hitsmod");
 	var resistmod := getConfigInt(elem, "resistmod");
 	var template := getConfigString(elem, "template");
-	var snd := getConfigInt(elem, "snd");	
+	var snd := getConfigInt(elem, "snd");
 	var namepoly:=GetConfigString(elem, "namepoly");
 
 	//seta os mods
@@ -50,14 +56,14 @@ program summontotem(params)
 	SetObjProperty(who, "skill_d", skill_d);
 	SetObjProperty(who, "dicedmg", dicedmg);
 	SetObjProperty(who, "polymorphhitsmod", hitsmod);
-	
-	
+
+
 	SetObjProperty(who, "resitmod", resistmod);
 	who.resist_physical_mod := who.resist_physical_mod + resistmod;
 	SetObjProperty(who, "hitsmod", hitsmod + hitsmod);
 	recalcvitals(who);
 	HealDamage(who, hitsmod);
-	
+
 
 
 	if (graphic == error)
@@ -65,23 +71,27 @@ program summontotem(params)
 			return;
 	endif
 	var metamorfosetime := 1 + AP_GetSkill(who, MAGICLORE) *10;
-	
+
+	if(temHabilidade(who,"Fera Natural"))
+		metamorfosetime := metamorfosetime * 2;
+	endif
+
 	Transforma(who, template, snd, graphic,namepoly);
 	TS_StartTimer(who, "metamorfosedruida", metamorfosetime);
-	
+
 	return 1;
 
 endprogram
 
 
 function Transforma(who, animal, snd, graphic,namepoly)
-	
-	
+
+
 	// Alterado por Edmond
 	if (GetObjProperty(who,"charname") == error)
 		SetObjProperty(who,"charname",who.name);
 	endif
-	
+
 	UnequipAll(who);
 	PerformAction(who, ANIM_CAST_AREA);
 

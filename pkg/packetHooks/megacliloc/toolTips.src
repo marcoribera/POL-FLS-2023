@@ -17,7 +17,8 @@ const OFFSET_LENGTH_ID       := 0x13;
 const OFFSET_UNICODE_TEXT    := 0x14;
 
 function GetDmgStringDesc(elem, item)
-
+	return  CSTR(elem.MinDam) + "-" + CSTR(elem.MaxDam);
+	/*
 	var avgdmg := cint(elem.MinDam + elem.MaxDam)/2;
 
 	if(avgdmg >= 20)
@@ -35,6 +36,7 @@ function GetDmgStringDesc(elem, item)
 	else
 		return "Inofensivo";
 	endif
+	*/
 
 endfunction
 
@@ -50,8 +52,9 @@ function getQuality(num)
 
 endfunction
 
-function getCondition(item)
-
+function getCondition(item) //Durabilidade dos itens
+	return CSTR(item.hp) + "/" + CSTR(item.maxhp);
+	/*
 	var c := cdbl(item.hp) / cdbl(item.maxhp);
 
 	if (c > 0.9)
@@ -63,9 +66,8 @@ function getCondition(item)
 	else
 		return "Quebradiça";
 	endif
+	*/
 endfunction
-
-
 
 function TranslateCritical(crit)
 	if (crit == "damage3")
@@ -79,7 +81,7 @@ function TranslateCritical(crit)
 	elseif (Crit == "bleed")
 		return "Alvejar Ponto Vital";
 	endif
-		
+
 endfunction
 
 
@@ -88,7 +90,7 @@ function GetCriticalInfo(entry)
 	var criticals := GetconfigStringArray(entry, "CriticalHitScripts");
 
 	var critstr := "";
-	
+
 	var str;
 	foreach crit in criticals
 		str := ParseScriptString(crit);
@@ -124,7 +126,7 @@ function GetHitsInfo(entry)
 	var criticals := GetconfigStringArray(entry, "HitScripts");
 
 	var critstr := "";
-	
+
 	var str;
 	foreach crit in criticals
 		str := ParseScriptString(crit);
@@ -135,8 +137,16 @@ function GetHitsInfo(entry)
 
 endfunction
 
-function getVelStringDesc(elem, item)
-
+function getVelStringDesc(elem, item) //Velocidade da arma. Mostra diferença pra item base
+	var difer := item.speed - elem.speed;
+	if (difer > 0)
+		return CSTR(item.speed) + " (+" + CSTR(difer) + ")";
+	elseif (difer < 0)
+		return CSTR(elem.speed) + " (" + CSTR(difer) + ")";
+	else
+		return CSTR(elem.speed);
+	endif
+	/*
 	if(speed >= 39)
 		return "Extrema";
 	elseif(speed >= 34)
@@ -152,16 +162,57 @@ function getVelStringDesc(elem, item)
 	else
 		return "Extremamente Lenta";
 	endif
-
+	*/
 
 endfunction
 
+function getParryBonus(elem, item)
+	var parrybonusI := Cint(item.parrybonus);
+	var parrybonusE := Cint(elem.parrybonus);
+	var difer := parrybonusI - parrybonusE;
+	if (difer > 0)
+		return CSTR(parrybonusE) + " (+" + CSTR(difer) + ")";
+	elseif (difer < 0)
+		return CSTR(parrybonusE) + " (" + CSTR(difer) + ")";
+	else
+		return CSTR(parrybonusE);
+		endif
+	return 0;
+endfunction
+
+function getParryDelay(elem, item)
+	var parrydelayI := Cint(item.parrydelay);
+	var parrydelayE := Cint(elem.parrydelay);
+	var difer := parrydelayI - parrydelayE;
+	if (difer > 0)
+		return CSTR(parrydelayE) + " (+" + CSTR(difer) + ")";
+	elseif (difer < 0)
+		return CSTR(parrydelayE) + " (" + CSTR(difer) + ")";
+	else
+		return CSTR(parrydelayE);
+	endif
+	return 0;
+endfunction
+
+function getDexPenalty(elem, item)
+	var DexPenaltyI := Cint(item.DexPenalty);
+	var DexPenaltyE := Cint(elem.DexPenalty);
+	var difer := DexPenaltyI - DexPenaltyE;
+	if (difer > 0)
+		return CSTR(DexPenaltyE) + " (+" + CSTR(difer) + ")";
+	elseif (difer < 0)
+		return CSTR(DexPenaltyE) + " (" + CSTR(difer) + ")";
+	else
+		return CSTR(DexPenaltyE);
+	endif
+	return 0;
+endfunction
 
 function ParseScriptString(crit)
 
 	var str := "";
 	var i := 1;
-	
+
 	while(crit[i] != "/")
 		i := i + 1;
 	endwhile
@@ -196,11 +247,7 @@ exported function MegaCliloc( who, byref packet )
 
 		if( item.IsA(POLCLASS_MOBILE) )
 			Object_Name := item.name;
-			var raca := item.title_race;
-			if (raca)
-				Object_Name := Object_Name  + " [" + raca + "]";
-			endif
-			
+
 			if (item.npctemplate)
 				if (who.weapon.attribute != WRESTLING)
 					if (AP_GetSkill(item, WRESTLING)+10 > AP_GetSkill(who, who.weapon.attribute))
@@ -222,12 +269,28 @@ exported function MegaCliloc( who, byref packet )
 					endif
 
 				endif
+			else
+				var conhecidos := dictionary;
+				if(GetObjProperty(who, "conhecidos"))
+					conhecidos := GetObjProperty(who, "conhecidos"); //Lista de pessoas conhecidadas
+					if(item.serial in conhecidos)
+						Object_Name := conhecidos[item.serial];
+					endif
+				else
+					Object_Name := "??????";
+				endif
+				/*
+				var raca := item.title_race;
+				if (raca)
+					Object_Name := Object_Name  + " [" + raca + "]";
+				endif
+				*/
 			endif
-			
+
 			// Let's get the characters hightlight color.
 			// This is just an example, NPC's and stuff will still have to be added
 			// ofcourse. :)
-			// Setting the text color for the object's name will only show 
+			// Setting the text color for the object's name will only show
 			// if the object's name has changed. So it's been left commented out for now.
 			//if (xObject.murderer)
 			//	Text_Color := "FF0000";
@@ -243,7 +306,7 @@ exported function MegaCliloc( who, byref packet )
 		// If you try to break a new line in the first cliloc(below) it doesn't
 		// display right for some reason.
 		// If you want to change the color of the Object's name.
-		// Use this. 
+		// Use this.
 		// Object_Name := CAscZ("<BASEFONT COLOR=#" + Text_Color + ">" + Object_Name);
 
 		Object_Name := CAscZ(Object_Name);
@@ -273,7 +336,7 @@ exported function MegaCliloc( who, byref packet )
 			endif
 		endif
 
-		
+
 		 var descmods := GetObjProperty(item, "descmod");
 
 		if((descmods!=error) && (desc == error))
@@ -294,7 +357,7 @@ exported function MegaCliloc( who, byref packet )
 			if (linguagem!=error)
 					//var linguas := GetObjProperty(who, "linguas");
 					//i//f (linguagem in linguas)
-					if (temHabilidade(who, "Arqueologo"))
+					if (temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica"))
 						xDesc := xDesc + white + "" + desc + "<BR>";
 					else
 						xDesc :=  xDesc + "*Inscrições em Língua Desconhecida*<BR>";
@@ -312,14 +375,16 @@ exported function MegaCliloc( who, byref packet )
 				xDesc := xDesc + white + "Excepcional<br>";
 			endif
 			var cond := GetCondition(item);
+			xDesc := xDesc + GetCondition(item) + "<br>";
+			/*
 			if (cond != "Boa")
 	 			xDesc := xDesc + GetCondition(item) + "<br>";
 			endif
-
+			*/
 			if (item.isA(POLCLASS_WEAPON))
 				xDesc := xDesc + "Min Str: " + elem.strrequired + "<br>";
-//				xDesc := xDesc + "Dano: " + GetDmgStringDesc(elem,  item) + "<br>";
-//				xDesc := xDesc + "Velocidade: " + GetVelStringDesc(elem, item) + "<br>";
+				xDesc := xDesc + "Dano: " + GetDmgStringDesc(elem,  item) + "<br>";
+				xDesc := xDesc + "Velocidade: " + GetVelStringDesc(elem, item) + "<br>";
 				var crits := GetCriticalInfo(elem);
 				if (crits != "")
 					xDesc := xDesc + red + crits;
@@ -342,15 +407,23 @@ exported function MegaCliloc( who, byref packet )
 				endif
 				if ( (item.damage_poison + item.damage_poison_mod != 0))
 					xDesc := xDesc  + "Veneno " + (item.damage_poison ) + "<br>";
-				endif		
-			
+				endif
+
 			elseif (item.isA(POLCLASS_ARMOR))
 				if (cint(elem.strrequired) > 0)
 					xDesc := xDesc + "Min Str: " + elem.strrequired + "<br>";
 				endif
-				
+				if (item.DexPenalty)
+					xDesc := xDesc + "Redutor Dex : " + getDexPenalty(elem, item) + "<br>";
+				endif
+				if (item.parrybonus)
+					xDesc := xDesc + "Block Bonus: " + getParryBonus(elem, item) + "<br>";
+				endif
+				if (item.parrydelay)
+					xDesc := xDesc + "Delay Bonus: " + getParryDelay(elem, item) + "<br>";
+				endif
 			endif
-		
+
 		endif
 
 		var pplmage := GetObjProperty(item, "magicwho"); //magic lore
@@ -418,7 +491,7 @@ exported function MegaCliloc( who, byref packet )
 		if ( getObjProperty(item, "swordmage") == who.serial)
 			var gems := getobjproperty(item, "gems");
 			foreach gem in (gems.keys())
-				xDesc := xDesc + white + gem + " - "+ getSwordSpellName(gems[gem].id) + "<br>";	
+				xDesc := xDesc + white + gem + " - "+ getSwordSpellName(gems[gem].id) + "<br>";
 			endforeach
 		endif
 

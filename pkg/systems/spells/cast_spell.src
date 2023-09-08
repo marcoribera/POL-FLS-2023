@@ -39,14 +39,14 @@ program SpellStarter(params)
 	endif
 
 	if ( GetObjProperty(mobile, "metamorfose") != error )
-		if ( !TemHabilidade(mobile, "Invocacao Animal"))
+		if ( !TemHabilidade(mobile, "Treinamento Druidico"))
 			SendSysMessageEx(mobile, "Voce nao pode usar magias metamorfoseado.");
 			return 1;
 		endif
 	endif
 
 	//se magia nao for de swordmage e tiver kit de swordmage, retorna.
-	if ( (spellinfo.spelltype != "Swordmage") && (TemHabilidade(mobile, "Espada Arcana")))
+	if ( (spellinfo.spelltype != "Swordmage") && (TemHabilidade(mobile, "Concentracao Aprimorada")))
 		SendSysMessageEx(mobile, "Voce nao pode utilizar essas magias.", SSM_FAIL);
 		return 1;
 	endif
@@ -174,7 +174,7 @@ program SpellStarter(params)
 
 		while(cycles)
 			// If mobile is injured and does not have the protection spell on, fail the spell
-			if ( (orig_hp > AP_GetVital(mobile, "Hits") &&  (GetObjProperty(mobile, "kit") != "Mago de Combate") ) )
+			if ( (orig_hp > AP_GetVital(mobile, "Hits") &&  !TemHabilidade(mobile, "Concentracao Aprimorada")) )
 				SendSysMessageEx(mobile, "Voce nao conseguiu se concentrar o suficiente para invocar esta magia.", SSM_FAIL);
 				FailSpell(mobile);
 				if (TemHabilidade(mobile, "Mago Precavido"))

@@ -825,15 +825,15 @@ function Corromper(who, spell, targ)
 	elseif ((corrupcao >= 10000) && (corrupcao < 14999) )
 		if (GetObjProperty(who, "corruptionalert") < 2)
 			SendSysMessageEx(who, "Sua corrupcao agora aumentou de 'baixa' para 'razoavel'.", SSM_FAIL);
-			SendSysMessageEx(who, "Voce comeca a sentir os efeitos da insanidade.", SSM_INFO);
+			//SendSysMessageEx(who, "Voce comeca a sentir os efeitos da insanidade.", SSM_INFO);
 			SetObjProperty(who, "corruptionalert", 2);
 		endif
 	elseif ((corrupcao >= 15000) && (corrupcao < 19999) )
 		if (GetObjProperty(who, "corruptionalert") < 3)
 			SendSysMessageEx(who, "Sua corrupcao agora aumentou de 'razoavel' para 'alta'.", SSM_FAIL);
-			SendSysMessageEx(who, "Voce esta ficando insano.", SSM_INFO);
+			//SendSysMessageEx(who, "Voce esta ficando insano.", SSM_INFO);
 			SetObjProperty(who, "corruptionalert", 3);
-
+/*
 			var originalcorruptionbody := struct;
 			var mybeard := GetEquipmentByLayer(who, LAYER_BEARD);
 			var myhair := GetEquipmentByLayer(who, LAYER_HAIR);
@@ -851,13 +851,14 @@ function Corromper(who, spell, targ)
 					myhair.color := 0;
 					SendSysMessageEx(who, "Seus cabelos perderam a cor!!", SSM_FAIL);
 			endcase
-
+*/
 		endif
 	elseif (corrupcao >= 20000)
 		if (GetObjProperty(who, "corruptionalert") < 4)
 			SendSysMessageEx(who, "Sua corrupcao agora aumentou de 'alta' para 'muito alta'.", SSM_FAIL);
-			SendSysMessageEx(who, "A insanidade agora faz parte do seu dia-a-dia.", SSM_INFO);
+			//SendSysMessageEx(who, "A insanidade agora faz parte do seu dia-a-dia.", SSM_INFO);
 			SetObjProperty(who, "corruptionalert", 4);
+/*
 			case ( RandomIntMinMax(1,3) )
 				1:
 					SetObjProperty(who, "BloodColor", 72);
@@ -870,6 +871,7 @@ function Corromper(who, spell, targ)
 					SetObjProperty(who, "description", str);
 					SendSysMessageEx(who, "As veias por baixo de sua pele parece estar mais escuras!!", SSM_FAIL);
 			endcase
+*/
 		endif
 	endif
 	//fim da checagem

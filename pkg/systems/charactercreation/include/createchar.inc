@@ -11,20 +11,20 @@ function ApplySkillCap(who)
 	var classe := GetObjProperty(who, "classe");
 	if (classe != error)
 
-		var secundarias := getSecundarias(who);		
+		var secundarias := getSecundarias(who);
 		foreach secundaria in secundarias
 			if ( AP_GetTrueSkill(who, secundaria) > 70 )
 				AP_SetTrueSkill(who, secundaria, 70);
 			endif
-		endif
+		endforeach
 
 		var terciarias := getTerciarias(who);
 		foreach terciaria in terciarias
 			if ( AP_GetTrueSkill(who, terciaria) > 40 )
 				AP_SetTrueSkill(who, terciaria, 40);
 			endif
-		endif
-		
+		endforeach
+
 
 	endif
 
@@ -46,7 +46,7 @@ function getTerciarias(who)
 		endif
 	endforeach
 
-	
+
 	return primarias;
 
 endfunction
@@ -68,7 +68,7 @@ function getSecundarias(who)
 		endif
 	endforeach
 
-	
+
 	return primarias;
 
 endfunction
@@ -90,7 +90,7 @@ function getPrimarias(who)
 		endif
 	endforeach
 
-	
+
 	return primarias;
 
 endfunction
@@ -103,7 +103,7 @@ function AP_AttributeNameToSkillId(skill)
 	var elem := AP_GetAttributeCfgElem(skill);
 	var id := elem.SkillId;
 	return id;
-endfunction 
+endfunction
 
 function AP_SkillIdToAttributeName(skillid)
 	if (skillid == 90)
@@ -128,13 +128,13 @@ function CreateBasicRecipes()
  	spellinfo1.+name := "Pocao de cura leve";
  	spellinfo1.+id := 56321;
 	spellinfo1.+description := "Sua formula ja esta bastante conhecida entre os alquimistas, basta utilizar duas raizes de ginseng e destilar o extrato. Dificuldade facil.";
-	
+
 	x.append(spellinfo1);
 
 	var spellinfo2 := struct;
 	spellinfo2.+name := "Pocao de cura media";
 	spellinfo2.+id := 56322;
-	spellinfo2.+description := "Aumentando o numero de raizes da cura leve para quatro, obtem-se um extrato mais forte e com propriedades curativas melhores. Dificuldade media."; 
+	spellinfo2.+description := "Aumentando o numero de raizes da cura leve para quatro, obtem-se um extrato mais forte e com propriedades curativas melhores. Dificuldade media.";
 	x.append(spellinfo2);
 
 
@@ -152,7 +152,7 @@ function CreateBasicRecipes()
 
 	var spellinfo5 := struct;
 	spellinfo5.+name := "Pocao explosiva fraca";
-        spellinfo5.+id := 0xef60;		                 
+        spellinfo5.+id := 0xef60;
 	spellinfo5.+description := "Utilizando quatro cinzas de enxofre e possivel fazer um artefato explosivo. Dificuldade baixa.";
 	x.append(spellinfo5);
 
@@ -162,7 +162,7 @@ function CreateBasicRecipes()
 	spellinfo6.+description := "Utilizando seis porcoes cinzas de enxofre e possivel fazer um artefato explosivo que causa estragos consideraveis. Dificuldade media.";
 	x.append(spellinfo6);
 
-	
+
 	var spellinfo7 := struct;
 	spellinfo7.+name := "Antidoto fraco";
         spellinfo7.+id := 0xdc14;
@@ -208,9 +208,9 @@ function CreateBasicRecipes()
         spellinfo13.id := 0xbf07;
 	spellinfo13.+description := "Duas terra ferteis tambem pode ser fertil pros pensamentos aumentando a atividade cerebral. Dificuldade baixa.";
 	x.append(spellinfo13);
-	
 
-	
+
+
 
 	return x;
 endfunction

@@ -26,7 +26,7 @@ include ":timeutils:time";
  */
 function DP_PlayDeathSound(object)
 	var death_sound := 0;
-	
+
 	if ( object.IsA(POLCLASS_CORPSE) )
 		var template := GetObjProperty(object, "npctemplate"); // Set by core
 		if ( template )
@@ -51,7 +51,7 @@ function DP_PlayDeathSound(object)
 	if ( death_sound )
 		PlaySoundEffect(object, death_sound);
 	endif
-	
+
 	return death_sound;
 endfunction
 
@@ -61,9 +61,9 @@ function CheckDeathPoints(who)
 
 	if (!who.npctemplate)
 		//if (who.cmdlevel < 1)
-			
+
 			var deathpoints := RegenerateDeathPoints(who);
-			
+
 			deathpoints += 1;
 
 			if( deathpoints >= 4 )
@@ -112,7 +112,7 @@ function RegenerateDeathPoints(who)
 			//	RegenDpStats(who, ratio);
 			//endif
 
-			var deathPointsToHeal = deathpoints - 3; //calcula quanto de stat tem q regenerar
+			var deathPointsToHeal := deathpoints - 3; //calcula quanto de stat tem q regenerar
 			if (deathPointsToHeal > 0)
 				RegenDpStats(who, deathPointsToHeal);
 			endif
@@ -132,7 +132,7 @@ function RegenerateDeathPoints(who)
 	SetObjProperty(who, "deathpoints", deathpoints);
 
 	return deathpoints;
-	
+
 endfunction
 
 function RegenDpStats(who, ratio)

@@ -7,7 +7,7 @@ include ":musicianship:bardmusic";
 program TimedScript_bard_inspirar_competencia(params)
 	var alvo := params[1];
 	var caster := params[2];
-	var modificador := CInt(params[3]/10);
+	var modificador := CInt(params[3]/5);
 	var teste := GetObjProperty(alvo, "#Bard_inspirar_competencia");
 	if(teste) //verifica se ja esta sob efeito similar
 		if(modificador > teste) //se o novo efeito é maior, aplica a diferença

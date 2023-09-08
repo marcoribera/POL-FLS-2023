@@ -23,7 +23,7 @@ program SpellScript(params)
 
 	var lvl := cint(AP_GetSkill(who, MAGICLORE)/25);
 
-	if (temHabilidade(who, "Maldicao do Sangue de Asan"))
+	if (temHabilidade(who, "Tocado por Asan"))
 		if (isBloodied(who))
 			lvl := lvl+1;
 		endif

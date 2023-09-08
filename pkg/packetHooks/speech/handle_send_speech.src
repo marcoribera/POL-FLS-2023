@@ -82,19 +82,19 @@ exported function handleUCOutgoing( character, byref packet )
 	if( !CheckLineOfSight(source, character) )
 		if(type == 0x09)
 			return 0;
-		elseif(temHabilidade(character,"mestre espiao"))
-				return 0;
-			else
-				if (temHabilidade(character, "Espionar"))
-					// Viadagem do kata removida
-					if (Distance(character, source) < 12 && abs(character.z - source.z ) < 19) // A hab só serve pra ouvir até 8 tile e 19 z
-						return 0;
-					else
-						return 1;
-					endif
+		elseif(temHabilidade(character,"Mestre Espiao"))
+			return 0;
+		else
+			if (temHabilidade(character, "Espionar"))
+				// Viadagem do kata removida
+				if (Distance(character, source) < 12 && abs(character.z - source.z ) < 19) // A hab só serve pra ouvir até 8 tile e 19 z
+					return 0;
 				else
 					return 1;
 				endif
+			else
+				return 1;
+			endif
 		endif
 	endif
 

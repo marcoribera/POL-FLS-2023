@@ -211,11 +211,11 @@ function preenchePartituraMagica(byref item, mag:=0) //mag é um parametro a ser
 				tempo[_nota_iter] := 300;
 			endforeach
 			break;
-		BARD_STR_DEX_DOWN:
-			desc := "Hino do Frota de Bel Sereg"; //Contribuição de CJ com base em cancoes militares
-			compositor := "Cleudson, o pescador";
+		BARD_INSPIRAR_HEROISMO:
+			desc := "Herois do Cerco"; //Contribuição de CJ com base em cancoes militares ATHOSIADO
+			compositor := "Cleudson, o menestrel";
 			notas := {"L","D","G","A","A#","D","A#","F#","G","G","L","F","D#","D","C","D#","F","G","G","D","L","D","F#","G","A","C","A","A#","G","A","A","L","G","F#","D#","D#","D","C","D#","G","D","L","D","G","A","A#","D","A#","A","D","F#","G","G","L","G","C","D","D#","D","C","G","D#","C","C","L","C","D#","F","G","D#","C","G","A","A#","A#","L","A#","A","G","D","F#","A","A#","A","G","G","L","D","G","F","D","D","A","C","A#","D","F","A","G","G","D#","L","D#","A","G","C","C","D","C","G","G","A#","A","G","F","L","D","G","F","D","D","C","A#","F","F","D#","D","D","C","G","L","G","A","G","F","F","F#","D","A#","A","A","G","F","A#","L","D","G","A","A#","D","A#","A","D","F","G","G","L","F","D#","D","C","D#","F","G","G","D","L","D","F#","G","A","C","A","A#","G","A","A","L","G","A#","D#","D#","D","C","D#","G","D"};//"G","A","A#","A","G","D","F","D#","F","D#","D","A","C","A#","A","G","A#","A","G","A","G","G","A","A#","A","G","D","F","D#","D","A","D","D","F","|","G","G","G","A#","A","G","A","A","A","C","A#","A","A#","A#","A#","D","C","A#","C","C","A#","A","G","G","G","A#","A","G","A","A","A","C","A#","A","A#","A#","A#","D","C","A#","C","C","A#","A","G","D","D","C#","C#",
-			letra := {"Qual cisne branco que em noite de lua","Vai deslizando num lago azul","O meu navio tambem flutua"," Nos grandes mares de Norte a Sul","Linda galera que em noite apagada","Vai navegando num mar imenso","Nos traz saudades da patria amada"," Da patria minha em que tanto penso","Qual linda garca que ai vai cruzando os ares","Vai navegando sob um belo ceu de anil","Minha galera tambem vai cruzando os mares","Os mares belos e os rios","Quanta alegria nos traz a volta"," A nossa Patria do coracao","Dada por finda a nossa derrota","Temos cumprido nossa missao"};
+			letra := {"O cerco jah durava","tantos sois que perdi a conta quando no ceu despontava","Nossas mulheres e criancas raptadas","subjugadas, violadas e desesperadas","Esse foi o Cerco a Cidadela","um periodo de pouca ou nenhuma cautela","Quem o diga nosso querido Arauto"," que em uma nobre acao para muitos","acabou, pelo orc General, facilmente enganado","Coube a Emister nossa suma santidade","a tarefa de livrar dos orcs nossa cidade","Balian, Cailan, Lucca, Benjamin, Gaiznom e Cantrell","eram os nobres guerreiros que ele acompanhava","A cada machadada ou espada atravessada","o sangue verde dos orcs jorrava","e assim o fogo na cidade se apagava"};
 			foreach nota in notas
 				tempo[_nota_iter] := 370;
 			endforeach
@@ -243,7 +243,7 @@ function preenchePartituraMagica(byref item, mag:=0) //mag é um parametro a ser
 			tempo := {700,600,600,600,500,450,450,700,600,700,500,500,600,500,500,700,450,500,500,500,450,450,450,450,500,500,700,500,600,500,500,700};
 			//PartituraDebug(notas,tempo);
 			break;
-		BARD_INSPIRAR_HEROISMO: //Roberta Criou
+		BARD_STR_DEX_DOWN: //Roberta Criou
 			desc := "A Marcha Imperial"; //The Imperial March: John Williams
 			compositor := "Cajuzinho Doce";
 			notas := {"G","G","G","D#","A#","G","D#","A#","G","D2","D2","D2","D#2","A#","F#","D#","A#","G","G2","G","G","G2","F#2","F2","E2","D#2","E2","G#","C#2","C2","B","A#","A","A#","D#","F#","D#","F#","A#","G","A#","D2","G2","G","G","G2","F#2","F2","E2","D#2","E2","G#","C#2","C2","B","A#","A","A#","D#","F#","D#","A#","G","D#","A#","G"};
@@ -377,7 +377,7 @@ endfunction
 
 //funcao pra tocar as musicas simples de bardo
 function tocarBasico(byref who, byref item) //Habilita os efeitos magicos da musica e manda tocar o som da musica
-	if (!TemHabilidade(who, "Talento Musical"))
+	if (!TemHabilidade(who, "Talento Musical") && !TemHabilidade(who, "Compositor Talentoso"))
 		return basicoSom(who,item,0);//Efeito de som errado
 		return 0;
 	elseif(Cint(GetObjProperty(who, "#MagicaMusic")) > ReadGameClock()) //verifica se pode voltar a tocar
@@ -390,7 +390,7 @@ endfunction
 
 //funcao para tocar as partituras
 function tocarPartitura(byref who, byref instrumento, byref partitura) //Habilita os efeitos magicos da partitura e manda tocar o som da musica
-	if (!TemHabilidade(who, "Talento Musical"))
+	if (!TemHabilidade(who, "Talento Musical") && !TemHabilidade(who, "Compositor Talentoso"))
 		SendSysMessage(who, "Voce nao entende essa partitura.",BARD_FONT,BARD_FONT_COLOR_BAD);
 		return 0;
 	elseif(Cint(GetObjProperty(who, "#MagicaMusic")) > ReadGameClock()) //verifica se pode voltar a tocar
@@ -825,7 +825,7 @@ function partituraSom(byref who,byref instrumento,byref partitura)
 endfunction
 
 function escrevePartitura(byref who, byref partitura)
-	if (TemHabilidade(who, "Talento Musical"))
+	if (TemHabilidade(who, "Talento Musical") || TemHabilidade(who, "Compositor Talentoso"))
 		printtextabove(who, "*Escrevendo a partitura*",BARD_FONT,0);
 		PlaySoundEffect(who, 0x24a); //Toca som de escrita
 		sleepms(2000);
@@ -835,9 +835,9 @@ function escrevePartitura(byref who, byref partitura)
 		var magica;
 
 		if (TemHabilidade(who, "Compositor Talentoso")) //muitas vezes mais chance que um bardo comum de conseguir escrever uma partitura lendária
-			magica := 1 + RandomInt(200);
+			magica := 1 + RandomInt(60);
 		else
-			magica := 1 + RandomInt(3000);
+			magica := 1 + RandomInt(1000);
 		endif
 
 		Set_Critical(1); //Força o codigo a rodar sem parar da criação da partitura escrita até a exclusão da partitura em branco
@@ -1339,32 +1339,50 @@ function AplicaEfeito(byref who,nomedoefeito,byref duration,byref modifier,byref
 		ALVO_BUFF_PLAYER:
 			mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x01, who.realm); //Alvo Player Normal
 			foreach mobile in mobiles
-				if ((mobile.connected) && (mobile != who) && (mobile.acctname))
-					TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-					PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+				if ((mobile.connected) && (mobile != who))
+					if (mobile.acctname)
+						TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+						PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+					elseif (GetObjProperty(mobile,"owner"))
+						TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+						PrintTextAbovePrivate(mobile, mensagemSucesso, SystemFindObjectBySerial(CInt(GetObjProperty(mobile,"owner"))), BARD_FONT, BARD_FONT_COLOR_GOOD);
+					endif
 				endif
 			endforeach
 			mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x02, who.realm); //Alvo Player Escondido
 			foreach mobile in mobiles
-				if ((mobile.connected) && (mobile != who) && (mobile.acctname))
-					TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-					PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+				if ((mobile.connected) && (mobile != who))
+					if (mobile.acctname)
+						TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+						PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+					elseif (GetObjProperty(mobile,"owner"))
+						TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+						PrintTextAbovePrivate(mobile, mensagemSucesso, SystemFindObjectBySerial(CInt(GetObjProperty(mobile,"owner"))), BARD_FONT, BARD_FONT_COLOR_GOOD);
+					endif
 				endif
 			endforeach
 			break;
 		ALVO_BUFF_NO_PLAYER:
 			mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x01, who.realm); //Alvo Nao Player Normal
 			foreach mobile in mobiles
-				if ((mobile.connected) && (mobile != who) && (!mobile.acctname))
-					TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-					PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+				if ((mobile.connected) && (mobile != who))
+					if (!mobile.acctname)
+						if (!GetObjProperty(mobile,"owner"))
+							TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+							PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+						endif
+					endif
 				endif
 			endforeach
 			mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x02, who.realm); //Alvo Nao Player Escondido
 			foreach mobile in mobiles
-				if ((mobile.connected) && (mobile != who) && (!mobile.acctname))
-					TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-					PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+				if ((mobile.connected) && (mobile != who))
+					if (!mobile.acctname)
+						if (!GetObjProperty(mobile,"owner"))
+							TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+							PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+						endif
+					endif
 				endif
 			endforeach
 			break;
@@ -1386,20 +1404,36 @@ function AplicaEfeito(byref who,nomedoefeito,byref duration,byref modifier,byref
 				endforeach
 			else //Alvos membros da mesma Party
 				mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x01, who.realm); //Alvo da Party Normal
+				var dono;
 				foreach mobile in mobiles
-					if ((mobile.connected) && (mobile != who) && (mobile.acctname) && (who.Party == mobile.Party))
-						TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-						PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+					if ((mobile.connected) && (mobile != who))
+						if ((mobile.acctname) && (who.Party == mobile.Party))
+							TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+							PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+						elseif (GetObjProperty(mobile,"owner"))
+							dono := SystemFindObjectBySerial(CInt(GetObjProperty(mobile,"owner")));
+							if (who.Party == dono.Party)
+								TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+								PrintTextAbovePrivate(mobile, mensagemSucesso, dono, BARD_FONT, BARD_FONT_COLOR_GOOD);
+							endif
+						endif
 					endif
 				endforeach
 				mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x02, who.realm); //Alvo da Party Escondido
 				foreach mobile in mobiles
-					if ((mobile.connected) && (mobile != who) && (mobile.acctname) && (who.Party == mobile.Party))
-						TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-						PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+					if ((mobile.connected) && (mobile != who))
+						if ((mobile.acctname) && (who.Party == mobile.Party))
+							TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+							PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+						elseif (GetObjProperty(mobile,"owner"))
+							dono := SystemFindObjectBySerial(CInt(GetObjProperty(mobile,"owner")));
+							if (who.Party == dono.Party)
+								TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+								PrintTextAbovePrivate(mobile, mensagemSucesso, dono, BARD_FONT, BARD_FONT_COLOR_GOOD);
+							endif
+						endif
 					endif
 				endforeach
-				break;
 			endif
 			break;
 		ALVO_BUFF_NO_PARTY:
@@ -1419,21 +1453,47 @@ function AplicaEfeito(byref who,nomedoefeito,byref duration,byref modifier,byref
 					endif
 				endforeach
 			else //Alvos nao membros da mesma Party
-				mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x01, who.realm); //Alvo Nao Party Normal
+				mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x01, who.realm); //Alvo da Party Normal
+				var dono;
 				foreach mobile in mobiles
-					if ((mobile.connected) && (mobile != who) && (who.Party != mobile.Party))
-						TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-						PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+					if ((mobile.connected) && (mobile != who))
+						if (mobile.acctname)
+							if (who.Party != mobile.Party)
+								TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+								PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+							endif
+						elseif (GetObjProperty(mobile,"owner"))
+							dono := SystemFindObjectBySerial(CInt(GetObjProperty(mobile,"owner")));
+							if (who.Party != dono.Party)
+								TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+								PrintTextAbovePrivate(mobile, mensagemSucesso, dono, BARD_FONT, BARD_FONT_COLOR_GOOD);
+							endif
+						else
+							TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+							PrintTextAbovePrivate(mobile, mensagemSucesso, dono, BARD_FONT, BARD_FONT_COLOR_GOOD);
+						endif
 					endif
 				endforeach
-				mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x02, who.realm); //Alvo Nao Party Escondido
+				mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x02, who.realm); //Alvo da Party Escondido
 				foreach mobile in mobiles
-					if ((mobile.connected) && (mobile != who) && (who.Party != mobile.Party))
-						TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-						PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+					if ((mobile.connected) && (mobile != who))
+						if (mobile.acctname)
+							if (who.Party != mobile.Party)
+								TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+								PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_GOOD);
+							endif
+						elseif (GetObjProperty(mobile,"owner"))
+							dono := SystemFindObjectBySerial(CInt(GetObjProperty(mobile,"owner")));
+							if (who.Party != dono.Party)
+								TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+								PrintTextAbovePrivate(mobile, mensagemSucesso, dono, BARD_FONT, BARD_FONT_COLOR_GOOD);
+							endif
+						else
+							TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+							PrintTextAbovePrivate(mobile, mensagemSucesso, dono, BARD_FONT, BARD_FONT_COLOR_GOOD);
+						endif
 					endif
 				endforeach
-				break;
 			endif
 			break;
 		ALVO_BUFF_EVIL:
@@ -1453,8 +1513,6 @@ function AplicaEfeito(byref who,nomedoefeito,byref duration,byref modifier,byref
 				endif
 			endforeach
 			break;
-
-		//TODO: Adicionar Testes de resistencia
 		ALVO_DEBUFF_TODOS:
 			mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x01, who.realm); //Alvo Normal
 			foreach mobile in mobiles
@@ -1484,25 +1542,45 @@ function AplicaEfeito(byref who,nomedoefeito,byref duration,byref modifier,byref
 		ALVO_DEBUFF_PLAYER:
 			mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x01, who.realm); //Alvo Player Normal
 			foreach mobile in mobiles
-				if ((mobile.connected) && (mobile != who) && (mobile.acctname))
-					resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
-					if(!resistiu)
-						TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-						PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
-					else
-						PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+				if ((mobile.connected) && (mobile != who))
+					if (mobile.acctname)
+						resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+						if(!resistiu)
+							TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+							PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
+						else
+							PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+						endif
+					elseif (GetObjProperty(mobile,"owner"))
+						resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+						if(!resistiu)
+							TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+							PrintTextAbovePrivate(mobile, mensagemSucesso, SystemFindObjectBySerial(CInt(GetObjProperty(mobile,"owner"))), BARD_FONT, BARD_FONT_COLOR_BAD);
+						else
+							PrintTextAbovePrivate(mobile, "resistiu", SystemFindObjectBySerial(CInt(GetObjProperty(mobile,"owner"))), BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+						endif
 					endif
 				endif
 			endforeach
 			mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x02, who.realm); //Alvo Player Escondido
 			foreach mobile in mobiles
-				if ((mobile.connected) && (mobile != who) && (mobile.acctname))
-					resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
-					if(!resistiu)
-						TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-						PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
-					else
-						PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+				if ((mobile.connected) && (mobile != who))
+					if (mobile.acctname)
+						resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+						if(!resistiu)
+							TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+							PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
+						else
+							PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+						endif
+					elseif (GetObjProperty(mobile,"owner"))
+						resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+						if(!resistiu)
+							TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+							PrintTextAbovePrivate(mobile, mensagemSucesso, SystemFindObjectBySerial(CInt(GetObjProperty(mobile,"owner"))), BARD_FONT, BARD_FONT_COLOR_BAD);
+						else
+							PrintTextAbovePrivate(mobile, "resistiu", SystemFindObjectBySerial(CInt(GetObjProperty(mobile,"owner"))), BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+						endif
 					endif
 				endif
 			endforeach
@@ -1510,25 +1588,33 @@ function AplicaEfeito(byref who,nomedoefeito,byref duration,byref modifier,byref
 		ALVO_DEBUFF_NO_PLAYER:
 			mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x01, who.realm); //Alvo Nao Player Normal
 			foreach mobile in mobiles
-				if ((mobile.connected) && (mobile != who) && (!mobile.acctname))
-					resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
-					if(!resistiu)
-						TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-						PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
-					else
-						PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+				if ((mobile.connected) && (mobile != who))
+					if (!mobile.acctname)
+						if (!GetObjProperty(mobile,"owner"))
+							resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+							if(!resistiu)
+								TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+								PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
+							else
+								PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+							endif
+						endif
 					endif
 				endif
 			endforeach
 			mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x02, who.realm); //Alvo Nao Player Escondido
 			foreach mobile in mobiles
-				if ((mobile.connected) && (mobile != who) && (!mobile.acctname))
-					resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
-					if(!resistiu)
-						TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-						PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
-					else
-						PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+				if ((mobile.connected) && (mobile != who))
+					if (!mobile.acctname)
+						if (!GetObjProperty(mobile,"owner"))
+							resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+							if(!resistiu)
+								TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+								PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
+							else
+								PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+							endif
+						endif
 					endif
 				endif
 			endforeach
@@ -1561,30 +1647,60 @@ function AplicaEfeito(byref who,nomedoefeito,byref duration,byref modifier,byref
 				endforeach
 			else //Alvos membros da mesma Party
 				mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x01, who.realm); //Alvo da Party Normal
+				var dono;
 				foreach mobile in mobiles
-					if ((mobile.connected) && (mobile != who) && (mobile.acctname) && (who.Party == mobile.Party))
-						resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
-						if(!resistiu)
-							TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-							PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
-						else
-							PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+					if ((mobile.connected) && (mobile != who))
+						if (mobile.acctname)
+							if (who.Party == mobile.Party)
+								resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+								if(!resistiu)
+									TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+									PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
+								else
+									PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+								endif
+							endif
+						elseif (GetObjProperty(mobile,"owner"))
+							dono := SystemFindObjectBySerial(CInt(GetObjProperty(mobile,"owner")));
+							if (who.Party == dono.Party)
+								resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+								if(!resistiu)
+									TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+									PrintTextAbovePrivate(mobile, mensagemSucesso, dono, BARD_FONT, BARD_FONT_COLOR_BAD);
+								else
+									PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+								endif
+							endif
 						endif
 					endif
 				endforeach
 				mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x02, who.realm); //Alvo da Party Escondido
 				foreach mobile in mobiles
-					if ((mobile.connected) && (mobile != who) && (mobile.acctname) && (who.Party == mobile.Party))
-						resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
-						if(!resistiu)
-							TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-							PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
-						else
-							PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+					if ((mobile.connected) && (mobile != who))
+						if (mobile.acctname)
+							if (who.Party == mobile.Party)
+								resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+								if(!resistiu)
+									TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+									PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
+								else
+									PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+								endif
+							endif
+						elseif (GetObjProperty(mobile,"owner"))
+							dono := SystemFindObjectBySerial(CInt(GetObjProperty(mobile,"owner")));
+							if (who.Party == dono.Party)
+								resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+								if(!resistiu)
+									TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+									PrintTextAbovePrivate(mobile, mensagemSucesso, dono, BARD_FONT, BARD_FONT_COLOR_BAD);
+								else
+									PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+								endif
+							endif
 						endif
 					endif
 				endforeach
-				break;
 			endif
 			break;
 		ALVO_DEBUFF_NO_PARTY:
@@ -1614,31 +1730,67 @@ function AplicaEfeito(byref who,nomedoefeito,byref duration,byref modifier,byref
 					endif
 				endforeach
 			else //Alvos nao membros da mesma Party
-				mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x01, who.realm); //Alvo Nao Party Normal
+				mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x01, who.realm); //Alvo da Party Normal
+				var dono;
 				foreach mobile in mobiles
-					if ((mobile.connected) && (mobile != who) && (who.Party != mobile.Party))
-						resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
-						if(!resistiu)
-							TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-							PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
+					if ((mobile.connected) && (mobile != who))
+						if (mobile.acctname)
+							if (who.Party != mobile.Party)
+								resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+								if(!resistiu)
+									TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+									PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
+								else
+									PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+								endif
+							endif
+						elseif (GetObjProperty(mobile,"owner"))
+							dono := SystemFindObjectBySerial(CInt(GetObjProperty(mobile,"owner")));
+							if (who.Party != dono.Party)
+								resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+								if(!resistiu)
+									TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+									PrintTextAbovePrivate(mobile, mensagemSucesso, dono, BARD_FONT, BARD_FONT_COLOR_BAD);
+								else
+									PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+								endif
+							endif
 						else
-							PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+							resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+							if(!resistiu)
+								TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+								PrintTextAbovePrivate(mobile, mensagemSucesso, dono, BARD_FONT, BARD_FONT_COLOR_BAD);
+							else
+								PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+							endif
 						endif
 					endif
 				endforeach
-				mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x02, who.realm); //Alvo Nao Party Escondido
+				mobiles := ListMobilesNearLocationEx(who.x, who.y, who.z, range, 0x02, who.realm); //Alvo da Party Escondido
 				foreach mobile in mobiles
-					if ((mobile.connected) && (mobile != who) && (who.Party != mobile.Party))
-						resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
-						if(!resistiu)
-							TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
-							PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
-						else
-							PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+					if ((mobile.connected) && (mobile != who))
+						if ((mobile.acctname) && (who.Party != mobile.Party))
+							resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+							if(!resistiu)
+								TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+								PrintTextAbovePrivate(mobile, mensagemSucesso, mobile, BARD_FONT, BARD_FONT_COLOR_BAD);
+							else
+								PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+							endif
+						elseif (GetObjProperty(mobile,"owner"))
+							dono := SystemFindObjectBySerial(CInt(GetObjProperty(mobile,"owner")));
+							if (who.Party != dono.Party)
+								resistiu := CheckResist(mobile, VONTADE, 30, resistencia_mod); //Alvo passou no teste de resistencia
+								if(!resistiu)
+									TS_StartTimer(mobile, nomedoefeito, duration, modifier, who, 0);
+									PrintTextAbovePrivate(mobile, mensagemSucesso, dono, BARD_FONT, BARD_FONT_COLOR_BAD);
+								else
+									PrintTextAbovePrivate(mobile, "resistiu", who, BARD_FONT, BARD_FONT_COLOR_NEUTRA); //avisa ao bardo que o alvo resistiu
+								endif
+							endif
 						endif
 					endif
 				endforeach
-				break;
 			endif
 			break;
 		ALVO_DEBUFF_EVIL:
@@ -1679,11 +1831,11 @@ function musicaEfeitos(byref who, byref magica, byref tempo) //DOING
 	//Verifica os tipos de alvo selecionados pelo comando .bardo para Buffs e Debuffs
 	var alvos;
 	if (TemHabilidade(who, "Dominio Musical"))
-		alvos := GetObjProperty(who, "#BardTargets");
+		alvos := GetObjProperty(who, "BardTargets");
 	endif
 	if(!alvos)	//caso nao esteja definico o tipo de algo, inicializa com o padrao
 		alvos := struct{"Buffs":=ALVO_BUFF_TODOS, "Debuffs":=ALVO_DEBUFF_TODOS};
-		SetObjProperty(who, "#BardTargets",struct{"Buffs":=ALVO_BUFF_TODOS, "Debuffs":=ALVO_DEBUFF_TODOS});
+		SetObjProperty(who, "BardTargets",struct{"Buffs":=ALVO_BUFF_TODOS, "Debuffs":=ALVO_DEBUFF_TODOS});
 	endif
 
 	var MagicLore := AP_GetSkill(who, MAGICLORE);
@@ -1694,23 +1846,23 @@ function musicaEfeitos(byref who, byref magica, byref tempo) //DOING
 	var range := 0;
 	var duration := tempo;
 	var sound_duration := tempo/1000;
-	var resistencia_mod := - CInt(MagicLore/2.5);  //Redutor nos testes de resistência inimigos
+	var resistencia_mod := - CInt(MagicLore/2.0);  //Redutor nos testes de resistência inimigos
 	var HarmoniaPerfeita, Vituperio;
 
 	//Calcula o modificador base da intensidade dos efeitos
-	if(MagicLore <= 40)
+	if(MagicLore < 40)
 		modifier := 5 + CInt(MagicLore/10); //limite 5-9
 		range := 2 + CInt(MagicLore/10); //limite 2-6
 		duration  := (tempo * (1.0 + (MagicLore/400)))/1000; //limite 1.0-1.1 vezes o tempo base
-	elseif (MagicLore <= 70)
+	elseif (MagicLore < 70)
 		modifier := 5 + CInt(MagicLore/5); //limite 13-19
 		range := 5 + CInt(MagicLore/10); //limite 9-12
 		duration  := (tempo * (1.0 + (MagicLore/200)))/1000; //limite 1.2-1.35 vezes o tempo base
-	elseif (MagicLore <= 100)
+	elseif (MagicLore < 100)
 		modifier := 5 + CInt(MagicLore/4); //limite 22-30
 		range := CInt(MagicLore/5); //limite 14-20
 		duration  := (tempo * (1.0 + (MagicLore/100)))/1000; //limite 1.7-2.0 vezes o tempo base
-	elseif (MagicLore > 100) //Lendário
+	elseif (MagicLore >= 100) //Lendário
 		modifier := 5 + CInt(MagicLore/2); //limite 55-60
 		range := CInt(MagicLore/5); //limite 14-20
 		duration  := (tempo * (1.0 + (MagicLore/50)))/1000; //limite 3.0-3.2 vezes o tempo base
@@ -1723,40 +1875,42 @@ function musicaEfeitos(byref who, byref magica, byref tempo) //DOING
 	//Aplica os efeitos de várias habilidades de nível
 
 	if (TemHabilidade(who, "Musica Persistente"))
-		duration := duration * 2; //dobra a duração base das cancoes
+		duration := duration * 1.5; //dobra a duração base das cancoes
 	endif
 	if (TemHabilidade(who, "Musica Alta"))
-		range := range + 5; //dobra a area de efeito das cancoes
+		range := range + 5; //aumenta a area de efeito das cancoes
 	endif
 
-	//Habilita eficacia extra nos buffs OU debuffs, nunca os dois
+	BuffModifier := modifier;  //porder base dos Buffs
+	DebuffModifier := modifier; //poder base do Debuffs
+
+	//Habilita eficacia extra nos buffs e debuffs
 	if (TemHabilidade(who, "Musica Contagiante"))
-		BuffModifier := modifier * 2;  //dobra o porder dos Buffs
-		DebuffModifier := modifier; //Debuffs com poder base
-	elseif (TemHabilidade(who, "Musica da Alma"))
-		BuffModifier := modifier;  //buffs com poder base
-		DebuffModifier := modifier * 1.5;  //aumenta o porder dos Buffs
+		BuffModifier := modifier * 1.2;  //aumenta o porder dos Buffs
+	endif
+
+	if (TemHabilidade(who, "Musica da Alma"))
+		DebuffModifier := modifier * 1.2;  //aumenta o porder dos Debuffs
 		resistencia_mod := resistencia_mod - 20; //torna os Debuffs mais dificies de resistir
-	else
-		BuffModifier := modifier;  //buffs com poder base
-		DebuffModifier := modifier; //Debuffs com poder base
 	endif
 
 	if (TemHabilidade(who, "Mestre do Improviso"))
+		BuffModifier := modifier * 1.2;
+		DebuffModifier := modifier * 1.2;  //aumenta o porder dos Debuffs
 		resistencia_mod := resistencia_mod - 40; //torna os Debuffs muito mais dificies de resistir
 	endif
 
 	//Habilita efeitos extras nos buffs OU debuffs, nunca os dois
 
+	HarmoniaPerfeita := 0;
+	Vituperio := 0;
+
 	if (TemHabilidade(who, "Harmonia Perfeita"))
 		HarmoniaPerfeita := 1;
-		Vituperio := 0;
-	elseif (TemHabilidade(who, "Vituperio"))
+	endif
+	if (TemHabilidade(who, "Vituperio"))
 		HarmoniaPerfeita := 0;
 		Vituperio := 1;
-	else
-		HarmoniaPerfeita := 0;
-		Vituperio := 0;
 	endif
 
 	var resistiu;
@@ -1853,67 +2007,22 @@ function musicaEfeitos(byref who, byref magica, byref tempo) //DOING
 			AplicaEfeito(who,"bard_int_down",duration,CInt(DebuffModifier*0.8),range,alvos.Debuffs,"*Desconcertado(a)*",resistencia_mod);
 			break;
 		BARD_INSPIRAR_COMPETENCIA: //concede buffs em pericias não combativas nem magicas a UM aliado escolhido
-			var mobile;
-			var ok := 0;
-			SendSysMessage(who, "Selecione alguem para inspirar Competencia.", BARD_FONT, BARD_FONT_COLOR_ITEM);
-			//Verifica se o alvo é valido
-			do
-				mobile := target(who);
-				if ((mobile.connected) && (mobile.acctname) && (mobile != who)) //se o alvo for personagem de jogador e diferente do bardo
-					ok := 1;
-				elseif(!mobile)
-					return BARD_ENCERRA;
-				else
-					SendSysMessage(who, "Alvo invalido. Escolha um personagem jogador que nao o seu", BARD_FONT, BARD_FONT_COLOR_TARGET);
-				endif
-			dowhile (ok == 0);
-			PrintTextAbove(mobile, "*Tocando musica ispiradora*", BARD_FONT, BARD_FONT_COLOR); //Exibe sobre cabeca do bardo
+			PrintTextAbove(who, "*Tocando musica ispiradora*", BARD_FONT, BARD_FONT_COLOR); //Exibe sobre cabeca do bardo
 			TS_StartTimer(who, "bard_tocando", sound_duration, 5, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			TS_StartTimer(mobile, "bard_inspirar_competencia", duration, modifier, who, 0);
-			PrintTextAbovePrivate(mobile, "*Focado no trabalho*", mobile, BARD_FONT, BARD_FONT_COLOR_NEUTRA);
+			AplicaEfeito(who,"bard_inspirar_competencia",duration,CInt(BuffModifier),range,alvos.Buffs,"*Focado(a)*",resistencia_mod);
 			break;
 		BARD_INSPIRAR_HEROISMO: //concede bônus de combate a UM aliado escolhido
-			var mobile;
-			var ok := 0;
-			SendSysMessage(who, "Selecione alguem para Inspirar Heroismo.", BARD_FONT, BARD_FONT_COLOR_ITEM);
-			//Verifica se o alvo é valido
-			do
-				mobile := target(who);
-				if ((mobile.connected) && (mobile.acctname) && (mobile != who)) //se o alvo for personagem de jogador e diferente do bardo
-					ok := 1;
-				elseif(!mobile)
-					return BARD_ENCERRA;
-				else
-					SendSysMessage(who, "Alvo invalido. Escolha um personagem jogador que nao o seu", BARD_FONT, BARD_FONT_COLOR_TARGET);
-				endif
-			dowhile (ok == 0);
-			PrintTextAbove(mobile, "*Tocando musica inspiradora*", BARD_FONT, BARD_FONT_COLOR); //Exibe sobre cabeca do bardo
+			PrintTextAbove(who, "*Tocando musica inspiradora*", BARD_FONT, BARD_FONT_COLOR); //Exibe sobre cabeca do bardo
 			TS_StartTimer(who, "bard_tocando", sound_duration, 5, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			TS_StartTimer(mobile, "bard_inspirar_heroismo", duration, modifier, who, 0);
-			PrintTextAbovePrivate(mobile, "*Focado no combate*", mobile, BARD_FONT, BARD_FONT_COLOR_NEUTRA);
+			AplicaEfeito(who,"bard_inspirar_heroismo",duration,CInt(BuffModifier),range,alvos.Buffs,"*Focado(a)*",resistencia_mod);
 			break;
 		BARD_INSPIRAR_CORAGEM: //aumenta todas as resistências em um percentual. Preciso ver como fazer isso ainda
-			var mobile;
-			var ok := 0;
-			SendSysMessage(who, "Selecione alguem para Inspirar Coragem.", BARD_FONT, BARD_FONT_COLOR_ITEM);
-			//Verifica se o alvo é valido
-			do
-				mobile := target(who);
-				if ((mobile.connected) && (mobile.acct) && (mobile != who)) //se o alvo for personagem de jogador e diferente do bardo
-					ok := 1;
-				elseif(!mobile)
-					return BARD_ENCERRA;
-				else
-					SendSysMessage(who, "Alvo invalido. Escolha um personagem jogador que nao o seu", BARD_FONT, BARD_FONT_COLOR_TARGET);
-				endif
-			dowhile (ok == 0);
-			PrintTextAbove(mobile, "*Tocando musica inspiradora*", BARD_FONT, BARD_FONT_COLOR); //Exibe sobre cabeca do bardo
+			PrintTextAbove(who, "*Tocando musica inspiradora*", BARD_FONT, BARD_FONT_COLOR); //Exibe sobre cabeca do bardo
 			TS_StartTimer(who, "bard_tocando", sound_duration, 5, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			TS_StartTimer(mobile, "bard_inspirar_coragem", duration, modifier, who, 0);
-			PrintTextAbovePrivate(mobile, "*Cheio de si*", mobile, BARD_FONT, BARD_FONT_COLOR_NEUTRA);
+			AplicaEfeito(who,"bard_inspirar_coragem",duration,CInt(BuffModifier),range,alvos.Buffs,"*Cheio de si*",resistencia_mod);
 			break;
 		break;
 		BARD_FASCINAR:
@@ -2020,7 +2129,7 @@ function musicaEfeitos(byref who, byref magica, byref tempo) //DOING
 					resistiu := CheckResist(mobile, VONTADE, 60, resistencia_mod); //Mais difícil de resistir pela especificidade do alvo
 					if(!resistiu)
 						if ((mobile.connected) && (mobile != who)) //Verificar se esta funcionando nos MOB
-							TS_StartTimer(mobile, "bard_fascinar", duration, modifier, who, 0);
+							TS_StartTimer(mobile, "bard_fascinar", duration, DebuffModifier, who, 0);
 							PrintTextAbove(mobile, "*Fascinado*", BARD_FONT, BARD_FONT_COLOR_BAD);
 						elseif (mobile.connected)
 							PrintTextAbove(mobile, "*Tocando musica fascinadora de cobras*", BARD_FONT, BARD_FONT_COLOR); //Exibe sobre cabeca do bardo

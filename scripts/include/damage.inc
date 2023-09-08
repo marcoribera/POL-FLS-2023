@@ -264,17 +264,21 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 
 
 	if (who.npctemplate) //Se for NPC utiliza tactics
-		tatics := CDbl(AP_GetSkill(who, TACTICS))/400.0; //Armazena o valor da skill que afeta dano
+		tatics := CDbl(AP_GetSkill(who, TACTICS))/100.0; //Armazena o valor da skill que afeta dano
 		SkillCheck(who, TACTICS, -1);
 	elseif (GetObjProperty(who, "kit") == "Mago de Combate")
-		tatics := CDbl(AP_GetSkill(who, MAGICLORE))/400.0; //Aplica bonus de magiclore na chance de critico quando é Mago de Combate
+		tatics := CDbl(AP_GetSkill(who, MAGICLORE))/100.0; //Aplica bonus de magiclore na chance de critico quando é Mago de Combate
 		SkillCheck(who, MAGICLORE, -1);
-	elseif(categoriaDefender == "GiantAnimal" || categoriaDefender == "Animal" || categoriaDefender == "EvilAnimal" || categoriaDefender == "Snow" || categoriaDefender == "Mount" || categoriaDefender == "Plantas" || categoriaDefender == "Terathan" || categoriaDefender == "Dragon")
-		tatics := CDbl(AP_GetSkill(who, SURVIVAL))/400.0; //Aplica bonus de Survival se forem criaturas selvagens ou dragões
-		SkillCheck(who, SURVIVAL, -1);
+	elseif (GetObjProperty(who, "kit") == "Medico de Combate")
+		tatics := CDbl(AP_GetSkill(who, MEDICINE))/100.0; //Aplica bonus de medicine na chance de critico quando é Medico de Combate
+		SkillCheck(who, MAGICLORE, -1);
 	else
-		tatics := CDbl(AP_GetSkill(who, TACTICS))/400.0; //Aplica bonus de tactics na chance de critico quando não é nenhum caso específico
+		tatics := CDbl(AP_GetSkill(who, TACTICS))/100.0; //Aplica bonus de tactics na chance de critico quando não é nenhum caso específico
 		SkillCheck(who, TACTICS, -1);
+		if(categoriaDefender == "GiantAnimal" || categoriaDefender == "Animal" || categoriaDefender == "EvilAnimal" || categoriaDefender == "Snow" || categoriaDefender == "Mount" || categoriaDefender == "Plantas" || categoriaDefender == "Terathan" || categoriaDefender == "Dragon")
+			tatics := CDbl(AP_GetSkill(who, SURVIVAL))/200.0; //Aplica bonus de Survival se forem criaturas selvagens ou dragões
+			SkillCheck(who, SURVIVAL, -1);
+		endif
 	endif
 
 	//Bonus STR
@@ -282,7 +286,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 	if (temHabilidade(who, "Ataques Precisos"))
 		stat := DEXTERITY;
 	endif
-	if (temHabilidade(who, "Taticas Arcanas"))
+	if (temHabilidade(who, "Ataques Oportunistas"))
 		stat := INTELLIGENCE;
 	endif
 	var strBonus := 0.0;
@@ -376,7 +380,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 
 	if (TemHabilidade(who, "Estilo Mao Livre"))
 		if (who.weapon.attribute == "MeeleCombat1H" && !who.shield)
-			other := other + 0.1; //10% - balanceamento depois da mudanca de calculo do dano
+			other := other + 0.4; //10% - balanceamento depois da mudanca de calculo do dano
 		endif
 	endif
 
@@ -422,7 +426,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 	endif
 
 	if ( GetObjProperty(who, "armapredileta") == who.weapon.objtype )
-		other := other + 0.25; //25% de bonus - balanceamento depois da mudanca de calculo do dano
+		other := other + 0.5; //50% de bonus - balanceamento depois da mudanca de calculo do dano
 	endif
 
 	if (GetObjProperty(who, "#SequenciaDevastadoraAcumulada"))
