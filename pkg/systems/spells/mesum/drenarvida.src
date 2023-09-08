@@ -27,7 +27,7 @@ program SpellScript(params)
 	//who.frozen := 1;
 
 	var amt := 10;
-	if (temHabilidade(who, "Maldicao do Sangue de Asan"))
+	if (temHabilidade(who, "Tocado por Asan"))
 		if (isBloodied(who))
 			amt := CInt(amt*1.5);
 		endif

@@ -202,38 +202,59 @@ var anim := wpn_a_elem.Anim;
       		endif
 	     endif
 
-    		if (Cint(GetObjProperty(defender, "evasao")))
-      			PrintText(defender, "*esquiva-se*");
-      			EraseObjProperty(defender, "evasao");
-      			if (TemHabilidade(defender, "Esquiva Oportunista"))
-        			if (GetObjProperty(defender, "#atacandooportunidade") == error)
-						SetObjProperty(defender, "#atacandooportunidade", 1);
-						printtext(defender, "*ataque de oportunidade*");
-						//defender.attack_once(attacker);
-						var new_hit_chance := CalculateHitChance(defender, attacker);
-						var new_random := RandomInt(100)+1;
-						PlayAttackAnimation(defender);
-						if ( new_random < new_hit_chance )
-							var armor :=  CS_GetEquipmentInArmorZone(attacker, CS_GetRandomArmorZone());
-							armor := armor[ RandomInt( len( armor ) ) + 1];
-							PlayHitSounds(defender, attacker);
-							var time := ReadGameClock();
-							var dmg := CalculateRawDamage(defender, defender.weapon);
-							var result := Run_Script_To_Completion(":combat:mainHitScript", array{defender, attacker, defender.weapon, armor, dmg, dmg});
-						endif
-
-					EraseObjProperty(defender, "#atacandooportunidade");
+		if (Cint(GetObjProperty(defender, "evasao")))
+  			PrintText(defender, "*esquiva-se*");
+  			EraseObjProperty(defender, "evasao");
+  			if (TemHabilidade(defender, "Esquiva Oportunista"))
+    			if (GetObjProperty(defender, "#atacandooportunidade") == error)
+					SetObjProperty(defender, "#atacandooportunidade", 1);
+					printtext(defender, "*ataque de oportunidade*");
+					//defender.attack_once(attacker);
+					var new_hit_chance := CalculateHitChance(defender, attacker);
+					var new_random := RandomInt(100)+1;
+					PlayAttackAnimation(defender);
+					if ( new_random < new_hit_chance )
+						var armor :=  CS_GetEquipmentInArmorZone(attacker, CS_GetRandomArmorZone());
+						armor := armor[ RandomInt( len( armor ) ) + 1];
+						PlayHitSounds(defender, attacker);
+						var time := ReadGameClock();
+						var dmg := CalculateRawDamage(defender, defender.weapon);
+						var result := Run_Script_To_Completion(":combat:mainHitScript", array{defender, attacker, defender.weapon, armor, dmg, dmg});
 					endif
-      			endif
-      			return 1;
-    		endif
 
-    		/*if (Cint(GetObjProperty(defender, "esquivadesconcertante")))
-      			PrintText(defender, "*esquiva-se*");
-      			EraseObjProperty(defender, "esquivadesconcertante");
-      			SetCooldown(attacker, "esquivadesconcertante", 40);
-      			return 1;
-    		endif*/
+				EraseObjProperty(defender, "#atacandooportunidade");
+				endif
+  			endif
+  			return 1;
+		elseif ((GetObjProperty(defender, "#mobilidade") == 1) && ((random-hit_chance) < 16)) //Esquivou por conta do jogo de pés da "Mobilidade em Combate"
+			printtext(defender, "*esquiva com jogo de pés*");
+			if (TemHabilidade(defender, "Esquiva Oportunista"))
+				if (GetObjProperty(defender, "#atacandooportunidade") == error)
+					SetObjProperty(defender, "#atacandooportunidade", 1);
+					printtext(defender, "*ataque de oportunidade*");
+					//defender.attack_once(attacker);
+					var new_hit_chance := CalculateHitChance(defender, attacker);
+					var new_random := RandomInt(100)+1;
+					PlayAttackAnimation(defender);
+					if ( new_random < new_hit_chance )
+						var armor :=  CS_GetEquipmentInArmorZone(attacker, CS_GetRandomArmorZone());
+						armor := armor[ RandomInt( len( armor ) ) + 1];
+						PlayHitSounds(defender, attacker);
+						var time := ReadGameClock();
+						var dmg := CalculateRawDamage(defender, defender.weapon);
+						var result := Run_Script_To_Completion(":combat:mainHitScript", array{defender, attacker, defender.weapon, armor, dmg, dmg});
+					endif
+					EraseObjProperty(defender, "#atacandooportunidade");
+				endif
+			endif
+		endif
+
+		/*if (Cint(GetObjProperty(defender, "esquivadesconcertante")))
+  			PrintText(defender, "*esquiva-se*");
+  			EraseObjProperty(defender, "esquivadesconcertante");
+  			SetCooldown(attacker, "esquivadesconcertante", 40);
+  			return 1;
+		endif*/
 
 		if (GetObjProperty(defender, "maolivre") == 1)
 			EraseObjPRoperty(defender, "maolivre");

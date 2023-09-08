@@ -4,8 +4,8 @@ include ":musicianship:bardmusic"; //As constantes estao nesse arquivo
 
 //Programa para selecionar os alvos das magias de bardo
 program menuBardo(who)
-	if (TemHabilidade(who, "Dominio Musical"))
-		var alvos := GetObjProperty(who, "#BardTargets");
+	if (TemHabilidade(who, "Compositor Talentoso"))
+		var alvos := GetObjProperty(who, "BardTargets");
 
 		//caso seja o primeiro uso do comando, inicializa a CProp de Alvos
 		if(!alvos) //TODO: inserir isso no else da verificação do dominio musical para garantir que quem troque de caminho nao mantenha o alvo anteriormente definido
@@ -56,14 +56,14 @@ program menuBardo(who)
 			"Alvos dos BUFFS:",
 			"Todos",
 			"Party",
-			"Player",
+			"Player+Pets",
 			"Evil NPC",
 			"Nao Party",
 			"Nao Player",
 			"Alvos dos DEBUFFS:",
 			"Todos",
 			"Party",
-			"Player",
+			"Player+Pets",
 			"Evil NPC",
 			"Nao Party",
 			"Nao Player",
@@ -72,7 +72,7 @@ program menuBardo(who)
 		//exibe o gump
 		var output := SendDialogGump( who, gflayout, gfdata);
 		var keys := output.keys;
-		SetObjProperty(who, "#BardTargets",struct{"Buffs":=keys[3], "Debuffs":=keys[4]});
+		SetObjProperty(who, "BardTargets",struct{"Buffs":=keys[3], "Debuffs":=keys[4]});
 	else
 		return 1;
 	endif

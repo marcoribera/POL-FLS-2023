@@ -9,7 +9,7 @@ include "include/damage";
 program manobra(who)
 
 	var elemental := GetObjProperty(who, "elementalprotection");
-	
+
 	if (elemental == error)
 		var prot := RadioGump(who, 200, 260, "Escolha o elemento", {"Fogo", "Frio", "Veneno", "Energia"});
 		SendSysMessageEx(who, "Voce escolheu protecao contra " + prot, SSM_INFO);
@@ -30,4 +30,4 @@ program manobra(who)
 		SendSysMessageEx(who, "Voce ja  escolheu sua protecao elemental.", SSM_FAIL);
 	endif
 
-endprogram   
+endprogram

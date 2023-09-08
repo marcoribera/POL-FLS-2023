@@ -50,6 +50,9 @@ function GetResist(who, resist)
 	endif
 
 	if (resist == FORTITUDE)
+		if (TemHabilidade(who, "Grande Fortitude"))
+			valor := valor + 30;
+		endif
 
 		// Aplica os bonus base do Caminho para a resistência
 		if (classe == "Guerreiro")

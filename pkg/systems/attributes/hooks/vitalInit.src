@@ -15,7 +15,12 @@ endprogram
 // Hit Point Functions
 // *****
 exported function GetHitsRegenRate(mobile)
-	var base_regen := CInt(AP_GetSettingsCfgElem("Regen").Hits) * 100;
+	var base_regen;
+	if (!mobile.npctemplate) //calculo diferenciado pra player
+		base_regen:= (CInt(AP_GetSettingsCfgElem("Regen").Hits) * 100) + (CInt(AP_GetTrueStat(mobile, "Strength"))*10); //base + 1 a cada 10 de atributo
+	else
+		base_regen:= CInt(AP_GetSettingsCfgElem("Regen").Hits) * 100;
+	endif
 	var regen := base_regen + AP_GetVitalRegenRateMod(mobile, "hits");
 
 	if (isBloodied(mobile) && (!mobile.npctemplate)  ) // Nao regenera se tiver sangrando
@@ -51,11 +56,13 @@ endfunction
 // Mana Functions
 // *****
 exported function GetManaRegenRate(mobile)
-	var base_regen := CInt(AP_GetSettingsCfgElem("Regen").Mana) * 100;
+	var base_regen;
+	if (!mobile.npctemplate) //calculo diferenciado pra player
+		base_regen:= (CInt(AP_GetSettingsCfgElem("Regen").Mana) * 100) + (CInt(AP_GetTrueStat(mobile, "Intelligence"))*10); //base + 1 a cada 10 de atributo
+	else
+		base_regen:= CInt(AP_GetSettingsCfgElem("Regen").Mana) * 100;
+	endif
 
-	//if(!mobile.npctemplate)
-	//	base_regen := 0;
-	//endif
 	if (TemHabilidade(mobile, "Mente Tranquila"))
 		base_regen := base_regen + base_regen;
 	endif
@@ -96,7 +103,12 @@ endfunction
 // Stamina Functions
 // *****
 exported function GetStaminaRegenRate(mobile)
-	var base_regen := CInt(AP_GetSettingsCfgElem("Regen").Stamina) * 100;
+	var base_regen;
+	if (!mobile.npctemplate) //calculo diferenciado pra player
+		base_regen:= (CInt(AP_GetSettingsCfgElem("Regen").Stamina) * 100) + (CInt(AP_GetTrueStat(mobile, "Dexterity"))*10); //base + 1 a cada 10 de atributo
+	else
+		base_regen:= CInt(AP_GetSettingsCfgElem("Regen").Stamina) * 100;
+	endif
 
 	return base_regen + AP_GetVitalRegenRateMod(mobile, "stamina");
 endfunction

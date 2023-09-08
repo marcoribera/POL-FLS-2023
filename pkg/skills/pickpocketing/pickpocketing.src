@@ -57,18 +57,26 @@ program skill_Stealing(mobile)
 		return 0;
 	elseif ( !IsBehind(targ, mobile.x, mobile.y) )
 		if(!temHabilidade(mobile, "Punga"))
-		SendSysMessageEx(mobile, "Voce precisa estar nas costas do alvo.", SSM_FAIL);
-		return 0;
+			SendSysMessageEx(mobile, "Voce precisa estar nas costas do alvo.", SSM_FAIL);
+			return 0;
 		else
-		difbonus := 10;
+			difbonus := 10;
 		endif
 	endif
 
 	var diff := 15 + CInt(AP_GetSkill(targ, AWARENESS));
+	if (temHabilidade(mobile, "Ladrao de Multidoes"))
+		var multidao := ListMobilesNearLocation(targ.x, targ.y, targ.z, 4, targ.realm).size();
+		if (multidao > 4)
+			var bonus := 5 * (multidao - 4);
+			diff := diff - bonus;
+			SendSysMessageEx(mobile, "Bonus de Ladrão de Multidões: +"+bonus+".", SSM_INFO);
+		endif
+	endif
 
 	var check := SkillCheck(mobile, PICKPOCKETING, diff);
 	if ( check > 0 )
-        
+
         if (!mobile.hidden)
             var range :=  13 - CInt(AP_GetSkill(mobile, PICKPOCKETING)/7);
             var diff_awar := CInt(AP_GetSkill(mobile, PICKPOCKETING)) - 15;
@@ -83,7 +91,7 @@ program skill_Stealing(mobile)
                 SleepMS(2);
             endforeach
         endif
-        
+
 		SendSysMessageEx(mobile, "Voce conseguiu abrir a mochila de "+targ.name+".", SSM_INFO);
 		SendOpenSpecialContainer(mobile, targ.backpack);
 		SendSysMessageEx(mobile, "Se desejar parar de roubar, pressione Esc no momento da escolha do item.", SSM_INFO);
@@ -151,6 +159,12 @@ program skill_Stealing(mobile)
 
 			var check := SkillCheck(mobile, PICKPOCKETING, diff);
 			if ( check > 0 )
+				if (TemHabilidade(targ, "Nexus"))
+					if (GetObjProperty(steal, "swordmage") ==  targ.serial)//seta com a arma
+						SendSysMessageEx(mobile, "O alvo tem uma ligacao magica com a arma.", SSM_FAIL);
+						return 1;
+					endif
+				endif
 				MoveObjectToLocation(steal, 0, 0, 0, mobile.realm);
 				MoveItemToContainer(steal, mobile.backpack);
 				SendSysMessageEx(mobile, "Voce roubou "+steal.desc+".", SSM_INFO);
@@ -167,7 +181,7 @@ program skill_Stealing(mobile)
 	else
 		SendSysMessageEx(mobile, "Voce nota que o alvo percebeu algo.", SSM_FAIL);
 		SendSysMessageEx(targ, "Voce sentiu algo na sua bolsa.", SSM_INFO);
-        
+
         if (!mobile.hidden)
             var range :=  13 - CInt(AP_GetSkill(mobile, PICKPOCKETING)/7);
             var diff_awar := CInt(AP_GetSkill(mobile, PICKPOCKETING)) - 15;
@@ -182,7 +196,7 @@ program skill_Stealing(mobile)
                 SleepMS(2);
             endforeach
         endif
-        
+
 		if (check < -10) // Falha Crítica
 			CriticalFailure(mobile, targ);
 		endif

@@ -57,6 +57,11 @@ program summontotem(params)
 	var undead :=   summon(template, targ, who);
 
 	if (temHabilidade(who, "Espirito Protetor"))
+		undead.resist_physical_mod  := 25;
+		undead.resist_cold_mod  := 25;
+		undead.resist_poison_mod  := 25;
+		undead.resist_energy_mod  := 25;
+		undead.resist_fire_mod  := 25;
 		SetObjProperty(undead, "#ReflexosMod", 50);
 		SetObjProperty(undead, "#ReflexosMod", 50);
 		SetObjProperty(undead, "#VontadeMod", 50);

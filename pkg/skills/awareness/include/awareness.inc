@@ -20,20 +20,23 @@ function examinarAlvo(who)
 	var armadilhaRevelada := 0;
 	var acharamArmadilha := array;
 	var found := 0;
-	if ( GetObjProperty(targ, "disfarce") )
-		if ((valorInicial(who, AWARENESS) >= 40) && (SkillCheck(who, AWARENESS, 70) > 0))
-			found:=1;
-			var char := GetObjProperty(targ, "chardata");
-			var name := char.FirstName;
-			var last_name := char.LastName;
-			if (last_name)
-				name := name+" "+last_name;
+	if(targ.isA(POLCLASS_MOBILE))
+		if (GetObjProperty(targ, "disfarce") )
+			if (SkillCheck(who, AWARENESS, AP_GetSkill(who, SNEAK)))
+				found:=1;
+				var char := GetObjProperty(targ, "chardata");
+				var name := char.FirstName;
+				var last_name := char.LastName;
+				if (last_name)
+					name := name+" "+last_name;
+				endif
+				sleep(1);
+				SendSysMessageEx(who, "Voce descobriu disfarce de "+name+" em "+targ.name+".", SSM_INFO);
+				SendSysMessageEx(who, "ATENCAO: Se voce nao conhece esse personagem, ignore o fato de saber o nome dele.", SSM_INFO);
+				return 1;
 			endif
-			sleep(1);
-			SendSysMessageEx(who, "Voce descobriu disfarce de "+name+" em "+targ.name+".", SSM_INFO);
-			SendSysMessageEx(who, "ATENCAO: Se voce nao conhece esse personagem, ignore o fato de saber o nome dele.", SSM_INFO);
+			return 0;
 		endif
-		return 0;
 	elseif ( GetObjProperty(targ, "TrapList") )
 		sleep(1);
 		if(!ReserveItem(targ)) //Apenas um personagem examina o bau por vez.
@@ -44,7 +47,6 @@ function examinarAlvo(who)
 	  			SendSysMessageEx(who, "Examinando "+targ.name+".", SSM_INFO);
 			else
 				PrintTextAbove(who, "*Examinando "+targ.name+"*");
-				SendSysMessageEx(who, "Examinando "+targ.name+".", SSM_INFO);
 			endif
 	  		sleep(1);
 		endif
@@ -58,7 +60,7 @@ function examinarAlvo(who)
 			SendSysMessageEx(who, "Armadilha ja foi encontrada e esta obvia para voce.", SSM_INFO);
 			if (YesNo(who, "Revelar a armadilha para todos? (", "Sim.", "Nao, deixa so pra mim."))
 				who.hidden := 0;
-				PrintTextAbove(who, "*Aponta para "+targ.name+"*");
+				PrintTextAbove(who, "*Aponta para armadilha em "+targ.name+"*");
 				PrintTextAbove(targ, "*!*");
 				TrapFound(targ, who);
 			endif
@@ -83,6 +85,12 @@ function examinarAlvo(who)
 				acharamArmadilha.Append(who.serial);
 				SetObjProperty(targ, "acharamArmadilha", acharamArmadilha);
 				SendSysMessageEx(who, "Armadilha encontrada em "+targ.name+".", SSM_INFO);
+				if (YesNo(who, "Revelar a armadilha para todos? (", "Sim.", "Nao, deixa so pra mim."))
+					who.hidden := 0;
+					PrintTextAbove(who, "*Aponta para armadilha em "+targ.name+"*");
+					PrintTextAbove(targ, "*!*");
+					TrapFound(targ, who);
+				endif
 				return 1;
 			else
 				SendSysMessageEx(who, "Voce nao encontrou nada de diferente.", SSM_FAIL);
@@ -159,8 +167,14 @@ function examinarArea(who)
 		if ( CheckLineOfSight(who, mobile) && abs(mobile.z - who.z ) < 19 )
 			difficulty := CalculateDHDiff(who, mobile);
 			if ( mobile == who ); // Do Nothing
-	        elseif (who.party && (who.party.leader.name == mobile.party.leader.name))
-	        	if ( SkillCheck(who, AWARENESS, difficulty, 0,ADV_DISABLE) > 0 )  //Não upa
+			elseif (who.npctemplate) // NPC revela quem ele achar
+				if ( SkillCheck(who, AWARENESS, difficulty) > 0 )
+					found := found+1;
+					mobile.hidden := 0;
+					PrintText(mobile, "*Revelado por "+who.name+"*");
+				endif
+	        elseif (who.party && (who.party.leader.name == mobile.party.leader.name)) //procura o colega, mas não revela
+	        	if ( SkillCheck(who, AWARENESS, difficulty, 0, ADV_DISABLE) > 0 )  //Não upa
 		        	exibeCharEscondido(who,mobile,258);
 		        	PrintTextAbovePrivate(mobile, "!", who,_DEFAULT_TEXT_FONT,258); //Se esta na mesma party nao revela
 	        	endif

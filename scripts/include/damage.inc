@@ -374,7 +374,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 
 	if (TemHabilidade(who, "Estilo Mao Livre"))
 		if (who.weapon.attribute == "MeeleCombat1H" && !who.shield)
-			other := other + 0.1; //10% - balanceamento depois da mudanca de calculo do dano
+			other := other + 0.4; //10% - balanceamento depois da mudanca de calculo do dano
 		endif
 	endif
 
@@ -420,7 +420,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 	endif
 
 	if ( GetObjProperty(who, "armapredileta") == who.weapon.objtype )
-		other := other + 0.25; //25% de bonus - balanceamento depois da mudanca de calculo do dano
+		other := other + 0.5; //50% de bonus - balanceamento depois da mudanca de calculo do dano
 	endif
 
 	if (GetObjProperty(who, "#SequenciaDevastadoraAcumulada"))
