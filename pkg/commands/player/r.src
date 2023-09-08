@@ -1,0 +1,35 @@
+use uo;
+use os;
+
+include "include/client";
+include "include/say";
+include ":survival:fishingFunctions";
+include ":gumps:requestgump";
+
+program reconhecer(who)
+	var conhecidos := dictionary;
+
+	if(GetObjProperty(who, "conhecidos"))
+		conhecidos := GetObjProperty(who, "conhecidos"); //Lista de pessoas conhecidadas
+	endif
+
+	var targ := Target(who);
+
+	if(targ.IsA(POLCLASS_MOBILE))
+		if(targ.serial in conhecidos)
+			var apelido := RequestGump(who, "Quer passar a reconhecer essa pessoa como?");
+			if (apelido)
+				conhecidos[targ.serial] := apelido;
+				SetObjProperty(who, "conhecidos", conhecidos);
+			endif
+		else
+			var apelido := RequestGump(who, "Quer reconhecer essa pessoa como?");
+			if (apelido)
+				conhecidos[targ.serial] := apelido;
+				SetObjProperty(who, "conhecidos",conhecidos);
+			endif
+		endif
+	endif
+	SendSysMessageEx(who, "So pode reconhecer jogadores.", SSM_FAIL);
+	return 0;
+endprogram
