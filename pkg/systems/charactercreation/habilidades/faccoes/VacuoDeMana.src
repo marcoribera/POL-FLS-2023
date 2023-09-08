@@ -21,6 +21,7 @@ include "include/damage";
 include "include/say";
 include ":timedScripts:timedScripts";
 include ":attributes:vitals";
+include ":charactercreation:resists";
 
 program vacuodemana(params)
 	var attacker	:= params[1];
@@ -34,8 +35,11 @@ program vacuodemana(params)
 	PlayAttackAnimation(attacker);
 	PlayHitSounds(attacker, defender);
 	SendSysMessageEx(attacker, "O panteão zharkiano testemunha sua fé", SSM_INFO);
-	SetObjProperty(attacker, "#golpeceleste", 1);
+	//SetObjProperty(attacker, "#golpeceleste", 1);
 	var danomana := (AP_GetVitalMaximumValue(defender, "mana") - AP_GetVital(defender, "mana")) * 1.2;
-	DamageFLS(defender, danomana, DMG_FORCED, attacker);
+    if (defender.npctemplate)
+        danomana := GetResist(attacker, VONTADE);
+    endif
 
+	DamageFLS(defender, danomana, DMG_FORCED, attacker);
 endprogram 

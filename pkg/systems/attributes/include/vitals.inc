@@ -131,6 +131,13 @@ function AP_GetVitalRegenRate(mobile, vital_name)
 	return GetVitalRegenRate(mobile, vital_name);
 endfunction
 
+function HealHits(mobile, amount)
+  AP_SetVital(mobile, "Hits", cint(AP_GetVital(mobile, "Hits")+amount));
+  if (AP_GetVital(mobile, "Hits") >  AP_GetVitalMaximumValue(mobile, "Hits"))
+    AP_SetVital(mobile, "Hits", AP_GetVitalMaximumValue(mobile, "Hits"));
+  endif
+endfunction
+
 function HealMana(mobile, amount)
   AP_SetVital(mobile, MANA, cint(AP_GetVital(mobile, MANA)+amount));
   if (AP_GetVital(mobile, MANA) >  AP_GetVitalMaximumValue(mobile, MANA))
