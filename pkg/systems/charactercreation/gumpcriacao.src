@@ -159,7 +159,6 @@ var gfdata := array{
 		gfdata.append("Homens são movidos pela curiosidade, o que faz com que explorem várias áreas de conhecimento. Começa com +2 pontos de skills.");
 		gfdata.append("Resistentes");
 		gfdata.append("Humanos se adaptam bem a condições adversas por piores que sejam. Ganha +10 em todos os testes de resistências.");
-		gfdata.append("Aprendiz Rápido");
 	elseif ( chardata.raca == "Elfo")
 		gfdata.append("Vontade de Ferro");
 		gfdata.append("Elfos possuem uma grande força de vontade e autocontrole. Ganham +20 nos testes de Vontade.");
@@ -412,7 +411,6 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 	endif
 
 if (chardata.kit == "Aprendiz de Ferreiro")
-
 		var i := 1;
 		//sobe as quaternarias
 		foreach skill in quaternarias //reduz as primarias
@@ -529,6 +527,37 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 			if ( skill == "HandleAnimal")
 				quaternarias.erase(i);
 				terciarias.append("HandleAnimal");
+			endif
+			i := i + 1;
+		endforeach
+	endif
+
+    if (chardata.kit == "Mago de Combate")
+		//sobe as terciarias
+		var i := 1;
+		foreach skill in terciarias //reduz as primarias
+			if ( skill == "MeleeCombat1h")
+				terciarias.erase(i);
+				secundarias.append("MeleeCombat1h");;
+			endif
+			i := i + 1;
+		endforeach
+
+		//sobe as quaternarias
+		i := 1;
+		foreach skill in quaternarias //reduz as primarias
+			if ( skill == "MeleeCombat2h")
+				quaternarias.erase(i);
+				terciarias.append("MeleeCombat2h");
+			endif
+			i := i + 1;
+		endforeach
+
+        i := 1;
+		foreach skill in quaternarias //reduz as primarias
+			if ( skill == "Parry")
+				quaternarias.erase(i);
+				terciarias.append("Parry");
 			endif
 			i := i + 1;
 		endforeach
