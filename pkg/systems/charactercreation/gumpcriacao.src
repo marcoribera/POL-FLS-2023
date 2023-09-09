@@ -12,13 +12,11 @@ include ":disguise:disguise";
 include ":charactercreation:createchar";
 include ":datafile:datafile";
 
-
 //cores: 1153 -> 2103 -> 2105
 
 const OK_BUTTON			:= 10;
 
 function RaceGump(who, byref  chardata)
-
 
 var gflayout := array{
 		"noclose",
@@ -105,9 +103,6 @@ var gfdata := array{
 		chardata.+raca := "Elfo";
 		chardata.+povo := "Vanirio";
 	endif
-
-
-
 endfunction
 
 
@@ -159,38 +154,22 @@ var gfdata := array{
 		"Escolha uma vantagem racial:" //2
 		};
 
-
 	if (chardata.raca == "Humano")
 		gfdata.append("Versatilidade");
 		gfdata.append("Homens são movidos pela curiosidade, o que faz com que explorem várias áreas de conhecimento. Começa com +2 pontos de skills.");
 		gfdata.append("Resistentes");
 		gfdata.append("Humanos se adaptam bem a condições adversas por piores que sejam. Ganha +10 em todos os testes de resistências.");
 		gfdata.append("Aprendiz Rápido");
-		gfdata.append("É mais fácil para os homens, do que para as outras raças, aprenderem coisas novas. Regeneração mais rápida de cap.");
-		if (chardata.povo  == "Zharkiano")
-			gflayout.append("text 180 490 2105 9");
-			gflayout.append("Radio 150 487 9726 9729 0 4");
-			gflayout.append("HtmlGump 150 520 330 60 10 3000 0");
-			//gfdata.append("Conhecedor do Kitah");
-			//gfdata.append("Apenas alguns Zharkianos sabem como utilizar o Kitah da mesma forma que os elfos. Não sofre penalidades usando o Kitah.");
-		endif
 	elseif ( chardata.raca == "Elfo")
 		gfdata.append("Vontade de Ferro");
 		gfdata.append("Elfos possuem uma grande força de vontade e autocontrole. Ganham +20 nos testes de Vontade.");
 		gfdata.append("Sabedoria dos Antigos");
 		gfdata.append("Elfos são mais antigos que os outros povos e aprenderam a dar mais valor ao conhecimento. Habilidades terciárias podem ir até 50%");
-		gfdata.append("Aliado da Natureza");
-		gfdata.append("O povo élfico possui uma ligação maior com a natureza que os humanos. Animais selvagens não o atacam.");
-		if (chardata.povo != "Vanirio")
-			gflayout.append("text 180 490 2105 9");
-			gflayout.append("Radio 150 487 9726 9729 0 4");
-			gflayout.append("HtmlGump 150 520 330 60 10 3000 0");
-			gfdata.append("Conhecedor da Mesum");
-			gfdata.append("A Mesum foi ensinada aos humanos por Asan, mas alguns elfos a dominam muito bem. Não sofre penalidades usando Mesum.");
-
-		endif
+        if (chardata.povo == "Numajene")
+		   gfdata.append("Aliado da Natureza");
+		   gfdata.append("O povo élfico possui uma ligação maior com a natureza que os humanos. Animais selvagens não o atacam.");
+        endif
 	endif
-
 
 	var ret := SendDialogGump( who, gflayout, gfdata );
 	if (chardata.raca == "Humano")
@@ -198,10 +177,6 @@ var gfdata := array{
 			chardata.+vantagemracial := "Versatilidade";
 		elseif (2 in ret.keys)
 			chardata.+vantagemracial := "Resistentes";
-		elseif (3 in ret.keys)
-			chardata.+vantagemracial := "Aprendiz Rapido";
-		//elseif (4 in ret.keys)
-		//	chardata.+vantagemracial := "Conhecedor do Kitah";
 		endif
 	else
 		if (1 in ret.keys)
@@ -210,8 +185,6 @@ var gfdata := array{
 			chardata.+vantagemracial := "Sabedoria dos Antigos";
 		elseif (3 in ret.keys)
 			chardata.+vantagemracial := "Aliado da Natureza";
-		elseif (4 in ret.keys)
-			chardata.+vantagemracial := "Conhecedor da Mesum";
 		endif
 	endif
 
