@@ -412,8 +412,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 
 if (chardata.kit == "Aprendiz de Ferreiro")
 		var i := 1;
-		//sobe as quaternarias
-		foreach skill in quaternarias //reduz as primarias
+		foreach skill in quaternarias
 			if ( skill == "MetalWorking")
 				quaternarias.erase(i);
 				secundarias.append("MetalWorking");
@@ -422,7 +421,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		endforeach
 
 		i := 1;
-		foreach skill in terciarias //reduz as primarias
+		foreach skill in terciarias
 			if ( skill == "Gathering")
 				terciarias.erase(i);
 				secundarias.append("Gathering");;
@@ -434,8 +433,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		if (chardata.kit == "Aprendiz de Trabalhador Domestico")
 
 		var i := 1;
-		//sobe as quaternarias
-		foreach skill in quaternarias //reduz as primarias
+		foreach skill in quaternarias 
 			if ( skill == "DomesticWork")
 				quaternarias.erase(i);
 				secundarias.append("DomesticWork");
@@ -447,8 +445,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 	if (chardata.kit == "Aprendiz de Carpinteiro")
 
 		var i := 1;
-		//sobe as quaternarias
-		foreach skill in quaternarias //reduz as primarias
+		foreach skill in quaternarias 
 			if ( skill == "WoodWorking")
 				quaternarias.erase(i);
 				secundarias.append("WoodWorking");
@@ -457,7 +454,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		endforeach
 
 		i := 1;
-		foreach skill in terciarias //reduz as primarias
+		foreach skill in terciarias 
 			if ( skill == "Gathering")
 				terciarias.erase(i);
 				secundarias.append("Gathering");;
@@ -484,7 +481,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 	if (chardata.kit == "Ranger")
 
 		var i := 1;
-		foreach skill in primarias //reduz as primarias
+		foreach skill in primarias 
 			if ( skill == "Tactics")
 				primarias.erase(i);
 				secundarias.append("Tactics");
@@ -493,7 +490,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		endforeach
 
 		i := 1;
-		foreach skill in primarias //reduz as primarias
+		foreach skill in primarias 
 			if (skill == "Parry")
 				primarias.erase(i);
 				terciarias.append("Parry");
@@ -501,9 +498,8 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 			i := i + 1;
 		endforeach
 
-		//sobe as secundarias
 		i := 1;
-		foreach skill in secundarias //reduz as primarias
+		foreach skill in secundarias 
 			if ( skill == "Survival")
 				secundarias.erase(i);
 				primarias.append("Survival");
@@ -511,9 +507,8 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 			i := i + 1;
 		endforeach
 
-		//sobe as terciarias
 		i := 1;
-		foreach skill in terciarias //reduz as primarias
+		foreach skill in terciarias 
 			if ( skill == "Sneak")
 				terciarias.erase(i);
 				secundarias.append("Sneak");;
@@ -521,9 +516,8 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 			i := i + 1;
 		endforeach
 
-		//sobe as quaternarias
 		i := 1;
-		foreach skill in quaternarias //reduz as primarias
+		foreach skill in quaternarias 
 			if ( skill == "HandleAnimal")
 				quaternarias.erase(i);
 				terciarias.append("HandleAnimal");
@@ -533,9 +527,18 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 	endif
 
     if (chardata.kit == "Mago de Combate")
-		//sobe as terciarias
+
+    	var i := 1;
+		foreach skill in primarias 
+			if ( skill == "Magery")
+				primarias.erase(i);
+				secundarias.append("Magery");;
+			endif
+			i := i + 1;
+		endforeach
+
 		var i := 1;
-		foreach skill in terciarias //reduz as primarias
+		foreach skill in terciarias 
 			if ( skill == "MeleeCombat1h")
 				terciarias.erase(i);
 				secundarias.append("MeleeCombat1h");;
@@ -543,9 +546,8 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 			i := i + 1;
 		endforeach
 
-		//sobe as quaternarias
 		i := 1;
-		foreach skill in quaternarias //reduz as primarias
+		foreach skill in quaternarias 
 			if ( skill == "MeleeCombat2h")
 				quaternarias.erase(i);
 				terciarias.append("MeleeCombat2h");
@@ -554,7 +556,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		endforeach
 
         i := 1;
-		foreach skill in quaternarias //reduz as primarias
+		foreach skill in quaternarias 
 			if ( skill == "Parry")
 				quaternarias.erase(i);
 				terciarias.append("Parry");
