@@ -12,13 +12,11 @@ include ":disguise:disguise";
 include ":charactercreation:createchar";
 include ":datafile:datafile";
 
-
 //cores: 1153 -> 2103 -> 2105
 
 const OK_BUTTON			:= 10;
 
 function RaceGump(who, byref  chardata)
-
 
 var gflayout := array{
 		"noclose",
@@ -105,9 +103,6 @@ var gfdata := array{
 		chardata.+raca := "Elfo";
 		chardata.+povo := "Vanirio";
 	endif
-
-
-
 endfunction
 
 
@@ -159,38 +154,22 @@ var gfdata := array{
 		"Escolha uma vantagem racial:" //2
 		};
 
-
 	if (chardata.raca == "Humano")
 		gfdata.append("Versatilidade");
 		gfdata.append("Homens são movidos pela curiosidade, o que faz com que explorem várias áreas de conhecimento. Começa com +2 pontos de skills.");
 		gfdata.append("Resistentes");
 		gfdata.append("Humanos se adaptam bem a condições adversas por piores que sejam. Ganha +10 em todos os testes de resistências.");
 		gfdata.append("Aprendiz Rápido");
-		gfdata.append("É mais fácil para os homens, do que para as outras raças, aprenderem coisas novas. Regeneração mais rápida de cap.");
-		if (chardata.povo  == "Zharkiano")
-			gflayout.append("text 180 490 2105 9");
-			gflayout.append("Radio 150 487 9726 9729 0 4");
-			gflayout.append("HtmlGump 150 520 330 60 10 3000 0");
-			gfdata.append("Conhecedor do Kitah");
-			gfdata.append("Apenas alguns Zharkianos sabem como utilizar o Kitah da mesma forma que os elfos. Não sofre penalidades usando o Kitah.");
-		endif
 	elseif ( chardata.raca == "Elfo")
 		gfdata.append("Vontade de Ferro");
 		gfdata.append("Elfos possuem uma grande força de vontade e autocontrole. Ganham +20 nos testes de Vontade.");
 		gfdata.append("Sabedoria dos Antigos");
 		gfdata.append("Elfos são mais antigos que os outros povos e aprenderam a dar mais valor ao conhecimento. Habilidades terciárias podem ir até 50%");
-		gfdata.append("Aliado da Natureza");
-		gfdata.append("O povo élfico possui uma ligação maior com a natureza que os humanos. Animais selvagens não o atacam.");
-		if (chardata.povo != "Vanirio")
-			gflayout.append("text 180 490 2105 9");
-			gflayout.append("Radio 150 487 9726 9729 0 4");
-			gflayout.append("HtmlGump 150 520 330 60 10 3000 0");
-			gfdata.append("Conhecedor da Mesum");
-			gfdata.append("A Mesum foi ensinada aos humanos por Asan, mas alguns elfos a dominam muito bem. Não sofre penalidades usando Mesum.");
-
-		endif
+        if (chardata.povo == "Numajene")
+		   gfdata.append("Aliado da Natureza");
+		   gfdata.append("O povo élfico possui uma ligação maior com a natureza que os humanos. Animais selvagens não o atacam.");
+        endif
 	endif
-
 
 	var ret := SendDialogGump( who, gflayout, gfdata );
 	if (chardata.raca == "Humano")
@@ -198,10 +177,6 @@ var gfdata := array{
 			chardata.+vantagemracial := "Versatilidade";
 		elseif (2 in ret.keys)
 			chardata.+vantagemracial := "Resistentes";
-		elseif (3 in ret.keys)
-			chardata.+vantagemracial := "Aprendiz Rapido";
-		elseif (4 in ret.keys)
-			chardata.+vantagemracial := "Conhecedor do Kitah";
 		endif
 	else
 		if (1 in ret.keys)
@@ -210,8 +185,6 @@ var gfdata := array{
 			chardata.+vantagemracial := "Sabedoria dos Antigos";
 		elseif (3 in ret.keys)
 			chardata.+vantagemracial := "Aliado da Natureza";
-		elseif (4 in ret.keys)
-			chardata.+vantagemracial := "Conhecedor da Mesum";
 		endif
 	endif
 
@@ -1311,80 +1284,30 @@ program createchar(who)
 
 	var ganheispell := 0;
 	setObjproperty(who, "kit", chardata.kit);
-	if (chardata.kit == "Defensor do Reino Zharkes")
-		var capa := CreateItemInBackpack(who, 0x1541, 1); //bodysash
-		capa.color := 2117;
-		SetObjProperty(capa, "description", "Faixa de Defensor de Zharkia de " + who.name + "<BR>");
-		SetObjProperty(capa, "cannotdye", 1);
-		SetObjProperty(capa, "descmod", "Defensor Zharkês");
-		SetName(capa, "Faixa");
-	elseif (chardata.kit == "Shimoriano")
-		var ordem := CreateItemInBackpack(who, 8792, 1);
-		SetName(ordem, "Aurotização de Shimoria para " + who.name);
-		var df := DFOpenDataFile(":tn:shimoria");
-		var elem := df.CreateElement(who.serial);
-
-		var ring := CreateItemInBackpack(who, "ring", 1);
-		ring.color  := 1150;
-		SetObjProperty(ring, "descmod", "Shimoriano");
-		SetName(ring, "Anel de Shimoria");
-		elem.setprop("shimoriano", 1);
-		var grimorio := createiteminbackpack(who, "grimorio", 1);
-		setobjproperty(grimorio, "serialid", who.serial);
-		setobjproperty(grimorio, "marked",who.name + " - " + who.acctname);
-		var spellinfo := struct;
-		var p1 := createiteminbackpack(who, "pergaminhomagico1");
-		spellinfo.+id := 1;
-		SetObjProperty(p1, "spellinfo", spellinfo);
-		p1 := createiteminbackpack(who, "pergaminhomagico1");
-		spellinfo.id := 3;
-		SetObjProperty(p1, "spellinfo", spellinfo);
-		p1 := createiteminbackpack(who, "pergaminhomagico1");
-		spellinfo.id := 2;
-		SetObjProperty(p1, "spellinfo", spellinfo);
-		p1 := createiteminbackpack(who, "pergaminhomagico1");
-		spellinfo.id := 28;
-		SetObjProperty(p1, "spellinfo", spellinfo);
-
-		ganheispell := 1;
-	elseif  (chardata.kit == "Acolito do Panteao Zhark")
-		var robe := CreateItemInBackpack(who, 0x9945, 1); //bodysash
-		SetObjProperty(robe, "description", "Robe com bordado do simbolo do clero de Zharkia");
-		SetObjProperty(robe, "cannotdye", 1);
-		SetObjProperty(robe, "descmod", "Acólito de Zhark");
-		createiteminbackpack(who, "runaarmasagrada");
-		createiteminbackpack(who, "runacuraleve");
-		createiteminbackpack(who, "runadescanso");
-		ganheispell := 1;
-	elseif (chardata.kit == "Membro da Nobreza")
-		if (who.graphic == 400)
-			who.title_prefix := "Sir";
-		else
-			who.title_prefix := "Lady";
-		endif
-		var ring := CreateItemInBackpack(who, 0x108a, 1); //ring
-		var NomeDaFamilia := cstr(RequestGump(who, "Escreva o Nome da sua Família"));
-		var FamiliaVassala := cstr(RadioGump(who, 270, 200, "Para quem ira prestar Vassalagem?", array{"Rothenien","Khumardigann","Hivyttain","Zanshirdd"}));
-		if (FamiliaVassala != "Nenhuma")
-			SetObjProperty(ring, "description", "Anel Da Família: " + NomeDaFamilia + "<br> Vassala Dos: " + FamiliaVassala);
-		else
-			SetObjProperty(ring, "description", "Anel Da Família: " + NomeDaFamilia);
-		endif
-		SetObjProperty(ring, "familia", NomeDaFamilia);
-		SetObjProperty(ring, "description", "Anel Da Família: " + NomeDaFamilia + "<br> Vassala Dos: " + FamiliaVassala);
-		SetName(ring, "Anel com Símbolo de Familia");
-	elseif (chardata.kit == "Corpulento")
-        AP_SetTrueStat(who, STRENGTH, chardata.str+30);
-        AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
-        AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
+	if (chardata.kit == "Corpulento")
+        if (chardata.povo == "Thuriao")
+            AP_SetTrueStat(who, STRENGTH, chardata.str+40);
+            AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
+            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
+        else
+            AP_SetTrueStat(who, STRENGTH, chardata.str+30);
+            AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
+            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
+        endif
 	elseif (chardata.kit == "Genio")
 		AP_SetTrueStat(who, INTELLIGENCE, chardata.int+20);
 		AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
 		AP_SetTrueStat(who, STRENGTH, chardata.str-10);
 	elseif (chardata.kit == "Agil")
-        AP_SetTrueStat(who, DEXTERITY, chardata.dex+20);
-		AP_SetTrueStat(who, STRENGTH, chardata.str-10);
-        AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
+        if (chardata.povo == "Aquilrano")
+            AP_SetTrueStat(who, DEXTERITY, chardata.dex+30);
+		    AP_SetTrueStat(who, STRENGTH, chardata.str-10);
+            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
+        else
+            AP_SetTrueStat(who, DEXTERITY, chardata.dex+20);
+		    AP_SetTrueStat(who, STRENGTH, chardata.str-10);
+            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
+        endif
     elseif (chardata.kit == "Afogado em Mana")
 		AP_SetTrueStat(who, DEXTERITY, chardata.dex-30);
 		AP_SetTrueStat(who, STRENGTH, chardata.str-30);
@@ -1395,14 +1318,7 @@ program createchar(who)
 		AP_SetTrueStat(who, STRENGTH, chardata.str-10);
 		AP_SetTrueStat(who, INTELLIGENCE, chardata.int+20);
 		AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
-	elseif (chardata.kit == "Totemista")
-		var totem := CreateItemInBackpack(who, "totem", 1);
-		var s1 := CreateItemInBackpack(who, "invocarespiritolobo", 1);
-		var s2 := CreateItemInBackpack(who, "metamorfoselobo", 1);
-		CreateItemInBackpack(who, "Deadwood", 10);
-		CreateItemInBackpack(who, "FertileDirt", 10);
-		ganheispell:=1;
-		chardata.+magia := "Totemista";
+
 	endif
 	if (chardata.povo == "Asanita")
         SetObjProperty(who, "dpmod", 10);
@@ -1437,81 +1353,63 @@ program createchar(who)
 					SetObjProperty(p1, "spellinfo", spellinfo);
 					ganheispell := 1;
 				endif
-		endif
-	endif
+        elseif (chardata.povo == "Zharkiano")
+            if (ganheispell == 0)
+                chardata.+magia := "Sacerdote";
+                var robe := CreateItemInBackpack(who, 0x9945, 1); //bodysash
+                SetObjProperty(robe, "description", "Robe com bordado do simbolo do clero de Zharkia");
+                SetObjProperty(robe, "cannotdye", 1);
+                SetObjProperty(robe, "descmod", "Acólito de Zhark");
+                createiteminbackpack(who, "runaarmasagrada");
+                createiteminbackpack(who, "runacuraleve");
+                createiteminbackpack(who, "runadescanso");
+                ganheispell := 1;
+            endif
+        elseif (chardata.povo == "Numajene")
+            if (ganheispell == 0)
+                var totem := CreateItemInBackpack(who, "totem", 1);
+                var s1 := CreateItemInBackpack(who, "invocarespiritolobo", 1);
+                var s2 := CreateItemInBackpack(who, "metamorfoselobo", 1);
+                CreateItemInBackpack(who, "Deadwood", 10);
+                CreateItemInBackpack(who, "FertileDirt", 10);
+		        ganheispell:=1;
+		        chardata.+magia := "Totemista";
+            endif
+        elseif (chardata.povo == "Vanirio")
+            if (ganheispell == 0)
+                chardata.+magia := "Kitah";
+                var gump3 := GFCreateGump();
+                GFDisposable(gump3, 0);
+                GFResizePic(gump3, 0, 25, 3600, 170, 200);
+                GFResizePic(gump3, 15, 40, 0x13BE, 140, 170);
+                GFTextLine(gump3, 45, 50, 1153, "Escolha o elemento");
 
-	if (chardata.classe == "Sabio")
-		if (!ganheispell)
-			var gump2 := GFCreateGump();
-				GFDisposable(gump2, 0);
-				GFResizePic(gump2, 0, 25, 3600, 170, 200);
-				GFResizePic(gump2, 15, 40, 0x13BE, 140, 170);
-				GFTextLine(gump2, 45, 50, 1153, "Escolha sua magia");
+                GFTextLine(gump3, 40, 70, 1153, "Fogo");
+                GFTextLine(gump3, 40, 90, 1153, "Gelo");
+                GFTextLine(gump3, 40, 110, 1153, "Eletricidade");
 
-				GFTextLine(gump2, 40, 70, 1153, "Mesumbeiro");
-				GFTextLine(gump2, 40, 90, 1153, "Kitah");
+                GfAddButton(gump3, 20, 73, 2117, 2118, GF_CLOSE_BTN,  10);
+                GfAddButton(gump3, 20, 94 , 2117, 2118, GF_CLOSE_BTN,  20);
+                GfAddButton(gump3, 20, 113 , 2117, 2118, GF_CLOSE_BTN,  30);
 
-				GfAddButton(gump2, 20, 73, 2117, 2118, GF_CLOSE_BTN,  10);
-				GfAddButton(gump2, 20, 94 , 2117, 2118, GF_CLOSE_BTN,  20);
+                var input3 := GFSendGump(who, gump3);
+                input3 := input3[0];
 
-				var input2 := GFSendGump(who, gump2);
-				input2 := input2[0];
-
-				if (input2 == 10)
-				    chardata.+magia := "Mesum";
-					var grimorio:=createiteminbackpack(who, "grimorio", 1);
-					SetObjProperty(grimorio, "serialid", who.serial);
-					CreateItemInBackpack(who, "gravedust", 10);
-					CreateItemInBackpack(who, "BlackMoor", 10);
-					setobjproperty(grimorio, "marked",who.name + " - " + who.acctname);
-					var spellinfo := struct;
-					var p1 := createiteminbackpack(who, "pergaminhomagico1");
-					spellinfo.+id := 1;
-					SetObjProperty(p1, "spellinfo", spellinfo);
-					p1 := createiteminbackpack(who, "pergaminhomagico1");
-					spellinfo.id := 3;
-					SetObjProperty(p1, "spellinfo", spellinfo);
-					p1 := createiteminbackpack(who, "pergaminhomagico1");
-					spellinfo.id := 2;
-					SetObjProperty(p1, "spellinfo", spellinfo);
-					p1 := createiteminbackpack(who, "pergaminhomagico1");
-					spellinfo.id := 28;
-					SetObjProperty(p1, "spellinfo", spellinfo);
-
-				else
-				    chardata.+magia := "Kitah";
-					var gump3 := GFCreateGump();
-					GFDisposable(gump3, 0);
-					GFResizePic(gump3, 0, 25, 3600, 170, 200);
-					GFResizePic(gump3, 15, 40, 0x13BE, 140, 170);
-					GFTextLine(gump3, 45, 50, 1153, "Escolha o elemento");
-
-					GFTextLine(gump3, 40, 70, 1153, "Fogo");
-					GFTextLine(gump3, 40, 90, 1153, "Gelo");
-					GFTextLine(gump3, 40, 110, 1153, "Eletricidade");
-
-					GfAddButton(gump3, 20, 73, 2117, 2118, GF_CLOSE_BTN,  10);
-					GfAddButton(gump3, 20, 94 , 2117, 2118, GF_CLOSE_BTN,  20);
-					GfAddButton(gump3, 20, 113 , 2117, 2118, GF_CLOSE_BTN,  30);
-
-					var input3 := GFSendGump(who, gump3);
-					input3 := input3[0];
-
-					if (input3 == 10)
-						createiteminbackpack(who, "pedralaminaflamejante");
-						createiteminbackpack(who, "pedraataqueelementalfogo");
-						CreateItemInBackpack(who, "SulphurousAsh", 10);
-					elseif (input3 == 20)
-						createiteminbackpack(who, "pedralaminacongelante");
-						createiteminbackpack(who, "pedraataqueelementalgelo");
-						CreateItemInBackpack(who, "BlackPearl", 10);
-					elseif (input3 == 30)
-						createiteminbackpack(who, "pedralaminaeletrificada");
-						createiteminbackpack(who, "pedraataqueelementalenergia");
-						CreateItemInBackpack(who, "Deadwood", 10);
-					endif
-					SetObjProperty(who, "EspadaArcana", 1);
-				endif
+                if (input3 == 10)
+                    createiteminbackpack(who, "pedralaminaflamejante");
+                    createiteminbackpack(who, "pedraataqueelementalfogo");
+                    CreateItemInBackpack(who, "SulphurousAsh", 10);
+                elseif (input3 == 20)
+                    createiteminbackpack(who, "pedralaminacongelante");
+                    createiteminbackpack(who, "pedraataqueelementalgelo");
+                    CreateItemInBackpack(who, "BlackPearl", 10);
+                elseif (input3 == 30)
+                    createiteminbackpack(who, "pedralaminaeletrificada");
+                    createiteminbackpack(who, "pedraataqueelementalenergia");
+                    CreateItemInBackpack(who, "Deadwood", 10);
+                endif
+                SetObjProperty(who, "EspadaArcana", 1);
+            endif
 		endif
 	endif
 
@@ -1521,7 +1419,6 @@ program createchar(who)
     AP_SetVital(who, "Hunger", 0);
 	HealDamage(who, 200);
 	RecalcVitals(who);
-
 endprogram
 
 function ExibeGumpAparencia(who, chardata)

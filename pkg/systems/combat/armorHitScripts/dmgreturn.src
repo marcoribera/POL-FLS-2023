@@ -19,9 +19,12 @@ program HitScript(params)
 	if (!returnamount)
 		returnamount := 0.2;
 	endif
-	
+
 	PlayObjectCenteredEffectEx( defender, 0x22c6, 1, 9);
 	var dmg := rawdamage*returnamount;
+    if (GetCooldown(attacker, "corpofechado") > 0)
+        dmg := 1;
+    endif
 	ApplyDamageEX(attacker, dmg, DMG_PHYSICAL);
 	
 	return 1;

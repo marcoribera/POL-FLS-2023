@@ -106,7 +106,7 @@ function GetResist(who, resist)
 		// Aplica modificadores decorrentes de habilidades
 		if ( GetCooldown(who, "VontadeIndomavel")) // Habilidade ativa
 			valor := valor + 40; // +400% do VALOR_REFERENCIA
-		elseif (temHabilidade(who, "Treinamento Vigilante")) // Habilidade passiva
+		elseif (temHabilidade(who, "Devocao")) // Habilidade passiva
 			valor := valor + 40; // +400% do VALOR_REFERENCIA
 		endif
 	endif

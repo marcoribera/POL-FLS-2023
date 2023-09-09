@@ -5,6 +5,7 @@ use cfgfile;
 use unicode;
 
 include ":attributes:attributes";
+include ":attributes:vitals";
 include ":containers:containers";
 include ":itemutils:itemdesc";
 include "include/client";
@@ -301,8 +302,14 @@ program SpellStarter(params)
 						noto := TGTOPT_HELPFUL;
 					endif
 					targ := Target(mobile, noto );
+                    var vont := GetResist(targ, VONTADE);
 					if (GetCooldown(targ, "repeal") > 0)
 						SendSysMessageEx(mobile, "O alvo esta invulneravel a magias.", SSM_FAIL);
+						return 1;
+					endif
+                    if (GetCooldown(targ, "corpofechado") > 0) //Sentença de Hivytorn paladino
+						SendSysMessageEx(mobile, "A magia nao funcionou no alvo, alem disso voce sente suas energias sendo esgotadas.", SSM_FAIL);
+						DamageMANA(mobile, vont/3);
 						return 1;
 					endif
 					TurnObjectToward(mobile, targ.x, targ.y);
@@ -320,6 +327,12 @@ program SpellStarter(params)
 				endif
 			else
 				if (GetCooldown(targ, "repeal") > 0)
+					return 1;
+				endif
+                if (GetCooldown(targ, "corpofechado") > 0)
+					SendSysMessageEx(mobile, "A magia nao funcionou no alvo, alem disso voce sente suas energias sendo esgotadas.", SSM_FAIL);
+					var vont := GetResist(targ, VONTADE);
+					DamageMANA(mobile, vont/3);
 					return 1;
 				endif
 			endif
