@@ -527,7 +527,6 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 	endif
 
     if (chardata.kit == "Mago de Combate")
-
     	var i := 1;
 		foreach skill in primarias 
 			if ( skill == "Magery")
@@ -537,7 +536,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 			i := i + 1;
 		endforeach
 
-		var i := 1;
+		i := 1;
 		foreach skill in terciarias 
 			if ( skill == "MeleeCombat1h")
 				terciarias.erase(i);
