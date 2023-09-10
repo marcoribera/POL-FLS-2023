@@ -16,6 +16,10 @@ program reconhecer(who, param)
 	endif
 
 	var targ := Target(who);
+	if(GetObjProperty(targ, "realname"))
+		SendSysMessageEx(who, "Precisar ver o rosto pra reconhecer.", SSM_FAIL);
+		return 0;
+	endif
 
 	var ID := cstr(targ.serial); //Salva o serial do personagem
 	if(GetObjProperty(targ, "disfarce"))
