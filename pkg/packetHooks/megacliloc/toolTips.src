@@ -7,9 +7,14 @@ use uo;
 use basic;
 use cfgfile;
 
+use os;
+
 include ":spells:swordmage";
 include ":attributes:attributes";
 include ":charactercreation:habilidades";
+
+include "include/client";
+include "include/say";
 
 const OFFSET_OBJECT_SERIAL   := 0x05;
 const OFFSET_CLILOC_ID       := 0x0F;
@@ -138,7 +143,7 @@ function GetHitsInfo(entry)
 endfunction
 
 function getVelStringDesc(elem, item) //Velocidade da arma. Mostra diferença pra item base
-	var difer := item.speed - elem.speed;
+	var difer := Cint(item.speed - elem.speed);
 	if (difer > 0)
 		return CSTR(item.speed) + " (+" + CSTR(difer) + ")";
 	elseif (difer < 0)
@@ -167,45 +172,42 @@ function getVelStringDesc(elem, item) //Velocidade da arma. Mostra diferença pr
 endfunction
 
 function getParryBonus(elem, item)
-	var parrybonusI := Cint(item.parrybonus);
+	var parrybonusI := Cint(GetObjProperty(item, "parrybonus"));
 	var parrybonusE := Cint(elem.parrybonus);
-	var difer := parrybonusI - parrybonusE;
-	if (difer > 0)
-		return CSTR(parrybonusE) + " (+" + CSTR(difer) + ")";
-	elseif (difer < 0)
-		return CSTR(parrybonusE) + " (" + CSTR(difer) + ")";
+	var difer := Cint(parrybonusI - parrybonusE);
+	if (parrybonusI > 0)
+		return CSTR(parrybonusE) + " (+" + CSTR(parrybonusI) + ")";
+	elseif (parrybonusI < 0)
+		return CSTR(parrybonusE) + " (" + CSTR(parrybonusI) + ")";
 	else
-		return CSTR(parrybonusE);
-		endif
-	return 0;
+		return CSTR(parrybonusI);
+	endif
 endfunction
 
 function getParryDelay(elem, item)
-	var parrydelayI := Cint(item.parrydelay);
+	var parrydelayI := Cint(GetObjProperty(item, "parrydelay_mod"));
 	var parrydelayE := Cint(elem.parrydelay);
-	var difer := parrydelayI - parrydelayE;
-	if (difer > 0)
-		return CSTR(parrydelayE) + " (+" + CSTR(difer) + ")";
-	elseif (difer < 0)
-		return CSTR(parrydelayE) + " (" + CSTR(difer) + ")";
+
+	if (parrydelayI > 0)
+		return CSTR(parrydelayE) + " (+" + CSTR(parrydelayI) + ")";
+	elseif (parrydelayI < 0)
+		return CSTR(parrydelayE) + " (" + CSTR(parrydelayI) + ")";
 	else
 		return CSTR(parrydelayE);
 	endif
-	return 0;
 endfunction
 
 function getDexPenalty(elem, item)
-	var DexPenaltyI := Cint(item.DexPenalty);
+	var DexPenaltyI := Cint(GetObjProperty(item, "penaltybonus"));
 	var DexPenaltyE := Cint(elem.DexPenalty);
-	var difer := DexPenaltyI - DexPenaltyE;
-	if (difer > 0)
-		return CSTR(DexPenaltyE) + " (+" + CSTR(difer) + ")";
-	elseif (difer < 0)
-		return CSTR(DexPenaltyE) + " (" + CSTR(difer) + ")";
+
+	if (DexPenaltyI > 0)
+		return CSTR(DexPenaltyE) + " (+" + CSTR(DexPenaltyI) + ")";
+	elseif (DexPenaltyI < 0)
+		return CSTR(DexPenaltyE) + " (" + CSTR(DexPenaltyI) + ")";
 	else
 		return CSTR(DexPenaltyE);
 	endif
-	return 0;
 endfunction
 
 function ParseScriptString(crit)
@@ -235,22 +237,36 @@ program Install()
 endprogram
 
 exported function MegaCliloc( who, byref packet )
+	var white := "<BASEFONT COLOR=#FFFFFF>";
+	var red := "<BASEFONT COLOR=#FF0000>";
+	var blue := "<BASEFONT COLOR=#0000FF>";
+	var orange :=  "<BASEFONT COLOR=#FFA500>";
 
+	if (who) //TODO: Descobrir em que casos existe um who
+		if(!who.npctemplate)
+			print("Atualizando informações sobre ");
+		endif
+	endif
+
+	var Object_Name;
+
+	var xDesc; //Será utilizado para juntar as informações do tooltip do item
+	var desc; //Salva o campo de descrição do item ou personagem
+
+	//Encontra o objeto que terá o tooltip preenchido
 	var item := SystemFindObjectBySerial(packet.GetInt32(OFFSET_OBJECT_SERIAL));
 
-	if ( item )
+	if(item)
+		packet.SetSize(15); //primeira parte do packet eh tamanho 15
 
-		packet.SetSize(15);//primeira parte do packet eh tamanho 15
-
-		var Object_Name;
-		//var Text_Color := "CBA300";
-
-		if( item.IsA(POLCLASS_MOBILE) )
+		if (item.IsA(POLCLASS_MOBILE))
+			//PREENCHE NOME DO MOBILE
 			Object_Name := item.name;
 
+			//Cor do nome dos NPC conforme skill de combate
 			if (item.npctemplate)
 				if (who.weapon.attribute != WRESTLING)
-					if (AP_GetSkill(item, WRESTLING)+10 > AP_GetSkill(who, who.weapon.attribute))
+					if ( (AP_GetSkill(item, WRESTLING) + 10) > AP_GetSkill(who, who.weapon.attribute))
 						Object_Name :=  "<BASEFONT COLOR=#CBA300>" + Object_Name;
 					endif
 				else
@@ -267,120 +283,104 @@ exported function MegaCliloc( who, byref packet )
 					if (AP_GetSkill(item, WRESTLING)+10 > maxsk)
 						Object_Name :=  "<BASEFONT COLOR=#CBA300>" + Object_Name;
 					endif
-
 				endif
 			else
+				//Verifica se o char já foi reconhecido por who
 				var conhecidos := dictionary;
 				if(GetObjProperty(who, "conhecidos"))
 					conhecidos := GetObjProperty(who, "conhecidos"); //Lista de pessoas conhecidadas
-					if(item.serial in conhecidos)
+					if(conhecidos.Exists(item.serial))
 						Object_Name := conhecidos[item.serial];
+						SendSysMessage(who, "Reconheceu " + cstr(conhecidos[item.serial]));
+					else
+						Object_Name := "????";
+						SendSysMessage(who, "Não Reconheceu.");
 					endif
 				else
 					Object_Name := "??????";
+					SendSysMessage(who, who.name + " nao conhece ninguem.");
 				endif
-				/*
-				var raca := item.title_race;
-				if (raca)
-					Object_Name := Object_Name  + " [" + raca + "]";
-				endif
-				*/
-			endif
 
-			// Let's get the characters hightlight color.
-			// This is just an example, NPC's and stuff will still have to be added
-			// ofcourse. :)
-			// Setting the text color for the object's name will only show
-			// if the object's name has changed. So it's been left commented out for now.
-			//if (xObject.murderer)
-			//	Text_Color := "FF0000";
-			//elseif (xObject.criminal)
-			//	Text_Color := "666666";
-			//else
-			//	Text_Color := "00CCFF";
-			//endif
+				if (who.cmdlevel > 1) //Staff consegue ver o nome e raça
+
+					Object_Name := Object_Name + " [" + item.name;
+
+					var raca := item.title_race;
+					if (raca)
+						Object_Name := Object_Name + " - " + raca;
+					endif
+					Object_Name := Object_Name + "]";
+				endif
+			endif
 		elseif ( item.IsA(POLCLASS_ITEM) )
 			Object_Name := item.desc;
+		else
+			Object_Name := item.name;
 		endif
 
-		// If you try to break a new line in the first cliloc(below) it doesn't
-		// display right for some reason.
-		// If you want to change the color of the Object's name.
-		// Use this.
-		// Object_Name := CAscZ("<BASEFONT COLOR=#" + Text_Color + ">" + Object_Name);
-
+		//MONTA E ENVIA PACOTE COM ATUALIZAÇÃO DO NOME DO ITEM
 		Object_Name := CAscZ(Object_Name);
-
 		packet.SetInt32(OFFSET_CLILOC_ID, 1042971);
 		packet.SetUnicodeString(OFFSET_UNICODE_TEXT, Object_Name, 1);
+		packet.SetInt16(OFFSET_LENGTH_ID, Object_Name.Size() * 2);
 		// I've noticed that this packet is only sent if this value has changed
 		// from the last time it was checked. And using html to change the size doesn't work
 		// for some reason. Maybe a core/client issue?
-		packet.SetInt16(OFFSET_LENGTH_ID, Object_Name.Size() * 2);
 
-		// Start of Loop.
+		//PREENCHE A DESCRIÇÃO COMUM A QUALQUER ITEM OU MOBILE
+		xDesc := "";
+		desc := GetObjProperty(item, "description");
 
-		// This is where you'll be putting all your properties. <br> to break a new line.
-		// You wont need to add anymore cliloc id's because you can just add all the props
-		// into one string.
-		var white := "<BASEFONT COLOR=#FFFFFF>";
-		var red := "<BASEFONT COLOR=#FF0000>";
-		var blue := "<BASEFONT COLOR=#0000FF>";
-		var orange :=  "<BASEFONT COLOR=#FFA500>";
-		var xDesc := "";
-		var desc := GetObjProperty(item, "description");
-
+		//EXIBE SE TEM PROPRIEDADE MAGICA
 		if (GetObjProperty(item,"magic"))
-			if (temHabilidade(who, "Detectar Item Magico"))
-				xDesc := xDesc + blue + "Mâgico<br>";
-			endif
+			xDesc := xDesc + blue + "Mâgico<br>";
 		endif
 
+		var descmods := GetObjProperty(item, "descmod");
 
-		 var descmods := GetObjProperty(item, "descmod");
-
+		//JUNTA AS DESCRIÇÕES DO DOS PROPS DO PERSONAGEM
 		if((descmods!=error) && (desc == error))
-			 desc:="";
+			 desc := descmods;
 		endif
 
-		 if(descmods != error)
+		if(descmods != error)
 			foreach descmod in descmods
 				desc:=desc + descmod ;
 			endforeach
-		 endif
+		endif
 
+		//LIMITA O TAMANHO DAS DESCRIÇÕES
 		if (len(desc) > 85)
 			desc := desc[1, 85];
 		endif
+
+		//VERIFICA PROPRIEDADES DE IDIOMAS
 		if (desc!=error)
 			var linguagem := GetObjProperty(item, "lingua");
 			if (linguagem!=error)
-					//var linguas := GetObjProperty(who, "linguas");
-					//i//f (linguagem in linguas)
-					if (temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica"))
-						xDesc := xDesc + white + "" + desc + "<BR>";
-					else
-						xDesc :=  xDesc + "*Inscrições em Língua Desconhecida*<BR>";
-					endif
+				//var linguas := GetObjProperty(who, "linguas");
+				//if (linguagem in linguas)
+				if (temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica"))
+					xDesc := xDesc + white + "" + desc + "<BR>";
+				else
+					xDesc :=  xDesc + "*Inscrições em Língua Desconhecida*<BR>";
+				endif
 			else
 				xDesc := xDesc + white + "" + desc + "<BR>";
 			endif
 		endif
 
-
-		if (item.isa(POLCLASS_WEAPON) || item.isa(POLCLASS_ARMOR))
+		//ADICIONA DESCRIÇÕES DAS PROPRIEDADES COMUNDS DE ARMAS E ARMADURAS
+		if (item.isA(POLCLASS_WEAPON) || item.isA(POLCLASS_ARMOR))
 			var cfg := ReadConfigFile(":*:itemdesc");
 			var elem := FindConfigElem(cfg, item.objtype);
 			if (item.quality >= 1.1)
 				xDesc := xDesc + white + "Excepcional<br>";
 			endif
+
 			var cond := GetCondition(item);
-			xDesc := xDesc + GetCondition(item) + "<br>";
-			/*
-			if (cond != "Boa")
-	 			xDesc := xDesc + GetCondition(item) + "<br>";
-			endif
-			*/
+			xDesc := xDesc + "HP: " + GetCondition(item) + "<br>";
+
 			if (item.isA(POLCLASS_WEAPON))
 				xDesc := xDesc + "Min Str: " + elem.strrequired + "<br>";
 				xDesc := xDesc + "Dano: " + GetDmgStringDesc(elem,  item) + "<br>";
@@ -409,21 +409,63 @@ exported function MegaCliloc( who, byref packet )
 					xDesc := xDesc  + "Veneno " + (item.damage_poison ) + "<br>";
 				endif
 
+				//EXIBE AS GEMAS QUE TEM NA ARMA
+				if ( getObjProperty(item, "swordmage") == who.serial)
+					var gems := getobjproperty(item, "gems");
+					foreach gem in (gems.keys())
+						xDesc := xDesc + white + gem + " - "+ getSwordSpellName(gems[gem].id) + "<br>";
+					endforeach
+				endif
+				if (item.dmg_mod > 0 )
+					xDesc := xDesc + blue + "Bônus Dano";
+				endif
+				if (item.hp_mod > 0)
+					xDesc := xDesc + blue + "Bônus Item PVs";
+				endif
+
+				var hitsscripts := GetObjProperty(item, "HitScripts");
+				if (hitsscripts != error)
+					foreach hits in hitsscripts
+						if (hits == ":combat:weaponHitScripts/FireHit")
+							xDesc := xDesc + blue + "Dano de Fogo<br>";
+						elseif ( hits == ":combat:weaponHitScripts/IceHit")
+							xDesc := xDesc + blue + "Dano de Gelo<br>";
+						elseif ( hits == ":combat:weaponHitScripts/LightningHit")
+							xDesc := xDesc + blue + "Dano de Energia<br>";
+						endif
+					endforeach
+				endif
+
+				if (GetObjProperty(item, "swordmage") != error)
+					xDesc := xDesc + white + GetObjProperty(item, "swordmage") + "<br>";
+				endif
 			elseif (item.isA(POLCLASS_ARMOR))
 				if (cint(elem.strrequired) > 0)
 					xDesc := xDesc + "Min Str: " + elem.strrequired + "<br>";
 				endif
-				if (item.DexPenalty)
+				if (elem.DexPenalty || GetObjProperty(item, "penaltybonus"))
 					xDesc := xDesc + "Redutor Dex : " + getDexPenalty(elem, item) + "<br>";
 				endif
-				if (item.parrybonus)
+				if (elem.parrybonus || GetObjProperty(item, "parrybonus"))
 					xDesc := xDesc + "Block Bonus: " + getParryBonus(elem, item) + "<br>";
 				endif
-				if (item.parrydelay)
+				if (elem.parrydelay || GetObjProperty(item, "parrydelay_mod"))
 					xDesc := xDesc + "Delay Bonus: " + getParryDelay(elem, item) + "<br>";
 				endif
+				xDesc := xDesc + white + "Fisico " + (item.resist_physical ) + "<br>";
+				if ( (item.resist_cold + item.resist_cold_mod != 0))
+					xDesc := xDesc  + "Frio " + (item.resist_cold ) + "<br>";
+				endif
+				if ( (item.resist_fire + item.resist_fire_mod != 0))
+					xDesc := xDesc  + "Fogo " + (item.resist_fire ) + "<br>";
+				endif
+				if ( (item.resist_energy + item.resist_mod != 0))
+					xDesc := xDesc  + "Energia " + (item.resist_energy ) + "<br>";
+				endif
+				if ( (item.resist_poison + item.resist_poison_mod != 0))
+					xDesc := xDesc  + "Veneno " + (item.resist_poison ) + "<br>";
+				endif
 			endif
-
 		endif
 
 		var pplmage := GetObjProperty(item, "magicwho"); //magic lore
@@ -462,39 +504,12 @@ exported function MegaCliloc( who, byref packet )
 						endif
 					endforeach
 				endif
-				if (item.dmg_mod > 0 )
-					xDesc := xDesc + blue + "Bônus Dano";
-				endif
-				if (item.hp_mod > 0)
-					xDesc := xDesc + blue + "Bônus Item PVs";
-				endif
-				var hitsscripts := GetObjProperty(item, "HitScripts");
-				if (hitsscripts != error)
-					foreach hits in hitsscripts
-						if (hits == ":combat:weaponHitScripts/FireHit")
-							xDesc := xDesc + blue + "Dano de Fogo<br>";
-						elseif ( hits == ":combat:weaponHitScripts/IceHit")
-							xDesc := xDesc + blue + "Dano de Gelo<br>";
-						elseif ( hits == ":combat:weaponHitScripts/LightningHit")
-							xDesc := xDesc + blue + "Dano de Energia<br>";
-						endif
-					endforeach
-				endif
-
-				if (GetObjProperty(item, "swordmage") != error)
-					xDesc := xDesc + white + GetObjProperty(item, "swordmage") + "<br>";
-				endif
 			endif
 		endif
 
-		//diz as gemas da espada
-		if ( getObjProperty(item, "swordmage") == who.serial)
-			var gems := getobjproperty(item, "gems");
-			foreach gem in (gems.keys())
-				xDesc := xDesc + white + gem + " - "+ getSwordSpellName(gems[gem].id) + "<br>";
-			endforeach
-		endif
+		PRINT("Eviar o pacote de Tooltip.");
 
+		//MONTA E ENVIA PACOTE COM ATUALIZAÇÃO DAS DESCRIÇÕES
 		xDesc := CAscZ(xDesc);
 
 		if ( xDesc.Size() > 0 )
@@ -511,11 +526,9 @@ exported function MegaCliloc( who, byref packet )
 		endif
 
 		// End of loop.
-
 		packet.SetInt32(packet.GetSize(), 0);
 	endif
 
 	return 0;
 
 endfunction
-

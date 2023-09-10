@@ -5,6 +5,8 @@ include "include/client";
 include "include/say";
 include ":survival:fishingFunctions";
 include ":gumps:requestgump";
+include ":attributes:attributes";
+include ":fls_core:packets";
 
 program reconhecer(who)
 	var conhecidos := dictionary;
@@ -14,22 +16,34 @@ program reconhecer(who)
 	endif
 
 	var targ := Target(who);
+	var nome;
 
 	if(targ.IsA(POLCLASS_MOBILE))
-		if(targ.serial in conhecidos)
+		if(conhecidos.Exists(targ.serial))
 			var apelido := RequestGump(who, "Quer passar a reconhecer essa pessoa como?");
 			if (apelido)
 				conhecidos[targ.serial] := apelido;
 				SetObjProperty(who, "conhecidos", conhecidos);
+				nome := targ.name;
+				SetName(targ, nome+".");
+				sleepms(100);
+				SetName(targ, nome);
+				SendSysMessageEx(who, "Novo nome salvo.", SSM_INFO);
 			endif
 		else
 			var apelido := RequestGump(who, "Quer reconhecer essa pessoa como?");
 			if (apelido)
 				conhecidos[targ.serial] := apelido;
 				SetObjProperty(who, "conhecidos",conhecidos);
+				nome := targ.name;
+				SetName(targ, nome+".");
+				sleepms(100);
+				SetName(targ, nome);
+				SendSysMessageEx(who, "Nome salvo.", SSM_INFO);
 			endif
 		endif
+	else
+		SendSysMessageEx(who, "So pode reconhecer jogadores.", SSM_FAIL);
+		return 0;
 	endif
-	SendSysMessageEx(who, "So pode reconhecer jogadores.", SSM_FAIL);
-	return 0;
 endprogram
