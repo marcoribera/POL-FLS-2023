@@ -516,7 +516,14 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 			i := i + 1;
 		endforeach
 
-        terciarias.append("HandleAnimal");
+		i := 1;
+		foreach skill in quaternarias 
+			if ( skill == "HandleAnimal")
+				quaternarias.erase(i);
+				terciarias.append("HandleAnimal");
+			endif
+			i := i + 1;
+		endforeach
 	endif
 
     if (chardata.kit == "Mago de Combate")
@@ -556,10 +563,6 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 			i := i + 1;
 		endforeach
 	endif
-
-    if (chardata.classe == "Artifice" || (chardata.povo == "Numajene" && chardata.classe == "Sabio"))
-        secundarias.append("HandleAnimal");
-    endif
 
 var gflayout := array{
 		"noclose",
