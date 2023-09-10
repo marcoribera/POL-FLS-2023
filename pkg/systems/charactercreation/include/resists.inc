@@ -57,6 +57,8 @@ function GetResist(who, resist)
 		// Aplica os bonus base do Caminho para a resistência
 		if (classe == "Guerreiro")
 			valor := valor + 20;
+		elseif (classe == "Artifice")
+			valor := valor + 20;
 		else
 			valor := valor + 10;
 		endif
