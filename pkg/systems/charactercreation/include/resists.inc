@@ -58,7 +58,7 @@ function GetResist(who, resist)
 		if (classe == "Guerreiro")
 			valor := valor + 20;
 		elseif (classe == "Artifice")
-			valor := valor + 20;
+			valor := valor + 15;
 		else
 			valor := valor + 10;
 		endif
@@ -74,6 +74,8 @@ function GetResist(who, resist)
 		// Aplica os bonus base do Caminho para a resistência
 		if (classe == "Ladino")
 			valor := valor + 20;
+		elseif (classe == "Artifice")
+			valor := valor + 15;
 		else
 			valor := valor + 10;
 		endif
@@ -90,6 +92,8 @@ function GetResist(who, resist)
 		// Aplica os bonus base do Caminho para a resistência
 		if (classe == "Sabio")
 			valor := valor + 20; // +300% do VALOR_REFERENCIA
+		elseif (classe == "Artifice")
+			valor := valor + 15;
 		else
 			valor := valor + 10; // +150% do VALOR_REFERENCIA
 		endif
