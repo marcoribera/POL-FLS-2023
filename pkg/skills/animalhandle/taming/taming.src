@@ -1,3 +1,4 @@
+use cfgfile;
 use uo;
 use os;
 use util;
@@ -5,11 +6,14 @@ use util;
 include ":attributes:attributes";
 include ":brainAI:include/npcCommands";
 include ":gumps:gumps_ex";
+include ":gumps:gumps"; //add
 include "include/say";
 include ":taming:taming";
 include ":mounts:mounts";
 include ":tn:characters";
 include ":tn:boss";
+include ":charactercreation:habilidades";
+//include ":damage:damage"; para os criticos talvez?
 
 const START_Y	   := 91;
 const END_Y	   := 311;
@@ -36,6 +40,16 @@ program TamingSkill(who)
 		return;
 	endif
 
+//checar se já tem animal fidelizado
+	var check_bond := 0;
+	var petsi := GetObjProperty(who, "TamedPets");
+		foreach serial in petsi
+			var pety := SystemFindObjectBySerial(serial);
+			if (GetObjProperty(pety, "bond") == "fiel")
+				check_bond := 1;
+			endif
+		endforeach 
+
 	var yn_gump := GFCreateGump(140, 120);
 
 	GFClosable(yn_gump, 1);
@@ -43,24 +57,46 @@ program TamingSkill(who)
 	GFResizePic(yn_gump, 15, 15, GFCfgConst("Defaults", "ForeGround"), 270, 250); //175);
 
 	var y_pos := 20;
-	GFTextLine(yn_gump, 20, 20, 1153, "Menu de HandleAnimal.");
+
+	GFTextMid(yn_gump, 20, 25, 300, 55, "Menu de Trato de Animais");
 
 	GFAddButton(yn_gump, 20, (63), 2117, 2118, GF_CLOSE_BTN, 1);
 	GFTextLine(yn_gump, 40, 60, 1153, "Adestrar Animal.");
 
 	GFAddButton(yn_gump, 20, (83), 2117, 2118, GF_CLOSE_BTN, 2);
 	GFTextLine(yn_gump, 40, 80, 1153, "Informações sobre o animal.");
+	
+	if (TemHabilidade(who, "Treinar"))
+		GFAddButton(yn_gump, 20, (103), 2117, 2118, GF_CLOSE_BTN, 3);
+		GFTextLine(yn_gump, 40, 100, 1153, "Treinar");
+	endif
 
-	GFTextLine(yn_gump, 20, 120, 1153, "Libertar Animal:");
-
+	GFTextLine(yn_gump, 20, 130, 1153, "Libertar Animal:");
+	
+	if ( (check_bond == 0) && (AP_GetSkill(who, HANDLEANIMAL) >= 1) )
+		GFAddButton(yn_gump, 190, (243), 2117, 2118, GF_CLOSE_BTN, 4);
+		GFTextLine(yn_gump, 210, 240, 1153, "Fidelizar?");
+	endif
+	
 	var y := 150;
 	var i := 1;
 	var pets := GetObjProperty(who, "TamedPets");
 	foreach serial in pets
 		var pet := SystemFindObjectBySerial(serial);
-		GFTextLine(yn_gump, 40, y, 1153, "" + pet.name);
+		var text_fiel := "";
+		if (GetObjProperty(pet, "bond") == "fiel")
+			text_fiel := "<basefont color=#34eb7a> *fiel*";
+			GFTextLine(yn_gump, 40, y, 1153, "" + pet.name + text_fiel);
+		else
+			GFTextLine(yn_gump, 40, y, 1153, "" + pet.name);
+			if (GetObjProperty(pet, "Fidelizar?") == "nao")
+				GFGumpPic(yn_gump, 190, y+4, 2437);
+			elseif (GetObjProperty(pet, "Fidelizar?") == "sim")
+				GFGumpPic(yn_gump, 190, y+4, 2436);
+			endif
+		endif
 		if (!GetObjProperty(pet, "summoned"))
-			GFAddButton(yn_gump, 20, y+3, 2117, 2118, GF_CLOSE_BTN, (100+i));
+			GFAddButton(yn_gump, 20, y+4, 2103, 2104, GF_CLOSE_BTN, (100+i));
 		endif
 		i := i + 1;
 		y := y + 20;
@@ -73,10 +109,29 @@ program TamingSkill(who)
 		taming(who);
 	elseif (input == 2)
 		Start_Script(":animallore:animalLore", who);
+	elseif (input == 3)
+		Teach(who);
 	elseif (input > 100)
 		SendSysMessageEx(who, "Voce libertou seu animal.", SSM_INFO);
 		ErasePet(who, pets[input-100]);
 		destama(pets[input-100]);
+	elseif (input == 4) // botão para poder fidelizar
+		SendSysMessageEx(who, "Qual pet voce quer poder fidelizar? OBS: O processo sera resetado para qualquer outro pet com fidelizacao iniciada!", SSM_INFO);
+		var targx := target(who);
+		if (GetObjProperty(targx,"owner") != who.serial)
+			SendSysMessageEx(who, "Esse animal nao lhe pertence!", SSM_FAIL);
+			return;
+		endif
+		//resetar os demais para "nao" e deixa só o selecionado como "sim"
+		var pets_all := GetObjProperty(who, "TamedPets");
+		foreach serial in pets_all
+			var pet_each := SystemFindObjectBySerial(serial);
+			SetObjProperty(pet_each, "Fidelizar?", "nao");
+			EraseObjProperty(pet_each, "bond");
+		endforeach 
+		SetObjProperty(targx, "Fidelizar?", "sim");
+		SendSysmessage(who, ""+targx.name+" pode ser fidelizado, todos os demais agora nao");
+		
 	endif
 
 
@@ -120,12 +175,17 @@ function taming(who)
 		return 0;*/
 	endif
 
+ if(!CheckLineOfSight(who, targ))
+    SendSysMessage(who, "Voce nao pode ver isso!");
+    return;
+  endif
+
 	if (isBoss(targ))
 		SendSysMessageEx(who, "Essa criatura nao aceita ser domesticada.", SSM_FAIL);
 		return 0;
 	endif
 
-	var cfg := ReadConfigFile(":brainAI:npcdesc");
+	var cfg := ReadConfigFile(":brainai:npcdesc");
 	var npctemplate := targ.npctemplate;
 	npctemplate := npctemplate[10, len(npctemplate)-9];
 	cfg := cfg[npctemplate];
@@ -164,7 +224,9 @@ function taming(who)
 				SetObjProperty(targ, "owner", who.serial);
 				SetObjProperty(targ, "name", targ.name);
 				SetObjproperty(targ, "script", targ.script);
+				SetObjProperty(targ,"happiness", 50);
 				SetObjProperty(targ, "AntigoTreinadorID", who.serial);
+				SetObjProperty(targ, "Fidelizar?", "nao");
 
 				targ.script := ":ghaia:tamed";
 				RestartScript(targ);
@@ -213,8 +275,12 @@ function TameLoop(who, targ, byref info)
 
 	PrintText(who, "*tentando adestrar " + targ.name + "*");
 
+	var ownerarray := GetObjProperty(targ, "LastOwners"); //identifica se teve último dono
+if(!ownerarray)
+    ownerarray := {};
+ endif
 	var check := SkillCheck(who, HANDLEANIMAL, info.difficulty);
-	if ( check > 0 )
+	if (( check > 0 ) || (who.serial in ownerarray) )
 		SendSysMessageEx(who, ""+targ.name+" parece ser seu amigo.", SSM_INFO);
 		AI_MoveXY(targ, info.x, NEMOVE_TOWARD, NEMOVE_WALK, WAKEUP, 1);
 
@@ -244,33 +310,90 @@ function TameLoop(who, targ, byref info)
 	endif
 endfunction
 
-function TeachGump(who, tamed)
+function Teach(who)
+	if (!TemHabilidade(who, "Treinar"))
+		SendSysMessageEx(who, "Voce nao tem a habilidade para treinar animais domesticados.", SSM_FAIL);
+		return;
+	endif
+
+	SendSysMessage(who, "Selecione a criatura que voce deseja treinar.");
+	var creature := Target(who, TGTOPT_CHECK_LOS);
+	var instincts := GetObjProperty(creature, "instincts");
+	var bond := (Getobjproperty(creature, "bond") == "fiel") ;
+	if (!bond)
+		SendSysMessage(who, "Esse animal nao eh fiel a voce, conquiste a confianca dele primeiro!", 0, 32);
+		return;
+	endif
+	var delay := GetObjProperty(who, "delayskill");
+	SetObjProperty(who, "delayskill", ReadGameClock() + 5);
+	if(delay)
+		if(delay > ReadGameClock())
+			SendSysMessage(who, "Voce ainda esta fazendo outra coisa.");
+			return;
+		endif
+	endif
+	if( GetObjProperty(creature, "Blocked") || creature.frozen )
+		SendSysMessage(who, "O raciocinio por tras da sua analise esta incorreto.");
+		return 0;
+	endif
+
+	if(instincts && !TemHabilidade(who, "Treinar Aprimorado"))
+		SendSysMessage(who, "Voce nao tem a habilidade Treino Aprimorado para despertar mais um instinto no seu animal.");
+		return;
+	endif
+
+	if( creature.serial == who.serial )
+		SendSysMessage(who, "Esse nao pode ser um alvo valido.");
+		return 0;
+	endif
+
+
+	if( (creature.graphic == 0x190) || (creature.graphic == 0x191) || (creature.graphic == 309) || (creature.graphic == 307) || (creature.graphic == 14) )
+		SendSysMessage(who, "Esse nao pode ser um alvo valido.");
+		return 0;
+	endif
+
+	//var category := lower(getnpccategory( ParseTemplateName(creature.npctemplate).template )); // Se necessário categorias
+
+
+	var advance_flags;
+	if(creature.script == ":ghaia:tamed")
+		TeachGump (who, creature);
+	else
+		return 0;
+	endif
+
+
+endfunction
+
+
+function TeachGump(who, creature)
 
 	info_cfg := ReadConfigFile(":taming:taming");
 	if ( !info_cfg )
 		SendSysMessage(who, "Erro ao ler cfg ->"+info_cfg);
 		return 0;
 	else
-		index_list := GetConfigStringArray(info_cfg["Index"], "Cmd");
+		index_list := GetConfigStringArray(info_cfg["Index"], "Ins");
 	endif
 
 	template := GumpTemplate();
 
-	var gump := BuildGump(who, tamed);
+	var gump := BuildGump(creature);
 	var input := GFSendGump(who, gump);
 
-	if ( input[0] > 1 )
-		ProcessInput(who, tamed, input);
+	if ( input[0] > 1 ) // Define na hora de apertar o botão ensinar
+		ProcessInput(who, creature, input);
 	endif
 
 endfunction
 
-function ProcessInput(who, tamed, input)
+function ProcessInput(who, creature, input)
 	var id := 2;
-	foreach cmd in new_list
 
+	foreach ins in new_list
 		if( input[0] == id )
-			TeachNow(who, tamed, cmd, input);
+			TeachNow(who, creature, ins);
 			break;
 		else
 			id := id + 1;
@@ -281,26 +404,27 @@ endfunction
 function GumpTemplate()
 	var gump := GFCreateGump(50,50);
 	GFPage(gump, 0);
-	GFResizePic(gump, 0, 0, BACKGROUND, 302, 375);
-	GFResizePic(gump, 2, 7, FOREGROUND, 293, 360);
-	GFTextLine(gump, 24, 31, 0, "Menu de Adestramento");
-
+	GFResizePic(gump, 0, 0, BACKGROUND, 322, 485);
+	GFResizePic(gump, 2, 7, FOREGROUND, 313, 470);
+	GFTextLine(gump, 125, 20, 40, "INSTINTOS");
+	GFGumpPic(gump, 150, 290, 1629); // jacaré primeiro lateral, segundo altura
+	GFGumpPic(gump, 10, 105, 1631); //boi
 	GFPage(gump, 1);
 
 	return gump;
 endfunction
 
-function BuildGump(who, animal)
+function BuildGump(creature)
 	var gump := template;
 	var y_pos := START_Y;
 
 
 	foreach index in index_list
-		var cmd_elem := info_cfg[index];
-		if( AP_GetSkill(who, HANDLEANIMAL) >= cmd_elem.Skill )
-			BuildCmds(animal, gump, cmd_elem, y_pos);
+		var ins_elem := info_cfg[index];
+		//if( AP_GetSkill(who, ADESTRAMENTO) >= ins_elem.Skill )// retirado Sem necessidade
+			BuildInstincts(creature, gump, ins_elem, y_pos);
 			new_list.append(index);
-		endif
+		//endif
 		SleepMS(2);
 	endforeach
 
@@ -308,84 +432,119 @@ function BuildGump(who, animal)
 	y_pos := START_Y;
 
 	foreach index in new_list
-		BuildDetails(animal, gump, index, y_pos);
+		BuildDetails(gump, index, y_pos);
 		SleepMS(2);
 	endforeach
 
 	return gump;
 endfunction
 
-function BuildCmds(animal, byref gump, cmd_elem, byref y_pos)
+function BuildInstincts(creature, byref gump, ins_elem, byref y_pos)
 
 	if( y_pos > END_Y )
-		GFAddButton(gump, 243, 34, 2224, 2224, GF_PAGE_BTN, gump.cur_page+1);
+		GFAddButton(gump, 243, 34, 2224, 2224, GF_PAGE_BTN, gump.cur_page+1); //botão de numero de página
 		y_pos := START_Y;
-		GFPage(gump, gump.cur_page+1);
+		GFPage(gump, gump.cur_page+1); //vai para a lista da descrição
 	endif
 
-	if( y_pos == START_Y )
-		GFTextLine(gump, 24, 67, 0, "Comando");
-		GFTextLine(gump, 192, 67, 0, "Detalhar");
+	if( y_pos == START_Y )//texto inicial e títulos
+		GFTextLine(gump, 220, 87, 10, "Naturais");
+		GFTextLine(gump, 12, 37, 0, "Você pode despertar instintos naturais (passivos)");
+		GFTextLine(gump, 12, 50, 0, "ou selvagens (crítico de dano) do seu fiel animal."); 
+		GFTextLine(gump, 12, 62, 0,	"Clique no botão para mais info sobre o instinto.");
+		GFTextLine(gump, 10, 437, 30,	" OBS: o animal só pode ter 1 de cada tipo de"); 
+		GFTextLine(gump, 10, 450, 30,	"   instinto(caso você saiba Treino Aprimorado)");
+		GFTextLine(gump, 44, 275, 90, "Selvagens");
 	endif
 
-	if(gump.cur_page > 1)
+	if(gump.cur_page > 1) //botão de número da página
 		GFAddButton(gump, 213, 34, 2223, 2223, GF_PAGE_BTN, gump.cur_page-1);
 	endif
 
-	GFTextLine(gump, 24, y_pos, 1890, cmd_elem.Nome);
-	GFAddButton(gump, 211, y_pos+3, 1209, 1210, GF_PAGE_BTN, det_page);
+var mount_packs := (creature.npctemplate == ":brainai:horse" || creature.npctemplate == ":brainai:horse2" || creature.npctemplate == ":brainai:horse3"|| creature.npctemplate == ":brainai:horse4" || creature.npctemplate == ":brainai:horse5" || creature.npctemplate == ":brainai:llama");// quem pode treinar animal de carga
+var sense_ones := (creature.npctemplate == ":brainai:dog" || creature.npctemplate == ":brainai:eagle"); // quem pode treinar sentido aguçado
+var npccfgfile := ReadConfigFile(":brainai:npcdesc");
+//var creature_who := creature.npctemplate;
+var creature_who := NPC_ParseTemplateName(creature.npctemplate).template;
+var creature_taxonomy := GetConfigString(npccfgfile[creature_who], "Taxonomy"); // identifca a taxonomy do npcdesc
+var pet_instinct := GetConfigStringArray(ins_elem, "Taxonomy"); // LISTA TODOS do cfg
+var equal_taxonomy := (creature_taxonomy in pet_instinct); //identifica a taxonomy do cfg de acordo com o alvo
+//print("A criatura eh "+creature_who+" Os taxonomys sao "+creature_taxonomy+" e os iguais sao "+equal_taxonomy); DEBUG
+	if(ins_elem.Type == 0) //listagem dos instintos naturais
 
-	det_page := det_page + 1;
+		GFTextLine(gump, 170, y_pos+20, 1890, ins_elem.Nome); // tive que listar individualmente pra não dar bode, a lista do cfg de acordo com o CONST inicial começa no 10
+		if(ins_elem.Nome == "Ferocidade")
+		GFAddButton(gump, 290, y_pos+23, 1209, 1210, GF_PAGE_BTN, 10);
+
+		y_pos := y_pos+20;
+		elseif(ins_elem.Nome == "Flexibilidade")
+		GFAddButton(gump, 290, y_pos+23, 1209, 1210, GF_PAGE_BTN, 11);
+
+		y_pos := y_pos+20;
+		elseif(ins_elem.Nome == "Fortaleza")
+		GFAddButton(gump, 290, y_pos+23, 1209, 1210, GF_PAGE_BTN, 12);
+
+		y_pos := y_pos+20;
+		endif
+	//elseif (ins_elem.Type == 3 && mount_packs) //Aqui inseri o Animal de Carga, tem type diferente no cfg (3), RETIRADO!
+		//GFTextLine(gump, 170, y_pos+20, 1890, ins_elem.Nome);
+		//GFAddButton(gump, 290, y_pos+23, 1209, 1210, GF_PAGE_BTN, 14);
+
+		//y_pos := y_pos+20;
+	elseif (ins_elem.Type == 2 && sense_ones) // Aqui inseri o senso aguçado, type 2 no cfg
+		GFTextLine(gump, 170, y_pos+20, 1890, ins_elem.Nome);
+		GFAddButton(gump, 290, y_pos+23, 1209, 1210, GF_PAGE_BTN, 13);
+
+		y_pos := y_pos+20;
+	elseif((ins_elem.Type == 1) && (equal_taxonomy)) //instintos selvagens listados de acordo com o alvo e cfg
+	
+	GFTextLine(gump, 27, y_pos+148, 1890, ins_elem.Nome);
+	var det_pagex := ins_elem.Number; //inseri um valor number no cfg pra ficar mais facil para listar, lá começa no 15
+	GFAddButton(gump, 10, y_pos+151, 1209, 1210, GF_PAGE_BTN, det_pagex);
+
+	//det_page := det_page + 5;
 	y_pos := y_pos+20;
+
+	endif
 
 	return 1;
 endfunction
 
 
-function BuildDetails(targ, byref gump, cmd_name, byref y_pos)
+function BuildDetails(byref gump, ins_name, byref y_pos)
 
-	var cfg_elem := info_cfg[cmd_name];
+	var cfg_elem := info_cfg[ins_name];
 
 	GFPage(gump, det_page);
 	GFAddButton(gump, 213, 34, 2223, 2223, GF_PAGE_BTN, 1);
-	GFTextLine(gump, 24, 67, 0, "Descrição");
-	GFTextLine(gump, 192, 67, 0, "Ensinar");
-
-	GFAddButton(gump, 211, y_pos+3, 1209, 1210, GF_CLOSE_BTN, btn_maxId);
+	if(cfg_elem.Type == 1) //identificar se é instinto selvagem para onde aparecer o título descrição e o botão de ensinar
+			GFTextLine(gump, 55, 280, 0, "Descrição");
+			GFTextLine(gump, 58, 400, 0, "Ensinar");
+			GFAddButton(gump, 67, y_pos+300, 1209, 1210, GF_CLOSE_BTN, btn_maxId);
+		else //identificar se é instinto natural para onde aparecer a descrição e o botão de ensinar
+			GFTextLine(gump, 210, 55, 0, "Descrição");
+			GFTextLine(gump, 210, 200, 0, "Ensinar");
+			GFAddButton(gump, 221, y_pos+95, 1209, 1210, GF_CLOSE_BTN, btn_maxId);
+		endif
 
 	var desc := GetConfigStringArray(cfg_elem, "Desc");
-	if ( desc.Size() < 1 )
+	if ( desc.Size() < 1 ) // se não tiver descrição não aparece nada
 		return 0;
 	endif
 
-	foreach line in desc
-		GFTextLine(gump, 24, y_pos, 1890, line);
-		y_pos := y_pos+20;
-		SleepMS(2);
+	foreach line in desc // identificar se é instinto natural ou selvagem para aparecer a descrição da hab
+		if(cfg_elem.Type == 1)
+			GFTextLine(gump, 20, y_pos+220, 1890, line);
+			y_pos := y_pos+20;
+			SleepMS(2);
+		else
+			GFTextLine(gump, 180, y_pos+10, 1890, line);
+			y_pos := y_pos+20;
+			SleepMS(2);
+		endif
 	endforeach
 
 	y_pos := y_pos+20;
-
-	var lines := struct;
-
-	var frase := GetConfigString(cfg_elem, "WhatToSay");
-	if( !frase )
-		frase := "Comando Individual:";
-	endif
-	GFTextLine(gump, 24, y_pos, 1890, frase);
-
-	lines.+singular := GFTextEntry(gump, 24 + GFTextWidth(frase), y_pos, 75, 20, 1418, ini_text:="aqui");
-
-	y_pos := y_pos+20;
-
-	if( cfg_elem.Group )
-		frase := "Comando de Grupo:";
-		GFTextLine(gump, 24, y_pos, 1890, frase);
-		lines.+plural := GFTextEntry(gump, 24 + len(frase)*7, y_pos, 75, 20, 1418, ini_text:="aqui");
-	endif
-
-	lines.+cmd_name := cmd_name;
-	entries_list.insert(cmd_name, lines);
 
 	det_page := det_page + 1;
 	btn_maxId := btn_maxId + 1;
@@ -394,42 +553,77 @@ function BuildDetails(targ, byref gump, cmd_name, byref y_pos)
 	return 1;
 endfunction
 
-function TeachNow(who, tamed, cmd, input)
+function TeachNow(who, tamed, ins)
 	if( Distance(who, tamed) > 1 )
 		SendSysMessage(who, "Voce nao vai conseguir ensinar nada de tao longe!");
 		return;
 	endif
 
-	var cmds := GetObjProperty(tamed, "cmds");
-	if(!cmds)
-		cmds := dictionary;
+	var instincts := GetObjProperty(tamed, "instincts");
+	var info_cfg := ReadConfigFile(":taming:taming");
+	var ins_natural := GetObjProperty(tamed, "Group_natural");
+	var ins_savage := GetObjProperty(tamed, "Group_savage");
+	var ins_2 := info_cfg[ins].Group;
+	if ((ins_2 == 1) && (ins_natural == 1)) //check para quem já tem 1 instinto natural e não pode mais pegar do mesmo tipo
+		SendSysMessage(who, "Voce ja despertou o instinto natural nesse animal!");
+		return;
+	elseif ((ins_2 == 2) && (ins_savage == 1))// check para instinto selvagem e não poder pegar mais um
+		SendSysMessage(who, "Voce ja despertou o instinto selvagem nesse animal!");
+		return;
+	else
 	endif
 
-	if(cmds[cmd])
-		SendSysMessage(who, "Este animal ja conhece o truque.");
+	if(!instincts) 
+	instincts := dictionary;
+	endif
+
+	if(instincts[ins]) //não repetir hab no pet
+		SendSysMessage(who, "Este animal ja despertou esse instinto.");
 		return;
 	endif
 
-	var singular := input[ entries_list[cmd].singular ];
-	var plural :=   input[ entries_list[cmd].plural ];
-	singular := singular[find(singular, " ", 1)+1, len(singular)];
-	plural := plural[find(plural, " ", 1)+1, len(plural)];
-
-	var new_cmd := struct;
-	new_cmd.+singular := singular;
-	new_cmd.cmd_name := cmd;
-	if(plural)
-		new_cmd.+plural := plural;
+	var new_ins := struct;
+	var groupa := info_cfg[ins].Group; 
+	var critic := info_cfg[ins].Critic;
+	
+	new_ins.ins_name := ins;
+	instincts.insert(ins, new_ins);//identificar a prop de acordo com o instinto escolhido
+	SetObjProperty(tamed, "instincts", instincts); //inserir no pet
+	
+	if(groupa == 1) // insere se é instinto natural ou selvagem para não poder pegar mais
+		SetObjProperty(tamed, "Group_natural", 1);
+	elseif(groupa == 2)
+		SetObjProperty(tamed, "Group_savage", 1);
 	endif
-
-	if( (cmd == "All") || (cmd == "Group") )
-		SetObjProperty(tamed, cmd, singular);
+	
+	if(!critic) //adiciona os criticos ou modificações nos stats
+		if(info_cfg[ins].Nome == "Ferocidade")
+			AP_SetTrueStat(tamed, STRENGTH, AP_GetStat(tamed, STRENGTH) + 5);
+		elseif(info_cfg[ins].Nome == "Flexibilidade")
+			AP_SetTrueStat(tamed, DEXTERITY, AP_GetStat(tamed, DEXTERITY) + 5);
+		elseif(info_cfg[ins].Nome == "Fortaleza")
+			var mudar := GetObjProperty(tamed, "%NPC_Vitals%").HITS;
+			var Variavel := GetObjProperty(tamed, "%NPC_Vitals%");
+			Variavel["HITS"] := mudar + 10;
+			SetObjProperty(tamed, "%NPC_Vitals%", Variavel);
+			RecalcVitals(tamed);
+		elseif(info_cfg[ins].Nome == "Sentidos Aguçados")
+			var teste := GetAttribute(tamed, AWARENESS);
+			AP_SetTrueSkill(tamed, AWARENESS, 20);
+		//elseif(info_cfg[ins].Nome == "Animal de Carga") //DECICIDIR SE VAI TER OU NÃO, HJ O CARA SÓ BOTA A BACKPACK E JÁ CRIA ANIMAL DE CARGA
+			//if (tamed.objtype == 0xdc) //para lhamas
+				//tamed.graphic := 292;
+			//else // para cavalos
+				//tamed.graphic := 291;
+			//endif
+		   //var newbackpack := CreateItemAtLocation(tamed.x, tamed.y, tamed.z, 0xe75,1, tamed.realm); // equipa a mochila no pet
+			//if (!EquipItem(tamed, newbackpack))
+				//return;
+			//endif
+		endif
 	else
-		cmds.insert(cmd, new_cmd);
+		SetObjProperty(tamed, "Critic", critic); // Aqui define os criticos do instinto selvagem, TO DO -> script de criticos para definir essas habs
 	endif
-
-	SetObjProperty(tamed, "cmds", cmds);
-
-	//SendSysMessage(who, "Ensinando " + cmd.Nome);
-	SendSysMessage(who, "Voce o ensinou com sucesso.");
+	
+	SendSysMessageEX(who, "Voce despertou o instinto com sucesso.", SSM_INFO);
 endfunction

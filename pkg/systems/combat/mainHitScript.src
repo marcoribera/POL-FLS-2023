@@ -26,6 +26,7 @@ include ":spells:swordmage";
 include ":taming:taming";
 
 var item_cfg := ReadConfigFile(":*:itemdesc");
+var taming_cfg := ReadConfigFile(":taming:taming");												   
 
 program MainHitScript( params )
 	var attacker := params[1];
@@ -737,11 +738,15 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 	endif
 
 	var weapon_scripts := array;
+	var pet_instinto :=	GetObjProperty(attacker, "Group_savage");
+	var pet_critic := GetObjProperty(attacker, "Critic");
 	//if ( weapon.objtype == 0xF020 ) // Intrinsic fist
 	//	weapon_scripts := GetObjProperty(attacker, "CriticalHitScripts");
-	if ( weapon.IsA(POLCLASS_WEAPON) )
+	if ( weapon.IsA(POLCLASS_WEAPON) && !pet_instinto )
 		weapon_scripts :=  GetConfigStringArray( item_cfg[weapon.objtype], "CriticalHitScripts" );
-	elseif (attacker.npctemplate)
+	elseif (pet_instinto == 1)
+		weapon_scripts :=  GetConfigStringArray( taming_cfg[pet_critic], "CriticalHitScripts" );
+	elseif (attacker.npctemplate)	  
 		var npcelem := NPC_GetNPCConfig(attacker.npctemplate);
 		weapon_scripts :=  GetConfigStringArray( npcelem, "CriticalHitScripts" );
 	endif
