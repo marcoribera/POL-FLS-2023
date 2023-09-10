@@ -242,12 +242,6 @@ exported function MegaCliloc( who, byref packet )
 	var blue := "<BASEFONT COLOR=#0000FF>";
 	var orange :=  "<BASEFONT COLOR=#FFA500>";
 
-	if (who) //TODO: Descobrir em que casos existe um who
-		if(!who.npctemplate)
-			print("Atualizando informações sobre ");
-		endif
-	endif
-
 	var Object_Name;
 
 	var xDesc; //Será utilizado para juntar as informações do tooltip do item
@@ -288,26 +282,36 @@ exported function MegaCliloc( who, byref packet )
 				//Verifica se o char já foi reconhecido por who
 				var conhecidos := dictionary;
 				if(GetObjProperty(who, "conhecidos"))
+
+					var ID := Cstr(item.serial); //Salva o serial do personagem
+					if(GetObjProperty(item, "disfarce"))
+						ID := Cstr(GetObjProperty(item, "FakeID")); //Substitui o serial pelo falso quando o personagem observado está disfarçado
+					endif
+
 					conhecidos := GetObjProperty(who, "conhecidos"); //Lista de pessoas conhecidadas
-					if(conhecidos.Exists(item.serial))
-						Object_Name := conhecidos[item.serial];
-						SendSysMessage(who, "Reconheceu " + cstr(conhecidos[item.serial]));
+					if(conhecidos.Exists(ID))
+						Object_Name := conhecidos[ID];
 					else
-						Object_Name := "????";
-						SendSysMessage(who, "Não Reconheceu.");
+						Object_Name := "??????";
 					endif
 				else
 					Object_Name := "??????";
-					SendSysMessage(who, who.name + " nao conhece ninguem.");
 				endif
 
 				if (who.cmdlevel > 1) //Staff consegue ver o nome e raça
 
-					Object_Name := Object_Name + " [" + item.name;
+					if(GetObjProperty(item, "disfarce"))
+						Object_Name := Object_Name + " [" + GetObjProperty(item, "disfarce").aparencia;
+					else
+						Object_Name := Object_Name + " [" + item.name;
+					endif
 
-					var raca := item.title_race;
-					if (raca)
-						Object_Name := Object_Name + " - " + raca;
+					var povo;
+					if (GetObjProperty(item, "chardata"))
+						povo := GetObjProperty(item, "chardata").povo;
+					endif
+					if (povo)
+						Object_Name := Object_Name + " - " + povo;
 					endif
 					Object_Name := Object_Name + "]";
 				endif
@@ -506,8 +510,6 @@ exported function MegaCliloc( who, byref packet )
 				endif
 			endif
 		endif
-
-		PRINT("Eviar o pacote de Tooltip.");
 
 		//MONTA E ENVIA PACOTE COM ATUALIZAÇÃO DAS DESCRIÇÕES
 		xDesc := CAscZ(xDesc);
