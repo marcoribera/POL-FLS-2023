@@ -564,9 +564,6 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		endforeach
 	endif
 
-
-//	sendsysmessage(who,  " " + primarias + " " + secundarias);
-
 var gflayout := array{
 		"noclose",
 		"nodispose",
