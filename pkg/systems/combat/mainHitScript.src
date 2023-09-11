@@ -208,7 +208,7 @@ program MainHitScript( params )
 
 		total := CalculateTotalDamage(defender, basedamage, attacker, dmgList);
 		if (GetObjProperty(attacker, "#ignorardefesas") >= 1);
-			 var ignr := getObjPRoperty(attacker, "#ignorardefesas");
+			var ignr := getObjPRoperty(attacker, "#ignorardefesas");
 			ignr := ignr - 1;
 			if (ignr <= 0)
 				EraseObjPRoperty(attacker, "#ignorardefesas");

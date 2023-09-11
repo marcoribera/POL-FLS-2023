@@ -96,7 +96,7 @@ function removedisfarce(who)
 		return 1;
 	endif
 
-	if (TemHabilidade(who, "Disfarce Aprimorado"))
+	if (TemHabilidade(who, "Disfarces"))
 		removeDisguise(who);
 	else
 		TS_LowerDuration(who, "kitdisfarce", -1);

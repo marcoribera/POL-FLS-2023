@@ -1920,128 +1920,219 @@ function musicaEfeitos(byref who, byref magica, byref tempo) //DOING
 			PrintTextAbove(who, "*Tocando musica encorajadora*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 1, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_str_up",duration,CInt(BuffModifier*0.5),range,alvos.Buffs,"*Encorajado(a)*",resistencia_mod);
+			if(HarmoniaPerfeita)
+				AplicaEfeito(who,"bard_str_up",duration,CInt(BuffModifier*1.0),range,alvos.Buffs,"*bem mais forte*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_str_up",duration,CInt(BuffModifier*0.5),range,alvos.Buffs,"*um pouco mais forte*",resistencia_mod);
+			endif
 			break;
 		BARD_CALMA:
 			PrintTextAbove(who, "*Tocando musica inspiradora*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 1, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_int_up",duration,CInt(BuffModifier*0.5),range,alvos.Buffs,"*Inspirado(a)*",resistencia_mod);
+			if(HarmoniaPerfeita)
+				AplicaEfeito(who,"bard_int_up",duration,CInt(BuffModifier*1.0),range,alvos.Buffs,"*bem mais esperto*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_int_up",duration,CInt(BuffModifier*0.5),range,alvos.Buffs,"*um pouco mais esperto*",resistencia_mod);
+			endif
 			break;
 		BARD_TRISTE:
 			PrintTextAbove(who, "*Tocando musica desencorajadora*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 1, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_str_down",duration,CInt(DebuffModifier*0.5),range,alvos.Debuffs,"*Desencorajado(a)*",resistencia_mod);
+			if(Vituperio)
+				AplicaEfeito(who,"bard_str_down",duration,CInt(DebuffModifier*1.0),range,alvos.Debuffs,"*bem mais fraco*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_str_down",duration,CInt(DebuffModifier*0.5),range,alvos.Debuffs,"*um pouco mais fraco*",resistencia_mod);
+			endif
 			break;
 		BARD_ACAO:
 			PrintTextAbove(who, "*Tocando musica empolgante*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 1, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_dex_up",duration,CInt(BuffModifier*0.5),range,alvos.Buffs,"*Empolgado(a)*",resistencia_mod);
+			if(HarmoniaPerfeita)
+				AplicaEfeito(who,"bard_dex_up",duration,CInt(BuffModifier*1.0),range,alvos.Buffs,"*bem mais ágil*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_dex_up",duration,CInt(BuffModifier*0.5),range,alvos.Buffs,"*um pouco mais ágil*",resistencia_mod);
+			endif
 			break;
 		BARD_STR_UP:
 			PrintTextAbove(who, "*Tocando musica encorajadora*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 2, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_str_up",duration,CInt(BuffModifier),range,alvos.Buffs,"*Encorajado(a)*",resistencia_mod);
+			if(HarmoniaPerfeita)
+				AplicaEfeito(who,"bard_str_up",duration,CInt(BuffModifier*1.2),range,alvos.Buffs,"*muito mais forte*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_str_up",duration,CInt(BuffModifier),range,alvos.Buffs,"*bem mais forte*",resistencia_mod);
+			endif
 			break;
 		BARD_STR_DOWN:
 			PrintTextAbove(who, "*Tocando musica desencorajadora*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 2, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_str_down",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*Desencorajado(a)*",resistencia_mod);
+			if(Vituperio)
+				AplicaEfeito(who,"bard_str_down",duration,CInt(DebuffModifier*1.2),range,alvos.Debuffs,"*muito mais fraco*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_str_down",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*bem mais fraco*",resistencia_mod);
+			endif
 			break;
 		BARD_DEX_UP:
 			PrintTextAbove(who, "*Tocando musica empolgante*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 2, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_dex_up",duration,CInt(BuffModifier),range,alvos.Buffs,"*Empolgado(a)*",resistencia_mod);
+			if(HarmoniaPerfeita)
+				AplicaEfeito(who,"bard_dex_up",duration,CInt(BuffModifier*1.2),range,alvos.Buffs,"*muito mais ágil*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_dex_up",duration,CInt(BuffModifier),range,alvos.Buffs,"*bem mais ágil*",resistencia_mod);
+			endif
 			break;
 		BARD_DEX_DOWN:
 			PrintTextAbove(who, "*Tocando musica desanimadora*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 2, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_dex_down",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*Desanimado(a)*",resistencia_mod);
+			if(Vituperio)
+				AplicaEfeito(who,"bard_dex_down",duration,CInt(DebuffModifier*1.2),range,alvos.Debuffs,"*muito mais lento*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_dex_down",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*bem mais lento*",resistencia_mod);
+			endif
 			break;
 		BARD_INT_UP:
 			PrintTextAbove(who, "*Tocando musica inspiradora*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 2, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_int_up",duration,CInt(BuffModifier),range,alvos.Buffs,"*Inspirado(a)*",resistencia_mod);
+			if(HarmoniaPerfeita)
+				AplicaEfeito(who,"bard_int_up",duration,CInt(BuffModifier*1.2),range,alvos.Buffs,"*muito mais esperto*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_int_up",duration,CInt(BuffModifier),range,alvos.Buffs,"*bem mais esperto*",resistencia_mod);
+			endif
 			break;
 		BARD_INT_DOWN:
 			PrintTextAbove(who, "*Tocando musica desconcertante*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 2, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_int_down",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*Desconcertado(a)*",resistencia_mod);
+			if(Vituperio)
+				AplicaEfeito(who,"bard_int_down",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*muito mais tapado*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_int_down",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*bem mais tapado*",resistencia_mod);
+			endif
 			break;
 		BARD_STR_DEX_UP:
 			PrintTextAbove(who, "*Tocando musica motivadora*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 3, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_str_up",duration,CInt(BuffModifier*0.9),range,alvos.Buffs,"*Encorajado(a)*",resistencia_mod);
-			AplicaEfeito(who,"bard_dex_up",duration,CInt(BuffModifier*0.9),range,alvos.Buffs,"*Empolgado(a)*",resistencia_mod);
+			if(HarmoniaPerfeita)
+				AplicaEfeito(who,"bard_str_up",duration,CInt(BuffModifier),range,alvos.Buffs,"*bem mais forte*",resistencia_mod);
+				AplicaEfeito(who,"bard_dex_up",duration,CInt(BuffModifier),range,alvos.Buffs,"*bem mais ágil*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_str_up",duration,CInt(BuffModifier*0.9),range,alvos.Buffs,"*mais forte*",resistencia_mod);
+				AplicaEfeito(who,"bard_dex_up",duration,CInt(BuffModifier*0.9),range,alvos.Buffs,"*mais ágil*",resistencia_mod);
+			endif
 			break;
 		BARD_STR_DEX_DOWN:
 			PrintTextAbove(who, "*Tocando musica desmotivante*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 3, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_str_down",duration,CInt(DebuffModifier*0.9),range,alvos.Debuffs,"*Desencorajado(a)*",resistencia_mod);
-			AplicaEfeito(who,"bard_dex_down",duration,CInt(DebuffModifier*0.9),range,alvos.Debuffs,"*Desanimado(a)*",resistencia_mod);
+			if(Vituperio)
+				AplicaEfeito(who,"bard_str_down",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*bem mais fraco*",resistencia_mod);
+				AplicaEfeito(who,"bard_dex_down",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*bem mais lento*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_str_down",duration,CInt(DebuffModifier*0.9),range,alvos.Debuffs,"*mais fraco*",resistencia_mod);
+				AplicaEfeito(who,"bard_dex_down",duration,CInt(DebuffModifier*0.9),range,alvos.Debuffs,"*mais lento*",resistencia_mod);
+			endif
 			break;
 		BARD_STR_DEX_INT_UP:
 			PrintTextAbove(who, "*Tocando musica motivadora*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 4, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_str_up",duration,CInt(BuffModifier*0.8),range,alvos.Buffs,"*Encorajado(a)*",resistencia_mod);
-			AplicaEfeito(who,"bard_dex_up",duration,CInt(BuffModifier*0.8),range,alvos.Buffs,"*Empolgado(a)*",resistencia_mod);
-			AplicaEfeito(who,"bard_int_up",duration,CInt(BuffModifier*0.8),range,alvos.Buffs,"*Inspirado(a)*",resistencia_mod);
+			if(HarmoniaPerfeita)
+				AplicaEfeito(who,"bard_str_up",duration,CInt(BuffModifier*0.9),range,alvos.Buffs,"*mais forte*",resistencia_mod);
+				AplicaEfeito(who,"bard_dex_up",duration,CInt(BuffModifier*0.9),range,alvos.Buffs,"*mais ágil*",resistencia_mod);
+				AplicaEfeito(who,"bard_int_up",duration,CInt(BuffModifier*0.9),range,alvos.Buffs,"*mais esperto*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_str_up",duration,CInt(BuffModifier*0.8),range,alvos.Buffs,"*um tanto mais forte*",resistencia_mod);
+				AplicaEfeito(who,"bard_dex_up",duration,CInt(BuffModifier*0.8),range,alvos.Buffs,"*um tanto mais ágil*",resistencia_mod);
+				AplicaEfeito(who,"bard_int_up",duration,CInt(BuffModifier*0.8),range,alvos.Buffs,"*um tanto mais esperto*",resistencia_mod);
+			endif
 			break;
 		BARD_STR_DEX_INT_DOWN:
 			PrintTextAbove(who, "*Tocando musica desmotivante*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 4, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_str_down",duration,CInt(DebuffModifier*0.8),range,alvos.Debuffs,"*Desencorajado(a)*",resistencia_mod);
-			AplicaEfeito(who,"bard_dex_down",duration,CInt(DebuffModifier*0.8),range,alvos.Debuffs,"*Desanimado(a)*",resistencia_mod);
-			AplicaEfeito(who,"bard_int_down",duration,CInt(DebuffModifier*0.8),range,alvos.Debuffs,"*Desconcertado(a)*",resistencia_mod);
+			if(Vituperio)
+				AplicaEfeito(who,"bard_str_down",duration,CInt(DebuffModifier*0.9),range,alvos.Debuffs,"*um tanto mais fraco*",resistencia_mod);
+				AplicaEfeito(who,"bard_dex_down",duration,CInt(DebuffModifier*0.9),range,alvos.Debuffs,"*um tanto mais lento*",resistencia_mod);
+				AplicaEfeito(who,"bard_int_down",duration,CInt(DebuffModifier*0.9),range,alvos.Debuffs,"*um tanto mais tapado*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_str_down",duration,CInt(DebuffModifier*0.8),range,alvos.Debuffs,"*um tanto mais fraco*",resistencia_mod);
+				AplicaEfeito(who,"bard_dex_down",duration,CInt(DebuffModifier*0.8),range,alvos.Debuffs,"*um tanto mais lento*",resistencia_mod);
+				AplicaEfeito(who,"bard_int_down",duration,CInt(DebuffModifier*0.8),range,alvos.Debuffs,"*um tanto mais tapado*",resistencia_mod);
+			endif
 			break;
 		BARD_INSPIRAR_COMPETENCIA: //concede buffs em pericias não combativas nem magicas a UM aliado escolhido
 			PrintTextAbove(who, "*Tocando musica ispiradora*", BARD_FONT, BARD_FONT_COLOR); //Exibe sobre cabeca do bardo
-			TS_StartTimer(who, "bard_tocando", sound_duration, 5, who, 0);
+			TS_StartTimer(who, "bard_tocando", sound_duration, 6, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_inspirar_competencia",duration,CInt(BuffModifier),range,alvos.Buffs,"*Focado(a)*",resistencia_mod);
+			if(HarmoniaPerfeita)
+				AplicaEfeito(who,"bard_inspirar_competencia",duration*1.2,CInt(BuffModifier),range,alvos.Buffs,"*pronto pro trabalho*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_inspirar_competencia",duration,CInt(BuffModifier),range,alvos.Buffs,"*pronto pro trabalho*",resistencia_mod);
+			endif
 			break;
 		BARD_INSPIRAR_HEROISMO: //concede bônus de combate a UM aliado escolhido
 			PrintTextAbove(who, "*Tocando musica inspiradora*", BARD_FONT, BARD_FONT_COLOR); //Exibe sobre cabeca do bardo
-			TS_StartTimer(who, "bard_tocando", sound_duration, 5, who, 0);
+			TS_StartTimer(who, "bard_tocando", sound_duration, 6, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_inspirar_heroismo",duration,CInt(BuffModifier),range,alvos.Buffs,"*Focado(a)*",resistencia_mod);
+			if(HarmoniaPerfeita)
+				AplicaEfeito(who,"bard_inspirar_heroismo",duration*1.2,CInt(BuffModifier),range,alvos.Buffs,"*pronto pro combate*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_inspirar_heroismo",duration,CInt(BuffModifier),range,alvos.Buffs,"*pronto pro combate*",resistencia_mod);
+			endif
 			break;
 		BARD_INSPIRAR_CORAGEM: //aumenta todas as resistências em um percentual. Preciso ver como fazer isso ainda
 			PrintTextAbove(who, "*Tocando musica inspiradora*", BARD_FONT, BARD_FONT_COLOR); //Exibe sobre cabeca do bardo
-			TS_StartTimer(who, "bard_tocando", sound_duration, 5, who, 0);
+			TS_StartTimer(who, "bard_tocando", sound_duration, 4, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_inspirar_coragem",duration,CInt(BuffModifier),range,alvos.Buffs,"*Cheio de si*",resistencia_mod);
+			if(HarmoniaPerfeita)
+				AplicaEfeito(who,"bard_inspirar_coragem",duration*1.2,CInt(BuffModifier),range,alvos.Buffs,"*Cheio de si*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_inspirar_coragem",duration,CInt(BuffModifier),range,alvos.Buffs,"*Cheio de si*",resistencia_mod);
+			endif
 			break;
 		break;
 		BARD_FASCINAR:
 			PrintTextAbove(who, "*Tocando musica fascinante*", BARD_FONT, BARD_FONT_COLOR_COMUM);
-			TS_StartTimer(who, "bard_tocando", sound_duration, 3, who, 0);
+			TS_StartTimer(who, "bard_tocando", sound_duration, 6, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_fascinar",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*Fascinado*",resistencia_mod);
+			if(Vituperio)
+				AplicaEfeito(who,"bard_fascinar",duration*0.5,CInt(DebuffModifier),range,alvos.Debuffs,"*Fascinado pelo som*",resistencia_mod);
+				AplicaEfeito(who,"bard_contagiante",duration*0.5,CInt(DebuffModifier),range,alvos.Debuffs,"*Dancando*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_fascinar",duration*0.5,CInt(DebuffModifier),range,alvos.Debuffs,"*Fascinado*",resistencia_mod);
+			endif
 			break;
 		BARD_ALUCINACAO:
 			PrintTextAbove(who, "*Tocando musica aluciante*", BARD_FONT, BARD_FONT_COLOR_COMUM);
-			TS_StartTimer(who, "bard_tocando", sound_duration, 2, who, 0);
+			TS_StartTimer(who, "bard_tocando", sound_duration, 3, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_alucinacao",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*Alucinado*",resistencia_mod);
+			if(Vituperio)
+				AplicaEfeito(who,"bard_alucinacao",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*Alucinado*",resistencia_mod);
+				AplicaEfeito(who,"bard_str_down",duration,CInt(DebuffModifier*0.5),range,alvos.Debuffs,"*um pouco mais fraco*",resistencia_mod);
+				AplicaEfeito(who,"bard_dex_down",duration,CInt(DebuffModifier*0.5),range,alvos.Debuffs,"*um pouco mais lento*",resistencia_mod);
+				AplicaEfeito(who,"bard_int_down",duration,CInt(DebuffModifier*0.5),range,alvos.Debuffs,"*um pouco mais tapado*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_alucinacao",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*Alucinado*",resistencia_mod);
+			endif
 			break;
 		BARD_DANCA_CONTAGIANTE: //força todos os que estão na área da música a dançarem) faz até aleijado dançar, afinal, é lendaria
 			PrintTextAbove(who, "*Tocando musica contagiante*", BARD_FONT, BARD_FONT_COLOR_COMUM);
-			TS_StartTimer(who, "bard_tocando", sound_duration, 2, who, 0);
+			TS_StartTimer(who, "bard_tocando", sound_duration, 4, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_contagiante",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*Dancando*",resistencia_mod);
+			if(Vituperio)
+				AplicaEfeito(who,"bard_contagiante",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*dança muito empolgado*",resistencia_mod);
+				AplicaEfeito(who,"bard_tocando",sound_duration,2,range,alvos.Debuffs,"*dançando intensamente*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_contagiante",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*dança empolgado*",resistencia_mod);
+			endif
 			break;
 		BARD_BLADE_DANCE:
 			var sword, mobile, laminaAnimada;
@@ -2217,16 +2308,21 @@ function musicaEfeitos(byref who, byref magica, byref tempo) //DOING
 			PrintTextAbove(who, "*Tocando musica desencorajadora*", BARD_FONT, BARD_FONT_COLOR_COMUM);
 			TS_StartTimer(who, "bard_tocando", sound_duration, 2, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
-			AplicaEfeito(who,"bard_emudecer",duration,CInt(DebuffModifier*0.5),range,alvos.Debuffs,"*Mudo(a)*",resistencia_mod);
+			if(Vituperio)
+				AplicaEfeito(who,"bard_emudecer",duration,CInt(DebuffModifier*0.5),range,alvos.Debuffs,"*Mudo(a)*",resistencia_mod);
+				AplicaEfeito(who,"bard_int_down",duration,CInt(DebuffModifier),range,alvos.Debuffs,"*bem mais tapado*",resistencia_mod);
+			else
+				AplicaEfeito(who,"bard_emudecer",duration,CInt(DebuffModifier*0.5),range,alvos.Debuffs,"*Mudo(a)*",resistencia_mod);
+			endif
 			break;
-		BARD_INCITAR:
+/*		BARD_INCITAR:
 			break;
 		BARD_ACALMAR:
 			break;
 		BARD_COPIA:
 			break;
 		BARD_FANTASMAS:
-			break;
+			break;*/
 		BARD_BLOOM:
 			TS_StartTimer(who, "bard_tocando", sound_duration, 2, who, 0);
 			TS_StartTimer(who, "bard_segurando_instrumento", sound_duration, 1, who, 0);
@@ -2241,4 +2337,3 @@ function musicaEfeitos(byref who, byref magica, byref tempo) //DOING
 
 	return 0;
 endfunction
-

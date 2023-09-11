@@ -29,8 +29,8 @@ function GetResist(who, resist)
 
 	var valor := 0;
 
- 	// Faz a resistência de Vontade para utilizar o valor de Reflexos quanto usando a habilidade "Desviar Mente"
-	if (resist == VONTADE && (GetCooldown(who, "desviarmente") > 0))
+ 	// Faz a resistência de Vontade para utilizar o valor de Reflexos para quem tem habilidade "Mente Evasiva"
+	if (resist == VONTADE && (TemHabilidade(who, "Mente Evasiva")))
 		resist := REFLEXOS;
 	endif
 
@@ -70,7 +70,9 @@ function GetResist(who, resist)
 		valor := valor + CInt(GetObjProperty(who, "#FortitudeMod"));
 
 	elseif (resist == REFLEXOS)
-
+		if (TemHabilidade(who, "Evasao Aprimorada"))
+			valor := valor + 40;
+		endif
 		// Aplica os bonus base do Caminho para a resistência
 		if (classe == "Ladino")
 			valor := valor + 20;
