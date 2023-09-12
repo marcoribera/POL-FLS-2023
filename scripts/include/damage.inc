@@ -380,6 +380,12 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 		if (cfg[npctemplate.template].Category == "Undead" || cfg[npctemplate.template].Category == "Demons")
 			inimigo_predileto := inimigo_predileto + 1.0; //dobra o dano se for inimigo predileto
 		endif
+    elseif (TemHabilidade(who, "Regencia de Asan"))
+        var npctemplate := NPC_ParseTemplateName(defender.npctemplate);
+		var cfg := ReadConfigFile(":brainai:npcdesc");
+		if (cfg[npctemplate.template].Category == "EvilHuman" || cfg[npctemplate.template].Category == "GiantAnimal")
+			inimigo_predileto := inimigo_predileto + 1.0; //dobra o dano se for inimigo predileto
+		endif
 	endif
 
 	if (TemHabilidade(who, "Estilo Mao Livre"))
