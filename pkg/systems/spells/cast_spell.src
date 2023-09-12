@@ -104,7 +104,7 @@ program SpellStarter(params)
 		FailSpell(mobile);
 		EraseObjProperty(mobile, "#Casting");
 		return 0;
-	elseif ( !EquipmentCheck(mobile) && !mobile.npctemplate )
+	elseif ( !EquipmentCheck(mobile) && !mobile.npctemplate && !(TemHabilidade(mobile, "Aura de Corrupcao") || TemHabilidade(mobile, "Devocao")) )
 		SendSysMessageEx(mobile, "Suas maos precisam estar livres para gesticular os componentes gestuais necessarios para a magia.", SSM_FAIL);
 		mobile.frozen := 0;
 		EraseObjProperty(mobile, "#medding");
