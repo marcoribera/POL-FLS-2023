@@ -35,7 +35,7 @@ program advalchemy(who, item)
 	Detach();
 
 	var advgump := GFCreateGump();
-	
+
 	GFResizePic(advgump, 0, 0, DEFAULT_BACKGROUND, 240, 340);
 	GFResizePic(advgump, 10, 10, DEFAULT_FOREGROUND, 220, 320);
 
@@ -56,16 +56,16 @@ program advalchemy(who, item)
 			i := i + 1;
 		endforeach
 	endif
-       
+
 	GFTextLine(advgump, 48, 237, 600, "Remover Ingredientes");
 	GFTextLine( advgump, 48, 257, 600, "Adicionar Ingredientes");
 	GFTextLine(advgump, 48, 277, 600, "Preparar Extrato");
 	GFAddButton(advgump, 37, 261, 2103, 2104, 1, 11);//adicionar
 	GFAddButton(advgump, 37, 281, 2103, 2104, 1, 12);//misturar
 	GFAddButton(advgump, 37, 241, 2103, 2104, 1, 13);//remover
-	
+
 	var retv := GFSendGump( who, advgump );
-    
+
 	if ( retv[10] )
 		return;
 	elseif ( retv[11])
@@ -103,12 +103,12 @@ program advalchemy(who, item)
 			endif
 		endforeach
 
-		EraseObjProperty(item, "reagentes"); 
-	
+		EraseObjProperty(item, "reagentes");
+
 	elseif ( retv[12])
 		FazPotion(who, item);
 	endif
-    
+
 endprogram
 
 function FazPotion(who, item)
@@ -128,7 +128,7 @@ function FazPotion(who, item)
 		var rN_keys := regsNeeded.keys();
 		if( len(r_keys) == len(rN_keys) )
 			foreach reg in rN_keys
-				if( CInt(regsNeeded[reg]) != regs[CInt(reg)] ) 
+				if( CInt(regsNeeded[reg]) != regs[CInt(reg)] )
 					objtype := 0;
 					break;
 				endif
@@ -168,7 +168,7 @@ function FazPotion(who, item)
 			EraseObjProperty(item, "reagentes");
 		endif
 	endif
-   
+
 endfunction
 
 function FindInBook(who, objtype)
@@ -197,9 +197,9 @@ function MakePotion ( pot, item, who, magic, strength := 0)
 		sleep(1);
 		loop := loop + 1;
 	endwhile
-      
-    
-	if(SkillCheck(who, ALCHEMY, difficulty) > 0) 
+
+
+	if(SkillCheck(who, ALCHEMY, difficulty) > 0)
 		//if (GetObjProperty(who, "classe") == "sabio")
 		//	SkillCheck(who, BEGGING, -1);
 		//endif
@@ -239,12 +239,12 @@ function MakePotion ( pot, item, who, magic, strength := 0)
 			SendSysMessageEx(who, "Voce fez a pocao e a guardou na sua mochila.", SSM_INFO);
 			EraseObjProperty(item, "reagentes");
 			return;
-        
+
 		else
 			SendSysMessageEx(who, "Voce nao tem frascos.", SSM_FAIL);
 			return;
 		endif
-      
+
 	else
 		EraseObjProperty(item, "reagentes");
 		PlaySoundEffect(who, SOUND_EFFECT_POUR);
@@ -257,7 +257,7 @@ function FalhaCritica(who, item)
 	EraseObjProperty(item, "reagentes");
 	EraseObjProperty(item, "reagamt");
 
-	if (TemHabilidade(who, "Alquimista Precavido"))
+	if (TemHabilidade(who, "Formacao Academica"))
 		return 1;
 	endif
 
