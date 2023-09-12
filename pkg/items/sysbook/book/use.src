@@ -44,7 +44,7 @@ program useBook(who,book)
 //	var linguas := GetObjProperty(who, "linguas");
 
 	if (linguagem != error)
-		if (temHabilidade(who, "Arqueologo"))
+		if (temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica"))
 			SendOpenBook(who, book);
 		else
 			SendSysMessageEx(who, "Voce nao conhece essa lingua: " + linguagem);

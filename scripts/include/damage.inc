@@ -355,6 +355,10 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 			other := other + 0.75; //75% - balanceamento depois da mudanca de calculo do dano
 	endif
 
+	if (TemHabilidade(who, "Precisao Cirurgica"))
+		other := other + 0.50; //50% - balanceamento depois da mudanca de calculo do dano
+	endif
+
 	var inimigo_predileto := 1.0;
 	if (TemHabilidade(who, "Inimigo Predileto II"))
 		var npctemplate := NPC_ParseTemplateName(defender.npctemplate);

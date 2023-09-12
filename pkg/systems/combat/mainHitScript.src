@@ -642,6 +642,12 @@ function WeaponHitScripts(attacker, defender, weapon, armor, basedamage, rawdama
 		endif
 	endif
 
+	if (GetObjProperty(attacker, "#golpesangrento") ) // VIVISEC do Igor
+		// EraseObjProperty(attacker, "#golpesangrento");
+		var dmg := basedamage + CInt(rawdamage*(AP_GetSkill(attacker, ALCHEMY)/100));
+		start_script(":combat:weaponHitScripts/bleedingstrike", array{attacker, defender, weapon, armor, basedamage, dmg*2});
+	endif
+
 	if ( GetCooldown(weapon, "circulodevas") )
 		var elemental := GetObjProperty(weapon, "#elementalweapon");
 		if (elemental != error)
@@ -707,9 +713,21 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 		chance := chance * 2;
 		critcooldown := 30;
 	endif
+// Inicio vivisec Igor-----------------------------
+	var bonus_Preservar_Orgaos := 0;
+	if (TemHabilidade(defender, "Preservar Orgaos"))
+		bonus_Preservar_Orgaos := 25;
+	endif
 
-	var rand := Cint((RandomInt(100) + 1));
+	var rand := Cint((RandomInt(100) + 1) + bonus_Preservar_Orgaos);
 	//printtextabove(attacker, "chance " + chance + " rand " + rand + " " + (chance > rand) );
+
+	if (TemHabilidade(defender, "Corpo ao Extremo"))
+		SendSysMessageEx(defender, "Seu corpo evita o critico", SSM_INFO);
+		SendSysMessageEx(attacker, "Seu critico nao surte efeito", SSM_FAIL);
+		chance := 0;
+	endif
+// FIM add vivisec igor----------------------------
 	var result := chance > rand;
 
 	if (autoCritical)

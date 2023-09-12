@@ -1,0 +1,26 @@
+use uo;
+
+include ":fls_core:packets";
+include ":combat:combat";
+include ":blood:blood";
+include "include/damage";
+include "include/say";
+
+program doubleattack(who)
+
+	var weapon := who.weapon.objtype;
+	var validWeapons:=array{ 0x1401, 0x13f6, 0x0ec2, 0x26C5, 11565, 0x27af, 0x27ab }; // Armas capazes de bleed
+
+	if (weapon in validWeapons)
+		SendSysMessageEx(who, "Voce prepara um ataque minucioso", SSM_INFO);
+		SetObjProperty(who, "#golpesangrento", 1);
+		sleep(5);
+		EraseObjProperty(who, "golpesangrento");
+		SetObjProperty(who, "#attackbonus", 100);
+	else
+		SendSysMessageEx(who, "Voce precisa estar com uma arma apropriada para alvejar ponto vital", SSM_INFO);
+		return;
+	endif
+
+
+endprogram
