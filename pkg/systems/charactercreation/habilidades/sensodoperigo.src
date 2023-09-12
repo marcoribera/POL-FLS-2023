@@ -21,7 +21,7 @@ program manobra(who)
 		//sleepms(20);
 	endforeach
 
-	sleepms(300);
+	sleepms(1000);
 	who.concealed := 0;
 	return 1;
 endprogram

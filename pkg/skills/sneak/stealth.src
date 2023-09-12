@@ -112,7 +112,7 @@ program skill_Stealth( who )
 		who.stealthsteps := baseSteps;
 		/*
 		Removido pois agora Furtividade Aprimorada � como se fosse pra habilitar Stealth e n�o mais dar bonus
-		if (temHabilidade(who, "Furtividade Aprimorada"))
+		if (temHabilidade(who, "Espionagem"))
 			var bonus := cint(who.stealthsteps * 0.5);
 			who.stealthsteps := who.stealthsteps + bonus;
 			SendSysMessageEx(who, "Voce ganhou " + bonus + " passos por sua furtividade aprimorada", SSM_INFO);
