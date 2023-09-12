@@ -360,7 +360,7 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
     		var DexPenBonus := Cint(elem.DexPenalty);
     		if(DexPenBonus > 0)
 	    		case (DexPenBonus)
-	    			1
+	    			1:
 	    				DexPenBonus := 1;
 	    				break;
 	    			2:
@@ -372,7 +372,7 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
     				default:
     					DexPenBonus := CInt(DexPenBonus/2);
 	    		endcase
-	    		SetObjProperty(item, "penaltybonus", DexPenBonus)
+	    		SetObjProperty(theitem, "penaltybonus", DexPenBonus);
 	    	endif
 		endif
 
@@ -402,13 +402,13 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 	    		else
 	    			parrybonus := CInt(parrybonus*1.5) + 5;
 	    		endif
-	    		SetObjProperty(item, "parrybonus", parrybonus)
+	    		SetObjProperty(theitem, "parrybonus", parrybonus);
 			endif
 			if(TemHabilidade(who,"Escudos Dissipadores"))
 				var parrydelay_mod := Cint(elem.parrydelay);
 	    		if(parrydelay_mod > 0)
 		    		case (parrydelay_mod)
-		    			1
+		    			1:
 		    				parrydelay_mod := 1;
 		    				break;
 		    			2:
@@ -420,7 +420,7 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 	    				default:
 	    					parrydelay_mod := CInt(parrydelay_mod/2);
 		    		endcase
-		    		SetObjProperty(item, "parrydelay_mod", parrydelay_mod)
+		    		SetObjProperty(theitem, "parrydelay_mod", parrydelay_mod);
 		    	endif
 			endif
 		endif
@@ -433,7 +433,7 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 		SetObjProperty(theitem, "dmgmods", DmgMods);
 	endif
 
-	var maximo_hp := theitem.maxhp + hpmod
+	var maximo_hp := theitem.maxhp + hpmod;
 
 	if(TemHabilidade(who,"Preparo do Metal"))
 		maximo_hp := CInt(maximo_hp * 1.5);
