@@ -206,81 +206,82 @@ function CreateRepairDeed(who, scroll, craft_skill)
   endif
   SetName(theitem, title);
   return;
-
 endfunction
 
 
 
 function repair_this(who, craft_skill := METALWORKING)
 
-
   SendSysMessage(who, "Escolha o item para consertar..");
   var use_on := Target(who);
   if(!Accessible(who, use_on))
     return;
   endif
+
   //SendSysMessage(who, "craft_skill: "+craft_skill);
   //SendSysMessage(who, "movable: "+use_on.movable);
   if(use_on.movable == 0)
     SendSysMessage(who, "Voce nao pode consertar isto.");
     return;
   endif
-  if((!Accessible(who, use_on)) or (distance(who, use_on) > 2))
+
+  if((!Accessible(who, use_on)) || (distance(who, use_on) > 2))
     SendSysMessage(who, "Voce nao alcanca o item.");
     return;
   endif
+
   if(CInt(use_on.objtype) == CInt(0xe34))
     case(CInt(craft_skill))
-       METALWORKING:            CreateRepairDeed(who, use_on, craft_skill);
-   //    BOWCRAFT_FLETCHING:    CreateRepairDeed(who, use_on, craft_skill);
-     //  CARPENTRY:   		 CreateRepairDeed(who, use_on, craft_skill);
-       //TAILORING:   		 CreateRepairDeed(who, use_on, craft_skill);
+      METALWORKING:            CreateRepairDeed(who, use_on, craft_skill);
+//    BOWCRAFT_FLETCHING:    CreateRepairDeed(who, use_on, craft_skill);
+  //  CARPENTRY:   		 CreateRepairDeed(who, use_on, craft_skill);
+    //TAILORING:   		 CreateRepairDeed(who, use_on, craft_skill);
     endcase
     return;
   endif
   var forge := 0;
   case(craft_skill)
-     METALWORKING: forge := 1;
-     DomesticWork:
-	if (is_tailor_item(use_on.objtype))
-		repair_item( who, use_on, craft_skill);
-	else
-		SendSysMessage(who, "Voce nao pode consertar isso.");
-	endif
-	return;
-     WOODWORKING:
-	if (is_carpentry_item(use_on.objtype))
-		repair_item( who, use_on, craft_skill);
-	else
-		SendSysMessage(who, "Voce nao pode consertar isto.");
-	endif
-	return;
-
+    METALWORKING:
+      forge := 1;
+      break;
+    DomesticWork:
+      if (is_tailor_item(use_on.objtype))
+        repair_item( who, use_on, craft_skill);
+      else
+        SendSysMessage(who, "Voce nao pode consertar isso.");
+      endif
+      return;
+    WOODWORKING:
+      if (is_carpentry_item(use_on.objtype))
+        repair_item( who, use_on, craft_skill);
+      else
+        SendSysMessage(who, "Voce nao pode consertar isto.");
+      endif
+      return;
   endcase
 
   if(!forge)
-    if(is_weapon_armor(use_on.objtype))
-      repair_item( who, use_on, craft_skill);
-    else
-      SendSysMessage(who, "Voce so pode concertar armas ou armaduras.");
-    endif
+   if(is_weapon_armor(use_on.objtype))
+    repair_item( who, use_on, craft_skill);
+   else
+    SendSysMessage(who, "Voce so pode concertar armas ou armaduras.");
+   endif
   else
     if(is_weapon_armor(use_on.objtype))
       var near_items := ListItemsNearLocation(who.x, who.y, who.z,2);
       foreach item in near_items
         if ((item.objtype == UOBJ_ANVIL1) || (item.objtype == UOBJ_ANVIL2))
           repair_item( who, use_on, craft_skill);
-          return;
-        endif
-      endforeach
-      SendSysMessage( who, "Voce precisa estar proximo de uma forja!" );
-      return;
+        return;
+      endif
+    endforeach
+    SendSysMessage( who, "Voce precisa estar proximo de uma forja!" );
+    return;
     else
       SendSysMessage(who, "Voce nao pode consertar isto.");
     endif
   endif
   return;
-
 //SendSysMessage(character,"Você não possui habilidades para isto");
 endfunction
 
@@ -298,10 +299,10 @@ endfunction
 function is_tailor_item(what)
   var tailorcfg := ReadConfigFile(":DomesticWork:tailoring");
   var elem := FindConfigElem(tailorcfg, what);
-  //var repairable := GetConfigInt(elem, "repairable");  
+  //var repairable := GetConfigInt(elem, "repairable");
   if (elem )
     return 1;
-  else    
+  else
     return 0;
   endif
 endfunction
@@ -309,7 +310,7 @@ endfunction
 function is_carpentry_item(what)
   var carpentrycfg := ReadConfigFile(":woodwork:carpentry");
   var elem := FindConfigElem(carpentrycfg, what);
-  //var repairable := GetConfigInt(elem, "repairable");  
+  //var repairable := GetConfigInt(elem, "repairable");
   if (elem )
     return 1;
   endif

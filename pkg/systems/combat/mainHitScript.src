@@ -26,7 +26,7 @@ include ":spells:swordmage";
 include ":taming:taming";
 
 var item_cfg := ReadConfigFile(":*:itemdesc");
-var taming_cfg := ReadConfigFile(":taming:taming");												   
+var taming_cfg := ReadConfigFile(":taming:taming");
 
 program MainHitScript( params )
 	var attacker := params[1];
@@ -764,7 +764,7 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 		weapon_scripts :=  GetConfigStringArray( item_cfg[weapon.objtype], "CriticalHitScripts" );
 	elseif (pet_instinto == 1)
 		weapon_scripts :=  GetConfigStringArray( taming_cfg[pet_critic], "CriticalHitScripts" );
-	elseif (attacker.npctemplate)	  
+	elseif (attacker.npctemplate)
 		var npcelem := NPC_GetNPCConfig(attacker.npctemplate);
 		weapon_scripts :=  GetConfigStringArray( npcelem, "CriticalHitScripts" );
 	endif
@@ -998,7 +998,7 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 	var skill := CInt(AP_GetSkill(defender, PARRY));
 
 	//Aplica delay básico do escudo, reduz delay com base na skill e soma fator de balanceamento
-	var parryDelay := CInt((item_cfg[shield.objtype]).parrydelay) - CInt(skill/20) + 8;
+	var parryDelay := CInt((item_cfg[shield.objtype]).parrydelay) - CInt(GetObjProperty(shield, "parrydelay_mod"))  - CInt(skill/20) + 8;
 
 	//Faz com que os bloqueios garantidos por cauda de habilidade resetem o delay de bloqueio
 	if (tempParryBonus == 100)

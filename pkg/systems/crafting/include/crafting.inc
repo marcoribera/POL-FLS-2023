@@ -14,6 +14,9 @@ include ":tn:recipes";
 include ":gumps:yesno";
 include ":gumps:requestgump";
 
+include ":charactercreation:habilidades";
+include ":attributes:attributes";
+
 const UOBJ_BOLT_START   := 0x0f95;
 const UOBJ_BOLT_END     := 0x0f9c;
 const UOBJ_SMALL_FORGE	:= 0xFB1;
@@ -236,7 +239,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 				SendSysMessageEx(who, "Voce nao tem espaco suficiente na sua mochila!", SSM_FAIL);
 				return theitems;
 			endif
-			CheckToolWear (who, tool, craft_skill);
+			CheckToolWear(who, tool, craft_skill);
 			theitem.movable := 1;
 
 			//passando a cor pra materiais coloridos que nao tem Id proprio (como madeira)
@@ -309,48 +312,138 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 		if(resource_config[principalMaterial].Color)
 			theitem.color := resource_config[principalMaterial].Color;
 		else
-
 			theitem.color := materialColor;
 		endif
 	endif
+
 	SetObjProperty(theitem, "material", principalMaterial);
 
+	//Insere o nome do material no item
+	SetName(theitem, theitem.name + " [" + resource_config[principalMaterial].name + "]");
+
+	//Insere modificadores de dano e resistencia
 	var DmgMods := GetConfigString(elem, "AoSDamageMod");
 	DmgMods := SplitWords(DmgMods);
 	var ResistMods := GetConfigString(elem, "AoSResistMod");
 	ResistMods := SplitWords(ResistMods);
     var hpmod := GetConfigInt(elem, "hpmod"); //modificador de durabilidade do item pelo material
 
+
+
 	if(theitem.isA(POLCLASS_WEAPON))
         var cfg:=ReadConfigFile(":combat:itemdesc");
         var elem := FindConfigElem(cfg, theitem.objtype);
-		theitem.damage_physical_mod := Cint(DmgMods[1]);
-		if (elem.Attribute != "RangedCombat")
-			theitem.damage_fire_mod := Cint(DmgMods[2]);
-			theitem.damage_cold_mod := Cint(DmgMods[3]);
-			theitem.damage_poison_mod := Cint(DmgMods[4]);
-			theitem.damage_energy_mod := Cint(DmgMods[5]);
+		theitem.damage_physical_mod := theitem.damage_physical_mod + Cint(DmgMods[1]);
+		theitem.damage_fire_mod := theitem.damage_fire_mod + Cint(DmgMods[2]);
+		theitem.damage_cold_mod := theitem.damage_cold_mod + Cint(DmgMods[3]);
+		theitem.damage_poison_mod := theitem.damage_poison_mod + Cint(DmgMods[4]);
+		theitem.damage_energy_mod := theitem.damage_energy_mod + Cint(DmgMods[5]);
+
+		if(TemHabilidade(who,"Armas Velozes"))
+			theitem.speed := CInt(theitem.speed *1.2);
 		endif
+
 	elseif(theitem.isA(POLCLASS_ARMOR))
         var cfg:=ReadConfigFile(":combat:itemdesc");
         var elem := FindConfigElem(cfg, theitem.objtype);
-        theitem.resist_fire_mod := Cint(ResistMods[2]);
-        theitem.resist_cold_mod := Cint(ResistMods[3]);
-        theitem.resist_poison_mod := Cint(ResistMods[4]);
-        theitem.resist_energy_mod := Cint(ResistMods[5]);
-        if (elem.parrydelay == error) //se for escudo nao aplica o resitmod fisico dos metais
-            theitem.resist_physical_mod := Cint(ResistMods[1]);
-        else
-            //aplica o modificador de durabilidade do material nos escudos
-            hpmod :=  hpmod*5;
-        endif
+        theitem.resist_fire_mod := theitem.resist_fire_mod + Cint(ResistMods[2]);
+        theitem.resist_cold_mod := theitem.resist_cold_mod + Cint(ResistMods[3]);
+        theitem.resist_poison_mod := theitem.resist_poison_mod + Cint(ResistMods[4]);
+        theitem.resist_energy_mod := theitem.resist_energy_mod + Cint(ResistMods[5]);
+        theitem.resist_physical_mod := theitem.resist_physical_mod + Cint(ResistMods[1]);
+
+        if (elem.parrybonus) //aplica o modificador de durabilidade do material nos escudos
+        	hpmod :=  hpmod*5;
+    	endif
+
+    	if(TemHabilidade(who,"Armaduras Articuladas"))
+    		var DexPenBonus := Cint(elem.DexPenalty);
+    		if(DexPenBonus > 0)
+	    		case (DexPenBonus)
+	    			1
+	    				DexPenBonus := 1;
+	    				break;
+	    			2:
+	    				DexPenBonus := 1;
+	    				break;
+	    			3:
+	    				DexPenBonus := 2;
+	    				break;
+    				default:
+    					DexPenBonus := CInt(DexPenBonus/2);
+	    		endcase
+	    		SetObjProperty(item, "penaltybonus", DexPenBonus)
+	    	endif
+		endif
+
+		if(TemHabilidade(who,"Armaduras sem Brechas"))
+			if(theitem.resist_fire_mod != 0)
+				theitem.resist_fire_mod := theitem.resist_fire_mod + 1;
+			endif
+			if(theitem.resist_cold_mod != 0)
+	        	theitem.resist_cold_mod := theitem.resist_cold_mod + 1;
+	        endif
+	        if(theitem.resist_poison_mod != 0)
+	        	theitem.resist_poison_mod := theitem.resist_poison_mod + 1;
+	    	endif
+	        if(theitem.resist_energy_mod != 0)
+	        	theitem.resist_energy_mod := theitem.resist_energy_mod + 1;
+	        endif
+	        if(theitem.resist_physical_mod != 0)
+	        	theitem.resist_physical_mod := theitem.resist_physical_mod + 1;
+			endif
+		endif
+
+		if((elem.parrybonus != 0) || elem.parrydelay != 0) //Verifica se é escudo
+			if(TemHabilidade(who,"Armaduras sem Brechas"))
+				var parrybonus := Cint(elem.parrybonus);
+	    		if(parrybonus == 0)
+	    			parrybonus := 5;
+	    		else
+	    			parrybonus := CInt(parrybonus*1.5) + 5;
+	    		endif
+	    		SetObjProperty(item, "parrybonus", parrybonus)
+			endif
+			if(TemHabilidade(who,"Escudos Dissipadores"))
+				var parrydelay_mod := Cint(elem.parrydelay);
+	    		if(parrydelay_mod > 0)
+		    		case (parrydelay_mod)
+		    			1
+		    				parrydelay_mod := 1;
+		    				break;
+		    			2:
+		    				parrydelay_mod := 1;
+		    				break;
+		    			3:
+		    				parrydelay_mod := 2;
+		    				break;
+	    				default:
+	    					parrydelay_mod := CInt(parrydelay_mod/2);
+		    		endcase
+		    		SetObjProperty(item, "parrydelay_mod", parrydelay_mod)
+		    	endif
+			endif
+		endif
+
+
+
+        //endif
 	//flechas e virotes de guerra
 	elseif (theitem.objtype == 0x9088 || theitem.objtype == 0x9098)
 		SetObjProperty(theitem, "dmgmods", DmgMods);
 	endif
 
-    theitem.maxhp_mod := Cint(hpmod * Cint(theitem.maxhp) /100.0);
-    theitem.hp := theitem.maxhp_mod + theitem.hp;
+	var maximo_hp := theitem.maxhp + hpmod
+
+	if(TemHabilidade(who,"Preparo do Metal"))
+		maximo_hp := CInt(maximo_hp * 1.5);
+	endif
+
+	//atualiza o life do item
+    theitem.maxhp := theitem.maxhp + hpmod;
+	theitem.hp := theitem.maxhp;
+
+
 endfunction
 
 function CraftExceptional(who, theitem, craft_skill)
