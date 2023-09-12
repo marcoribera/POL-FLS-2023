@@ -11,6 +11,8 @@ include "include/client";
 include ":charactercreation:habilidades";
 include ":timedscripts:timedScripts";
 
+//TODO: Criar constantes para os ID dos botões
+
 CONST CANCEL_BTN	:= 0xA00001;
 
 program disguise(who, kit)
@@ -36,6 +38,7 @@ program disguise(who, kit)
 	disfarce.+aparencia := "";
 	disfarce.+sexo := -1;
 	disfarce.+raca := "";
+	disfarce.+id := "";
 
 	var gump := GfCreateGump();
 	GFDisposable(gump, 0);
@@ -129,6 +132,7 @@ function criaDisfarceTarget(who, kit)
 
 	disfarce.+sexo := targ.trueobjtype;
 	disfarce.+raca := GetObjProperty(targ, "raca");
+	disfarce.+id := Cstr(targ.serial);
 
 	disguiseSelf(who, kit, disfarce);
 
@@ -141,14 +145,14 @@ function usarDisfarce(who, disfarce)
 		var targ := target(who);
 		if (!targ)
 			SendSysMessageEx(who, "Cancelado");
-			return;
+			return 0;
 		elseif (targ.connected && targ != who)
 			var pode := YesNo(targ, "Voce permite "+who.name+" disfarcar voce?");
 			if (pode)
 				who := targ;
 			else
 				SendSysMessageEx(who, targ.name+" nao permitiu ser disfarcado.", SSM_FAIL);
-				return;
+				return 0;
 			endif
 		endif
 	endif
@@ -161,9 +165,12 @@ function usarDisfarce(who, disfarce)
 		return;
 	endif
 
-	if (GetObjProperty(who, "disguise"))
+/*
+	if (GetObjProperty(who, "disfarce"))
 		removeDisfarce(who);
+		Print("Disguise");
 	endif
+*/
 
 	PrintText(who, "*usando um disfarce*");
 
@@ -208,22 +215,16 @@ function usarDisfarce(who, disfarce)
 		//sendsysmessage(who, "original hair " + original.myhair);
 	endif
 
-        if (disfarce.corcabelo != -1)
-		var myhair := GetEquipmentByLayer(who, LAYER_HAIR);
-                original.+corcabelo := myhair.color;
-                myhair.color := disfarce.corcabelo;
-         endif
-
+    if (disfarce.corcabelo != -1)
+	var myhair := GetEquipmentByLayer(who, LAYER_HAIR);
+            original.+corcabelo := myhair.color;
+            myhair.color := disfarce.corcabelo;
+     endif
 
 	if (disfarce.corpele != -1)
 		original.+corpele := who.color;
 		who.color := disfarce.corpele;
 		who.truecolor := disfarce.corpele;
-	endif
-
-	if (disfarce.aparencia != "")
-		original.+aparencia := who.name;
-		setname(who, disfarce.aparencia);
 	endif
 
 	if( disfarce.sexo != -1)
@@ -238,9 +239,23 @@ function usarDisfarce(who, disfarce)
 		who.title_race := disfarce.raca;
 	endif
 
+	if(disfarce.id != "")
+		SetObjProperty(who, "FakeID", Cstr(disfarce.id));
+	else
+		SetObjProperty(who, "FakeID", Cstr(who.serial) + Cstr(disfarce.aparencia));
+	endif
 
- 	//printtextabove(who, "original " + original);
+	if (disfarce.aparencia != "")
+		original.+aparencia := who.name;
+	endif
+
 	SetObjProperty(who, "disfarce", original);
+
+	if (disfarce.aparencia != "")
+		SetName(who, disfarce.aparencia);
+	else
+		SetName(who, who.name);
+	endif
 
 	if (!temHabilidade(who, "Disfarces"))
 		TS_StartTimer(who, "kitdisfarce", 600);

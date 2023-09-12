@@ -16,9 +16,11 @@ function removeDisguise(who)
 		sendsysmessage(who, "Nao foi possivel achar sua configuracao inicial.");
 		return 1;
 	endif
+	EraseObjProperty(who, "disfarce");
+	EraseObjProperty(who, "FakeID");
 
 	if (original.barba)
-                var fakebarba := GetEquipmentByLayer(who, LAYER_BEARD);
+		var fakebarba := GetEquipmentByLayer(who, LAYER_BEARD);
 		var newbarba := CreateItemAtLocation(who.x, who.y, who.z, original.barba, 1, who.realm);
 		if (fakebarba)
 			DestroyItem(fakebarba);
@@ -60,14 +62,6 @@ function removeDisguise(who)
 		who.truecolor := original.corpele;
 	endif
 
-	if (original.aparencia)
-		if (who.name == "Desconhecido")
-			SetObjProperty(who, "realname", original.aparencia);
-		else
-			setname(who, original.aparencia);
-		endif
-	endif
-
 	if (original.sexo)
 		who.graphic := original.sexo;
 		who.trueobjtype := original.sexo;
@@ -78,9 +72,18 @@ function removeDisguise(who)
 		who.title_race := original.raca;
 	endif
 
-	eraseobjproperty(who, "disfarce");
+	if (original.aparencia != "")
+		if (who.name == "Desconhecido")
+			SetObjProperty(who, "realname", original.aparencia);
+			SetName(who, original.aparencia);
+		else
+			SetName(who, who.name);
+		endif
+	else
+		SetName(who, who.name);
+	endif
 
-	return 1; 
+	return 1;
 
 endfunction
 
@@ -93,7 +96,7 @@ function removedisfarce(who)
 		return 1;
 	endif
 
-	if (TemHabilidade(who, "Disfarce Aprimorado"))
+	if (TemHabilidade(who, "Disfarces"))
 		removeDisguise(who);
 	else
 		TS_LowerDuration(who, "kitdisfarce", -1);
@@ -217,7 +220,7 @@ function BuildHairDyeGump(cur_color := 0, povo := 0)
 	GFAddButton(gump, 190, 509, 2128, 2129, GF_CLOSE_BTN, 1);
 	GFAddButton(gump, 265, 509, 2119, 2120, GF_CLOSE_BTN, 2);
 
-	
+
 	var color_cfg := ReadConfigFile(":hair:config/hairColors");
 	var index_elem;
 	if (povo == "Zharkiano" || povo == "Asanita")
@@ -247,7 +250,7 @@ function BuildHairDyeGump(cur_color := 0, povo := 0)
 		var color_x := 150;
 		var color_y := 20;
 		var side := 1;
-    var colors := GetConfigStringArray(color_elem, "Color"); 
+    var colors := GetConfigStringArray(color_elem, "Color");
     gump.+colors := colors;
 		foreach color in colors
 			color := CInt(color);
@@ -267,7 +270,7 @@ function BuildHairDyeGump(cur_color := 0, povo := 0)
 		sleepms(2);
 	endforeach
 
-      
+
 	return gump;
 endfunction
 
@@ -396,7 +399,7 @@ function SkinGump(who, byref new_look, povo := 0, sempreretorna := 0)
     if (!selected)
       if (sempreretorna)
           new_look.corpele :=  (cint(colors[1]));
-      endif    
+      endif
     endif
 	else
 		SendSysMessageEx(who, "Cancelado.", SSM_FAIL);
