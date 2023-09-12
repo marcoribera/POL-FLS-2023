@@ -52,7 +52,7 @@ function SetEquipmentMods(who, item)
 
 	//magery
 	penalty := CInt(itemdesc[item.objtype].MageryPenalty);
-	if ((!TemHabilidade(who, "Aura de Corrupcao") || !TemHabilidade(who, "Devocao")))
+	if (!(TemHabilidade(who, "Aura de Corrupcao") || TemHabilidade(who, "Devocao")))
         AP_ModifySkillMod(who, MAGERY, penalty);
     endif
 
