@@ -26,6 +26,7 @@ program HitScript(params)
     if (GetCooldown(attacker, "corpofechado") > 0)
         dmg := 1;
     endif
+
 	DamageFLS(attacker, cint(dmg), DMG_FORCED, defender);
 	
 	return 1;
