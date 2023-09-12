@@ -25,7 +25,6 @@ var fighting := 0;
 var opponent := 0;
 var going_loc := 0;
 
-
 //Owner info
 var owner_serial;
 var owner;
@@ -230,7 +229,9 @@ function ProcessSpeech(ev)
 		if ( targ == me || targ == ev.source || !targ.IsA(POLCLASS_MOBILE) )
 			return;
 		endif
-
+        if(obediencecheck()== 0)
+          return;
+        endif
 
 
 		if ( text["todos"] )
@@ -240,7 +241,9 @@ function ProcessSpeech(ev)
 		endif
 
 	elseif ( text["guarde"] )
-
+        if(obediencecheck()== 0)
+          return;
+        endif
 		if ( text["todos guardem"] )
 			if ( text["todos guardem-me"] )
 				guarding := ev.source;
@@ -263,14 +266,18 @@ function ProcessSpeech(ev)
 		endif
 
 	elseif( text[name+" pare"] || text["todos parem"] )
-
+        if(obediencecheck()== 0)
+          return;
+        endif
 		opponent := 0;
 		guarding := 0;
 		following := 0;
 		going_loc := 0;
 
 	elseif( text[name+" siga"] )
-
+        if(obediencecheck()== 0)
+          return;
+        endif
 		if ( text["siga-me"] )
 			following := ev.source;
 		else
@@ -278,7 +285,9 @@ function ProcessSpeech(ev)
 		endif
 
 	elseif ( text["todos sigam"] )
-
+        if(obediencecheck()== 0)
+          return;
+        endif
 		if ( text["todos sigam-me"] )
 			following := ev.source;
 		else
@@ -291,7 +300,9 @@ function ProcessSpeech(ev)
 		endif
 
 	elseif ( text[name+" novo dono"] || text["todos novo dono"] )
-
+        if(obediencecheck()== 0)
+          return;
+        endif
 
 		var cfg := ReadConfigFile(":brainAI:npcdesc");
 		var npctemplate := me.npctemplate;
@@ -343,16 +354,88 @@ function ProcessSpeech(ev)
 endfunction
 
 
-
 function TakeItem(ev)
-
-	var cfg := ReadConfigFile(":*:itemdesc");
-	if ( cfg[(ev.item).objtype].script["eat"] )
+//cfgd
+	var cfgeat := ReadConfigFile(":*:itemdesc");
+	var cfg := ReadConfigFile("food");
+	var npccfg := ReadConfigFile(":brainai:npcdesc");
+	
+// relacionado as comidas do pet
+	var npctemplate := me.npctemplate;
+	npctemplate := npctemplate[10, len(npctemplate)-9];
+	var foodtype := npccfg[npctemplate].food;
+	if(!foodtype)
+		foodtype := "qualquer";
+	endif
+  var elem := FindConfigElem(cfg,foodtype);
+  var foodarray := GetConfigStringArray(elem,"Food");
+ 
+//relacionado ao tempo para inicio do bond (tudo em segundos!)
+	var happy := GetObjProperty(me,"happiness");
+  	var timebond := ReadGameClock(); //tempo do relógio 
+	var startbond := GetObjProperty(me, "bond"); //hora que foi tamado
+	var adestramento := AP_GetSkill(owner, HANDLEANIMAL); //skill do owner
+	var adestramentocalc := (adestramento * 4320); //modificador com base na skill
+	var tempo_detreino := ( 432001 - adestramentocalc); //tempo que irá demorar para fidelizar
+	var tempo_fiel := (startbond + tempo_detreino);  // tempo em que irá ficar pronto o fidelizar
+   
+ //check se quer fidelizar ou nao
+  var fidelizar := GetObjProperty(me, "Fidelizar?");
+ 
+ if ( cfgeat[(ev.item).objtype].script["eat"]) //evento comida checando tds os itemdesc para ver se são comíveis
+	if (Cstr(ev.item.objtype) in foodarray)
+		if (ev.item.amount >1)
+			SendSysMessage(ev.source, "Quer engasgar o animal? Pegue um de cada vez!", 0, 1255);
+			MoveItemToContainer(ev.item, (ev.source).backpack);
+			return;
+		endif
+		if (happy >= 100)
+			PrintTextAbovePrivate(me,"O animal já está satisfeito", ev.source);
+			return;
+		endif
+		//checkbond para ver se já tem animal fidelizado
+		var check_bond := 0;
+		var pets := GetObjProperty(owner, "TamedPets");
+			foreach serial in pets
+				var pet := SystemFindObjectBySerial(serial);
+				if (GetObjProperty(pet, "bond") == "fiel")
+					check_bond := 1;
+				endif
+			endforeach 
+		if ((happy >= 20) && (ev.source == owner)) //checa a felicidade e se o dono que está dando comida
+			if (startbond) //checa o bond para fidelizar
+			
+				if ( (adestramento >= 1) && (tempo_fiel <= timebond) ) // Pelo menos 1 de skill e o tempo que demoraria para fidelizar tem q ser menor que o tempo de agora
+					SetObjProperty(me, "bond", "fiel");
+					SetobjProperty(me, "NeverRelease", 1);
+					PrintTextAbovePrivate(me, "*O animal se esfrega em voce*", owner);
+					PlaySoundEffect(me, npccfg[me.npctemplate].idlesound);
+					SendSysMessage(owner, +me.name+ " criou um vinculo de fidelidade com voce!", 0, 1410);
+				endif
+			elseif ((startbond == "fiel") || (check_bond == 1) || (fidelizar == "nao") ) //se já é fiel/se já tem animal fidelizado/marcado como nao fidelizar só vai comer
+			else //para iniciar o bond
+				SetObjProperty(me, "bond", timebond);
+				SendSysMessageEX(owner, "Voce comeca a construir uma fidelidade com seu animal.", SSM_INFO);
+			endif
+		endif
 		PlaySoundEffect(me, CInt(0x3b)+ RandomInt(3));
 		DestroyItem(ev.item);
-		PrintTextAbovePrivate(me,"*O animal parece feliz*", ev.source);
-		SetObjProperty(me, "happiness", 100);
-	elseif ( ev.item.objtype IN {2482, 3701} && !(me.graphic in pack_animals) )
+		SetObjProperty(me,"happiness", happy +35);
+			if ( CInt(GetObjProperty(me, "happiness") > 100) ) // se passar de 100 o happiness volta pra 100
+				SetObjProperty(me, "happiness", 100);
+			endif
+		var tameinfo := "";
+		tameinfo := "* " +me.name+" "+GetHappy(happy)+"*";
+		PrintTextAbove(me, tameinfo);
+		return;
+	else
+		SendSysMessage(ev.source, "Nao pode comer isso!");
+		return;
+	endif
+
+endif
+		
+if ( ev.item.objtype IN {2482, 3701} && !(me.graphic in pack_animals) ) //usar backpack em montaria para transformar em animal de carga
 		if ((EnumerateItemsInContainer(ev.item)).size() > 0)
 			SendSysMessage(ev.source, "Voce precisa esvaziar a mochila antes de coloca-la na montaria.");
 			return;
@@ -368,16 +451,14 @@ function TakeItem(ev)
 			DestroyItem(ev.item);
 			PrintText(ev.source,"*prende uma mochila na llama*");
 		endif
-
 		//if(IsMountable(me.graphic))
-		//	mount := 1;
+			//mount := 1;
 		//else
-		//	mount := 0;
+			//mount := 0;
 		//endif
-	else
-		SendSysMessage(ev.source, "Nao pode dar esse item!");
-	endif
-
+//else
+		//SendSysMessage(ev.source, "Nao pode dar esse item BURRO!");	
+endif
 endfunction
 
 
@@ -547,15 +628,13 @@ function Transfer(targ)
 	AddPet(targ, me.serial);
 
 	me.SetMaster(targ);
-
-
+	EraseObjProperty(me, "bond");
+	EraseObjProperty(me, "NeverRelease");
+	SetObjProperty(me, "Fidelizar?", "nao");
 
 	RestartScript(me);
 
 endfunction
-
-
-
 
 
 function UnTame()
@@ -586,6 +665,9 @@ function UnTame()
 	EraseObjProperty(me, "name");
 	EraseObjproperty(me, "script");
 	EraseObjProperty(me, "happiness");
+	EraseObjProperty(me, "bond");
+	EraseObjProperty(me, "NeverRelease");
+	EraseObjProperty(me, "Fidelizar?");
 	RestartScript(me);
 
 	ErasePetMods(me);
@@ -667,8 +749,6 @@ function ProcessDoubleClick(ev)
 endfunction
 
 
-
-
 function EnableMainEvents()
 
 	EnableEvents(SYSEVENT_SPEECH, 10);
@@ -680,7 +760,6 @@ function EnableMainEvents()
 endfunction
 
 
-
 function DisableMainEvents()
 
 	DisableEvents(SYSEVENT_SPEECH);
@@ -689,7 +768,6 @@ function DisableMainEvents()
 	DisableEvents(SYSEVENT_ITEM_GIVEN);
 
 endfunction
-
 
 
 function Setup()
@@ -731,6 +809,54 @@ function Setup()
 
 endfunction
 
+function obediencecheck()
+  var arry := { 0xcc, 0xc8, 0xe2, 0xe4, 0x123, 0x124, 0xd2, 0xdb };
+  if(me.objtype in arry)
+    return 1;
+  endif
+
+var npccfgfile := ReadConfigFile(":brainAI:npcdesc");  
+var orneriness := npccfgfile[me.npctemplate].PetSlot;
+	if (!orneriness)
+		orneriness := 1;
+	endif
+var dmgsound := npccfgfile[me.npctemplate].damagedsound;
+var hit := npccfgfile[me.npctemplate].attackhitsound;
+	
+  var maslore    := AP_GetSkill(owner, HANDLEANIMAL)/5;
+  var mastaming  := CInt(AP_GetSkill(owner, HANDLEANIMAL)+ maslore);
+  var checkvalue := CInt(mastaming - 20);
+  var happiness := GetObjProperty(me, "happiness");
+  var happybonus := happiness/10;
+  checkvalue := checkvalue + happybonus;
+  var defiance :=(orneriness * 20)-30;
+  //print("valor checkvalue eh "+checkvalue);
+  //print("valor happiness eh "+happybonus);
+  if(defiance < 1)
+    defiance := 1;
+  endif
+  //print("valor defiance eh "+defiance);
+  var finaldefiance := CInt(defiance + RandomInt(40) );
+  //print("FINALDEFIANCE eh "+finaldefiance);
+  if( (GetObjProperty(me, "summoned")== 1) || (GetObjProperty(me, "NeverRelease") == 1) )// se for summon ou fiel/bond não destama não desobedece
+	return 1;
+  elseif(finaldefiance > checkvalue)
+    PrintTextAbovePrivate(me, "*O animal te ignora*", owner);
+	PlaySoundEffect(me, dmgsound);
+    happiness := happiness - orneriness;
+    SetObjProperty(me, "happiness",(happiness-1));
+		if(happiness < 10)
+			SendSysMessage(owner, "*Seu pet "+me.name+" decidiu que eh melhor ficar sozinho*");
+			UnTame();
+		endif
+    return 0;
+  else
+    PlaySoundEffect(me,hit);
+    return 1;
+  endif
+
+endfunction
+
 function SpecialHab(me)
 
 	if (owner)
@@ -757,4 +883,30 @@ function CastFaerieHeal(me, owner)
 	HealDamage(owner, amt);
 	SetCooldown(me, "heal", 150);
 
+endfunction
+
+function GetHappy(percentage)
+  if(percentage >= 98)
+    return "parece maravilhosamente feliz.";
+  elseif(percentage >= 88)
+    return "parece extremamente feliz.";
+  elseif(percentage >= 78)
+    return "parece muito feliz";
+  elseif(percentage >= 68)
+    return "parece bastante feliz.";
+  elseif(percentage >= 58)
+    return "parece feliz.";
+  elseif(percentage >= 48)
+    return "parece normal.";
+  elseif(percentage >= 38)
+    return "parece normal, eu presumo.";
+  elseif(percentage >= 28)
+    return "parece infeliz.";
+  elseif(percentage >= 18)
+    return "parece bem triste.";
+  elseif(percentage >= 8)
+    return "parece muito triste.";
+  else
+    return "parece confuso e irritadiço.";
+  endif
 endfunction

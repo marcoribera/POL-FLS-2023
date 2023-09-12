@@ -26,6 +26,7 @@ include ":spells:swordmage";
 include ":taming:taming";
 
 var item_cfg := ReadConfigFile(":*:itemdesc");
+var taming_cfg := ReadConfigFile(":taming:taming");												   
 
 program MainHitScript( params )
 	var attacker := params[1];
@@ -641,6 +642,12 @@ function WeaponHitScripts(attacker, defender, weapon, armor, basedamage, rawdama
 		endif
 	endif
 
+	if (GetObjProperty(attacker, "#golpesangrento") ) // VIVISEC do Igor
+		// EraseObjProperty(attacker, "#golpesangrento");
+		var dmg := basedamage + CInt(rawdamage*(AP_GetSkill(attacker, ALCHEMY)/100));
+		start_script(":combat:weaponHitScripts/bleedingstrike", array{attacker, defender, weapon, armor, basedamage, dmg*2});
+	endif
+
 	if ( GetCooldown(weapon, "circulodevas") )
 		var elemental := GetObjProperty(weapon, "#elementalweapon");
 		if (elemental != error)
@@ -706,9 +713,21 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 		chance := chance * 2;
 		critcooldown := 30;
 	endif
+// Inicio vivisec Igor-----------------------------
+	var bonus_Preservar_Orgaos := 0;
+	if (TemHabilidade(defender, "Preservar Orgaos"))
+		bonus_Preservar_Orgaos := 25;
+	endif
 
-	var rand := Cint((RandomInt(100) + 1));
+	var rand := Cint((RandomInt(100) + 1) + bonus_Preservar_Orgaos);
 	//printtextabove(attacker, "chance " + chance + " rand " + rand + " " + (chance > rand) );
+
+	if (TemHabilidade(defender, "Corpo ao Extremo"))
+		SendSysMessageEx(defender, "Seu corpo evita o critico", SSM_INFO);
+		SendSysMessageEx(attacker, "Seu critico nao surte efeito", SSM_FAIL);
+		chance := 0;
+	endif
+// FIM add vivisec igor----------------------------
 	var result := chance > rand;
 
 	if (autoCritical)
@@ -737,11 +756,15 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 	endif
 
 	var weapon_scripts := array;
+	var pet_instinto :=	GetObjProperty(attacker, "Group_savage");
+	var pet_critic := GetObjProperty(attacker, "Critic");
 	//if ( weapon.objtype == 0xF020 ) // Intrinsic fist
 	//	weapon_scripts := GetObjProperty(attacker, "CriticalHitScripts");
-	if ( weapon.IsA(POLCLASS_WEAPON) )
+	if ( weapon.IsA(POLCLASS_WEAPON) && !pet_instinto )
 		weapon_scripts :=  GetConfigStringArray( item_cfg[weapon.objtype], "CriticalHitScripts" );
-	elseif (attacker.npctemplate)
+	elseif (pet_instinto == 1)
+		weapon_scripts :=  GetConfigStringArray( taming_cfg[pet_critic], "CriticalHitScripts" );
+	elseif (attacker.npctemplate)	  
 		var npcelem := NPC_GetNPCConfig(attacker.npctemplate);
 		weapon_scripts :=  GetConfigStringArray( npcelem, "CriticalHitScripts" );
 	endif

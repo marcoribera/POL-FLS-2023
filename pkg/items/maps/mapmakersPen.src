@@ -46,7 +46,7 @@ program use_MapmakersPen(who, tool)
 	var blank_array := array{ 0xE34, 0xEF3, 0x14EB, 0x14EC };
 
 	if (targ.objtype in blank_array)
-	
+
 		if (TemHabilidade(who, "Mapear Regiao") || who.cmdlevel >= 3)
 		//var rinfo := sendCraftGump(who, "Cartography");
 
@@ -71,7 +71,7 @@ program use_MapmakersPen(who, tool)
 		var amt         := 1;
 
 		makeCartographyMap(who, the_objtype, amt, tool);
-		
+
 
 		else
 			SendSysMessageEx(who, "Voce nao tem conhecimentos para mapear regioes.", SSM_FAIL);
@@ -92,7 +92,7 @@ program use_MapmakersPen(who, tool)
 					SendSysMessageEx(who, "Voce nao pode escrever neste livro.", SSM_FAIL);
 					return;
 				elseif (linguagem != error)
-					if (!temHabilidade(who, "Arqueologo"))
+					if (!(temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica")))
 						SendSysMessageEx(who, "Voce nao conhece essa lingua para copiar o livro.");
 						return;
 					else
@@ -118,7 +118,17 @@ program use_MapmakersPen(who, tool)
 				return;
 			endif
 		else
-			var yes := YesNo(who, "Deseja lacrar o livro?");
+			var yes;
+			if (temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica"))
+				yes := YesNo(who, "Escrever em lingua antiga?");
+				if(yes)
+					SetObjProperty(targ, "lingua", "idioma antigo");
+				elseif(GetObjProperty(targ, "lingua"))
+					EraseObjProperty(targ, "lingua");
+				endif
+			endif
+
+			yes := YesNo(who, "Deseja lacrar o livro?");
 			if (yes)
 				targ.ReadOnly(1);
 				SendSysMessageEx(who, "O livro esta lacrado.", SSM_INFO);

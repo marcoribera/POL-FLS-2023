@@ -214,7 +214,7 @@ program UseBandage(mobile, bandage)
 				return 0;
 			endif
 			if (GetCooldown(targ, "resurrect") > 0 )
-				if (!GetObjProperty(targ, "companheiro"))
+				if (!GetObjProperty(targ, "NeverRelease"))
 					SendSysMessageEx(mobile, "O alvo esta morto.", SSM_FAIL);
 					SetObjProperty(targ, "morto", 1);
 					return;
@@ -423,7 +423,24 @@ function HealNpcCorpse(mobile, targ, aux_skill)
 			foreach skill in (skills.keys())
 				AP_SetTrueSkill(npc, skill, skills[skill]);
 			endforeach
-		else
+			
+						
+			var happy := GetObjProperty(npc,"happiness"); //happiness do pet
+			var fiel := GetObjProperty(npc, "NeverRelease"); // se é animal fiel
+			if (happy)
+				SetObjProperty(npc,"happiness", happy -20);
+				if(happy < 10 ) 
+					if (!fiel) //destama se happiness menor que 10
+						SendSysMessage(owner, "*Seu pet "+npc.name+" decidiu que eh melhor ficar sozinho*");
+						destama(npc.serial);
+					else // se é fiel só perde fidelidade
+						SendSysMessage(owner, "*Seu pet "+npc.name+" nao sente mais tanta confian em voce**");
+						EraseObjProperty(npc, "NeverRelease");
+						EraseObjProperty(npc, "bond");
+					endif
+				endif
+			endif			
+	else
 			SendSysMessage(mobile, "Voce nao conseguiu estabilizar "+name+".");
 		endif
 	endif

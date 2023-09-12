@@ -105,34 +105,30 @@ program skill_animal_lore( who )
 endprogram
 
 // Get the Happiness level
-function Gethappy(percentage)
-
-    if(percentage >= 100)
-        return "Euphoric";
-    elseif(percentage >= 98)
-        return "Wonderfully Happy";
-    elseif(percentage >= 88)
-        return "Extremely Happy";
-    elseif(percentage >= 78)
-        return "Very Happy";
-    elseif(percentage >= 68)
-        return "Rather Happy";
-    elseif(percentage >= 58)
-        return "Happy";
-    elseif(percentage >= 48)
-        return "Content";
-    elseif(percentage >= 38)
-        return "Somewhat Content";
-    elseif(percentage >= 28)
-        return "Unhappy";
-    elseif(percentage >= 18)
-        return "Rather Unhappy";
-    elseif(percentage >= 8)
-        return "Extremely Unhappy";
-    else
-        return "Confused";
-    endif
-
+function GetHappy(percentage)
+  if(percentage >= 98)
+    return "Felicidade: parece maravilhosamente feliz.";
+  elseif(percentage >= 88)
+    return "Felicidade: parece extremamente feliz.";
+  elseif(percentage >= 78)
+    return "Felicidade: parece muito feliz";
+  elseif(percentage >= 68)
+    return "Felicidade: parece bastante feliz.";
+  elseif(percentage >= 58)
+    return "Felicidade: parece feliz.";
+  elseif(percentage >= 48)
+    return "Felicidade: parece normal.";
+  elseif(percentage >= 38)
+    return "Felicidade: parece normal, eu presumo.";
+  elseif(percentage >= 28)
+    return "Felicidade: parece infeliz.";
+  elseif(percentage >= 18)
+    return "Felicidade: parece bem triste.";
+  elseif(percentage >= 8)
+    return "Felicidade: parece muito triste.";
+  else
+    return "Felicidade: parece confuso e irritadiço.";
+  endif
 endfunction
 
 
@@ -160,23 +156,50 @@ function AL_LoadGump(who, creature)
 
         var cTemplate := NPC_GetNPCConfig(creature.npctemplate);
 
-        var thepacktype := cTemplate.packinstinct;
-        if( TypeOf(thepacktype) != "String" )
-                thepacktype := "None";
+        //var thepacktype := cTemplate.packinstinct;
+        //if( TypeOf(thepacktype) != "String" )
+          //      thepacktype := "None";
+        //endif
+		var thepacktype := dictionary;
+		var instintos := GetObjProperty(creature, "instincts");
+		if (!instintos)
+			thepacktype := "Nada";
+		else
+			thepacktype := instintos.keys();
+		endif
+
+        var foodtype := cTemplate.food;
+        if( TypeOf(foodtype) != "String" )
+                foodtype := "qualquer";
         endif
 
-        var foodtype := cTemplate.foodtype;
-        if( TypeOf(foodtype) != "String" )
-                foodtype := "None";
-        endif
+		var dono := GetObjProperty(creature, "owner");
+		if (!dono)
+			dono := "Animal Selvagem.";
+		else
+			dono := "Pertence a alguem.";
+		endif
 
         var loyalty := "";
-        if(creature.script == "tamed")
-                loyalty := Gethappy(CInt(GetObjProperty(creature, "happiness")));
-        else
-                loyalty := "None";
+        if(creature.script == ":ghaia:tamed")
+            loyalty := Gethappy(CInt(GetObjProperty(creature, "happiness")));
         endif
 
+//controle do tempo de fidelizar (tudo em segundos!)
+	var tempo_fidelizar := "";
+	var timebond := ReadGameClock(); //tempo do relógio
+	var startbond := GetObjProperty(creature, "bond"); //hora que foi tamado
+	var adestramento := AP_GetSkill(who, HANDLEANIMAL); //skill do owner
+	var adestramentocalc := (adestramento * 4320); //calculo do modificador do tempo
+	var tempo_detreino := ( 432001 - adestramentocalc); //modificador do tempo menos 5 dias total para fidelizar qqr animal
+
+var tempo_fiel := startbond + tempo_detreino; //tempo total para ele ser fidelizado
+var tempo_agora := tempo_fiel - timebond; // quanto tempo falta de acordo com o clock de agora
+	var tempo_emdias := Cint(tempo_agora / 86400); // transforma em dias
+		if(!GetObjProperty(creature, "NeverRelease") && startbond )
+			tempo_fidelizar := "Tempo para fidelizar: +/- "+tempo_emdias+" dias.";
+		endif
+			
         var gump := GFCreateGump();
         GFGumpPic(gump, 100, 100, 2080);
         GFGumpPic(gump, 118, 137, 2081);
@@ -205,9 +228,13 @@ function AL_LoadGump(who, creature)
         GFHTMLArea(gump, 280, 222,  75, 18, "<basefont color=#4A3929><div align=right>"+CStr(str)+"</div>");
         GFHTMLArea(gump, 153, 240, 160, 18, "<basefont color=#4A3929>Destreza");
         GFHTMLArea(gump, 280, 240,  75, 18, "<basefont color=#4A3929><div align=right>"+CStr(dex)+"</div>");
-        GFGumpPic(gump, 128, 278, 2086);
-        GFHTMLArea(gump, 147, 276, 160, 18, "<basefont color=#A52A2A>Lealdade");
-        GFHTMLArea(gump, 153, 294, 160, 18, "<basefont color=#4A3929>"+loyalty);
+        GFGumpPic(gump, 128, 258, 2086);
+        GFHTMLArea(gump, 147, 258, 160, 18, "<basefont color=#A52A2A>Lealdade");
+        GFHTMLArea(gump, 135, 276, 360, 18, "<basefont color=#4A3929>"+loyalty);
+        GFHTMLArea(gump, 135, 294, 360, 18, "<basefont color=#4A3929>"+dono);
+		if (who.serial == GetObjProperty(creature, "owner")) // apenas se quem tá analisando é dono aparece o tempo que falta para fidelizar
+			GFHTMLArea(gump, 135, 312, 360, 18, "<basefont color=#4A3929>"+tempo_fidelizar);
+		endif
         GFAddButton(gump, 317, 358, 5603, 5607, GF_PAGE_BTN, 4);
         GFAddButton(gump, 340, 358, 5601, 5605, GF_PAGE_BTN, 2);
 
@@ -243,9 +270,9 @@ function AL_LoadGump(who, creature)
         GFGumpPic(gump, 128, 243, 2086);
         GFHTMLArea(gump, 147, 240, 160, 18, "<basefont color=#A52A2A>Alimentação");
         GFHTMLArea(gump, 153, 258, 160, 18, "<basefont color=#4A3929>"+foodtype);
-        GFGumpPic(gump, 128, 297, 2086);
-        GFHTMLArea(gump, 147, 294, 160, 18, "<basefont color=#A52A2A>Instintos");
-        GFHTMLArea(gump, 153, 312, 160, 18, "<basefont color=#4A3929>"+thepacktype);
+        GFGumpPic(gump, 128, 275, 2086);
+        GFHTMLArea(gump, 147, 275, 160, 18, "<basefont color=#A52A2A>Instintos");
+        GFHTMLArea(gump, 135, 293, 260, 18, "<basefont color=#4A3929>"+thepacktype);
 
         GFAddButton(gump, 317, 358, 5603, 5607, GF_PAGE_BTN, 2);
         GFAddButton(gump, 340, 358, 5601, 5605, GF_PAGE_BTN, 4);

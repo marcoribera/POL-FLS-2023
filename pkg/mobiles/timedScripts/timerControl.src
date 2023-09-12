@@ -86,7 +86,7 @@ function SaveState(mobile, byref timer_list, byref cooldowns)
 			save_timer.+duration := timer.endtime - ReadGameClock();
 			save_timer.+timerType := EVENT_TYPE_COOLDOWN;
 			save_timer.+endtime := timer.endtime;
-	
+
 			cooldowns_dict[_timer_iter] := save_timer;
 		endforeach
 		//sendsysmessage(mobile, "s cd");
@@ -162,8 +162,8 @@ function AddTimer(mobile, byref event, byref timer_list, byref cooldowns, byref 
 	// Check if a poison exists. If it does, increase its duration.
 	// If it does not exist, add it to the list on the mobile.
 	// Start the necessary script and store the name, duration and sub-script pid.
-	
-		
+
+
 
 	if (event.timerType == EVENT_TYPE_COOLDOWN)
 		var result := 0;
@@ -174,7 +174,7 @@ function AddTimer(mobile, byref event, byref timer_list, byref cooldowns, byref 
 			var timer := struct;
 			timer.+endtime := event.amount + ReadGameClock();
 			cooldowns.Insert(event.name, timer);
-			result := 1;		
+			result := 1;
 		else
 			result := 0;
 		endif
@@ -190,11 +190,11 @@ function AddTimer(mobile, byref event, byref timer_list, byref cooldowns, byref 
 		var timer := struct;
 		timer.+endtime := event.amount + ReadGameClock();
 		sendsysmessage(mobile, "timer old "+cooldowns[event.name]);
-		cooldowns.Insert(event.name, timer);	
+		cooldowns.Insert(event.name, timer);
 		sendsysmessage(mobile, "timer new "+cooldowns[event.name]);
 		//SaveState(mobile, timer_list, cooldowns);
 		*/
-	
+
 	endif
 
 	if( !TS_GetCfgElem(event.name) )
@@ -214,6 +214,10 @@ function AddTimer(mobile, byref event, byref timer_list, byref cooldowns, byref 
 			return 0;
 		endif
 		if ( TemHabilidade(mobile, "Resistencia a Venenos" ) )
+			SendSysMessageEx(mobile, "O veneno nao faz efeito em voce.", SSM_INFO);
+			return 0;
+		endif
+		if ( TemHabilidade(mobile, "Corpo ao Extremo" ) )
 			SendSysMessageEx(mobile, "O veneno nao faz efeito em voce.", SSM_INFO);
 			return 0;
 		endif
@@ -363,10 +367,10 @@ function CheckTimerStatus(mobile, byref timer_list, byref cooldowns, byref num_p
 	foreach timer in (cooldowns)
 		/*
 		if (mobile.name == "Zedh")
-			sendsysmessage(mobile, "check: "+timer+" "+ReadGameClock()); 
+			sendsysmessage(mobile, "check: "+timer+" "+ReadGameClock());
 		endif*/
 		if ( ReadGameClock() >= timer.endtime )
-			
+
 			var event := struct;
 			event.+name := _timer_iter;
 			event.+amount := -1;
@@ -435,7 +439,7 @@ function LowerDuration(mobile, byref event, byref timer_list, byref cooldowns, b
 		//tive que colocar esse codigo aqui, deveria ser em outro arquivo separado
 		if (event.name[1,5] == "quest")
 			Start_Script(":tn:endquest", array{mobile, timer_info} );
-		endif	
+		endif
 
 		return 1;
 	endif
@@ -459,7 +463,7 @@ function LowerDuration(mobile, byref event, byref timer_list, byref cooldowns, b
 	if ( duration <= 0 )
 		EndTimedScript(mobile, event.name, num_poisons);
 		KillTimedScript(mobile, timer_info.pid, timer_list, event.name);
-		if ( elem_info.Icon ) 
+		if ( elem_info.Icon )
 			SendBuff(mobile, 0, elem_info.Icon);
 		endif
 		//sendsysmessage(mobile, "mantain "+ timer_info.mantain);

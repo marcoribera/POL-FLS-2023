@@ -206,6 +206,9 @@ function destama(serial)
 	EraseObjProperty(me, "name");
 	EraseObjproperty(me, "script");
 	EraseObjProperty(me, "happiness");
+	EraseObjProperty(me, "bond");
+	EraseObjProperty(me, "NeverRelease");
+	EraseObjProperty(me, "Fidelizar?");
 	RestartScript(me);
 	ErasePetMods(me);
 endfunction
