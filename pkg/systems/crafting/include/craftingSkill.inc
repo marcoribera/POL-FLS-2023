@@ -1,4 +1,6 @@
 include ":attributes:advanceCheck";
+include ":charactercreation:habilidades";
+include ":attributes:attributes";
 
 function CraftCheckSkill(who, craft_skill, difficulty, points, report:=0)
 
@@ -8,7 +10,7 @@ function CraftCheckSkill(who, craft_skill, difficulty, points, report:=0)
     return 0;
   elseif(difficulty == 0.0)
     if (report)
-	return 100;
+      return 100;
     endif
     return 1;
   endif
@@ -49,14 +51,42 @@ function CraftCheckSkill(who, craft_skill, difficulty, points, report:=0)
 endfunction
 
 
-function ExceptionalCraft( who, aidskill)
+function ExceptionalCraftChance(who, skillvalue, skillreq, theitem)
+  var chance := CDbl(skillvalue - skillreq) / 5.0; //Variação de 0% a 20% de chance
 
-  var chance := Cint(aidskill/20 ) + cint(GetObjProperty(who, "craftexcepmod"));
+  if(chance > 0) //A diferença de skill entre o crafter e o necessário passa a ser o percentual de fazer excepcional
+    if(TemHabilidade(who,"Maestria em Laminas") && (theitem.TipoAtaque == "Cortante"))
+      chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+    endif
 
-  if(RandomInt(100) < chance)
-    return 1;
+    if(TemHabilidade(who,"Maestria em Pontas") && (theitem.TipoAtaque == "Perfurante"))
+      chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+    endif
+
+    if(TemHabilidade(who,"Maestria em Impacto") && (theitem.TipoAtaque == "Contusivo"))
+      chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+    endif
+
+    if(TemHabilidade(who,"Maestria em Armaduras") && (theitem.TipoProtecao == "ArmaduraPesada" || theitem.TipoProtecao == "ArmaduraMedia" || theitem.TipoProtecao == "ArmaduraLeve"))
+      chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+    endif
+
+    if(TemHabilidade(who,"Maestria em Escudos") && (theitem.TipoProtecao == "EscudoPesad" || theitem.TipoProtecao == "EscudoMedio" || theitem.TipoProtecao == "EscudoLeve"))
+      chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+    endif
   else
-    return 0;
+    chance := 0.0;
   endif
+  return chance;
+endfunction
 
+function ExceptionalCraft( who, theitem, skillvalue, skillreq)
+  var chance := Cdbl(ExceptionalCraftChance(who, skillvalue, skillreq, theitem));
+  var teste := RandomFloat(100.0);
+  if(teste < chance)
+    var margem := chance - teste;
+    return 1.2 + (margem/50);
+  else
+    return 1.0;
+  endif
 endfunction

@@ -135,6 +135,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 		modpts := (mainSkill - (skill - 10));
 	endif
 	var diff := Cint(craft_config[objtype].difficulty);
+	var skillreq := Cint(craft_config[objtype].skill);
 	var pts  := Cint(craft_config[objtype].points);
 	pts := pts + modpts;
 	var chk := 0;
@@ -244,7 +245,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 
 			//passando a cor pra materiais coloridos que nao tem Id proprio (como madeira)
 			AddMaterialMod(who, theitem, chosenPrincipalMaterial, materialColor);
-			CraftExceptional(who, theitem,craft_skill);
+			CraftExceptional(who, theitem, craft_skill, skillreq);
 			CraftLockable(who, theitem);
 
 			SendSysMessageEx(who, "Voce criou o item o colocou na mochila.", SSM_INFO);
@@ -265,6 +266,22 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 			endif
 			if (canFix)
 				SetObjProperty(theitem, "canfix", 1);
+			endif
+
+			//Modificada a nomeação dos excepcionais para o término da criação do item, pra possibilitar ver o resultado final antes de nomear.
+			theitem.SetName(theitem.name);
+			sleepms(200);
+			if(theitem.quality >= 1.2)
+				if ( YesNo(who, "Voce fez um item obra prima, deseja renomea-lo?"))
+					var name := RequestGump(who, "Qual o nome do item?");
+					if (name != error)
+						SetName(theitem, name);
+					endif
+					if ( YesNo(who, "Deseja adicionar uma descricao no item?"))
+						AddItemDescription(who, theitem);
+						theitem.SetName(theitem.name);
+					endif
+				endif
 			endif
 
 			theitems.append( theitem);
@@ -328,8 +345,6 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 	ResistMods := SplitWords(ResistMods);
     var hpmod := GetConfigInt(elem, "hpmod"); //modificador de durabilidade do item pelo material
 
-
-
 	if(theitem.isA(POLCLASS_WEAPON))
         var cfg:=ReadConfigFile(":combat:itemdesc");
         var elem := FindConfigElem(cfg, theitem.objtype);
@@ -341,6 +356,16 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 
 		if(TemHabilidade(who,"Armas Velozes"))
 			theitem.speed := CInt(theitem.speed *1.2);
+		endif
+
+		if(TemHabilidade(who,"Amolador de Laminas") && (theitem.TipoAtaque == "Cortante"))
+			theitem.dmg_mod := theitem.dmg_mod + CInt(theitem.MaxDam * 1.3);
+		endif
+		if(TemHabilidade(who,"Ponta Temperada") && (theitem.TipoAtaque == "Perfurante"))
+			theitem.dmg_mod := theitem.dmg_mod + CInt(theitem.MaxDam * 1.3);
+		endif
+		if(TemHabilidade(who,"Densidade Esmagadora") && (theitem.TipoAtaque == "Contusivo"))
+			theitem.dmg_mod := theitem.dmg_mod + CInt(theitem.MaxDam * 1.3);
 		endif
 
 	elseif(theitem.isA(POLCLASS_ARMOR))
@@ -395,7 +420,7 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 		endif
 
 		if((elem.parrybonus != 0) || elem.parrydelay != 0) //Verifica se é escudo
-			if(TemHabilidade(who,"Armaduras sem Brechas"))
+			if(TemHabilidade(who,"Suportes Balanceados"))
 				var parrybonus := Cint(elem.parrybonus);
 	    		if(parrybonus == 0)
 	    			parrybonus := 5;
@@ -406,6 +431,7 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 			endif
 			if(TemHabilidade(who,"Escudos Dissipadores"))
 				var parrydelay_mod := Cint(elem.parrydelay);
+				//Não afeta escudos com parrydelay já otimizado como o buckler
 	    		if(parrydelay_mod > 0)
 		    		case (parrydelay_mod)
 		    			1:
@@ -424,8 +450,6 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 		    	endif
 			endif
 		endif
-
-
 
         //endif
 	//flechas e virotes de guerra
@@ -446,28 +470,23 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 
 endfunction
 
-function CraftExceptional(who, theitem, craft_skill)
-	if((craft_config[theitem.objtype].Exceptional == 1) && (ExceptionalCraft(who, AP_GetSkill(who, craft_skill) ) ) )
-		SetObjProperty(theitem, "Exceptional", 1);
-		if ( YesNo(who, "Voce fez um item obra prima, deseja renomea-lo?"))
-			var name := RequestGump(who, "Qual o nome do item?");
-			if (name != error)
-				SetName(theitem, name);
-			endif
-			if ( YesNo(who, "Deseja adicionar uma descricao no item?"))
-				AddItemDescription(who, theitem);
+function CraftExceptional(who, byref theitem, craft_skill, skillreq)
+	if(craft_config[theitem.objtype].Exceptional == 1)
+		var qualidade := ExceptionalCraft(who, theitem, AP_GetSkill(who, craft_skill), skillreq);
+		theitem.quality := qualidade;
+
+		if(qualidade >= 1.2)
+			SetObjProperty(theitem, "Exceptional", 1);
+			if(theitem.isA(POLCLASS_WEAPON))
+				AddQualityDamageMod(theitem, EXCEP );
+			elseif(theitem.isA(POLCLASS_ARMOR))
+	            var cfg:=ReadConfigFile(":combat:itemdesc");
+	            var elem := FindConfigElem(cfg, theitem.objtype);
+	            //if (elem.parrydelay == error) //se for escudo nao aplica o resistmod
+	            AddQualityResistMod(who, theitem, qualidade);
+	            //endif
 			endif
 		endif
-		if(theitem.isA(POLCLASS_WEAPON))
-			AddQualityDamageMod(theitem, EXCEP );
-		elseif(theitem.isA(POLCLASS_ARMOR))
-            var cfg:=ReadConfigFile(":combat:itemdesc");
-            var elem := FindConfigElem(cfg, theitem.objtype);
-            if (elem.parrydelay == error) //se for escudo nao aplica o resistmod
-                AddQualityResistMod(theitem, EXCEP);
-            endif
-		endif
-		theitem.quality := 1.2;
 	endif
 endfunction
 
@@ -509,9 +528,7 @@ function SubtractMaterial(who, targMaterials, amountMod)
 			if (targMaterials[thing] > 0)
 				return 0;
 			endif
-
 	endforeach
-
 	return 1;
 endfunction
 

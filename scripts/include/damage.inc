@@ -511,3 +511,6 @@ function DamageFLS(defender, dmg, type := DMG_FORCED, source := 0)
 	return totaldmg;
 
 endfunction
+
+
+//TODO: adicionar influencia do .dmg_mod das armas

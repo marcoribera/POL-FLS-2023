@@ -14,8 +14,8 @@ const STR_GOODCHANCE := "alta";
 //funcao que pergunta por fechadura, caso o item seja lockable
 function CraftLockable(who, theitem)
 		if (theitem.isDoor())
-			SetObjProperty(theitem, "pedreiro", who.serial); 			
-			SetObjProperty(theitem, "criador", who.acctname); 			
+			SetObjProperty(theitem, "pedreiro", who.serial);
+			SetObjProperty(theitem, "criador", who.acctname);
 			SetObjProperty(theitem, "validade", CInt(ReadGameClock()+360));
 			MoveObjectToLocation(theitem, who.x, who.y, who.z, who.realm, MOVEOBJECT_NORMAL);
 			theitem.movable := 0;
@@ -57,7 +57,7 @@ function GetMaterialName(obj);
       return items[obj].desc;
     endif
   endif
-  
+
 
 endfunction
 
@@ -65,67 +65,63 @@ endfunction
 // as stratics says, exceptional weapons add +35 dmg increase
 
 function AddQualityDamageMod( byref theitem, quality )
-	var i;
-	if (quality == EXCEP)
-
+	if (quality >= 1.2)
 		var randomDmg;
-		var maxBonus := 4;
-		if (maxBonus == 0)
-			maxBonus := 1;
-		endif
+		var maxBonus := CInt(quality*20); //mínimo 24
+
 		//adiciona 5% a 20%
-		for (i := 1; i <= maxBonus; i := i + 1)
-			randomDmg := RandomInt(5) + 1;
-			var cfg:=ReadConfigFile(":combat:itemdesc");
-			var elem := FindConfigElem(cfg, theitem.objtype);
-			if (elem.Attribute != "RangedCombat")
-				randomDmg := 1;
+		var i := 0;
+		var cfg:=ReadConfigFile(":combat:itemdesc");
+		var elem := FindConfigElem(cfg, theitem.objtype);
+		var qtd := 5;
+		while(i < maxBonus)
+			if(maxBonus < qtd)
+				qtd := maxBonus;
 			endif
-			case(randomDmg)
-				1: theitem.damage_physical_mod := theitem.damage_physical_mod + 5; break;
-				2: theitem.damage_fire_mod     := theitem.damage_fire_mod + 5; break;
-				3: theitem.damage_cold_mod     := theitem.damage_cold_mod + 5; break;
-				4: theitem.damage_energy_mod   := theitem.damage_energy_mod + 5; break;
-				5: theitem.damage_poison_mod   := theitem.damage_poison_mod + 5; break;
-			endcase
-
-		endfor
-	else
-		return;
-	endif
-
-
-endfunction
-
-function AddQualityResistMod( byref theitem, quality)
-	var i;
-	if (quality == EXCEP)
-
-		var randomDmg;
-		var maxBonus := 6;
-		if (maxBonus == error)
-			maxBonus := 6;
-		endif
-		for (i := 1; i <= maxBonus; i := i + 1)
 			randomDmg := RandomInt(5) + 1;
-
 			case(randomDmg)
-				1: theitem.resist_physical_mod := theitem.resist_physical_mod +1; break;
-				2: theitem.resist_fire_mod     := theitem.resist_fire_mod +1; break;
-				3: theitem.resist_cold_mod     := theitem.resist_cold_mod +1; break;
-				4: theitem.resist_energy_mod   := theitem.resist_energy_mod +1; break;
-				5: theitem.resist_poison_mod   := theitem.resist_poison_mod +1; break;
+				1: theitem.damage_physical_mod := theitem.damage_physical_mod + qtd; break;
+				2: theitem.damage_fire_mod     := theitem.damage_fire_mod + qtd; break;
+				3: theitem.damage_cold_mod     := theitem.damage_cold_mod + qtd; break;
+				4: theitem.damage_energy_mod   := theitem.damage_energy_mod + qtd; break;
+				5: theitem.damage_poison_mod   := theitem.damage_poison_mod + qtd; break;
 			endcase
+			maxBonus := maxBonus - qtd;
+		endwhile
+	endif
+	return;
+endfunction
 
+function AddQualityResistMod(who, byref theitem, quality)
+	var i;
+	if (quality >= 1.2)
+		var randomDmg;
+		var maxBonus := CInt(quality);
+
+
+		//Soma um bonus em todas as resistencias que o item já dá
+		for (i := 1; i <= maxBonus; i := i + 1)
+			if (theitem.resist_physical_mod)
+				theitem.resist_physical_mod := theitem.resist_physical_mod +1; break;
+			endif
+			if (theitem.resist_fire_mod)
+				theitem.resist_fire_mod := theitem.resist_fire_mod +1; break;
+			endif
+			if (theitem.resist_cold_mod)
+				theitem.resist_cold_mod := theitem.resist_cold_mod +1; break;
+			endif
+			if (theitem.resist_energy_mod)
+				theitem.resist_energy_mod := theitem.resist_energy_mod +1; break;
+			endif
+			if (theitem.resist_poison_mod)
+				theitem.resist_poison_mod := theitem.resist_poison_mod +1; break;
+			endif
 		endfor
-
 	else
 		return;
-
 	endif
-
 endfunction
-  
+
  function AddItemDescription(who, item)
 	var repeating := 1;
 	var str;

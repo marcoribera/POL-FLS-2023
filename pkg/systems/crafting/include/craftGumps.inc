@@ -16,7 +16,7 @@ var BKGND_SILVERTRIM := GFCfgConst("Defaults", "BackGround");
 
 // This function is the main backbone for building the Crafting Menu.
 function sendCraftGump(who, skill_name)
- 
+
 	unloadconfigfile(":blacksmithy:blacksmithy");
 	var menu_file    := menu_config[skill_name].MenuFile;
 	var skill_config := ReadConfigFile(menu_file);
@@ -37,7 +37,7 @@ function sendCraftGump(who, skill_name)
 		if( !craft_gump )
 			exit;
 		endif
-  
+
 		var res := GFSendGump(who, craft_gump);
 
 		// Exit the menu, return 0 so crafting script knows it was cancled
@@ -149,7 +149,7 @@ function Craft_IndexGump(who, skill_name)
 	GFHTMLArea(gump, 10, 302, 150, 20, "<basefont color=#ffffff><center>Noticias</center>");
 	GFHTMLArea(gump, 10, 37, 200, 20, "<basefont color=#ffffff><center>Categorias</center>");
 	GFHTMLArea(gump, 215, 37, 305, 20, "<basefont color=#ffffff><center>Selecoes</center>");
-		
+
 	if( menu_config[skill_name].Repair == 1 )
 		GFHTMLArea(gump, 305, 385, 150, 18, "<basefont color=#ffffff>Reparar Item");
 		GFAddButton(gump, 270, 382, 4005, 4006, GF_CLOSE_BTN, 61451);
@@ -208,28 +208,28 @@ function GFCraftNewPage(who, byref gump, skill_config, MenuName, skill_name)
 		endif
 	endif
 		var menurecipe := GetConfigStringArray(skill_config[MenuName], "recipe" );
-	
+
 		var myrecipes := GetObjProperty(who, "recipes");
-	
-		
+
+
 		foreach recipe in menurecipe
 			if (recipe in myrecipes)
 				itens.append(recipe);
 			endif
 		endforeach
-  
+
     		foreach item in itens
 	      		var objtype   := GetObjTypeByName(item);
       			if(TypeOf(objtype) == "Struct")
         			continue;
       			endif
       			var itemdesc  := TruncatePlural(objtype);
-	
+
       			if(TypeOf(itemdesc) == "Struct")
         			continue;
       			endif
       			itemdesc := lower(itemdesc);
-	
+
 			if (craft_config[objtype].difficulty <= (AP_GetSkill(who, craft_skill) + 15))
 				if(ItemY >= 243)
         				ItemY := 63;
@@ -269,187 +269,183 @@ function GFCraftInfoPage(who, objtype, skill_config)
   	var i_config, thisitem, elem, graphic, itemdesc, tooltip, skillreq, diff, skillreqb, aid_skill, matname, material, color;
   	color := 0;
   	if (objtype > 0)
-    		i_config := ReadConfigFile(":*:itemdesc");
-    		thisitem := i_config[objtype];
-    		if(TypeOf(thisitem) != "ConfigElemRef")
-      			thisitem := i_config[("0x0"+(CStr(objtype) - "0x"))];
-    		endif
-    		elem     := craft_config[objtype];
-    		graphic  := CInt(thisitem.graphic);
-			color	 := CInt(thisitem.color);
-    		itemdesc := TruncatePlural(objtype);
-    		itemdesc := lower(itemdesc);
+		i_config := ReadConfigFile(":*:itemdesc");
+		thisitem := i_config[objtype];
+		if(TypeOf(thisitem) != "ConfigElemRef")
+  			thisitem := i_config[("0x0"+(CStr(objtype) - "0x"))];
+		endif
+		elem     := craft_config[objtype];
+		graphic  := CInt(thisitem.graphic);
+		color	 := CInt(thisitem.color);
+		itemdesc := TruncatePlural(objtype);
+		itemdesc := lower(itemdesc);
 
-    		if(!graphic || TypeOf(graphic) == "Struct")
-      			graphic := CInt(objtype);
-    		endif
+		if(!graphic || TypeOf(graphic) == "Struct")
+  			graphic := CInt(objtype);
+		endif
 
-    		tooltip := getConfigString(elem, "text");;
-    		if(TypeOf(tooltip) != "String")
-      			tooltip := "";
-    		endif
+		tooltip := getConfigString(elem, "text");;
+		if(TypeOf(tooltip) != "String")
+  			tooltip := "";
+		endif
 
-    		// Set the variables for skill required levels
-    		skillreq  := elem.skill;
-    		diff      := elem.difficulty;
-    		skillreqb := elem.skill2;
-    		if(!skillreqb || skillreqb.errortext)
-      			skillreqb  := 0;
-    		endif
-
+		// Set the variables for skill required levels
+		skillreq  := elem.skill;
+		diff      := elem.difficulty;
+		skillreqb := elem.skill2;
+		if(!skillreqb || skillreqb.errortext)
+  			skillreqb  := 0;
+		endif
 
 		matname := "";
 		material := "";
 		var materials := GetConfigStringDictionary(elem, "materials");
-	
+
 		foreach thing in (materials.keys())
 			matname := matname + "\n" + GetMaterialName(thing);
 			material := material + "\n" + materials[thing];
 		endforeach
-    
-    
   	endif
-		// Get their xxx.x skill amount
-		var temp1 := CDbl(AP_GetSkill(who, craft_skill));
-		// Get their xxx.x skill amount of the secondary skill entry
-		var temp2 := 0;
+	// Get their xxx.x skill amount
+	var temp1 := CDbl(AP_GetSkill(who, craft_skill));
+	// Get their xxx.x skill amount of the secondary skill entry
+	var temp2 := 0;
 
-		// If there was no secondary skill in the cfg entry, set it to main skill
-		if(temp2 == error)
-			temp2 := temp1;
-		endif
-		// Figure the sickening odd Success Chance percentages.
-		var schance   := 0.0;
-		if((TypeOf(aid_skill) == "Integer") && (skillreqb != 0))
-			if(TypeOf(skillreqb) == "Double" or TypeOf(skillreqb) == "Integer")
-				// Although CraftCheckSkill() would return 0%, let's not run all that code
-				// since it is a given anyway.
-				if(skillreqb > temp2)
-					schance := 0.0;
-				else
-					schance := CraftCheckSkill(who, craft_skill, diff, 0, 1);
-				endif
-			endif
-		else
-			if(skillreq > temp1)
-				schance := 0;
+	// If there was no secondary skill in the cfg entry, set it to main skill
+	if(temp2 == error)
+		temp2 := temp1;
+	endif
+	// Figure the sickening odd Success Chance percentages.
+	var schance   := 0.0;
+	if((TypeOf(aid_skill) == "Integer") && (skillreqb != 0))
+		if(TypeOf(skillreqb) == "Double" || TypeOf(skillreqb) == "Integer")
+			// Although CraftCheckSkill() would return 0%, let's not run all that code
+			// since it is a given anyway.
+			if(skillreqb > temp2)
+				schance := 0.0;
 			else
 				schance := CraftCheckSkill(who, craft_skill, diff, 0, 1);
 			endif
 		endif
-		if(elem.placeholder == 1)
-			schance := 100;
-		endif
-		if(TypeOf(aid_skill) != "String")
-			aid_skill := 0;
-		endif
-
-		// Below added for checking for parts. If parts are present, then create the part list
-		// instead.
-		var tmatname  := 0;
-		var tmpmat    := "";
-		if(TypeOf(elem.parts) == "String")
-			tmpmat := SplitWords(elem.parts);
-			matname  := "";
-			material := "";
-			if((len(tmpmat)/2) < 5)
-				for j := 1 to (len(tmpmat)/2)
-					tmatname := TruncatePlural(tmpmat[j]);
-					case(j)
-						1:
-						2:
-						3: matname := matname + tmatname + "\n";
-						4: matname := matname + tmatname;
-						default: matname := matname + tmatname + "\n";
-					endcase
-					material := material + (tmpmat[j+(len(tmpmat)/2)]) + "\n";
-				endfor
-			else
-				material := 0;
-				for j := 1 to (len(tmpmat)/2)
-					tmatname := TruncatePlural(tmpmat[j]);
-					if(j == (len(tmpmat)/2))
-						matname := matname + "& " + (tmpmat[j+(len(tmpmat)/2)]) + " " + tmatname + " requirido";
-					else
-						matname := matname + (tmpmat[j+(len(tmpmat)/2)]) + " " + tmatname + ", ";
-					endif
-				endfor
-			endif
-		endif
-
-		// Exception % chance wording.
-		var echance   := 0;
-		if(elem.Exceptional == 1)
-			//echance := ExceptionalCraft(temp1, skillreq, temp2, 1);
-		endif
-
-		var gump := GFCreateGump(50, 25);
-		GFResizePic(gump, 2, 0, BKGND_SILVERTRIM, 521, 420);
-		GFGumpPic(gump, 10, 10, 2624);
-		GFGumpPic(gump, 10, 205, 2624);
-		GFGumpPic(gump, 250, 10, 2624);
-		GFGumpPic(gump, 250, 205, 2624);
-		GFAddAlphaRegion(gump, 10, 10, 505, 400);
-		GFGumpPic(gump, 10, 30, 5055);
-		GFGumpPic(gump, 90, 30, 5055);
-		GFResizePic(gump, 160, 120, 5054, 356, 13);
-		GFGumpPic(gump, 10, 210, 5055);
-		GFGumpPic(gump, 90, 210, 5055);
-		GFGumpPic(gump, 10, 290, 5055);
-		GFGumpPic(gump, 90, 290, 5055);
-		GFGumpPic(gump, 10, 370, 5055);
-		GFGumpPic(gump, 90, 370, 5055);
-		GFHTMLArea(gump, 10, 27, 150, 18, "<basefont color=#ffffff>ITEM");
-		GFHTMLArea(gump, 170, 117, 150, 18, "<basefont color=#ffffff>SKILLS");
-		GFHTMLArea(gump, 10, 207, 150, 18, "<basefont color=#ffffff>MATERIAIS");
-		GFHTMLArea(gump, 10, 287, 150, 18, "<basefont color=#ffffff>DESCRICAO");
-		GFAddButton(gump, 15, 387, 4014, 4016, GF_CLOSE_BTN, 1);
-		GFHTMLArea(gump, 50, 390, 150, 18, "<basefont color=#ffffff>VOLTAR");
-		GFAddButton(gump, 270, 387, 4005, 4006, GF_CLOSE_BTN, CInt(objtype) );
-		GFHTMLArea(gump, 305, 390, 150, 18, "<basefont color=#ffffff>FAZER");
-		GFTilePic(gump, 20, 50, CInt(graphic), color);
-		//GFHTMLArea(gump, 430, 132, 150, 18, ("<basefont color=#ffffff>" + skillreq));
-
-		// Tooltip info from itemdesc.cfg appended in.
-		if(tooltip != "")
-			GFHTMLArea(gump, 170, 300, 340, 60, ("<basefont color=#ffffff>" + tooltip), 0, 1);
-		endif
-		// Material Required
-		GFHTMLArea(gump, 170, 219, 300, 80, ("<basefont color=#ffffff>" + matname));
-		if(material != 0)
-			GFHTMLArea(gump, 430, 219, 20, 80, ("<basefont color=#ffffff>" + material));
-		endif
-		// Success Chance % text
-		GFTextLine(gump, 170, 80, 1153, "Chance de Sucesso:");
-		var schanceString := GetChanceString(schance);
-		GFTextLine(gump, 430, 80, 1153, schanceString);
-		// Excpetional Chance % text
-		if(echance != 0)
-			GFTextLine(gump, 170, 100, 1153, "Chance de Excepcional:");
-			var echanceString := GetChanceString(echance);
-			GFTextLine(gump, 430, 100, 1153, echanceString);
-		endif
-		// Title of the menu
-		GFHTMLArea(gump, 10, 12, 510, 20, ("<basefont color=#ffffff>"+CStr(GetConfigString(skill_config["Index"], "Title"))));
-		// Item Name
-		GFHTMLArea(gump, 330, 40, 150, 20, ("<basefont color=#ffffff>"+itemdesc));
-		// Skill name
-		GFHTMLArea(gump, 170, 132, 150, 20, ("<basefont color=#ffffff>"+display_skill + " requirido"));
-
-		if((skillreqb > 0) && (skillreqb != error))
-			// Skill 2 name
-			GFHTMLArea(gump, 170, 152, 150, 20, ("<basefont color=#ffffff>"+lower(aid_skill)+" requirido"));
-			GFHTMLArea(gump, 430, 152, 150, 20, ("<basefont color=#ffffff>"+skillreqb));
-		endif
-
-		var ifres := GFSendGump(who, gump);
-	
-		if(ifres[0] == 1)
-			return 0;
+	else
+		if(skillreq > temp1)
+			schance := 0;
 		else
-			return ifres[0];
+			schance := CraftCheckSkill(who, craft_skill, diff, 0, 1);
 		endif
+	endif
+	if(elem.placeholder == 1)
+		schance := 100;
+	endif
+	if(TypeOf(aid_skill) != "String")
+		aid_skill := 0;
+	endif
 
+	// Below added for checking for parts. If parts are present, then create the part list
+	// instead.
+	var tmatname  := 0;
+	var tmpmat    := "";
+	if(TypeOf(elem.parts) == "String")
+		tmpmat := SplitWords(elem.parts);
+		matname  := "";
+		material := "";
+		if((len(tmpmat)/2) < 5)
+			for j := 1 to (len(tmpmat)/2)
+				tmatname := TruncatePlural(tmpmat[j]);
+				case(j)
+					1:
+					2:
+					3: matname := matname + tmatname + "\n";
+					4: matname := matname + tmatname;
+					default: matname := matname + tmatname + "\n";
+				endcase
+				material := material + (tmpmat[j+(len(tmpmat)/2)]) + "\n";
+			endfor
+		else
+			material := 0;
+			for j := 1 to (len(tmpmat)/2)
+				tmatname := TruncatePlural(tmpmat[j]);
+				if(j == (len(tmpmat)/2))
+					matname := matname + "& " + (tmpmat[j+(len(tmpmat)/2)]) + " " + tmatname + " requirido";
+				else
+					matname := matname + (tmpmat[j+(len(tmpmat)/2)]) + " " + tmatname + ", ";
+				endif
+			endfor
+		endif
+	endif
+
+	// Exception % chance wording.
+	var echance   := 0;
+	if(elem.Exceptional == 1)
+		echance := ExceptionalCraftChance(who, temp1, skillreq, thisitem);
+	endif
+
+	var gump := GFCreateGump(50, 25);
+	GFResizePic(gump, 2, 0, BKGND_SILVERTRIM, 521, 420);
+	GFGumpPic(gump, 10, 10, 2624);
+	GFGumpPic(gump, 10, 205, 2624);
+	GFGumpPic(gump, 250, 10, 2624);
+	GFGumpPic(gump, 250, 205, 2624);
+	GFAddAlphaRegion(gump, 10, 10, 505, 400);
+	GFGumpPic(gump, 10, 30, 5055);
+	GFGumpPic(gump, 90, 30, 5055);
+	GFResizePic(gump, 160, 120, 5054, 356, 13);
+	GFGumpPic(gump, 10, 210, 5055);
+	GFGumpPic(gump, 90, 210, 5055);
+	GFGumpPic(gump, 10, 290, 5055);
+	GFGumpPic(gump, 90, 290, 5055);
+	GFGumpPic(gump, 10, 370, 5055);
+	GFGumpPic(gump, 90, 370, 5055);
+	GFHTMLArea(gump, 10, 27, 150, 18, "<basefont color=#ffffff>ITEM");
+	GFHTMLArea(gump, 170, 117, 150, 18, "<basefont color=#ffffff>SKILLS");
+	GFHTMLArea(gump, 10, 207, 150, 18, "<basefont color=#ffffff>MATERIAIS");
+	GFHTMLArea(gump, 10, 287, 150, 18, "<basefont color=#ffffff>DESCRICAO");
+	GFAddButton(gump, 15, 387, 4014, 4016, GF_CLOSE_BTN, 1);
+	GFHTMLArea(gump, 50, 390, 150, 18, "<basefont color=#ffffff>VOLTAR");
+	GFAddButton(gump, 270, 387, 4005, 4006, GF_CLOSE_BTN, CInt(objtype) );
+	GFHTMLArea(gump, 305, 390, 150, 18, "<basefont color=#ffffff>FAZER");
+	GFTilePic(gump, 20, 50, CInt(graphic), color);
+	//GFHTMLArea(gump, 430, 132, 150, 18, ("<basefont color=#ffffff>" + skillreq));
+
+	// Tooltip info from itemdesc.cfg appended in.
+	if(tooltip != "")
+		GFHTMLArea(gump, 170, 300, 340, 60, ("<basefont color=#ffffff>" + tooltip), 0, 1);
+	endif
+	// Material Required
+	GFHTMLArea(gump, 170, 219, 300, 80, ("<basefont color=#ffffff>" + matname));
+	if(material != 0)
+		GFHTMLArea(gump, 430, 219, 20, 80, ("<basefont color=#ffffff>" + material));
+	endif
+	// Success Chance % text
+	GFTextLine(gump, 170, 80, 1153, "Chance de Sucesso:");
+	var schanceString := GetChanceString(schance);
+	GFTextLine(gump, 430, 80, 1153, schanceString);
+	// Excpetional Chance % text
+	if(echance != 0)
+		GFTextLine(gump, 170, 100, 1153, "Chance de Excepcional:");
+		//var echanceString := GetChanceString(echance);
+		GFTextLine(gump, 430, 100, 1153, CStr(echance) + "%");
+	endif
+	// Title of the menu
+	GFHTMLArea(gump, 10, 12, 510, 20, ("<basefont color=#ffffff>"+CStr(GetConfigString(skill_config["Index"], "Title"))));
+	// Item Name
+	GFHTMLArea(gump, 330, 40, 150, 20, ("<basefont color=#ffffff>"+itemdesc));
+	// Skill name
+	GFHTMLArea(gump, 170, 132, 150, 20, ("<basefont color=#ffffff>"+display_skill + " requirido"));
+
+	if((skillreqb > 0) && (skillreqb != error))
+		// Skill 2 name
+		GFHTMLArea(gump, 170, 152, 150, 20, ("<basefont color=#ffffff>"+lower(aid_skill)+" requirido"));
+		GFHTMLArea(gump, 430, 152, 150, 20, ("<basefont color=#ffffff>"+skillreqb));
+	endif
+
+	var ifres := GFSendGump(who, gump);
+
+	if(ifres[0] == 1)
+		return 0;
+	else
+		return ifres[0];
+	endif
 endfunction
 
 
