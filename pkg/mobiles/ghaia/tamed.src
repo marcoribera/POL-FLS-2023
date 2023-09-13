@@ -43,6 +43,14 @@ program TamedAI()
 	EnableMainEvents();
 	Setup();
 
+  //Detach();
+  //var time := ReadGameClock();
+  //SetObjProperty(me,"countercheck", time);
+  //var parms := {};
+  //parms[1] := me;
+  //parms[2] := time;
+  //start_script(":taming:happyCounter", parms);
+
 	while ( me )
 		if ( wait_time < 1 )
 			sleepms(10);
@@ -51,7 +59,11 @@ program TamedAI()
 		SpecialHab(me);
 
 		var ev := Wait_For_Event(wait_time);
-
+		var time := ReadGameClock();
+		 var parms := {};
+		parms[1] := me;
+		parms[2] := time;
+		start_script(":taming:happycounter", {me, time});
 
         //npcs criam ovos ou outras coisas
         //if ( (GetCooldown(me, "dropitem" ) == 0) && (CInt(npccfgfile[mytemplate].DropDelay) > 0) )
@@ -164,13 +176,13 @@ program TamedAI()
 
 
 
-			//if ( me.graphic in mountables )
+			if ( me.graphic in mountables )
 
-			//	UnMount(owner);
+				MP_Unmount (owner);
 
-			//endif
+			endif
 
-			//UnTame();
+			UnTame();
 
 		elseif ( opponent && !IsDead(opponent) && !opponent.concealed && !opponent.hidden )
 
@@ -666,6 +678,7 @@ function UnTame()
 	EraseObjproperty(me, "script");
 	EraseObjProperty(me, "happiness");
 	EraseObjProperty(me, "bond");
+	EraseObjProperty(me,"countercheck");
 	EraseObjProperty(me, "NeverRelease");
 	EraseObjProperty(me, "Fidelizar?");
 	RestartScript(me);
@@ -798,11 +811,11 @@ function Setup()
 	me.facing := me.facing+1;
 	TurnToward(me.master);
 
-	//if ( !GetProcess(GetObjProperty(me, "#happypid")) )
+	if ( !GetProcess(GetObjProperty(me, "#happypid")) )
 
-	//	start_script(":taming:happycounter", {me, ReadGameClock()});
+		start_script(":taming:happycounter", {me, ReadGameClock()});
 
-	//endif
+	endif
 
 	me.cmdlevel := 4;
 	SetWarMode(0);
@@ -835,9 +848,10 @@ var hit := npccfgfile[me.npctemplate].attackhitsound;
   if(defiance < 1)
     defiance := 1;
   endif
-  //print("valor defiance eh "+defiance);
+  var tamedPets := GetObjProperty(owner, "TamedPets");
+  var petcount := tamedPets.size();
+  defiance := defiance + petcount;
   var finaldefiance := CInt(defiance + RandomInt(40) );
-  //print("FINALDEFIANCE eh "+finaldefiance);
   if( (GetObjProperty(me, "summoned")== 1) || (GetObjProperty(me, "NeverRelease") == 1) )// se for summon ou fiel/bond não destama não desobedece
 	return 1;
   elseif(finaldefiance > checkvalue)
