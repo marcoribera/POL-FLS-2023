@@ -279,7 +279,6 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 					endif
 					if ( YesNo(who, "Deseja adicionar uma descricao no item?"))
 						AddItemDescription(who, theitem);
-						theitem.SetName(theitem.name);
 					endif
 				endif
 			endif
@@ -289,13 +288,22 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 		else
 			SubtractMaterial(who, targMaterials, 0.5); //consome metade do material
 			SendSysMessageEx(who, "Voce falhou ao fazer o item e perdeu material." , SSM_FAIL);
-			//return 0;
+			return 0;
 		endif
 		sleepms(100);
 	endwhile
 
-	return theitems;
+	//atualiza o life do item
+	theitem.hp := theitem.maxhp;
 
+	//essa mudança de nove força o cliente a atualizar os dados do item
+	if(GetObjProperty(theitem, "material"))
+		SendSysMessage(who, resource_config[GetObjProperty(theitem, "material")]);
+		SetName(theitem, theitem.name + " [" + resource_config[GetObjProperty(theitem, "material")].name + "]");
+	else
+		SetName(theitem, theitem.name);
+	endif
+	return theitems;
 endfunction
 
 function CreateItem(who, objtype, more:=0)
@@ -335,9 +343,6 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 
 	SetObjProperty(theitem, "material", principalMaterial);
 
-	//Insere o nome do material no item
-	SetName(theitem, theitem.name + " [" + resource_config[principalMaterial].name + "]");
-
 	//Insere modificadores de dano e resistencia
 	var DmgMods := GetConfigString(elem, "AoSDamageMod");
 	DmgMods := SplitWords(DmgMods);
@@ -371,11 +376,11 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 	elseif(theitem.isA(POLCLASS_ARMOR))
         var cfg:=ReadConfigFile(":combat:itemdesc");
         var elem := FindConfigElem(cfg, theitem.objtype);
+        theitem.resist_physical_mod := theitem.resist_physical_mod + Cint(ResistMods[1]);
         theitem.resist_fire_mod := theitem.resist_fire_mod + Cint(ResistMods[2]);
         theitem.resist_cold_mod := theitem.resist_cold_mod + Cint(ResistMods[3]);
         theitem.resist_poison_mod := theitem.resist_poison_mod + Cint(ResistMods[4]);
         theitem.resist_energy_mod := theitem.resist_energy_mod + Cint(ResistMods[5]);
-        theitem.resist_physical_mod := theitem.resist_physical_mod + Cint(ResistMods[1]);
 
         if (elem.parrybonus) //aplica o modificador de durabilidade do material nos escudos
         	hpmod :=  hpmod*5;
@@ -402,24 +407,25 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 		endif
 
 		if(TemHabilidade(who,"Armaduras sem Brechas"))
-			if(theitem.resist_fire_mod != 0)
+			//SendSysMessage(who, "Faz Armaduras sem Brechas: ");
+			if(theitem.resist_fire != 0)
 				theitem.resist_fire_mod := theitem.resist_fire_mod + 1;
 			endif
-			if(theitem.resist_cold_mod != 0)
+			if(theitem.resist_cold != 0)
 	        	theitem.resist_cold_mod := theitem.resist_cold_mod + 1;
 	        endif
-	        if(theitem.resist_poison_mod != 0)
+	        if(theitem.resist_poison != 0)
 	        	theitem.resist_poison_mod := theitem.resist_poison_mod + 1;
 	    	endif
-	        if(theitem.resist_energy_mod != 0)
+	        if(theitem.resist_energy != 0)
 	        	theitem.resist_energy_mod := theitem.resist_energy_mod + 1;
 	        endif
-	        if(theitem.resist_physical_mod != 0)
+	        if(theitem.resist_physical != 0)
 	        	theitem.resist_physical_mod := theitem.resist_physical_mod + 1;
 			endif
 		endif
 
-		if((elem.parrybonus != 0) || elem.parrydelay != 0) //Verifica se é escudo
+		if((CInt(elem.parrybonus) != 0) || CInt(elem.parrydelay) != 0) //Verifica se é escudo
 			if(TemHabilidade(who,"Suportes Balanceados"))
 				var parrybonus := Cint(elem.parrybonus);
 	    		if(parrybonus == 0)
@@ -463,11 +469,8 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 		maximo_hp := CInt(maximo_hp * 1.5);
 	endif
 
-	//atualiza o life do item
-    theitem.maxhp := theitem.maxhp + hpmod;
+	theitem.maxhp := theitem.maxhp + hpmod;
 	theitem.hp := theitem.maxhp;
-
-
 endfunction
 
 function CraftExceptional(who, byref theitem, craft_skill, skillreq)
@@ -478,14 +481,17 @@ function CraftExceptional(who, byref theitem, craft_skill, skillreq)
 		if(qualidade >= 1.2)
 			SetObjProperty(theitem, "Exceptional", 1);
 			if(theitem.isA(POLCLASS_WEAPON))
-				AddQualityDamageMod(theitem, EXCEP );
+				AddQualityDamageMod(theitem, qualidade );
 			elseif(theitem.isA(POLCLASS_ARMOR))
-	            var cfg:=ReadConfigFile(":combat:itemdesc");
-	            var elem := FindConfigElem(cfg, theitem.objtype);
+	            //var cfg:=ReadConfigFile(":combat:itemdesc");
+	            //var elem := FindConfigElem(cfg, theitem.objtype);
 	            //if (elem.parrydelay == error) //se for escudo nao aplica o resistmod
 	            AddQualityResistMod(who, theitem, qualidade);
 	            //endif
 			endif
+			//Aplica modificador de qualidade no HP do item
+			theitem.maxhp := CInt(theitem.maxhp * theitem.quality);
+			theitem.hp := theitem.maxhp;
 		endif
 	endif
 endfunction

@@ -75,7 +75,7 @@ function AddQualityDamageMod( byref theitem, quality )
 		var elem := FindConfigElem(cfg, theitem.objtype);
 		var qtd := 5;
 		while(i < maxBonus)
-			if(maxBonus < qtd)
+			if(qtd < maxBonus)
 				qtd := maxBonus;
 			endif
 			randomDmg := RandomInt(5) + 1;
@@ -97,7 +97,7 @@ function AddQualityResistMod(who, byref theitem, quality)
 	if (quality >= 1.2)
 		var randomDmg;
 		var maxBonus := CInt(quality);
-
+		SendSysMessage(who,"Adicionando resistencia do excepcional");
 
 		//Soma um bonus em todas as resistencias que o item já dá
 		for (i := 1; i <= maxBonus; i := i + 1)

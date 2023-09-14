@@ -53,8 +53,8 @@ endfunction
 
 function ExceptionalCraftChance(who, skillvalue, skillreq, theitem)
   var chance := CDbl(skillvalue - skillreq) / 5.0; //Variação de 0% a 20% de chance
-
-  if(chance > 0) //A diferença de skill entre o crafter e o necessário passa a ser o percentual de fazer excepcional
+  //SendSysMessage(who, "who:"+who.name+" skillvalue:"+ skillvalue+" skillreq:"+ skillreq+ " theitem:" +theitem);
+  if(chance > 0.0) //A diferença de skill entre o crafter e o necessário passa a ser o percentual de fazer excepcional
     if(TemHabilidade(who,"Maestria em Laminas") && (theitem.TipoAtaque == "Cortante"))
       chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
     endif
@@ -71,18 +71,22 @@ function ExceptionalCraftChance(who, skillvalue, skillreq, theitem)
       chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
     endif
 
-    if(TemHabilidade(who,"Maestria em Escudos") && (theitem.TipoProtecao == "EscudoPesad" || theitem.TipoProtecao == "EscudoMedio" || theitem.TipoProtecao == "EscudoLeve"))
+    if(TemHabilidade(who,"Maestria em Escudos") && (theitem.TipoProtecao == "EscudoPesado" || theitem.TipoProtecao == "EscudoMedio" || theitem.TipoProtecao == "EscudoLeve"))
       chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
     endif
   else
     chance := 0.0;
   endif
+  //SendSysMessage(who, "Calculada chance de Excepcional:"+chance);
   return chance;
 endfunction
 
 function ExceptionalCraft( who, theitem, skillvalue, skillreq)
-  var chance := Cdbl(ExceptionalCraftChance(who, skillvalue, skillreq, theitem));
+  var cfg:=ReadConfigFile(":combat:itemdesc");
+  var elem := FindConfigElem(cfg, theitem.objtype);
+  var chance := Cdbl(ExceptionalCraftChance(who, skillvalue, skillreq, elem));
   var teste := RandomFloat(100.0);
+  //SendSysMessage(who, "Chance:"+chance+" Rolagem:"+teste);
   if(teste < chance)
     var margem := chance - teste;
     return 1.2 + (margem/50);
