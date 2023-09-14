@@ -33,8 +33,12 @@ program aura_of_hate(params)
 		// Prevents mod from being applied twice.
 		return 0;
 	endif	
-    var corrupcao := Cint(GetObjProperty(attacker, "corruption"));
-	var cast_points := CInt(AP_GetSkill(attacker, MAGICLORE)) + CInt(corrupcao/1000);
+    
+    var corrupcao := Cint(GetObjProperty(attacker, "corruption")/1000);
+    if (corrupcao < 1)
+        corrupcao := 1;
+    endif
+	var cast_points := CInt(AP_GetSkill(attacker, MAGICLORE)) + corrupcao;
 	cast_points := cast_points/4;
 //	var defense := CInt(AP_GetSkill(mobile, RESISTING_SPELLS))/4;
 	var final := cast_points;// - defense;
