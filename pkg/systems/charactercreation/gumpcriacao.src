@@ -139,14 +139,13 @@ var gflayout := array{
 
 		"text 180 290 2105 5",
 		"Radio 150 287 9726 9729 0 2",
-		"HtmlGump 150 320 330 60 6 3000 0",
+		"HtmlGump 150 320 330 60 6 3000 0"};
 
-		"text 180 390 2105 7",
-		"Radio 150 387 9726 9729 0 3",
-		"HtmlGump 150 420 330 60 8 3000 0"
-
-
-		};
+	if (chardata.povo == "Numajene")
+		gflayout.append("text 180 390 2105 7");
+		gflayout.append("Radio 150 387 9726 9729 0 3");
+		gflayout.append("HtmlGump 150 420 330 60 8 3000 0");
+	endif
 
 var gfdata := array{
 		"Forgotten Lore Shard", //0
@@ -223,7 +222,10 @@ var gflayout := array{
 		"Radio 150 297 9726 9729 0 2",
 
 		"text 180 400 2105 5",
-		"Radio 150 397 9726 9729 0 3"
+		"Radio 150 397 9726 9729 0 3",
+
+		"text 180 500 2105 6",
+		"Radio 150 497 9726 9729 0 4"
 
 
 		};
@@ -234,7 +236,8 @@ var gfdata := array{
 		"Escolha o Caminho do seu personagem:", //2
 		"Caminho das Armas",
 		"Caminho do Subterfúgio",
-		"Caminho da Sabedoria"
+		"Caminho da Sabedoria",
+		"Caminho da Trabalhador"
 		};
 
 
@@ -246,6 +249,8 @@ var gfdata := array{
 		chardata.+classe := "Ladino";
 	elseif (3 in ret.keys)
 		chardata.+classe := "Sabio";
+	elseif (4 in ret.keys)
+		chardata.+classe := "Artifice";
 	endif
 endfunction
 
@@ -322,6 +327,8 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 	var terciarias   := GetConfigStringArray(elem, "T");
 	var quaternarias := GetConfigStringArray(elem, "Q");
 
+	//ESSI KIT FOI DESATIVADO COM A CRIACAO DO CAMINHO DO ARTIFICE
+	/*
 	if (chardata.kit == "Artifice")
 
 		var novasquaternarias := array;
@@ -409,8 +416,9 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		endforeach
 
 	endif
+	*/
 
-if (chardata.kit == "Aprendiz de Ferreiro")
+	if (chardata.kit == "Aprendiz de Ferreiro")
 		var i := 1;
 		foreach skill in quaternarias
 			if ( skill == "MetalWorking")
@@ -430,10 +438,9 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		endforeach
 	endif
 
-		if (chardata.kit == "Aprendiz de Trabalhador Domestico")
-
+	if (chardata.kit == "Aprendiz de Trabalhador Domestico")
 		var i := 1;
-		foreach skill in quaternarias 
+		foreach skill in quaternarias
 			if ( skill == "DomesticWork")
 				quaternarias.erase(i);
 				secundarias.append("DomesticWork");
@@ -445,7 +452,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 	if (chardata.kit == "Aprendiz de Carpinteiro")
 
 		var i := 1;
-		foreach skill in quaternarias 
+		foreach skill in quaternarias
 			if ( skill == "WoodWorking")
 				quaternarias.erase(i);
 				secundarias.append("WoodWorking");
@@ -454,7 +461,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		endforeach
 
 		i := 1;
-		foreach skill in terciarias 
+		foreach skill in terciarias
 			if ( skill == "Gathering")
 				terciarias.erase(i);
 				secundarias.append("Gathering");;
@@ -481,7 +488,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 	if (chardata.kit == "Ranger")
 
 		var i := 1;
-		foreach skill in primarias 
+		foreach skill in primarias
 			if ( skill == "Tactics")
 				primarias.erase(i);
 				secundarias.append("Tactics");
@@ -490,7 +497,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		endforeach
 
 		i := 1;
-		foreach skill in primarias 
+		foreach skill in primarias
 			if (skill == "Parry")
 				primarias.erase(i);
 				terciarias.append("Parry");
@@ -499,7 +506,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		endforeach
 
 		i := 1;
-		foreach skill in secundarias 
+		foreach skill in secundarias
 			if ( skill == "Survival")
 				secundarias.erase(i);
 				primarias.append("Survival");
@@ -508,7 +515,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		endforeach
 
 		i := 1;
-		foreach skill in terciarias 
+		foreach skill in terciarias
 			if ( skill == "Sneak")
 				terciarias.erase(i);
 				secundarias.append("Sneak");;
@@ -517,7 +524,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		endforeach
 
 		i := 1;
-		foreach skill in quaternarias 
+		foreach skill in quaternarias
 			if ( skill == "HandleAnimal")
 				quaternarias.erase(i);
 				terciarias.append("HandleAnimal");
@@ -528,7 +535,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 
     if (chardata.kit == "Mago de Combate")
     	var i := 1;
-		foreach skill in primarias 
+		foreach skill in primarias
 			if ( skill == "Magery")
 				primarias.erase(i);
 				secundarias.append("Magery");;
@@ -537,7 +544,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		endforeach
 
 		i := 1;
-		foreach skill in terciarias 
+		foreach skill in terciarias
 			if ( skill == "MeleeCombat1h")
 				terciarias.erase(i);
 				secundarias.append("MeleeCombat1h");;
@@ -546,7 +553,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		endforeach
 
 		i := 1;
-		foreach skill in quaternarias 
+		foreach skill in quaternarias
 			if ( skill == "MeleeCombat2h")
 				quaternarias.erase(i);
 				terciarias.append("MeleeCombat2h");
@@ -555,7 +562,7 @@ if (chardata.kit == "Aprendiz de Ferreiro")
 		endforeach
 
         i := 1;
-		foreach skill in quaternarias 
+		foreach skill in quaternarias
 			if ( skill == "Parry")
 				quaternarias.erase(i);
 				terciarias.append("Parry");
