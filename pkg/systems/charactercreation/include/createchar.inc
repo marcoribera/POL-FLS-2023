@@ -214,3 +214,35 @@ function CreateBasicRecipes()
 
 	return x;
 endfunction
+
+function CreateVeryBasicRecipes()
+	var x := array;
+
+	var spellinfo1 := struct;
+ 	spellinfo1.+name := "Pocao de cura leve";
+ 	spellinfo1.+id := 56321;
+	spellinfo1.+description := "Sua formula ja esta bastante conhecida entre os alquimistas, basta utilizar duas raizes de ginseng e destilar o extrato. Dificuldade facil.";
+
+	x.append(spellinfo1);
+
+	var spellinfo3 := struct;
+	spellinfo3.+name := "Veneno fraco de ervas";
+    spellinfo3.+id := 0xbf00;
+	spellinfo3.+description := "Veneno feito com a erva solenaceae, apenas duas plantas já podem matar pequenas criaturas. Dificuldade facil.";
+	x.append(spellinfo3);
+
+	var spellinfo7 := struct;
+	spellinfo7.+name := "Antidoto fraco";
+    spellinfo7.+id := 0xdc14;
+	spellinfo7.+description := "Alho possui caracteristicas de neutralizar venenos, dois alhos podem curar um veneno fraco. Dificuldade muito baixa.";
+	x.append(spellinfo7);
+
+	var spellinfo12 := struct;
+	spellinfo12.+name := "Pocao da visao noturna";
+    spellinfo12.+id := 56550;
+	spellinfo12.+description := "Duas teias de aranha gigante fazem a pupila dos seus olhos dilatarem e receberem mais luz, consequentemente ambientes escuros ou com pouca luz ficam bem claros para quem beber esta pocao. Dificuldade baixa.";
+	x.append(spellinfo12);
+
+	return x;
+endfunction
+

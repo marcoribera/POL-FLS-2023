@@ -543,6 +543,15 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 			i := i + 1;
 		endforeach
 
+        i := 1;
+		foreach skill in primarias 
+			if ( skill == "Alchemy")
+				primarias.erase(i);
+				secundarias.append("Magery");;
+			endif
+			i := i + 1;
+		endforeach
+
 		i := 1;
 		foreach skill in terciarias
 			if ( skill == "MeleeCombat1h")
@@ -565,7 +574,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		foreach skill in quaternarias
 			if ( skill == "Parry")
 				quaternarias.erase(i);
-				terciarias.append("Parry");
+				secundarias.append("Parry");
 			endif
 			i := i + 1;
 		endforeach
@@ -1305,11 +1314,17 @@ program createchar(who)
 		var book := createiteminbackpack(who, "alchemybook");
 		setobjproperty(book, "serialid", who.serial);
 		setobjproperty(book, "marked",who.name + " - " + who.acctname);
+        
+        var recipes := array;
+		recipes := CreateVeryBasicRecipes();
+		var basic_book := createiteminbackpack(who, "alchemybook");
+		setobjproperty(basic_book, "recipes", recipes);
 	elseif (chardata.Skills["Alchemy"] == 3)
 		var book1:= CreateItemInBackpack(who, "alchemybook");
 		setobjproperty(book1, "serialid", who.serial);
 		setobjproperty(book1, "marked",who.name + " - " + who.acctname);
-		var recipes := array;
+		
+        var recipes := array;
 		recipes := CreateBasicRecipes();
 		var book2 := createiteminbackpack(who, "alchemybook");
 		setobjproperty(book2, "recipes", recipes);
