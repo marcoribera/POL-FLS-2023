@@ -189,9 +189,9 @@ function getParryDelay(elem, item)
 	var parrydelayE := Cint(elem.parrydelay);
 
 	if (parrydelayI > 0)
-		return CSTR(parrydelayE) + " (+" + CSTR(parrydelayI) + ")";
+		return CSTR(parrydelayE) + " (-" + CSTR(parrydelayI) + ")";
 	elseif (parrydelayI < 0)
-		return CSTR(parrydelayE) + " (" + CSTR(parrydelayI) + ")";
+		return CSTR(parrydelayE) + " (+" + CSTR(-parrydelayI) + ")";
 	else
 		return CSTR(parrydelayE);
 	endif
@@ -202,9 +202,9 @@ function getDexPenalty(elem, item)
 	var DexPenaltyE := Cint(elem.DexPenalty);
 
 	if (DexPenaltyI > 0)
-		return CSTR(DexPenaltyE) + " (+" + CSTR(DexPenaltyI) + ")";
+		return CSTR(DexPenaltyE) + " (-" + CSTR(DexPenaltyI) + ")";
 	elseif (DexPenaltyI < 0)
-		return CSTR(DexPenaltyE) + " (" + CSTR(DexPenaltyI) + ")";
+		return CSTR(DexPenaltyE) + " (+" + CSTR(-DexPenaltyI) + ")";
 	else
 		return CSTR(DexPenaltyE);
 	endif
@@ -388,7 +388,7 @@ exported function MegaCliloc( who, byref packet )
 			var cfg := ReadConfigFile(":*:itemdesc");
 			var elem := FindConfigElem(cfg, item.objtype);
 			if (item.quality >= 1.1)
-				xDesc := xDesc + white + "Excepcional<br>";
+				xDesc := xDesc + white + "Excepcional ["+Cstr(item.quality)+"]<br>";
 			endif
 
 			var cond := GetCondition(item);
