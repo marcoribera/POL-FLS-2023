@@ -38,7 +38,8 @@ program skill_Stealth( who )
 		skillTested := MAGICLORE;
 	endif
 
-	if (!temHabilidade(who, "Misturar-se na Selva"))
+	if (temHabilidade(who, "Camuflagem"))
+		skill := AP_GetSkill(who, SURVIVAL);
 		if (skill < 50)
 			SendSysMessageEx(who, "Voce nao consegue se mover furtivamente!", SSM_FAIL);
 			return 0;
@@ -58,14 +59,14 @@ program skill_Stealth( who )
 		diff := diff + 50;
 	endif
 
-	if (temHabilidade(who, "Misturar-se na Selva"))
-		//var region := GetRegionName(who);
-		//if(region != "aghaja" && region != "zharkia")
+	if (temHabilidade(who, "Camuflagem"))
+		var region := GetRegionName(who);
+		if(region != "aghaja" && region != "zharkia")
 			diff := diff - 25;
 			if (diff <= 0)
 				diff := 5;
 			endif
-		//endif
+		endif
 			var check := SkillCheck(who, SURVIVAL, diff);
 			if( check > 0 )
 			who.stealthsteps := baseSteps;
@@ -104,10 +105,8 @@ program skill_Stealth( who )
 				endif
 				return 0;
 			endif
-
-	endif
-
-	var check := SkillCheck(who, skillTested, diff);
+	else
+		var check := SkillCheck(who, skillTested, diff);
 	if( check > 0 )
 		who.stealthsteps := baseSteps;
 		/*
@@ -153,6 +152,10 @@ program skill_Stealth( who )
 		endif
 		return 0;
 	endif
+
+	endif
+
+
 endprogram
 
 function qtdSteps(who, skill)
