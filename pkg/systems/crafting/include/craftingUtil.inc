@@ -89,19 +89,19 @@ function AddQualityDamageMod(who, byref theitem, quality )
 			maxBonus := maxBonus - qtd;
 		endwhile
 		if(TemHabilidade(who,"Armas Velozes"))
-			SendSysMessage(who,"bonus velocidade" + (quality-1)/2 + "qualidade: "+ quality);
+			//SendSysMessage(who,"bonus velocidade" + (quality-1)/2 + "qualidade: "+ quality);
 			theitem.speed_mod := CInt(elem.Speed * (quality-1)/2);
 		endif
 		//Acplica dano extra pra arma
 		if(TemHabilidade(who,"Amolador de Laminas") && (elem.TipoAtaque == "Cortante"))
-			SendSysMessage(who,"bonus dano" + theitem.quality-1);
-			theitem.dmg_mod := CInt(elem.MaxDam * (theitem.quality-1));
+			//SendSysMessage(who,"bonus dano" + theitem.quality-1);
+			theitem.dmg_mod := CInt(elem.MaxDam * (quality-1)/2);
 		endif
 		if(TemHabilidade(who,"Ponta Temperada") && (elem.TipoAtaque == "Perfurante"))
-			theitem.dmg_mod := CInt(elem.MaxDam * (theitem.quality-1));
+			theitem.dmg_mod := CInt(elem.MaxDam * (quality-1)/2);
 		endif
 		if(TemHabilidade(who,"Densidade Esmagadora") && (elem.TipoAtaque == "Contusivo"))
-			theitem.dmg_mod := CInt(elem.MaxDam * (theitem.quality-1));
+			theitem.dmg_mod := CInt(elem.MaxDam * (quality-1)/2);
 		endif
 	endif
 	return;
