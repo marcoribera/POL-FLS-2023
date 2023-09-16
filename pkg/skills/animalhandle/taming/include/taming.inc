@@ -113,6 +113,10 @@ function GetMaxPets(who)
 	var skill := cint(AP_GetSkill(who, HANDLEANIMAL));
 	var maxpets := 1;
 
+	if(TemHabilidade(who, "Lider do Bando"))
+		maxpets := maxpets + 1;
+	endif
+
 	if (skill >= 45 && skill < 75)
 		maxpets := maxpets + 1;
 	elseif (skill >= 75 && skill < 90)
@@ -207,6 +211,7 @@ function destama(serial)
 	EraseObjproperty(me, "script");
 	EraseObjProperty(me, "happiness");
 	EraseObjProperty(me, "bond");
+	EraseObjProperty(me,"countercheck");
 	EraseObjProperty(me, "NeverRelease");
 	EraseObjProperty(me, "Fidelizar?");
 	RestartScript(me);

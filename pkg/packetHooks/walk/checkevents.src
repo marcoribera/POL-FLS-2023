@@ -15,7 +15,8 @@ endprogram
 exported function CheckEventsWalk( who, byref packet )
 	if (who.hidden == 1)
 		if (who.stealthsteps >= 1)
-			SendSysMessage(who, "Ainda lhe restam "+who.stealthsteps-1+" passos.");
+		var passos := who.stealthsteps -1;
+			SendSysMessage(who, "Ainda lhe restam "+passos+" passos.");
 		endif
 	endif
 	if (GetObjProperty(who, "neve") && who.concealed == 0 && !GetObjProperty(who, "noprints") && TemHabilidade(who, "Movimento Livre") == 0)

@@ -66,9 +66,9 @@ program TamingSkill(who)
 	GFAddButton(yn_gump, 20, (83), 2117, 2118, GF_CLOSE_BTN, 2);
 	GFTextLine(yn_gump, 40, 80, 1153, "Informações sobre o animal.");
 	
-	if (TemHabilidade(who, "Treinar"))
+	if (TemHabilidade(who, "Instintos Selvagens") || TemHabilidade(who, "Despertar Natureza") )
 		GFAddButton(yn_gump, 20, (103), 2117, 2118, GF_CLOSE_BTN, 3);
-		GFTextLine(yn_gump, 40, 100, 1153, "Treinar");
+		GFTextLine(yn_gump, 40, 100, 1153, "Despertar");
 	endif
 
 	GFTextLine(yn_gump, 20, 130, 1153, "Libertar Animal:");
@@ -160,7 +160,7 @@ function taming(who)
 //	elseif (Distance(who,targ) > 4)
 //		SendSysMessage(who, "Alvo esta muito distante.");
 //		return;
-	elseif ( targ.script["tamed"] )
+	elseif ( targ.script[":ghaia:tamed"] )
 		//if( targ.master.serial == who.serial )
 		//	TeachGump(who, targ);
 		//else
@@ -227,6 +227,8 @@ function taming(who)
 				SetObjProperty(targ,"happiness", 50);
 				SetObjProperty(targ, "AntigoTreinadorID", who.serial);
 				SetObjProperty(targ, "Fidelizar?", "nao");
+				  var time := ReadGameClock();
+  SetObjProperty(targ,"countercheck", time);
 
 				targ.script := ":ghaia:tamed";
 				RestartScript(targ);
@@ -311,7 +313,7 @@ if(!ownerarray)
 endfunction
 
 function Teach(who)
-	if (!TemHabilidade(who, "Treinar"))
+	if (!TemHabilidade(who, "Despertar Natureza") && !TemHabilidade(who, "Instintos Selvagens") )
 		SendSysMessageEx(who, "Voce nao tem a habilidade para treinar animais domesticados.", SSM_FAIL);
 		return;
 	endif
@@ -335,11 +337,6 @@ function Teach(who)
 	if( GetObjProperty(creature, "Blocked") || creature.frozen )
 		SendSysMessage(who, "O raciocinio por tras da sua analise esta incorreto.");
 		return 0;
-	endif
-
-	if(instincts && !TemHabilidade(who, "Treinar Aprimorado"))
-		SendSysMessage(who, "Voce nao tem a habilidade Treino Aprimorado para despertar mais um instinto no seu animal.");
-		return;
 	endif
 
 	if( creature.serial == who.serial )
@@ -379,7 +376,7 @@ function TeachGump(who, creature)
 
 	template := GumpTemplate();
 
-	var gump := BuildGump(creature);
+	var gump := BuildGump(who, creature);
 	var input := GFSendGump(who, gump);
 
 	if ( input[0] > 1 ) // Define na hora de apertar o botão ensinar
@@ -406,7 +403,7 @@ function GumpTemplate()
 	GFPage(gump, 0);
 	GFResizePic(gump, 0, 0, BACKGROUND, 322, 485);
 	GFResizePic(gump, 2, 7, FOREGROUND, 313, 470);
-	GFTextLine(gump, 125, 20, 40, "INSTINTOS");
+	GFTextLine(gump, 90, 20, 40, "NATUREZA E INSTINTOS");
 	GFGumpPic(gump, 150, 290, 1629); // jacaré primeiro lateral, segundo altura
 	GFGumpPic(gump, 10, 105, 1631); //boi
 	GFPage(gump, 1);
@@ -414,7 +411,7 @@ function GumpTemplate()
 	return gump;
 endfunction
 
-function BuildGump(creature)
+function BuildGump(who, creature)
 	var gump := template;
 	var y_pos := START_Y;
 
@@ -422,7 +419,7 @@ function BuildGump(creature)
 	foreach index in index_list
 		var ins_elem := info_cfg[index];
 		//if( AP_GetSkill(who, ADESTRAMENTO) >= ins_elem.Skill )// retirado Sem necessidade
-			BuildInstincts(creature, gump, ins_elem, y_pos);
+			BuildInstincts(who, creature, gump, ins_elem, y_pos);
 			new_list.append(index);
 		//endif
 		SleepMS(2);
@@ -439,7 +436,7 @@ function BuildGump(creature)
 	return gump;
 endfunction
 
-function BuildInstincts(creature, byref gump, ins_elem, byref y_pos)
+function BuildInstincts(who, creature, byref gump, ins_elem, byref y_pos)
 
 	if( y_pos > END_Y )
 		GFAddButton(gump, 243, 34, 2224, 2224, GF_PAGE_BTN, gump.cur_page+1); //botão de numero de página
@@ -448,13 +445,13 @@ function BuildInstincts(creature, byref gump, ins_elem, byref y_pos)
 	endif
 
 	if( y_pos == START_Y )//texto inicial e títulos
-		GFTextLine(gump, 220, 87, 10, "Naturais");
-		GFTextLine(gump, 12, 37, 0, "Você pode despertar instintos naturais (passivos)");
-		GFTextLine(gump, 12, 50, 0, "ou selvagens (crítico de dano) do seu fiel animal."); 
+		GFTextLine(gump, 178, 87, 10, "Despertar Natureza");
+		GFTextLine(gump, 12, 37, 0, "Você pode despertar a natureza (stats) ou ");
+		GFTextLine(gump, 12, 50, 0, "instinto selvagem (crítico-dano) do seu fiel animal."); 
 		GFTextLine(gump, 12, 62, 0,	"Clique no botão para mais info sobre o instinto.");
-		GFTextLine(gump, 10, 437, 30,	" OBS: o animal só pode ter 1 de cada tipo de"); 
-		GFTextLine(gump, 10, 450, 30,	"   instinto(caso você saiba Treino Aprimorado)");
-		GFTextLine(gump, 44, 275, 90, "Selvagens");
+		GFTextLine(gump, 10, 437, 30,	" OBS: o animal só pode ter um despertar ou"); 
+		GFTextLine(gump, 10, 450, 30,	"   instinto (caso você saiba as duas habilidades)");
+		GFTextLine(gump, 30, 275, 90, "Instintos Selvagens");
 	endif
 
 	if(gump.cur_page > 1) //botão de número da página
@@ -470,7 +467,7 @@ var creature_taxonomy := GetConfigString(npccfgfile[creature_who], "Taxonomy"); 
 var pet_instinct := GetConfigStringArray(ins_elem, "Taxonomy"); // LISTA TODOS do cfg
 var equal_taxonomy := (creature_taxonomy in pet_instinct); //identifica a taxonomy do cfg de acordo com o alvo
 //print("A criatura eh "+creature_who+" Os taxonomys sao "+creature_taxonomy+" e os iguais sao "+equal_taxonomy); DEBUG
-	if(ins_elem.Type == 0) //listagem dos instintos naturais
+	if( (ins_elem.Type == 0) && TemHabilidade(who, "Despertar Natureza") ) //listagem dos instintos naturais
 
 		GFTextLine(gump, 170, y_pos+20, 1890, ins_elem.Nome); // tive que listar individualmente pra não dar bode, a lista do cfg de acordo com o CONST inicial começa no 10
 		if(ins_elem.Nome == "Ferocidade")
@@ -491,20 +488,28 @@ var equal_taxonomy := (creature_taxonomy in pet_instinct); //identifica a taxono
 		//GFAddButton(gump, 290, y_pos+23, 1209, 1210, GF_PAGE_BTN, 14);
 
 		//y_pos := y_pos+20;
-	elseif (ins_elem.Type == 2 && sense_ones) // Aqui inseri o senso aguçado, type 2 no cfg
+	elseif ( (ins_elem.Type == 2 && sense_ones) && TemHabilidade(who, "Despertar Natureza") ) // Aqui inseri o senso aguçado, type 2 no cfg
 		GFTextLine(gump, 170, y_pos+20, 1890, ins_elem.Nome);
 		GFAddButton(gump, 290, y_pos+23, 1209, 1210, GF_PAGE_BTN, 13);
 
 		y_pos := y_pos+20;
-	elseif((ins_elem.Type == 1) && (equal_taxonomy)) //instintos selvagens listados de acordo com o alvo e cfg
-	
+	elseif((ins_elem.Type == 1) && (equal_taxonomy) && TemHabilidade(who, "Instintos Selvagens")) //instintos selvagens listados de acordo com o alvo e cfg
 	GFTextLine(gump, 27, y_pos+148, 1890, ins_elem.Nome);
 	var det_pagex := ins_elem.Number; //inseri um valor number no cfg pra ficar mais facil para listar, lá começa no 15
 	GFAddButton(gump, 10, y_pos+151, 1209, 1210, GF_PAGE_BTN, det_pagex);
 
 	//det_page := det_page + 5;
 	y_pos := y_pos+20;
-
+	else
+	if ( !TemHabilidade(who, "Despertar Natureza") )
+		GFTextLine(gump, 170, 154, 1890, "Você não tem a ");
+		GFTextLine(gump, 170, 166, 1890, "habilidade necessária.");
+		y_pos := y_pos+10;
+	elseif ( !TemHabilidade(who, "Instintos Selvagens") )
+		GFTextLine(gump, 27, 334, 1890, "Você não tem a ");
+		GFTextLine(gump, 27, 346, 1890, "habilidade necessária.");
+		//y_pos := y_pos+10;
+	endif
 	endif
 
 	return 1;
@@ -516,13 +521,14 @@ function BuildDetails(byref gump, ins_name, byref y_pos)
 	var cfg_elem := info_cfg[ins_name];
 
 	GFPage(gump, det_page);
-	GFAddButton(gump, 213, 34, 2223, 2223, GF_PAGE_BTN, 1);
+	GFAddButton(gump, 80, 44, 2223, 2223, GF_PAGE_BTN, 1);
+	GFTextLine(gump, 70, 60, 0, "(voltar)");
 	if(cfg_elem.Type == 1) //identificar se é instinto selvagem para onde aparecer o título descrição e o botão de ensinar
 			GFTextLine(gump, 55, 280, 0, "Descrição");
 			GFTextLine(gump, 58, 400, 0, "Ensinar");
 			GFAddButton(gump, 67, y_pos+300, 1209, 1210, GF_CLOSE_BTN, btn_maxId);
 		else //identificar se é instinto natural para onde aparecer a descrição e o botão de ensinar
-			GFTextLine(gump, 210, 55, 0, "Descrição");
+			GFTextLine(gump, 200, 55, 0, "Descrição");
 			GFTextLine(gump, 210, 200, 0, "Ensinar");
 			GFAddButton(gump, 221, y_pos+95, 1209, 1210, GF_CLOSE_BTN, btn_maxId);
 		endif
@@ -565,7 +571,7 @@ function TeachNow(who, tamed, ins)
 	var ins_savage := GetObjProperty(tamed, "Group_savage");
 	var ins_2 := info_cfg[ins].Group;
 	if ((ins_2 == 1) && (ins_natural == 1)) //check para quem já tem 1 instinto natural e não pode mais pegar do mesmo tipo
-		SendSysMessage(who, "Voce ja despertou o instinto natural nesse animal!");
+		SendSysMessage(who, "Voce ja despertou a natureza nesse animal!");
 		return;
 	elseif ((ins_2 == 2) && (ins_savage == 1))// check para instinto selvagem e não poder pegar mais um
 		SendSysMessage(who, "Voce ja despertou o instinto selvagem nesse animal!");

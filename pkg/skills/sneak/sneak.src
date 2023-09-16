@@ -29,7 +29,7 @@ program skill_Hide(who)
 
 	SendSysMessageEx(who, "Voce comecou a tentar se esconder...", SSM_INFO);
 
-	if (temHabilidade(who, "Misturar-se na Selva"))
+	if (temHabilidade(who, "Camuflagem"))
 
 		while ( 1 )
 			sleep(2);
@@ -38,19 +38,21 @@ program skill_Hide(who)
 				break;
 			endif
 			var check := SkillCheck(who, SURVIVAL, -1);
-			var diff := 0;
-			/*case ( temHabilidade(who, "Misturar-se na Selva") )
-				1:
+			var diff;
+	
 					var region := GetRegionName(who);
+					print("a region eh "+region);
 					if(region != "aghaja" && region != "zharkia")
+					print("vc NAO tah em zharkia");
 						diff := diff - 50;
 						if (diff <= 0)
 							diff := 5;
 						endif
-					endif
-				0:
+					else
+					print("vc tah em zharkia");
 					diff := 0;
-			endcase */
+					endif
+									
 
 			if ( GetObjProperty(who, "forjoumorte") == 1 )
 				diff := diff - 50;
@@ -209,7 +211,7 @@ function CanHide(who, orig_x, orig_y, override_hiding := 0)
 
 	var skill := AP_GetSkill(who, SNEAK);
 
-	if (temHabilidade(who, "Misturar-se na Selva"))
+	if (temHabilidade(who, "Camuflagem"))
 		var skill := AP_GetSkill(who, SURVIVAL);
 	endif
 
@@ -257,7 +259,7 @@ endfunction
 function GetWatchingPeople(who)
 	var counter := 0;
 	var range := GetHidingRange(AP_GetSkill(who, SNEAK));
-	if (temHabilidade(who, "Misturar-se na Selva"))
+	if (temHabilidade(who, "Camuflagem"))
 		var range := GetHidingRange(AP_GetSkill(who, SURVIVAL));
 	endif
 	foreach person in ListMobilesInLineOfSight(who, range)
