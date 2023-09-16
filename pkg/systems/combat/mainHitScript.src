@@ -715,10 +715,11 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 	endif
 // Inicio vivisec Igor-----------------------------
 	var bonus_Preservar_Orgaos := 0;
+	/*
 	if (TemHabilidade(defender, "Preservar Orgaos"))
 		bonus_Preservar_Orgaos := 25;
 	endif
-
+	*/
 	var rand := Cint((RandomInt(100) + 1) + bonus_Preservar_Orgaos);
 	//printtextabove(attacker, "chance " + chance + " rand " + rand + " " + (chance > rand) );
 

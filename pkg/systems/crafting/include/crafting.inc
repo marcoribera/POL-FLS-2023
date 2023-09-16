@@ -360,17 +360,17 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 		theitem.damage_energy_mod := theitem.damage_energy_mod + Cint(DmgMods[5]);
 
 		if(TemHabilidade(who,"Armas Velozes"))
-			theitem.speed := CInt(theitem.speed *1.2);
+			theitem.speed_mod := CInt(elem.Speed*0.3);
 		endif
 
-		if(TemHabilidade(who,"Amolador de Laminas") && (theitem.TipoAtaque == "Cortante"))
-			theitem.dmg_mod := theitem.dmg_mod + CInt(theitem.MaxDam * 1.3);
+		if(TemHabilidade(who,"Amolador de Laminas") && (elem.TipoAtaque == "Cortante"))
+			theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.3);
 		endif
-		if(TemHabilidade(who,"Ponta Temperada") && (theitem.TipoAtaque == "Perfurante"))
-			theitem.dmg_mod := theitem.dmg_mod + CInt(theitem.MaxDam * 1.3);
+		if(TemHabilidade(who,"Ponta Temperada") && (elem.TipoAtaque == "Perfurante"))
+			theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.3);
 		endif
-		if(TemHabilidade(who,"Densidade Esmagadora") && (theitem.TipoAtaque == "Contusivo"))
-			theitem.dmg_mod := theitem.dmg_mod + CInt(theitem.MaxDam * 1.3);
+		if(TemHabilidade(who,"Densidade Esmagadora") && (elem.TipoAtaque == "Contusivo"))
+			theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.3);
 		endif
 
 	elseif(theitem.isA(POLCLASS_ARMOR))
@@ -382,7 +382,7 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
         theitem.resist_poison_mod := theitem.resist_poison_mod + Cint(ResistMods[4]);
         theitem.resist_energy_mod := theitem.resist_energy_mod + Cint(ResistMods[5]);
 
-        if (elem.parrybonus) //aplica o modificador de durabilidade do material nos escudos
+        if ((CInt(elem.parrybonus) != 0) || CInt(elem.parrydelay) != 0) //aplica o modificador de durabilidade do material nos escudos
         	hpmod :=  hpmod*5;
     	endif
 
@@ -463,14 +463,23 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 		SetObjProperty(theitem, "dmgmods", DmgMods);
 	endif
 
-	var maximo_hp := theitem.maxhp + hpmod;
+//	sendsysmessage(who,theitem.maxhp+" "+theitem.maxhp_mod);
 
+	//Adiciona modificador do material
+	theitem.maxhp_mod := theitem.maxhp_mod + hpmod;
+
+//	sendsysmessage(who,"Modificador Material "+theitem.maxhp+" "+theitem.maxhp_mod);
+	//Adiciona modificador de Habilidade de nível
 	if(TemHabilidade(who,"Preparo do Metal"))
-		maximo_hp := CInt(maximo_hp * 1.5);
+		//(HP total x 1.5) x (HP total - HP inicial)
+		var temp := (theitem.maxhp * 1.5) - (theitem.maxhp-theitem.maxhp_mod);
+//		sendsysmessage(who,"Temp "+temp);
+		theitem.maxhp_mod := CInt(temp);
+//		sendsysmessage(who,"Preparo do Metal "+theitem.maxhp+" "+theitem.maxhp_mod);
 	endif
-
-	theitem.maxhp := theitem.maxhp + hpmod;
+	//Atualiza o HP
 	theitem.hp := theitem.maxhp;
+//	sendsysmessage(who,"Final Material "+theitem.maxhp+" "+theitem.maxhp_mod);
 endfunction
 
 function CraftExceptional(who, byref theitem, craft_skill, skillreq)
@@ -489,9 +498,16 @@ function CraftExceptional(who, byref theitem, craft_skill, skillreq)
 	            AddQualityResistMod(who, theitem, qualidade);
 	            //endif
 			endif
+
 			//Aplica modificador de qualidade no HP do item
-			theitem.maxhp := CInt(theitem.maxhp * theitem.quality);
+//			sendsysmessage(who,"Excepcional");
+//			sendsysmessage(who,theitem.maxhp+" "+theitem.maxhp_mod);
+			var temp := (theitem.maxhp * theitem.quality) - (theitem.maxhp-theitem.maxhp_mod);
+			theitem.maxhp_mod := temp;
+//			sendsysmessage(who,"Temp "+temp);
+//			sendsysmessage(who,"Aplicada Qualidade "+theitem.maxhp+" "+theitem.maxhp_mod);
 			theitem.hp := theitem.maxhp;
+//			sendsysmessage(who,"Final Qualidade"+theitem.maxhp+" "+theitem.maxhp_mod);
 		endif
 	endif
 endfunction

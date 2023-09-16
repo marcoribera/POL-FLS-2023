@@ -5,9 +5,15 @@ program speechHook()
   return 1;
 endprogram
 
-exported function handeSendSpeech(who, byref pkt)
-	if(pkt.GetInt8(9) == 0x6)
-		var obj := SystemFindObjectBySerial(pkt.GetInt32(3));
+const ITEM_ID := 3;
+const TEXT_TYPE := 9;
+const NAME := 14; //posição do Name de quem fala
+const SYS_MSG := 0x06;
+
+//Show names of incoming mobiles
+exported function handeSendSpeech(who, byref packet)
+	if(packet.GetInt8(TEXT_TYPE) == SYS_MSG)
+		var obj := SystemFindObjectBySerial(packet.GetInt32(ITEM_ID));
     		If(obj.IsA(POLCLASS_MOBILE)) // Se for um mobile, não exibe o nome
 			return 1;
 		endif

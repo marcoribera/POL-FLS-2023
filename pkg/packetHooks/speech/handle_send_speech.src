@@ -10,6 +10,8 @@ endprogram
 
 const ITEM_ID := 3;
 const TEXT_TYPE := 9;
+const NAME := 18; //posição do Name de quem fala
+const SYS_MSG := 0x06;
 
 exported function handleUCOutgoing( character, byref packet )
 
@@ -25,6 +27,40 @@ exported function handleUCOutgoing( character, byref packet )
 	var length_of_text := ( packet.GetInt16(1) - 49 ) / 2;
 	var message_txt := packet.GetUnicodeString(48, length_of_text);
 
+/*
+	SendSysMessage(source,"cmd "+ packet.GetInt8(0));
+	SendSysMessage(source,"length "+ packet.GetInt16(1));
+	SendSysMessage(source,"ID "+ packet.GetInt32(3));
+	SendSysMessage(source,"model "+ packet.GetInt16(7));
+	SendSysMessage(source,"type "+ packet.GetInt8(8));
+	SendSysMessage(source,"color "+ packet.GetInt16(10));
+	SendSysMessage(source,"font "+ packet.GetInt16(12));
+	SendSysMessage(source,"Language "+ packet.GetString(14,4));
+	SendSysMessage(source,"Name "+ packet.GetString(18, 30));
+	SendSysMessage(source,"msg "+ packet.GetUnicodeString(48,length_of_text));
+
+	//var tamanho := packet.GetInt16(1)-30+nome.size();
+
+	//SendSysMessage(source,tamanho);
+	//packet.SetInt16(1,tamanho);
+
+	packet.SetString(18, "Teste",1);
+
+	SendSysMessage(source,"ZZZZZZZZZZZZZZZZZZZZZZZ");
+
+
+	SendSysMessage(source,"cmd "+ packet.GetInt8(0));
+	SendSysMessage(source,"length "+ packet.GetInt16(1));
+	SendSysMessage(source,"ID "+ packet.GetInt32(3));
+	SendSysMessage(source,"model "+ packet.GetInt16(7));
+	SendSysMessage(source,"type "+ packet.GetInt8(8));
+	SendSysMessage(source,"color "+ packet.GetInt16(10));
+	SendSysMessage(source,"font "+ packet.GetInt16(12));
+	SendSysMessage(source,"Language "+ packet.GetString(14,4));
+	SendSysMessage(source,"Name "+ packet.GetString(18,30));
+	SendSysMessage(source,"msg "+ packet.GetUnicodeString(48,length_of_text));
+*/
+
 	if ( (getObjProperty(source, "metamorfose") != error) || (getObjProperty(source, "mudo") != error) || (getObjProperty(source, "#sleep") != error))
 		if  (type != 0x02)
 			return 1;
@@ -36,7 +72,7 @@ exported function handleUCOutgoing( character, byref packet )
 			SetObjProperty(source, "LastMSG", message_txt);
 			foreach player in GetGlobalProperty("GmsOnlines")
 				var sender := source.name;
-				if (sender == "Desconhecido")
+				if (GetObjProperty(source, "realname"))
 					sender := GetObjProperty(source, "realname");
 				endif
 				if (GetGlobalProperty("onlyuni"))
@@ -56,7 +92,7 @@ exported function handleUCOutgoing( character, byref packet )
 			player := SystemFindObjectBySerial(Cint(player));
 			if ( GetObjProperty(player, "SaySpyOn") && player.cmdlevel >= 3 && player != source)
 				var sender := source.name;
-				if (sender == "Desconhecido")
+				if (GetObjProperty(source, "realname")) //Se está com rosto coberto
 					sender := GetObjProperty(source, "realname");
 				endif
 				if (GetObjProperty(player, "SaySpyOn") == "on")
