@@ -64,7 +64,7 @@ endfunction
 //Reference: http://uo.stratics.com/content/aos/baseproperties.shtml#exceptional
 // as stratics says, exceptional weapons add +35 dmg increase
 
-function AddQualityDamageMod( byref theitem, quality )
+function AddQualityDamageMod(who, byref theitem, quality )
 	if (quality >= 1.2)
 		var randomDmg;
 		var maxBonus := CInt(quality*20); //mínimo 24
@@ -88,6 +88,21 @@ function AddQualityDamageMod( byref theitem, quality )
 			endcase
 			maxBonus := maxBonus - qtd;
 		endwhile
+		if(TemHabilidade(who,"Armas Velozes"))
+			SendSysMessage(who,"bonus velocidade" + (quality-1)/2 + "qualidade: "+ quality);
+			theitem.speed_mod := CInt(elem.Speed * (quality-1)/2);
+		endif
+		//Acplica dano extra pra arma
+		if(TemHabilidade(who,"Amolador de Laminas") && (elem.TipoAtaque == "Cortante"))
+			SendSysMessage(who,"bonus dano" + theitem.quality-1);
+			theitem.dmg_mod := CInt(elem.MaxDam * (theitem.quality-1));
+		endif
+		if(TemHabilidade(who,"Ponta Temperada") && (elem.TipoAtaque == "Perfurante"))
+			theitem.dmg_mod := CInt(elem.MaxDam * (theitem.quality-1));
+		endif
+		if(TemHabilidade(who,"Densidade Esmagadora") && (elem.TipoAtaque == "Contusivo"))
+			theitem.dmg_mod := CInt(elem.MaxDam * (theitem.quality-1));
+		endif
 	endif
 	return;
 endfunction

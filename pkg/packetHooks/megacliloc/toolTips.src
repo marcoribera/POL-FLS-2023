@@ -53,15 +53,27 @@ function GetDmgStringDesc(elem, item)
 endfunction
 
 function getQuality(num)
-
-	if (num >= 1.1)
-		return "Excepcional";
-	elseif(num  > 0.8)
-		return "Normal";
+	var rank;
+	if(num>3.0)
+		rank := "SSS";
+	elseif(num>2.9)
+		rank := "SS";
+	elseif(num>2.7)
+		rank := "S";
+	elseif(num>2.5)
+		rank := "A";
+	elseif(num>2.2)
+		rank := "B";
+	elseif(num>1.9)
+		rank := "C";
+	elseif(num>1.3)
+		rank := "D";
+	elseif(num>1.3)
+		rank := "E";
 	else
-		return "Baixa";
+		rank := "F";
 	endif
-
+	return "Excepcional [Rank "+rank+"]";
 endfunction
 
 function getCondition(item) //Durabilidade dos itens
@@ -396,7 +408,7 @@ exported function MegaCliloc( who, byref packet )
 			var cfg := ReadConfigFile(":*:itemdesc");
 			var elem := FindConfigElem(cfg, item.objtype);
 			if (item.quality >= 1.1)
-				xDesc := xDesc + white + "Excepcional ["+Cstr(item.quality)+"]<br>";
+				xDesc := xDesc + white + getQuality(item.quality) + "<br>"; //exibe apenas dois digitos
 			endif
 
 			var cond := GetCondition(item);

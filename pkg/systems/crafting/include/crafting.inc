@@ -359,18 +359,19 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 		theitem.damage_poison_mod := theitem.damage_poison_mod + Cint(DmgMods[4]);
 		theitem.damage_energy_mod := theitem.damage_energy_mod + Cint(DmgMods[5]);
 
+		//Aplica velocidade extra em armas normais
 		if(TemHabilidade(who,"Armas Velozes"))
-			theitem.speed_mod := CInt(elem.Speed*0.3);
+			theitem.speed_mod := CInt(elem.Speed*0.1);
 		endif
 
 		if(TemHabilidade(who,"Amolador de Laminas") && (elem.TipoAtaque == "Cortante"))
-			theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.3);
+			theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.1);
 		endif
 		if(TemHabilidade(who,"Ponta Temperada") && (elem.TipoAtaque == "Perfurante"))
-			theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.3);
+			theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.1);
 		endif
 		if(TemHabilidade(who,"Densidade Esmagadora") && (elem.TipoAtaque == "Contusivo"))
-			theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.3);
+			theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.1);
 		endif
 
 	elseif(theitem.isA(POLCLASS_ARMOR))
@@ -490,7 +491,10 @@ function CraftExceptional(who, byref theitem, craft_skill, skillreq)
 		if(qualidade >= 1.2)
 			SetObjProperty(theitem, "Exceptional", 1);
 			if(theitem.isA(POLCLASS_WEAPON))
-				AddQualityDamageMod(theitem, qualidade );
+				AddQualityDamageMod(who, theitem, qualidade);
+
+
+
 			elseif(theitem.isA(POLCLASS_ARMOR))
 	            //var cfg:=ReadConfigFile(":combat:itemdesc");
 	            //var elem := FindConfigElem(cfg, theitem.objtype);
