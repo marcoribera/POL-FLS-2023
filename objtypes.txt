@@ -1995,7 +1995,8 @@
 # 0x3bd4 - 0x3bd6 unused
 0x3bd7 bainhaealjava woodworking
 0x3bd8 ChapeuPirata domesticwork
-# 0x3bd9 - 0x3be5 unused
+0x3bd9 cintoutilidades woodworking
+# 0x3bda - 0x3be5 unused
 0x3be6 cachimbo tn
 0x3be7 WolfMask domesticwork
 # 0x3be8 - 0x3bea unused
@@ -2412,7 +2413,8 @@
 0x70b1 chessboard games
 0x70b2 backgammon games
 0x70b3 dontcreateme_gamepiece games
-# 0x70b4 - 0x7104 unused
+0x70b4 jogodados woodworking
+# 0x70b5 - 0x7104 unused
 0x7105 HairDye hair
 # 0x7106 - 0x76aa unused
 0x76ab EagleRing tn
@@ -2632,7 +2634,10 @@
 0xa383 mantonumaja domesticwork
 # 0xa384 - 0xa400 unused
 0xa401 SpawnPoint spawnpoint
-# 0xa402 - 0xafef unused
+# 0xa402 - 0xa4c2 unused
+0xa4c3 serrabancada woodworking
+0xa4c4 serrabancada1 woodworking
+# 0xa4c5 - 0xafef unused
 0xaff0 TintaVerdeClaro alchemy
 0xaff1 TintaVerdeClaro1 alchemy
 0xaff2 TintaVerdeClaro2 alchemy
@@ -2933,7 +2938,9 @@
 0xff9a beartrap traps
 # 0xff9b - 0xffe0 unused
 0xffe1 mushrooms2 food
-# 0xffe2 - 0x10fff unused
+# 0xffe2 - 0xffe6 unused
+0xffe7 aljavacintura woodworking
+# 0xffe8 - 0x10fff unused
 0x11000 SmallBoat boat
 # 0x11001 - 0x11003 unused
 0x11004 SmallDragonBoat boat

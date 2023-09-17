@@ -190,7 +190,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 				endif
 			else	//os materiais que nao tem tipos variados
 				foreach item in (EnumerateItemsInContainer(who.backpack)) //Checa os itens na mochila para contabilizar o material
-						//sendsysmessage(who, " " + item.objtype + " " + cint(thing));
+					//sendsysmessage(who, " " + item.objtype + " " + cint(thing));
 					if (item.objtype == cint(thing))	//acha os itens do tipo do material pedido
 						if (targMaterials[thing])
 							targMaterials[thing] := targMaterials[thing] + item.amount;
@@ -199,11 +199,25 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 						endif
 					endif
 				endforeach
+				SendSysMessage(who, "Não achou o material.", 0, 133);
 				if ( targMaterials[thing] < ( ( materials[thing] * ( 1 + more ) ) ) )
-					//SendSysMessageEx(who, "DEBUG: " + cstr(targMaterials[thing]) + " < " + cstr((materials[thing] + more)) + " - GAMA", SSM_FAIL);	//quando a quantidade de um material for insuficiente, exibe mensagem de erro.
-					SendSysMessageEx(who, "Voce nao possui os materiais necessarios." , SSM_FAIL);
-					return OUT_OF_MATERIALS;
+					SendSysMessageEx(who, "Faltou material." , SSM_FAIL);
+					if((craft_skill == "WoodWorking") && (TemHabilidade(who,"Recursos Improvisados")))
+						if(RandomInt(100) < 10) //10% de chance
+							SendSysMessageEx(who, "Voce improvisou um dos materiais." , SSM_INFO);
+							targMaterials[thing] := materials[thing];
+						else
+							SendSysMessageEx(who, "Tentou Improvisar um dos materiais, mas nao deu certo." , SSM_FAIL);
+							SubtractMaterial(who, targMaterials, 0.5); //consome metade do material
+							return 0;
+						endif
+					else
+						//SendSysMessageEx(who, "DEBUG: " + cstr(targMaterials[thing]) + " < " + cstr((materials[thing] + more)) + " - GAMA", SSM_FAIL);	//quando a quantidade de um material for insuficiente, exibe mensagem de erro.
+						SendSysMessageEx(who, "Voce nao possui os materiais necessarios." , SSM_FAIL);
+						return OUT_OF_MATERIALS;
+					endif
 				else
+					SendSysMessageEx(who, "Nao faltou material." , SSM_FAIL);
 					targMaterials[thing] := materials[thing];
 				endif
 			endif
@@ -232,8 +246,12 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 
 		if(check > 0)
 			if (!SubtractMaterial(who, targMaterials, 1+more))
-				SendSysMessageEx(who, "Voce nao possui todos os materiais.", SSM_FAIL);
-				return theitems;
+				if(craft_skill == "WoodWorking" && TemHabilidade(who,"Recursos Improvisados"))
+					SendSysMessageEx(who, "Seu improviso deu certo." , SSM_INFO);
+				else
+					SendSysMessageEx(who, "Voce nao possui todos os materiais.", SSM_FAIL);
+					return theitems;
+				endif
 			endif
 			theitem := CreateItem(who, objtype, more);
 			if(!theitem)
@@ -244,7 +262,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 			theitem.movable := 1;
 
 			//passando a cor pra materiais coloridos que nao tem Id proprio (como madeira)
-			AddMaterialMod(who, theitem, chosenPrincipalMaterial, materialColor);
+			AddMaterialMod(who, craft_skill, theitem, chosenPrincipalMaterial, materialColor);
 			CraftExceptional(who, theitem, craft_skill, skillreq);
 			CraftLockable(who, theitem);
 
@@ -326,7 +344,7 @@ function CreateItem(who, objtype, more:=0)
 endfunction
 
 
-function AddMaterialMod(who, theitem, principalMaterial, materialColor)
+function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialColor)
 
 	if (!principalMaterial)
 		return;
@@ -359,21 +377,31 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 		theitem.damage_poison_mod := theitem.damage_poison_mod + Cint(DmgMods[4]);
 		theitem.damage_energy_mod := theitem.damage_energy_mod + Cint(DmgMods[5]);
 
-		//Aplica velocidade extra em armas normais
-		if(TemHabilidade(who,"Armas Velozes"))
-			theitem.speed_mod := CInt(elem.Speed*0.1);
-		endif
+		sendsysmessage(who,craft_skill);
+		if(craft_skill == "MetalWorking")
+			sendsysmessage(who,"Usou MetalWorking");
+			//Aplica velocidade extra em armas de metal
+			if(TemHabilidade(who,"Armas Velozes"))
+				theitem.speed_mod := CInt(elem.Speed*0.1);
+			endif
 
-		if(TemHabilidade(who,"Amolador de Laminas") && (elem.TipoAtaque == "Cortante"))
-			theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.1);
+			if(TemHabilidade(who,"Amolador de Laminas") && (elem.TipoAtaque == "Cortante"))
+				theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.1);
+			endif
+			if(TemHabilidade(who,"Ponta Temperada") && (elem.TipoAtaque == "Perfurante"))
+				theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.1);
+			endif
+			if(TemHabilidade(who,"Densidade Esmagadora") && (elem.TipoAtaque == "Contusivo"))
+				theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.1);
+			endif
+		elseif(craft_skill == "WoodWorking")
+			if(TemHabilidade(who,"Entalhe para Combate"))
+				theitem.speed_mod := CInt(elem.Speed*0.1);
+			endif
+			if(TemHabilidade(who,"Flexao da Madeira") && (Cint(elem.maxrange) > 2))
+				theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.1);
+			endif
 		endif
-		if(TemHabilidade(who,"Ponta Temperada") && (elem.TipoAtaque == "Perfurante"))
-			theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.1);
-		endif
-		if(TemHabilidade(who,"Densidade Esmagadora") && (elem.TipoAtaque == "Contusivo"))
-			theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.1);
-		endif
-
 	elseif(theitem.isA(POLCLASS_ARMOR))
         var cfg:=ReadConfigFile(":combat:itemdesc");
         var elem := FindConfigElem(cfg, theitem.objtype);
@@ -387,74 +415,106 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
         	hpmod :=  hpmod*5;
     	endif
 
-    	if(TemHabilidade(who,"Armaduras Articuladas"))
-    		var DexPenBonus := Cint(elem.DexPenalty);
-    		if(DexPenBonus > 0)
-	    		case (DexPenBonus)
-	    			1:
-	    				DexPenBonus := 1;
-	    				break;
-	    			2:
-	    				DexPenBonus := 1;
-	    				break;
-	    			3:
-	    				DexPenBonus := 2;
-	    				break;
-    				default:
-    					DexPenBonus := CInt(DexPenBonus/2);
-	    		endcase
-	    		SetObjProperty(theitem, "penaltybonus", DexPenBonus);
-	    	endif
-		endif
-
-		if(TemHabilidade(who,"Armaduras sem Brechas"))
-			//SendSysMessage(who, "Faz Armaduras sem Brechas: ");
-			if(theitem.resist_fire != 0)
-				theitem.resist_fire_mod := theitem.resist_fire_mod + 1;
-			endif
-			if(theitem.resist_cold != 0)
-	        	theitem.resist_cold_mod := theitem.resist_cold_mod + 1;
-	        endif
-	        if(theitem.resist_poison != 0)
-	        	theitem.resist_poison_mod := theitem.resist_poison_mod + 1;
-	    	endif
-	        if(theitem.resist_energy != 0)
-	        	theitem.resist_energy_mod := theitem.resist_energy_mod + 1;
-	        endif
-	        if(theitem.resist_physical != 0)
-	        	theitem.resist_physical_mod := theitem.resist_physical_mod + 1;
-			endif
-		endif
-
-		if((CInt(elem.parrybonus) != 0) || CInt(elem.parrydelay) != 0) //Verifica se é escudo
-			if(TemHabilidade(who,"Suportes Balanceados"))
-				var parrybonus := Cint(elem.parrybonus);
-	    		if(parrybonus == 0)
-	    			parrybonus := 5;
-	    		else
-	    			parrybonus := CInt(parrybonus*1.5) + 5;
-	    		endif
-	    		SetObjProperty(theitem, "parrybonus", parrybonus);
-			endif
-			if(TemHabilidade(who,"Escudos Dissipadores"))
-				var parrydelay_mod := Cint(elem.parrydelay);
-				//Não afeta escudos com parrydelay já otimizado como o buckler
-	    		if(parrydelay_mod > 0)
-		    		case (parrydelay_mod)
+		if(craft_skill == "MetalWorking")
+			//sendsysmessage(who,"Usou MetalWorking");
+	    	if(TemHabilidade(who,"Armaduras Articuladas"))
+	    		var DexPenBonus := Cint(elem.DexPenalty);
+	    		if(DexPenBonus > 0)
+		    		case (DexPenBonus)
 		    			1:
-		    				parrydelay_mod := 1;
+		    				DexPenBonus := 1;
 		    				break;
 		    			2:
-		    				parrydelay_mod := 1;
+		    				DexPenBonus := 1;
 		    				break;
 		    			3:
-		    				parrydelay_mod := 2;
+		    				DexPenBonus := 2;
 		    				break;
 	    				default:
-	    					parrydelay_mod := CInt(parrydelay_mod/2);
+	    					DexPenBonus := CInt(DexPenBonus/2);
 		    		endcase
-		    		SetObjProperty(theitem, "parrydelay_mod", parrydelay_mod);
+		    		SetObjProperty(theitem, "penaltybonus", DexPenBonus);
 		    	endif
+			endif
+
+			if(TemHabilidade(who,"Armaduras sem Brechas"))
+				//SendSysMessage(who, "Faz Armaduras sem Brechas: ");
+				if(theitem.resist_fire != 0)
+					theitem.resist_fire_mod := theitem.resist_fire_mod + 1;
+				endif
+				if(theitem.resist_cold != 0)
+		        	theitem.resist_cold_mod := theitem.resist_cold_mod + 1;
+		        endif
+		        if(theitem.resist_poison != 0)
+		        	theitem.resist_poison_mod := theitem.resist_poison_mod + 1;
+		    	endif
+		        if(theitem.resist_energy != 0)
+		        	theitem.resist_energy_mod := theitem.resist_energy_mod + 1;
+		        endif
+		        if(theitem.resist_physical != 0)
+		        	theitem.resist_physical_mod := theitem.resist_physical_mod + 1;
+				endif
+			endif
+
+			if((CInt(elem.parrybonus) != 0) || CInt(elem.parrydelay) != 0) //Verifica se é escudo
+				if(TemHabilidade(who,"Suportes Balanceados"))
+					var parrybonus := Cint(elem.parrybonus);
+		    		if(parrybonus == 0)
+		    			parrybonus := 5;
+		    		else
+		    			parrybonus := CInt(parrybonus*1.5) + 5;
+		    		endif
+		    		SetObjProperty(theitem, "parrybonus", parrybonus);
+				endif
+				if(TemHabilidade(who,"Escudos Dissipadores"))
+					var parrydelay_mod := Cint(elem.parrydelay);
+					//Não afeta escudos com parrydelay já otimizado como o buckler
+		    		if(parrydelay_mod > 0)
+			    		case (parrydelay_mod)
+			    			1:
+			    				parrydelay_mod := 1;
+			    				break;
+			    			2:
+			    				parrydelay_mod := 1;
+			    				break;
+			    			3:
+			    				parrydelay_mod := 2;
+			    				break;
+		    				default:
+		    					parrydelay_mod := CInt(parrydelay_mod/2);
+			    		endcase
+			    		SetObjProperty(theitem, "parrydelay_mod", parrydelay_mod);
+			    	endif
+				endif
+			endif
+		elseif(craft_skill == "WoodWorking")
+			if(TemHabilidade(who,"Entalhe para Combate"))
+	    		var DexPenBonus := Cint(elem.DexPenalty);
+	    		if(DexPenBonus > 0)
+		    		case (DexPenBonus)
+		    			1:
+		    				DexPenBonus := 1;
+		    				break;
+		    			2:
+		    				DexPenBonus := 1;
+		    				break;
+		    			3:
+		    				DexPenBonus := 2;
+		    				break;
+	    				default:
+	    					DexPenBonus := CInt(DexPenBonus/2);
+		    		endcase
+		    		SetObjProperty(theitem, "penaltybonus", DexPenBonus);
+		    	endif
+		    	if((CInt(elem.parrybonus) != 0) || CInt(elem.parrydelay) != 0) //Verifica se é escudo
+					var parrybonus := Cint(elem.parrybonus);
+		    		if(parrybonus == 0)
+		    			parrybonus := 5;
+		    		else
+		    			parrybonus := CInt(parrybonus*1.5) + 5;
+		    		endif
+		    		SetObjProperty(theitem, "parrybonus", parrybonus);
+				endif
 			endif
 		endif
 
@@ -464,34 +524,36 @@ function AddMaterialMod(who, theitem, principalMaterial, materialColor)
 		SetObjProperty(theitem, "dmgmods", DmgMods);
 	endif
 
-//	sendsysmessage(who,theitem.maxhp+" "+theitem.maxhp_mod);
-
 	//Adiciona modificador do material
 	theitem.maxhp_mod := theitem.maxhp_mod + hpmod;
 
-//	sendsysmessage(who,"Modificador Material "+theitem.maxhp+" "+theitem.maxhp_mod);
-	//Adiciona modificador de Habilidade de nível
-	if(TemHabilidade(who,"Preparo do Metal"))
-		//(HP total x 1.5) x (HP total - HP inicial)
-		var temp := (theitem.maxhp * 1.5) - (theitem.maxhp-theitem.maxhp_mod);
-//		sendsysmessage(who,"Temp "+temp);
-		theitem.maxhp_mod := CInt(temp);
-//		sendsysmessage(who,"Preparo do Metal "+theitem.maxhp+" "+theitem.maxhp_mod);
+	if(craft_skill == "MetalWorking")
+		//Adiciona modificador de Habilidade de nível
+		if(TemHabilidade(who,"Preparo do Metal"))
+			//(HP total x 1.5) x (HP total - HP inicial)
+			var temp := (theitem.maxhp * 1.5) - (theitem.maxhp-theitem.maxhp_mod);
+			theitem.maxhp_mod := CInt(temp);
+		endif
+	elseif(craft_skill == "WoodWorking")
+		if(TemHabilidade(who,"Secagem da Madeira"))
+			//(HP total x 1.5) x (HP total - HP inicial)
+			var temp := (theitem.maxhp * 1.5) - (theitem.maxhp-theitem.maxhp_mod);
+			theitem.maxhp_mod := CInt(temp);
+		endif
 	endif
 	//Atualiza o HP
 	theitem.hp := theitem.maxhp;
-//	sendsysmessage(who,"Final Material "+theitem.maxhp+" "+theitem.maxhp_mod);
 endfunction
 
 function CraftExceptional(who, byref theitem, craft_skill, skillreq)
 	if(craft_config[theitem.objtype].Exceptional == 1)
-		var qualidade := ExceptionalCraft(who, theitem, AP_GetSkill(who, craft_skill), skillreq);
+		var qualidade := ExceptionalCraft(who, craft_skill, theitem, AP_GetSkill(who, craft_skill), skillreq);
 		theitem.quality := qualidade;
 
 		if(qualidade >= 1.2)
 			SetObjProperty(theitem, "Exceptional", 1);
 			if(theitem.isA(POLCLASS_WEAPON))
-				AddQualityDamageMod(who, theitem, qualidade);
+				AddQualityDamageMod(who, craft_skill, theitem, qualidade);
 
 
 
@@ -499,7 +561,7 @@ function CraftExceptional(who, byref theitem, craft_skill, skillreq)
 	            //var cfg:=ReadConfigFile(":combat:itemdesc");
 	            //var elem := FindConfigElem(cfg, theitem.objtype);
 	            //if (elem.parrydelay == error) //se for escudo nao aplica o resistmod
-	            AddQualityResistMod(who, theitem, qualidade);
+	            AddQualityResistMod(who, craft_skill, theitem, qualidade);
 	            //endif
 			endif
 

@@ -2,8 +2,9 @@ use uo;
 use os;
 use util;
 
-
 include ":gumps:gumps";
+include ":charactercreation:habilidades";
+include ":attributes:attributes";
 
 program usar_serra(who, item)
 
@@ -78,17 +79,17 @@ function OpenMenuLog(who, targetted)
 endfunction
 
 function maketabuas(who, item)
- 
+
    var nova_tabua;
 
    case (item.objtype)
-        0xee36: 
+        0xee36:
                 nova_tabua :=0xee66;
                 MakeBoardSerra(who, item, nova_tabua);
-        0xee37: 
+        0xee37:
                 nova_tabua :=0xee67;
                 MakeBoardSerra(who, item, nova_tabua);
-        0xee38: 
+        0xee38:
                 nova_tabua :=0xee68;
                 MakeBoardSerra(who, item, nova_tabua);
         0xee39:
@@ -114,34 +115,48 @@ function MakeBoardSerra(who, item, nova_tabua)
 
 	var characterx := who.x;
 	var charactery := who.y;
+    var toras;
 	repeat
-                if ((item.amount) <= 0)
-                   break;
-                endif
-                MakeSerraEfect(who);
+        if ((item.amount) <= 0)
+            break;
+        endif
+        MakeSerraEfect(who);
+        //Versão que faz por conjutos de toras
+        if(item.amount < 20)
+            toras := item.amount;
+        else
+            toras := 20;
+        endif
+        if(TemHabilidade(who,"Secagem da Madeira"))
+            CreateItemInContainer (who.backpack, nova_tabua, toras*2);
+        else
+            CreateItemInContainer (who.backpack, nova_tabua, toras);
+        endif
+        SubtractAmount(item, toras);
+        //fim alternativa
 
-		//CreateItemInContainer (who.backpack, nova_tabua, 1);
-                //SubtractAmount(item, item.amount);
-
-		//alterado - Ed.
-		CreateItemInContainer (who.backpack, nova_tabua, item.amount);
-                SubtractAmount(item, item.amount);
-
-
-
-	until ((who.x != characterx or who.y != charactery));
+/*
+        //Versão que faz tudo de uma vez
+        if(TemHabilidade(who,"Secagem da Madeira"))
+            CreateItemInContainer (who.backpack, nova_tabua, item.amount*2);
+        else
+            CreateItemInContainer (who.backpack, nova_tabua, item.amount);
+        endif
+        SubtractAmount(item, item.amount);
+*/
+	until ((who.x != characterx || who.y != charactery));
 
 endfunction
 
 function makecabos(who, item)
- 
+
 
    case (item.objtype)
-        0xee36: 
+        0xee36:
                 MakeCaboSerra(who, item);
-        0xee37: 
+        0xee37:
                 MakeCaboSerra(who, item);
-        0xee38: 
+        0xee38:
                 MakeCaboSerra(who, item);
         0xee39:
                 MakeCaboSerra(who, item);
