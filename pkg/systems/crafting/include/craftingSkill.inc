@@ -82,6 +82,16 @@ function ExceptionalCraftChance(who, skillname, skillvalue, skillreq, theitem)
       if(TemHabilidade(who,"Mobiliario Exclusivo") && !theitem.isa(POLCLASS_WEAPON) && !theitem.isa(POLCLASS_ARMOR))
         chance := 100.0;
       endif
+    elseif(skillname == "DomesticWork")
+      if((CInt(theitem.resist_physical)==0)) //Não é armadura
+        if(TemHabilidade(who,"Maestria em Alfaiataria"))
+          chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+        endif
+      else
+        if(TemHabilidade(who,"Maestria em Curticao") && (theitem.TipoProtecao == "ArmaduraPesada" || theitem.TipoProtecao == "ArmaduraMedia" || theitem.TipoProtecao == "ArmaduraLeve"))
+          chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+        endif
+      endif
     endif
   else
     chance := 0.0;

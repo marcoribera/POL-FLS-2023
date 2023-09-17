@@ -405,11 +405,20 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 	elseif(theitem.isA(POLCLASS_ARMOR))
         var cfg:=ReadConfigFile(":combat:itemdesc");
         var elem := FindConfigElem(cfg, theitem.objtype);
-        theitem.resist_physical_mod := theitem.resist_physical_mod + Cint(ResistMods[1]);
-        theitem.resist_fire_mod := theitem.resist_fire_mod + Cint(ResistMods[2]);
-        theitem.resist_cold_mod := theitem.resist_cold_mod + Cint(ResistMods[3]);
-        theitem.resist_poison_mod := theitem.resist_poison_mod + Cint(ResistMods[4]);
-        theitem.resist_energy_mod := theitem.resist_energy_mod + Cint(ResistMods[5]);
+        //ESSA HAB NÃO MODIFICA A RESISTENCIA FISICA PARA NAO DESBALANCEAR AS ARMADURAS NO GERAL.
+        if((craft_skill == "DomesticWork") && TemHabilidade(who,"Realce de Material"))
+	        theitem.resist_physical_mod := theitem.resist_physical_mod + Cint(ResistMods[1]);
+	        theitem.resist_fire_mod := theitem.resist_fire_mod + 2 * Cint(ResistMods[2]);
+	        theitem.resist_cold_mod := theitem.resist_cold_mod + 2 * Cint(ResistMods[3]);
+	        theitem.resist_poison_mod := theitem.resist_poison_mod + 2 * Cint(ResistMods[4]);
+	        theitem.resist_energy_mod := theitem.resist_energy_mod + 2 * Cint(ResistMods[5]);
+	    else
+	    	theitem.resist_physical_mod := theitem.resist_physical_mod + Cint(ResistMods[1]);
+	        theitem.resist_fire_mod := theitem.resist_fire_mod + Cint(ResistMods[2]);
+	        theitem.resist_cold_mod := theitem.resist_cold_mod + Cint(ResistMods[3]);
+	        theitem.resist_poison_mod := theitem.resist_poison_mod + Cint(ResistMods[4]);
+	        theitem.resist_energy_mod := theitem.resist_energy_mod + Cint(ResistMods[5]);
+	    endif
 
         if ((CInt(elem.parrybonus) != 0) || CInt(elem.parrydelay) != 0) //aplica o modificador de durabilidade do material nos escudos
         	hpmod :=  hpmod*5;
@@ -516,6 +525,35 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 		    		SetObjProperty(theitem, "parrybonus", parrybonus);
 				endif
 			endif
+		elseif(craft_skill == "DomesticWork")
+			if((CInt(theitem.resist_physical)==0)) //Não é armadura
+				if(TemHabilidade(who,"Tratar Tecido"))
+					var ct := 0;
+					var randomDmg;
+					while(ct < 4)
+						randomDmg := RandomInt(2) + 1;
+						case(randomDmg)
+							1: theitem.damage_fire_mod := theitem.damage_fire_mod + 1; break;
+							2: theitem.damage_cold_mod := theitem.damage_cold_mod + 1; break;
+						endcase
+						ct := ct + 1;
+					endwhile
+				endif
+			else
+				if(TemHabilidade(who,"Tratar Couro"))
+					var ct := 0;
+					var randomDmg;
+					while(ct < 4)
+						randomDmg := RandomInt(2) + 1;
+						case(randomDmg)
+							1: theitem.damage_energy_mod := theitem.damage_energy_mod + 1; break;
+							2: theitem.damage_poison_mod := theitem.damage_poison_mod + 1; break;
+						endcase
+						ct := ct + 1;
+					endwhile
+				endif
+
+			endif
 		endif
 
         //endif
@@ -540,6 +578,13 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 			var temp := (theitem.maxhp * 1.5) - (theitem.maxhp-theitem.maxhp_mod);
 			theitem.maxhp_mod := CInt(temp);
 		endif
+	elseif(craft_skill == "DomesticWork")
+		if(TemHabilidade(who,"Alta Costura"))
+			//(HP total x 1.5) x (HP total - HP inicial)
+			var temp := (theitem.maxhp * 1.5) - (theitem.maxhp-theitem.maxhp_mod);
+			theitem.maxhp_mod := CInt(temp);
+		endif
+
 	endif
 	//Atualiza o HP
 	theitem.hp := theitem.maxhp;
