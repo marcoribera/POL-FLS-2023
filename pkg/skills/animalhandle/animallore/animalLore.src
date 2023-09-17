@@ -199,6 +199,18 @@ var tempo_agora := tempo_fiel - timebond; // quanto tempo falta de acordo com o 
 		if(!GetObjProperty(creature, "NeverRelease") && startbond )
 			tempo_fidelizar := "Tempo para fidelizar: +/- "+tempo_emdias+" dias.";
 		endif
+
+var thegender := GetObjProperty(creature, "Sexo");
+var thesex;
+if (thegender == 1)
+	thesex := "Macho";
+elseif (thegender == 2)
+	thesex := "Fêmea";
+else
+	thesex := "sem info";
+endif
+
+var num_partos :=	Cint(Getobjproperty(creature, "Gravida")); //Qtas vezes engravidou
 			
         var gump := GFCreateGump();
         GFGumpPic(gump, 100, 100, 2080);
@@ -298,6 +310,14 @@ var tempo_agora := tempo_fiel - timebond; // quanto tempo falta de acordo com o 
      else
         GFHTMLArea(gump, 153, 168, 160, 80, "<basefont color=#4A3929>Voce nao e druida");
      endif
+
+        GFGumpPic(gump, 128, 186, 2086);
+        GFHTMLArea(gump, 147, 186, 160, 18, "<basefont color=#A52A2A>Sexo");
+       GFHTMLArea(gump, 135, 204, 260, 18, "<basefont color=#4A3929>"+thesex);
+	   if (GetObjProperty(creature, "Sexo") == 2)
+       GFHTMLArea(gump, 135, 222, 260, 18, "<basefont color=#4A3929>Ja pariu "+num_partos+" vezes");
+	   endif
+		
         GFAddButton(gump, 317, 358, 5603, 5607, GF_PAGE_BTN, 3);
         GFAddButton(gump, 340, 358, 5601, 5605, GF_PAGE_BTN, 1);
 

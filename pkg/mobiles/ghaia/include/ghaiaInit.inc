@@ -227,3 +227,33 @@ function EquipItemString(who, str, lastcolor)
   endif
   return lastc;
 endfunction
+
+/*
+ * SetupGender(mobile)
+ *
+ * Purpose
+ * Set the gender of the npc  based on its 'Sex'
+ * settings in its npcdesc.cfg template.
+ *
+ * mobile:	The npc that will be given the gender.
+ *
+ * Return value
+ * Returns 1
+ *
+ */
+function SetupGender(mobile)
+  var gender_set := npccfgfile[ParseTemplateName(mobile.npctemplate).template].Gender;
+	//var npc_elem := NPC_GetNPCConfig(mobile);
+
+	if ( gender_set == 0)
+		//var gender_new := Cint(randomint(2) + 1);
+		case(randomint(2))
+          0: Setobjproperty(mobile, "Sexo", 1);
+          1: Setobjproperty(mobile, "Sexo", 2);
+        endcase
+	elseif (!gender_set)
+	else
+		Setobjproperty(mobile, "Sexo", Cint(mobile.Gender) );
+	endif
+
+endfunction
