@@ -23,10 +23,10 @@ use os;
 Const ITEM_LIMIT := 6000;
 
 program textcmd_massmove(who, text)
-	
+
 	var item_filter;
 
-	if ((text == "help") or (text == "?"))
+	if ((text == "help") || (text == "?"))
 		SendSysMessage(who, "USAGE: \".massmove [target|filter]\"");
 		SendSysMessage(who, "Text in brackets are optional switches you can use to change how the command functions. You can only use one switch at a time.");
 		SendSysMessage(who, "For example \".massmove target\" would allow you to target items to specify the maximum and minimum hieghts.");
@@ -47,7 +47,7 @@ program textcmd_massmove(who, text)
 		SendSysMessage(who, "Cancelled!");
 		return 0;
 	endif
-	
+
 	SendSysmessage(who, "Select coordinate #2");
 	var coordStructTwo := TargetCoordinates(who);
 	if (!coordStructTwo)
@@ -55,7 +55,7 @@ program textcmd_massmove(who, text)
 		return 0;
 	endif
 
-	if ((!coordStructOne) OR (!coordStructTwo)) // check that we got two valid coordstructs.
+	if ((!coordStructOne) || (!coordStructTwo)) // check that we got two valid coordstructs.
 		SendSysmessage(who, "One or more coordinates are missing. Aborting!");
 		return 0;
 	endif
@@ -74,8 +74,8 @@ program textcmd_massmove(who, text)
 		endif
 		z_plus := zplus.z;
 	endif
-	
-	if (!(z_plus or (z_plus == 0)))
+
+	if (!(z_plus || (z_plus == 0)))
 		SendSysMessage(who, "You must enter a number or target a valid item!");
 		return 0;
 	endif
@@ -95,12 +95,12 @@ program textcmd_massmove(who, text)
 		z_minus := zminus.z;
 	endif
 
-	if (!(z_minus or (z_minus == 0)))
+	if (!(z_minus || (z_minus == 0)))
 		SendSysMessage ( who, "You must enter a number or target a valid item!");
 		return 0;
 	endif
 
-	if ((z_minus < -127) OR (z_plus > 128))
+	if ((z_minus < -127) || (z_plus > 128))
 		SendSysmessage(who, "Z-height is out of bounds. Aborting!");
 		return 0;
 	endif
@@ -130,7 +130,7 @@ program textcmd_massmove(who, text)
 	if (item_filter)
 		var temp_list2 :=  array{};
 		foreach item in temp_list
-			if (item.isa(POLCLASS_ITEM) AND (item.objtype == item_filter.objtype))
+			if (item.isa(POLCLASS_ITEM) && (item.objtype == item_filter.objtype))
 				temp_list2.append(item);
 			endif
 		endforeach
@@ -175,7 +175,7 @@ program textcmd_massmove(who, text)
 			SendSysMessage(who, "Moving the items North. Please wait...");
 			foreach item in master_list
 				item.movable := 1;
-				MoveObjectToLocation(item, item.x, (item.y - 1), item.z, item.realm, MOVEITEM_FORCELOCATION);
+				MoveObjectToLocation(item, item.x, (item.y - 1), item.z, item.realm, MOVEOBJECT_FORCELOCATION );
 				item.movable := 0;
 				sleepms(3);
 			endforeach
@@ -187,7 +187,7 @@ program textcmd_massmove(who, text)
 			SendSysMessage(who, "Moving the items South. Please wait...");
 			foreach item in master_list
 				item.movable := 1;
-				MoveObjectToLocation(item, item.x, (item.y + 1), item.z, item.realm, MOVEITEM_FORCELOCATION);
+				MoveObjectToLocation(item, item.x, (item.y + 1), item.z, item.realm, MOVEOBJECT_FORCELOCATION );
 				item.movable := 0;
 				sleepms(3);
 			endforeach
@@ -199,7 +199,7 @@ program textcmd_massmove(who, text)
 			SendSysMessage(who, "Moving the items West. Please wait...");
 			foreach item in master_list
 				item.movable := 1;
-				MoveObjectToLocation(item, (item.x - 1), item.y, item.z, item.realm, MOVEITEM_FORCELOCATION);
+				MoveObjectToLocation(item, (item.x - 1), item.y, item.z, item.realm, MOVEOBJECT_FORCELOCATION );
 				item.movable := 0;
 				sleepms(3);
 			endforeach
@@ -211,7 +211,7 @@ program textcmd_massmove(who, text)
 			SendSysMessage(who, "Moving the items East. Please wait...");
 			foreach item in master_list
 				item.movable := 1;
-				MoveObjectToLocation(item, (item.x + 1), item.y, item.z, item.realm, MOVEITEM_FORCELOCATION);
+				MoveObjectToLocation(item, (item.x + 1), item.y, item.z, item.realm, MOVEOBJECT_FORCELOCATION);
 				item.movable := 0;
 				sleepms(3);
 			endforeach
@@ -223,7 +223,7 @@ program textcmd_massmove(who, text)
 			SendSysMessage(who, "Moving the items Up. Please wait...");
 			foreach item in master_list
 				item.movable := 1;
-				MoveObjectToLocation(item, item.x, item.y, (item.z + 1), item.realm, MOVEITEM_FORCELOCATION);
+				MoveObjectToLocation(item, item.x, item.y, (item.z + 1), item.realm, MOVEOBJECT_FORCELOCATION);
 				item.movable := 0;
 				sleepms(3);
 			endforeach
@@ -235,7 +235,7 @@ program textcmd_massmove(who, text)
 			SendSysMessage(who, "Moving the items Down. Please wait...");
 			foreach item in master_list
 				item.movable := 1;
-				MoveObjectToLocation(item, item.x, item.y, (item.z - 1), item.realm, MOVEITEM_FORCELOCATION);
+				MoveObjectToLocation(item, item.x, item.y, (item.z - 1), item.realm, MOVEOBJECT_FORCELOCATION);
 				item.movable := 0;
 				sleepms(3);
 			endforeach
@@ -247,14 +247,14 @@ program textcmd_massmove(who, text)
 			SendSysMessage(who, "Reseting the items to their original position. Please wait...");
 			foreach item in master_list
 				item.movable := 1;
-				MoveObjectToLocation(item, GetObjProperty(item, "orig_x"), GetObjProperty(item, "orig_y"), GetObjProperty(item, "orig_z"), item.realm, MOVEITEM_FORCELOCATION);
+				MoveObjectToLocation(item, GetObjProperty(item, "orig_x"), GetObjProperty(item, "orig_y"), GetObjProperty(item, "orig_z"), item.realm, MOVEOBJECT_FORCELOCATION);
 				item.movable := 0;
 				sleepms(3);
 			endforeach
 			SendSysMessage(who, "The items have been reset!");
 		endif
 
-	until ((movetype[9999]) OR (movetype[5555]) OR (!movetype) OR (!who.ip));
+	until ((movetype[9999]) || (movetype[5555]) || (!movetype) || (!who.ip));
 
 	foreach item in master_list
 		item.color := GetObjProperty(item, "orig_c");
@@ -268,7 +268,7 @@ program textcmd_massmove(who, text)
 
 	if (movetype[9999])
 		SendSysmessage(who, "Finished moving items.!");
-	endif		
+	endif
 
 endprogram
 
