@@ -326,6 +326,7 @@ function InitializeNpc(mobile)
   SetupColor(mobile);
   SetupName(mobile);
   SetupEquip(mobile);
+  SetupGender(mobile);
   var loot := npccfgfile[mytemplate].Loot;
   if (loot)
     Loot_Generate(mobile.backpack, loot);
