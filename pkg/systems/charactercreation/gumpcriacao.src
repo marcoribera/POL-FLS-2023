@@ -544,7 +544,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		endforeach
 
         i := 1;
-		foreach skill in primarias 
+		foreach skill in primarias
 			if ( skill == "Alchemy")
 				primarias.erase(i);
 				secundarias.append("Magery");;
@@ -642,7 +642,7 @@ var gfdata := array{
 		skillCount := skillCount + 1;
 		y := y + 20;
 
-		sendsysmessage(who, "skill " + skill +  " id " +  GetSkillIdFromName(skill));
+		//sendsysmessage(who, "skill " + skill +  " id " +  GetSkillIdFromName(skill));
 	endforeach
 
 	foreach skill in secundarias
@@ -728,7 +728,7 @@ var gfdata := array{
 		else
 			var skillname := GetSkillNameFromId(input);
 			var custo := SkillPrice(skillname, primarias, secundarias, terciarias, quaternarias);
-			sendsysmessage(who, "skillname " + skillname + " custo " + custo + " input " + input);
+			//sendsysmessage(who, "skillname " + skillname + " custo " + custo + " input " + input);
 			if (skillspoints >= custo) //se tem pontos pra comprar
 				if (chardata.Skills[skillname] == 3)//se ja for primaria
 					SendSysMessage(who, "Voce ja tem essa skill primaria!");
@@ -788,15 +788,15 @@ function BuyKits(who, byref  chardata)
 		var classes := GetConfigStringArray( elem, "Classe" );
 
 		if ((racas.size >= 1) && !(chardata.raca in racas))
-			sendsysmessage(who, " racas " + racas + " chardata.raca " + chardata.raca);
+			//sendsysmessage(who, " racas " + racas + " chardata.raca " + chardata.raca);
 			canadd := 0;
 		endif
 		if ((classes.size()>=1) && !(chardata.classe in classes))
-			sendsysmessage(who, " classes " + classes + " chardata.classe " + chardata.classe);
+			//sendsysmessage(who, " classes " + classes + " chardata.classe " + chardata.classe);
 			canadd := 0;
 		endif
 		if ((povos.size() >= 1) && !(chardata.povo in povos))
-			sendsysmessage(who, " povos " + povos + " chardata.povo " + chardata.povo);
+			//sendsysmessage(who, " povos " + povos + " chardata.povo " + chardata.povo);
 			canadd := 0;
 		endif
 //		sendsysmessage(who, "can add " + canadd);
@@ -899,7 +899,7 @@ var gfdata := array{
 
 	if (cint(ret.keys[2]) == 99)
 		chardata.+kit := kits[selectedkit].nome;
-		SendSysMessageEx(who, "Seu kit sera: " + chardata.kit, SSM_INFO);
+		//SendSysMessageEx(who, "Seu kit sera: " + chardata.kit, SSM_INFO);
 		return 1;
 	else
 		kitgump(who, chardata, ret.keys[2], kits);
@@ -1314,7 +1314,7 @@ program createchar(who)
 		var book := createiteminbackpack(who, "alchemybook");
 		setobjproperty(book, "serialid", who.serial);
 		setobjproperty(book, "marked",who.name + " - " + who.acctname);
-        
+
         var recipes := array;
 		recipes := CreateVeryBasicRecipes();
 		var basic_book := createiteminbackpack(who, "alchemybook");
@@ -1323,7 +1323,7 @@ program createchar(who)
 		var book1:= CreateItemInBackpack(who, "alchemybook");
 		setobjproperty(book1, "serialid", who.serial);
 		setobjproperty(book1, "marked",who.name + " - " + who.acctname);
-		
+
         var recipes := array;
 		recipes := CreateBasicRecipes();
 		var book2 := createiteminbackpack(who, "alchemybook");
