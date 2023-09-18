@@ -14,6 +14,7 @@ const GO_BTN			:= 0x4;
 const DESTROY_BTN		:= 0x5;
 const GET_BTN			:= 0x6;
 const REMOVE_BTN		:= 0x7;
+const REMOVEPDONO_BTN	:= 0x8;
 
 
 //Menu Position Constants
@@ -100,6 +101,10 @@ program UniqueItemsMenu(player)
 				EraseObjProperty(item, "itemunico");
 				SendSysMessage(player, "Voce removeu o item da lista.");
 				return 1;
+			REMOVEPDONO_BTN:
+				EraseObjProperty(item, "primeiro_dono");
+				SendSysMessage(player, "Voce removeu o primeiro dono da prop do item.");
+				return 1;			
 		endcase
 	endwhile
 
@@ -143,13 +148,20 @@ function ShowItemInfo(byref gump, player, item)
 	else
 		GFTextMid(gump, 130, 25, 455, GF_STDCOLOR, "Ligado ao char: " + elem.GetProp("OwnerName"));
 	endif
-
+	var primeiro_dono := Getobjproperty(item, "primeiro_dono");
 	GFTextLine(gump, 175, 60, GF_STDCOLOR, "Nome");
 	GFTextLine(gump, 205, 80, color, item.desc);
 
 	GFTextLine(gump, 175, 110, GF_STDCOLOR, "Quantidade");
 	GFTextLine(gump, 205, 130, 0, item.amount);
 
+	GFTextLine(gump, 370, 110, GF_STDCOLOR, "Primeiro Dono");
+	if(!primeiro_dono)
+		GFTextLine(gump, 400, 130, 0, "Sem ainda");
+	else
+		GFTextLine(gump, 400, 130, 0, primeiro_dono);
+	endif
+	
 	GFTextLine(gump, 370, 60, GF_STDCOLOR, "GM Criador");
 	GFTextLine(gump, 400, 80, color, elem.GetProp("Creator"));
 
@@ -224,6 +236,10 @@ function ShowItemInfo(byref gump, player, item)
 
 	GFAddButton(gump, 455, 430, 2151, 2154, 1, REMOVE_BTN);
 	GFTextLine(gump, 490, 433, GF_STDCOLOR, "Remover da lista");
+	
+	GFAddButton(gump, 275, 396, 2151, 2154, 1, REMOVEPDONO_BTN);
+	GFTextLine(gump, 310, 399, GF_STDCOLOR, "Apagar Primeiro Dono");
+
 endfunction
 
 function AddItem(player)
