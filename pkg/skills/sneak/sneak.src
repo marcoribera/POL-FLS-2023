@@ -41,16 +41,13 @@ program skill_Hide(who)
 			var diff;
 	
 					var region := GetRegionName(who);
-					print("a region eh "+region);
 					if(region != "aghaja" && region != "zharkia")
-					print("vc NAO tah em zharkia");
 						diff := diff - 50;
 						if (diff <= 0)
 							diff := 5;
 						endif
 					else
-					print("vc tah em zharkia");
-					diff := 0;
+					diff := 50;
 					endif
 									
 

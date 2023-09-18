@@ -38,10 +38,20 @@ exported function HandleItemPickup( who, byref packet )
 			SendPacket(who, "2700");
 			return 1;
 		else
-			if (!(who.hidden || who.concealed))
-				if (item.movable != 0)
-					PrintText(who, "*Pegou "+item.desc+"*");
-				endif
+			if (item.movable != 0)
+				var primeira := GetObjProperty(item, "primeiro_dono");
+					if (GetObjProperty(item, "itemunico") == 1 && !primeira && (who.cmdlevel <= 0) )//Para o DiscordWebhook funcionar
+						Setobjproperty(item, "primeiro_dono", who.name);
+						var region := GetRegionName(who);
+						var char_name := who.serial;
+						var fin := SystemFindObjectBySerial(char_name, SYSFIND_SEARCH_OFFLINE_MOBILES);
+						var coords := {who.x, who.y};
+						var tipo := "unico";
+						Start_script(":DiscordWebhook:discord", {tipo, who.name, fin.acctname, "chão", region, coords, item.desc});
+					endif
+					if (!(who.hidden || who.concealed))
+						PrintText(who, "*Pegou "+item.desc+"*");
+					endif
 			endif
 		endif
 	endif
