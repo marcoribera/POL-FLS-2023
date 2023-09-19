@@ -30,14 +30,14 @@ function CheckToolWear (who, tool, craft_skill)
     if((RandomInt(100)+1) > skill)
       if(tool.isa(POLCLASS_WEAPON))
         if(tool.hp > 1)
-	  if (TemHabilidade(who, "Preservar Ferramentas"))
-		if (randomint(2) == 0)
-			return;
-		endif
-	  endif
+	        if (TemHabilidade(who, "Preservar Ferramentas") || TemHabilidade(who, "Cortador de Madeira"))
+		        if (randomint(2) == 0)
+			        return;
+		        endif
+          endif
           SetObjProperty(tool,"swings", (swings - 1));
           tool.hp := tool.hp - 1;
-        elseif((tool.hp > tool.maxhp) or (tool.hp == 1))
+        elseif((tool.hp > tool.maxhp) || (tool.hp == 1))
           SendSysMessage(who,"Your tool broke.");
           DestroyItem(tool);
         endif
@@ -69,7 +69,7 @@ function SetToolDurability(who, tool, craft_skill)
       endcase
       swings := Cint(50 + myskill) + bonus;
       SetObjProperty(tool, "swings", swings);
-      if(!tool.quality or tool.quality == error)
+      if(!tool.quality || tool.quality == error)
         tool.quality := 1.0;
       endif
     endif

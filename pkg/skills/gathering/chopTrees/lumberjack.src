@@ -13,6 +13,7 @@ include ":fls_core:fls_objtypes";
 include ":crafting:toolWear";
 include "include/facings";
 include "include/say";
+include ":charactercreation:habilidades";
 
 program skill_LumberJack(who,tool)
 
@@ -20,7 +21,7 @@ program skill_LumberJack(who,tool)
 	EraseObjProperty(who, "HealTimer");
 	SendSysMessage(who, "Escolha a arvore para cortar.");
 	var targ := TargetCoordinates(who);
-	
+
 	if ( !targ )
 		SendSysMessage(who, "Cancelado.");
 		return 0;
@@ -31,8 +32,8 @@ program skill_LumberJack(who,tool)
 		return 0;
 	endif
 
-	if ((targ.item.objtype == 0xec24) || (targ.item.objtype == 0xec25) || (targ.item.objtype == 0xec26) || (targ.item.objtype == 0xFF04)||(targ.item.objtype == 0xec27) || (targ.item.objtype == 0xec28))  
-		if ((!CheckLineOfSight(who, targ.item)) or (Distance(who, targ.item) > 1))
+	if ((targ.item.objtype == 0xec24) || (targ.item.objtype == 0xec25) || (targ.item.objtype == 0xec26) || (targ.item.objtype == 0xFF04)||(targ.item.objtype == 0xec27) || (targ.item.objtype == 0xec28))
+		if ((!CheckLineOfSight(who, targ.item)) || (Distance(who, targ.item) > 1))
 			SendSysMessage(who, "O alvo esta distante.");
 			return;
 		else
@@ -40,7 +41,7 @@ program skill_LumberJack(who,tool)
 			var script := start_script (":tn:destroyitems", {who, targ.item, tool});
 			return 1;
 		endif
-	endif 
+	endif
 
 	if ( !LJ_IsTree(targ.objtype) )
 		SendSysMessage(who, "Isto nao e uma arvore.");
@@ -48,19 +49,27 @@ program skill_LumberJack(who,tool)
 	endif
 
 
-
 	var orig_x := who.x;
 	var orig_y := who.y;
 
 	//SendSysMessage(who," e" + CanChop(who, tool, targ,  orig_x, orig_y));
 	while(CanChop(who, tool, targ,  orig_x, orig_y) )
-		if ( AP_GetVital(who, "Stamina") <= 2)
-			SendSysMessageEx(who, "Voce esta muito cansado para continuar.", SSM_FAIL);
-			break;
+		if(TemHabilidade(who, "Vigor do Extrator"))
+			if ( AP_GetVital(who, "Stamina") < 2)
+				SendSysMessageEx(who, "Voce esta muito cansado para continuar.", SSM_FAIL);
+				break;
+			endif
+			ChopTree(who, tool, targ, orig_x, orig_y);
+			AP_ConsumeVital(who, "Stamina", 2);
+		else
+			if ( AP_GetVital(who, "Stamina") < 3)
+				SendSysMessageEx(who, "Voce esta muito cansado para continuar.", SSM_FAIL);
+				break;
+			endif
+			ChopTree(who, tool, targ, orig_x, orig_y);
+			AP_ConsumeVital(who, "Stamina", 3);
 		endif
-		ChopTree(who, tool, targ, orig_x, orig_y);
-		AP_ConsumeVital(who, "Stamina", 3);
-		CheckToolWear(who, tool, GATHERING );
+		CheckToolWear(who, tool, GATHERING);
 		sleep(1);
 		if (LJ_GetWoodAmount(who.realm, targ.x, targ.y)== 0 )
 			PrinttextAbove(who, "*derruba a arvore*");
@@ -110,6 +119,9 @@ function ChopTree(who, tool, targ, orig_x, orig_y)
 
 	if ( SkillCheck(who, GATHERING, difficulty) > 0 )
 		var amt := Cint(AP_GetSkill(who, GATHERING)/20);
+		if(TemHabilidade(who, "Lenhador Talentoso"))
+			amt := amt + 4;
+		endif
 		if (amt <= 0)
 			amt := 1;
 		endif
@@ -121,7 +133,12 @@ function ChopTree(who, tool, targ, orig_x, orig_y)
 		if (wood_amount < 0)
 			wood_amount := 0;
 		endif
-		var item := CreateItemInBackPack(who, wood_type, amt);
+		var item;
+		if(TemHabilidade(who, "Corte Limpo"))
+			item := CreateItemInBackPack(who, wood_type, amt*2);
+		else
+			item := CreateItemInBackPack(who, wood_type, amt);
+		endif
 		if ( item.errortext )
 			SendSysMessage(who, "Nao foi possivel criar: "+wood_type+" ->"+item.errortext);
 			return 0;
@@ -134,6 +151,7 @@ function ChopTree(who, tool, targ, orig_x, orig_y)
 	SendSysMessage(who, "Voce e incapaz de conseguir madeira usavel dessa arvore.");
 	return 0;
 endfunction
+
 function CanChop(who, axe, targ, orig_x, orig_y)
 	if ( who.hidden )
 		SendSysMessage(who, "Voce parou de cortar a arvore para ficar escondido.");

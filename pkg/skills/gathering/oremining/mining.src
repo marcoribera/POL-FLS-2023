@@ -2,6 +2,7 @@
 use uo;
 use cfgfile;
 use os;
+use util;
 
 include "include/client";
 include ":datafile:datafile";
@@ -25,7 +26,7 @@ program OreMining(who, tool)
 	endif
 	SendSysMessageEx(who, "Onde voce deseja minerar?", SSM_REQUEST);
 	var targ := TargetCoordinates(who);
-	
+
 
 	if ( CoordinateDistance(who.x, who.y, targ.x, targ.y) > 2 )
 		SendSysMessage(who, "Muito longe.");
@@ -48,7 +49,7 @@ program OreMining(who, tool)
 			SendSysMessageEx(who, "Voce nao pode minerar aqui.", SSM_FAIL);
 			return;
 		endif
-	
+
 	endif
 
 //	sendsysmessage(who, CanMine(targ, "Stone") + " " );
@@ -65,18 +66,28 @@ program OreMining(who, tool)
 
 	while(MiningLoop(who, tool, my_x, my_y, targ.x, targ.y, my_facing))
 		CheckToolWear(who, tool, GATHERING);
-		if (!CheckLoop(who, tool, my_x, my_y, my_facing))
+		if(TemHabilidade(who, "Vigor do Extrator"))
+			if (!CheckLoop(who, tool, my_x, my_y, my_facing))
 			break;
-		elseif (AP_GetVital(who, "Stamina") < 5)
-			SendSysMessage(who, "Voce esta muito cansado para minerar.");
-			break;
+			elseif (AP_GetVital(who, "Stamina") < 3)
+				SendSysMessage(who, "Voce esta muito cansado para minerar.");
+				break;
+			endif
+			AP_ConsumeVital(who, "Stamina", 3);
+		else
+			if (!CheckLoop(who, tool, my_x, my_y, my_facing))
+				break;
+			elseif (AP_GetVital(who, "Stamina") < 5)
+				SendSysMessage(who, "Voce esta muito cansado para minerar.");
+				break;
+			endif
+			AP_ConsumeVital(who, "Stamina", 5);
 		endif
-		AP_ConsumeVital(who, "Stamina", 5);
 		sleep(3);
 	endwhile
-	
+
 	SendSysMessage(who, "Voce parou de minerar.");
-	
+
 endprogram
 
 function MiningLoop(who, tool, my_x, my_y, targx, targy, my_facing)
@@ -92,7 +103,7 @@ function MiningLoop(who, tool, my_x, my_y, targx, targy, my_facing)
 
 	var miningregion := GetMiningRegion(targx, targy); //feita
 	var ore_type := DetermineOreType(who, miningregion); //feit
-	
+
 	var ore_amount := GetOreAmount(who.realm, targx, targy ); //feita
 	var difficulty := DetermineMiningDifficulty(ore_type); // feita
 
@@ -118,9 +129,12 @@ function MiningLoop(who, tool, my_x, my_y, targx, targy, my_facing)
 
 	if ( ore_amount > 0 )
 		if (ore_type != 999) //999 eh quando nao passou na chance de raridade do minerio
-		
+
 			if ( SkillCheck(who, GATHERING, difficulty) > 0 )
 				var amt := Cint(AP_GetSkill(who, GATHERING)/20);
+				if(TemHabilidade(who, "Minerador Talentoso"))
+					amt := amt + 2;
+				endif
 				if (amt <= 0)
 					amt := 1;
 				endif
@@ -132,8 +146,12 @@ function MiningLoop(who, tool, my_x, my_y, targx, targy, my_facing)
 				var minerio := CreateItemInBackPack(who, ore_type, amt);
 				minerio.movable := 1;
 				SendSysMessage(who, "Voce pegou alguns minerios. " );
-				if (TemHabilidade(who, "Garimpeiro"))
-					Garimpeiro(who);
+				//Verifica se encontra joia
+				Garimpeiro(who);
+				if(TemHabilidade(who, "Minerar Raridades"))
+					if (mineraRaroAleatorio(who))
+						PrinttextAbove(who, "*encontra algo chamativo*");
+					endif
 				endif
 			else
 				SendSysMessage(who, "Voce falhou em pegar minerios.");
@@ -146,4 +164,34 @@ function MiningLoop(who, tool, my_x, my_y, targx, targy, my_facing)
 
 
 	return 1;
+endfunction
+
+function mineraRaroAleatorio(who)
+	var rand := RandomFloat(100.0);
+	if(rand<0.1)
+		SendSysMessage(who, "Achou um pouco de Galvorn em meio ao minerios.");
+		return CreateItemInBackPack(who, 0x6307, 1); // return 90; //galvorn
+	elseif(rand<0.2)
+		SendSysMessage(who, "Achou um pouco de Mithril em meio ao minerios.");
+		return CreateItemInBackPack(who, 0x6308, 1); // return 90; //mithril
+	elseif(rand<0.4)
+		SendSysMessage(who, "Achou um pouco de Helce em meio ao minerios.");
+		return CreateItemInBackPack(who, 0x6302, 1); // return 80; //helce
+	elseif(rand<0.6)
+		SendSysMessage(who, "Achou um pouco de Sinque em meio ao minerios.");
+		return CreateItemInBackPack(who, 0x6303, 1); // return 80; //sinque
+	elseif(rand<0.8)
+		SendSysMessage(who, "Achou um pouco de Figin em meio ao minerios.");
+		return CreateItemInBackPack(who, 0x6304, 1); // return 80; //figin
+	elseif(rand<1.0)
+		SendSysMessage(who, "Achou um pouco de Argonil em meio ao minerios.");
+		return CreateItemInBackPack(who, 0x6451, 1); // return 80; //argonil
+	elseif(rand<1.2)
+		SendSysMessage(who, "Achou um pouco de Lithtan em meio ao minerios.");
+		return CreateItemInBackPack(who, 0x6301, 1); // return 70; //lithtan
+	elseif(rand<1.4)
+		SendSysMessage(who, "Achou um pouco de Ouro em meio ao minerios.");
+		return CreateItemInBackPack(who, 0x6305, 1); // return 40; //golden
+	endif
+	return 0;
 endfunction

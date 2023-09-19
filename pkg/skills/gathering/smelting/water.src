@@ -1,8 +1,11 @@
 use uo;
 use os;
 use cfgfile;
+use util;
 
 include "include/client";
+include ":charactercreation:habilidades";
+
 const UOBJECT_EMPTY_BOTTLE := 0x0f0e;
 var item;
 var item2;
@@ -29,7 +32,7 @@ program coolOff(user, water)
            EsfriarLiga(user, item);
            return;
         endif
-        
+
 	if(item.color != 0x486)
 		SendSysMessage(user, "Voce nao pode esfriar este item.", FONT_NORMAL, 40);
 		return;
@@ -43,70 +46,81 @@ program coolOff(user, water)
 endprogram
 
 function EsfriarLiga(user, item)
-   var hasestanho, hascobre;
-   var num := CINT(GetObjProperty(item, "numMetal"));
-   if (num)
-      if (num == 1)
-	PlaySoundEffect(user, 0x23f);
-	sleepms(1500);
-        var amt := CINT(GetObjProperty(item, "amt1"));
-        var ingot := GetObjProperty(item, "oreObj1");
-	if (ingot == "carvao")
-	   SendSysMessage(user, "Voce apenas estragou carvao!", FONT_NORMAL, 40);
-	else   
-           SendSysMessage(user, "Voce esfriou o metal derretido e fez as barras.", FONT_NORMAL, 90);
-	   CreateItemInBackpack(user, ingot, amt);
-	endif
-        EraseObjProperty(item, "ingType");
-        EraseObjProperty(item, "numMetal");
-        EraseObjProperty(item, "amt1");
-        EraseObjProperty(item, "oreObj1");
-        item.color := 951;
-     else
-        var metals := {};
-        var metal;
-        var i := 1;
-        while ( i<=num) //pega a lista de metais que tem no pot
-           metal := GetObjProperty(item, "oreObj"+i);
-           metals.append(metal);
-           i := i +1;
-        endwhile
-	//printtextabove(item, " " + metals);
-	PlaySoundEffect(user, 0x23f);
-	sleepms(1500);
-        var amt := CINT(GetObjProperty(item, "amt1"));
-        var ingot := DeterminaLiga(metals, user);
+  var hasestanho, hascobre;
+  var num := CINT(GetObjProperty(item, "numMetal"));
+  if (num)
+    if (num == 1)
+      PlaySoundEffect(user, 0x23f);
+      sleepms(1500);
+      var amt := CINT(GetObjProperty(item, "amt1"));
+      var ingot := GetObjProperty(item, "oreObj1");
+    	if (ingot == "carvao")
+    	   SendSysMessage(user, "Voce apenas estragou carvao!", FONT_NORMAL, 40);
+    	else
+        SendSysMessage(user, "Voce esfriou o metal derretido e fez as barras.", FONT_NORMAL, 90);
+    	  CreateItemInBackpack(user, ingot, amt);
+        smeltaImpurezasRaras(user, amt);
+    	endif
+      EraseObjProperty(item, "ingType");
+      EraseObjProperty(item, "numMetal");
+      EraseObjProperty(item, "amt1");
+      EraseObjProperty(item, "oreObj1");
+      item.color := 951;
+    else
+      var metals := {};
+      var metal;
+      var i := 1;
+      while ( i<=num) //pega a lista de metais que tem no pot
+         metal := GetObjProperty(item, "oreObj"+i);
+         metals.append(metal);
+         i := i +1;
+      endwhile
+    	//printtextabove(item, " " + metals);
+    	PlaySoundEffect(user, 0x23f);
+    	sleepms(1500);
+      var amt := CINT(GetObjProperty(item, "amt1"));
+      var ingot := DeterminaLiga(metals, user);
 
-	
-        if (ingot == "noIngot")
-          deleteProp(item);
-          item.color := 951;
-          SendSysMessage(user, "Voce nao conseguiu fazer uma liga com esses metais", FONT_NORMAL, 40);
-          return;
-        endif
 
-        SendSysMessage(user, "Voce esfriou a liga metalica derretida e fez as barras.", FONT_NORMAL, 90);
-        item.color := 951;
-        deleteProp(item);
-        if (ingot == 0x6317) //metal liquido, nao foi implementado no shard ainda mas quandofor
-	                     //eh so consertar isso
-             var hasbottle:= 0;
-              foreach item in EnumerateItemsInContainer(user.backpack)
-                if(item.objtype == UOBJECT_EMPTY_BOTTLE)
-                SubtractAmount(item, 1);
-                hasbottle := 1;
-                break;
-                endif
-              endforeach
-              if (hasbottle)
-                CreateItemInBackpack(user, ingot, amt);
-              else
-                 SendSysMessage(user, "Voce deixou o metal liquido derramar no chao.", FONT_NORMAL, 40);
-                 return;
-              endif
+      if (ingot == "noIngot")
+        if(TemHabilidade(user,"Tesouro do Lixo"))
+          foreach met in metals
+            CreateItemInBackpack(user, met, amt);
+            SendSysMessage(user, "Voce nao conseguiu fazer uma liga, mas aproveitou todo o material!", FONT_NORMAL, 40);
+          endforeach
         else
-            CreateItemInBackpack(user, ingot, amt);
+          foreach met in metals
+            CreateItemInBackpack(user, met, amt/2);
+          endforeach
+          SendSysMessage(user, "Voce nao conseguiu fazer uma liga, mas nao perdeu todo material!", FONT_NORMAL, 40);
         endif
+        deleteProp(item);
+        item.color := 951;
+        return;
+      endif
+
+      SendSysMessage(user, "Voce esfriou a liga metalica derretida e fez as barras.", FONT_NORMAL, 90);
+      item.color := 951;
+      deleteProp(item);
+      if (ingot == 0x6317) //metal liquido, nao foi implementado no shard ainda mas quandofor
+                 //eh so consertar isso
+        var hasbottle:= 0;
+        foreach item in EnumerateItemsInContainer(user.backpack)
+          if(item.objtype == UOBJECT_EMPTY_BOTTLE)
+          SubtractAmount(item, 1);
+          hasbottle := 1;
+          break;
+          endif
+        endforeach
+        if (hasbottle)
+          CreateItemInBackpack(user, ingot, amt);
+        else
+           SendSysMessage(user, "Voce deixou o metal liquido derramar no chao.", FONT_NORMAL, 40);
+           return;
+        endif
+      else
+          CreateItemInBackpack(user, ingot, amt);
+      endif
      endif
   endif
 endfunction
@@ -123,22 +137,19 @@ function deleteProp(item)
 endfunction
 
 function DeterminaLiga(metals, who)
-
 	var metais := array;
-
-        foreach item in metals
-           case(Cint(item))
-              25353: metais.append("ferro");
-              27025: metais.append("estanho");
-	      25696: metais.append("argonil");
-	      25360: metais.append("galvorn");
-	      25361: metais.append("mithril");
-	      25355: metais.append("helce");
-	      25356: metais.append("sinque");
-	      25357: metais.append("figin");	
-           endcase
-        endforeach
-
+  foreach item in metals
+     case(Cint(item))
+        25353: metais.append("ferro");
+        27025: metais.append("estanho");
+        25696: metais.append("argonil");
+        25360: metais.append("galvorn");
+        25361: metais.append("mithril");
+        25355: metais.append("helce");
+        25356: metais.append("sinque");
+        25357: metais.append("figin");
+     endcase
+  endforeach
 
 	if ( (metais.size() == 2) && ("ferro"  in metais ) && ("estanho" in metais)  )
 		return 0x6995;
@@ -150,9 +161,42 @@ function DeterminaLiga(metals, who)
 		return 0x6997;
 	elseif ( (metais.size() == 2) && ("galvorn" in metais) && ("argonil" in metais) )
 		return 0x699A;
-	elseif ( (metais.size() == 5) && ("mithril" in metais) && ("helce" in metais) && ("sinque" in metais) && ("figin" in metais) && ("argonil" in metais) ) 
-		return 0x699B;    
+	elseif ( (metais.size() == 5) && ("mithril" in metais) && ("helce" in metais) && ("sinque" in metais) && ("figin" in metais) && ("argonil" in metais) )
+		return 0x699B;
         else
            return "noIngot";
         endif
-endfunction 
+endfunction
+
+
+function smeltaImpurezasRaras(who, amt)
+  if(amt >= 20)
+    var rand := RandomFloat(100.0);
+    if(rand<0.1)
+      SendSysMessage(who, "Achou um pouco de Galvorn em meio ao minerios.");
+      return CreateItemInBackPack(who, 0x6310, CInt(amt/20)); // return 90; //galvorn
+    elseif(rand<0.2)
+      SendSysMessage(who, "Achou um pouco de Mithril em meio ao minerios.");
+      return CreateItemInBackPack(who, 0x6311, CInt(amt/20)); // return 90; //mithril
+    elseif(rand<0.4)
+      SendSysMessage(who, "Achou um pouco de Helce em meio ao minerios.");
+      return CreateItemInBackPack(who, 0x630b, CInt(amt/20)); // return 80; //helce
+    elseif(rand<0.6)
+      SendSysMessage(who, "Achou um pouco de Sinque em meio ao minerios.");
+      return CreateItemInBackPack(who, 0x630c, CInt(amt/20)); // return 80; //sinque
+    elseif(rand<0.8)
+      SendSysMessage(who, "Achou um pouco de Figin em meio ao minerios.");
+      return CreateItemInBackPack(who, 0x630d, CInt(amt/20)); // return 80; //figin
+    elseif(rand<1.0)
+      SendSysMessage(who, "Achou um pouco de Argonil em meio ao minerios.");
+      return CreateItemInBackPack(who, 0x6460, CInt(amt/20)); // return 80; //argonil
+    elseif(rand<1.2)
+      SendSysMessage(who, "Achou um pouco de Lithtan em meio ao minerios.");
+      return CreateItemInBackPack(who, 0x630a, CInt(amt/20)); // return 70; //lithtan
+    elseif(rand<1.4)
+      SendSysMessage(who, "Achou um pouco de Ouro em meio ao minerios.");
+      return CreateItemInBackPack(who, 0x630e, CInt(amt/20)); // return 40; //golden
+    endif
+  endif
+  return 0;
+endfunction
