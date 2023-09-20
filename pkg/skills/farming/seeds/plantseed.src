@@ -13,19 +13,19 @@ include ":charactercreation:habilidades";
 include ":gumps:yesno";
 
 program PlantSeed(who, seed)
-	
+
 	var canplant := 0;
 	foreach item in ListItemsNearLocation(who.x, who.y, who.z, 0)
 		if ( item.objtype == 0x31F4 ) //dirtpatch
 			canplant := 1;
 		endif
 		sleepms(2);
-	endforeach	
+	endforeach
 
 	if (canplant == 0)
 		SendSysMessage(who, "Voce nao pode plantar aqui.");
 		return 1;
-	endif	
+	endif
 
 	foreach item in ListItemsNearLocation(who.x, who.y, who.z, 0)
 		if ( item.IsPlant() )
@@ -38,22 +38,34 @@ program PlantSeed(who, seed)
 	PerformAction(who, BOW_ANIM);
 	sleepms(500);
 	PlaySoundEffect(who, PLANT_SOUND);
+
 	var cfg := ReadConfigFile(":*:itemdesc");
 	cfg := cfg[seed.objtype];
-	var difficulty := cfg.PlantDifficulty;
-	
-	if ( SkillCheck(who, DomesticWork, difficulty) > 0 )
+	var award_diff := cfg.PlantDifficulty;
+	var difficulty := award_diff;
+
+	if(TemHabilidade(who,"Agricultor Talentoso"))
+		difficulty := difficulty-20;
+	endif
+
+	if ( SkillCheck(who, DomesticWork, difficulty, award_diff) > 0 )
 		var grower := CreateItemAtLocation(who.x, who.y, who.z+1, GROWTH_UNIT, 1);
 		grower.SetGrowerType(seed.objtype);
 		SendSysMessage(who, "Voce plantou a semente.");
 		grower.SetWaterAmount(100);
-		grower.SetGrowStep(0);
+		if(TemHabilidade(who,"Dedo Verde"))
+			grower.SetGrowStep(5);
+		else
+			grower.SetGrowStep(0);
+		endif
 		var maxAmt := grower.GetDefaultMaxProduceAmount();
+		/*
 		if (TemHabilidade(who, "Agricultor Experiente"))
 			maxAmt := maxAmt*2;
 		endif
+		*/
 		grower.SetMaxProduceAmount( maxAmt );
-		
+
 		if ( who.cmdlevel >= 1 )
 			if (!YesNo(who, "(GM) Deseja que esta planta precise ser regada?", "Sim.", "Nao."))
 				SendSysMessage(who, "Esta planta nao precisa de agua.");
@@ -76,7 +88,7 @@ function selectflower(who)
 
 	var gump := GFCreateGump();
         GFDisposable(gump, 0);
-	GFResizePic(gump, 0, 25, 3600, 320, 550);	
+	GFResizePic(gump, 0, 25, 3600, 320, 550);
 	GFResizePic(gump, 15, 40, 0x13BE, 290, 520);
 	GFTextLine(gump, 60, 50, 1153, "Escolha a flor dessa semente");
 

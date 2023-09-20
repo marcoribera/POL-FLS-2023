@@ -40,7 +40,7 @@ program harvest_honey (character, beehive)
 				already_harvested_amount := CInt(GetObjProperty (beehive, "#harvested"));
 				if (already_harvested_amount >= MAX_PER_HIVE)
 					SendSysmessage (character, "Não há mais nada para ser retirado daqui.", FONT_NORMAL, COLMEIA_FONT_COLOR_BAD);
-					
+
 					return 1;
 				//Testa a skill para retirar a cera de abelha e o mel
 				elseif (SkillCheck(character, DomesticWork, 20, 0) > 0)
@@ -50,18 +50,26 @@ program harvest_honey (character, beehive)
 						SetObjProperty(beehive, "#harvested", already_harvested_amount + 1);
 					endif
 					//Coloca os recursos coletados na bolsa
-					CreateItemInBackpack(character, UOBJ_HONEY, 1);
-					CreateItemInBackpack(character, UOBJ_WAX, 1);
-					SendSysmessage (character, "Coletou um pouco de mel e cera de abelha.", FONT_NORMAL, COLMEIA_FONT_COLOR_GOOD);
+					if(TemHabilidade(character,"Sorte na Coleta"))
+						CreateItemInBackpack(character, UOBJ_HONEY, 2);
+						CreateItemInBackpack(character, UOBJ_WAX, 2);
+						SendSysmessage (character, "Coletou bastante de mel e cera de abelha.", FONT_NORMAL, COLMEIA_FONT_COLOR_GOOD);
+					else
+						CreateItemInBackpack(character, UOBJ_HONEY, 1);
+						CreateItemInBackpack(character, UOBJ_WAX, 1);
+						SendSysmessage (character, "Coletou um pouco de mel e cera de abelha.", FONT_NORMAL, COLMEIA_FONT_COLOR_GOOD);
+					endif
 				else
 					SendSysmessage (character, "Falhou em coletar mel e cera de abelha.", FONT_NORMAL, COLMEIA_FONT_COLOR_NEUTRAL);
 				endif
 				//Testa se as abelhas ficaram furiosas
 				if (!(SkillCheck(character, HANDLEANIMAL, 15, 0) > 0))
-					if (RandomInt (4) == 1)
-						CreateItemAtLocation(beehive.x, beehive.y, beehive.z, ITEM_SWARM, 1, character.realm);
-						SendSysmessage(character, "Oh não...Abelhas!!!", FONT_NORMAL, COLMEIA_FONT_COLOR_BAD);
-						return 0;
+					if(!TemHabilidade(character,"Sorte na Coleta"))
+						if (RandomInt (4) == 1)
+							CreateItemAtLocation(beehive.x, beehive.y, beehive.z, ITEM_SWARM, 1, character.realm);
+							SendSysmessage(character, "Oh não...Abelhas!!!", FONT_NORMAL, COLMEIA_FONT_COLOR_BAD);
+							return 0;
+						endif
 					endif
 				endif
 			else
