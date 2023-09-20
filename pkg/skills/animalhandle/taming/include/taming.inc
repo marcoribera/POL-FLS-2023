@@ -51,7 +51,7 @@ function GetNumPets(who)
 
 	foreach serial in tamed
 		var pet := SystemFindObjectBySerial(serial);
-		if ( pet.master == who )
+		if ( pet.master == who && !GetObjProperty(pet, "summoned")) //se não é summon
 			var cfg := ReadConfigFile(":brainAI:npcdesc");
 			var npctemplate := pet.npctemplate;
 			npctemplate := npctemplate[10, len(npctemplate)-9];
@@ -69,6 +69,34 @@ function GetNumPets(who)
 
 	SetObjProperty(who, "TamedPets", tamed);
 	who.followers := num_tamed;
+	return num_tamed;
+endfunction
+
+function GetNumSummons(who)
+	var num_tamed := 0;
+	var tamed := GetObjProperty(who, "SummonedPets");
+	if ( !tamed )
+		return 0;
+	endif
+
+	foreach serial in tamed
+		var pet := SystemFindObjectBySerial(serial);
+		if ( pet.master == who && GetObjProperty(pet, "summoned")) //se é summon
+			var cfg := ReadConfigFile(":brainAI:npcdesc");
+			var npctemplate := pet.npctemplate;
+			npctemplate := npctemplate[10, len(npctemplate)-9];
+			cfg := cfg[npctemplate];
+			if (!Cint(cfg.petslot))
+				num_tamed := num_tamed+1;
+			else
+				num_tamed := num_tamed + Cint(cfg.petslot);
+			endif
+		elseif ( !pet || pet.master !=who )
+			tamed.erase(_serial_iter);
+		endif
+		sleepms(2);
+	endforeach
+	SetObjProperty(who, "SummonedPets", tamed);
 	return num_tamed;
 endfunction
 
@@ -135,7 +163,21 @@ function GetMaxPets(who)
 	maxpets := maxpets + cint( GetObjProperty(who, "extrapets") );
 
 	return maxpets;
+endfunction
 
+function GetMaxSummons(who)
+	var maxpets := 1;
+
+	//Influência da skill na quantidade
+	var skill := cint(AP_GetSkill(who, MAGICLORE));
+	if (skill >= 45 && skill < 75)
+		maxpets := maxpets + 1;
+	elseif (skill >= 75 && skill < 90)
+		maxpets := maxpets + 2;
+	elseif (skill >= 90)
+		maxpets := maxpets + 3;
+	endif
+	return maxpets;
 endfunction
 
 //desloga os pets, teleportando eles pra um lugar l
