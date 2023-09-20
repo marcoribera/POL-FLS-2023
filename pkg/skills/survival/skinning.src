@@ -14,13 +14,14 @@ include ":blood:blood";
 include ":survival:skinning";
 include ":brainAi:npcUtil";
 include ":gumps:yesno";
+include ":charactercreation:habilidades";
 
 
 program skinning(parms)
 	var who := parms[1];
 	var cadaver := parms[2];
 	var blade := parms[3];
-	
+
 	if (who.weapon != blade)
 		var cfg := ReadConfigFile(":combat:itemdesc");
 		var equippedright := GetEquipmentByLayer(who, 0x01);
@@ -55,10 +56,10 @@ program skinning(parms)
 		endforeach
 		//DestroyItem(cadaver);
 		return;
-		
+
 
 	elseif((GetObjProperty(cadaver,"npctemplate")== error) && (GetObjProperty(cadaver, "morto")!=1))
-		if ((idadeChar( who) > 30)) 
+		if ((idadeChar( who) > 30))
 			if (YesNo(who, "Voce deseja mesmo matar o alvo?", "Sim: o alvo morrera e voce perdera 1 DP permanentemente.", "Nao: nenhuma consequencia.")) //quer matar mesmo
 				DesmembreCorpse(cadaver);
 				//retira 1 dp
@@ -72,20 +73,25 @@ program skinning(parms)
 				SetObjProperty(cadaver, "deathtime", polcore().systime);
 				SetName(cadaver, "Corpo Irreconhecivel");
 				SetObjProperty(cadaver, "morto",1);
-				
+
 			endif
 		endif
 		//DesmembreCorpse(cadaver);
-	
+
 	elseif (((c_type == 400) || (c_type == 401)) && (GetObjProperty(cadaver, "morto")!=1))
 				DesmembreCorpse(cadaver);
-				PrintTextAbove( who, "*Corta a cabeca*", font := _DEFAULT_TEXT_FONT, color := _DEFAULT_TEXT_COLOR, journal_print := JOURNAL_PRINT_NAME);	
+				PrintTextAbove( who, "*Corta a cabeca*", font := _DEFAULT_TEXT_FONT, color := _DEFAULT_TEXT_COLOR, journal_print := JOURNAL_PRINT_NAME);
 				SetObjProperty(cadaver, "morto",1);
 	else
+		var qtd;
 		PrintText(who, "*escalpelando "+cadaver.desc+"*");
 		SetObjProperty(cadaver, "morto",1);
 		if(c_type == 223)
-			CreateItemInContainer(cadaver, 0x9f1, 2);
+			qtd := 2;
+			if(TemHabilidade(who, "Sem Desperdicio"))
+				qtd := qtd + CInt(AP_GetSkill(who, SURVIVAL)/20);
+			endif
+			CreateItemInContainer(cadaver, 0x9f1, qtd);
 			SendSysMessage(who, "Voce colocou os itens no corpo.");
 			MakeBleed(cadaver);
 			return;
@@ -112,7 +118,7 @@ program skinning(parms)
 				return;
 			endif
 			var i := 1;
-      			corpseitm := SplitWords(corpseitm);
+      		corpseitm := SplitWords(corpseitm);
 			corpseamt := SplitWords(corpseamt);
 			var minamt;
 			var dif := 0;
@@ -128,7 +134,11 @@ program skinning(parms)
 					if (minamt > corpseamt[i])
 						minamt := corpseamt[i];
 					endif
-					var item := CreateItemInContainer(cadaver, cstr(thing), cint(minamt) );			
+					qtd := minamt;
+					if(TemHabilidade(who, "Sem Desperdicio"))
+						qtd := qtd + CInt(qtd * AP_GetSkill(who, SURVIVAL)/100);
+					endif
+					var item := CreateItemInContainer(cadaver, cstr(thing), cint(qtd) );
 					found := 1;
 				endif
 				i := i + 1;
