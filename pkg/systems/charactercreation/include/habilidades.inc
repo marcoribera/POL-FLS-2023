@@ -10,8 +10,6 @@ function NivelHabilidade(habilidade, classe)
 
 endfunction
 
-
-
 function TemRequisito(who, habilidade, msg := 1)
 
 	var habcfg := ReadConfigFile(":charactercreation:config/habilidades");
@@ -147,4 +145,248 @@ function HabilidadesPorNivelFaccao(who, faccao, lvl)
 
 	return possiveis;
 
+endfunction
+
+
+function ComprarHabGump(who, habs, habsfac)
+
+	UnloadConfigFile(":charactercreation:config/habilidades");
+
+	var gump := GFCreateGump();
+
+	var habsize := habs.size();
+	var sizey := (habsize*100) + 120;
+	var newsizey := (habsfac.size()*100) + 120; //facção
+	if (newsizey > sizey)//facção
+		sizey := newsizey;
+	endif
+
+	var newsizex := 0;
+	if (habsfac.size() >= 1) //facção
+		newsizex := 320;
+	endif
+
+	if (habsize > 10)
+		newsizex := newsizex + 600;
+		sizey := 620;
+	elseif (habsize > 5)
+		newsizex := newsizex + 300;
+		sizey := 620;
+	endif
+
+    GFDisposable(gump, 0);
+	GFResizePic(gump, 0, 25, 3600, 380+newsizex, sizey+30);
+	GFResizePic(gump, 15, 40, 0x13BE, 350+newsizex, sizey);
+	GFTextMid(gump, 80, 50, 250, 1153, "Habilidades de Classe");
+	if (habsfac.size() >= 1) //facção
+		GFTextMid(gump, 80+newsizex, 50, 250, 1153, "Habilidades de Faccao");
+	endif
+
+	var habcfg := ReadConfigFile(":charactercreation:config/habilidades");
+
+	var x := 40;
+	var y := 80;
+
+	var i := 1;
+	foreach hab in habs
+		var habelem := FindConfigElem(habcfg, hab);
+		var desc := GetConfigString(habelem, "desc");
+		var uso := GetConfigString(habelem, "uso");
+		var nome := GetConfigString(habelem, "nome");
+		if (uso == "Ativa")
+			var delay := GetConfigInt(habelem, "delay");
+			nome := nome + " ["+delay+" s]";
+			var stam := GetConfigInt(habelem, "stam");
+			if (!stam)
+				stam := GetConfigInt(habelem, "mana");
+				nome := nome + " [" + stam + " mana]";
+			else
+				nome := nome + " [" + stam + " stam]";
+			endif
+		endif
+		var nivel := GetConfigInt(habelem, nivel);
+		var requisitos := getConfigstringArray(habelem, "requisito");
+		//var gumpid :=  Hex(GetConfigInt(habelem, "gump"));
+
+		GFAddButton(gump, x-20, y+4, 2103, 2104, 1, i );
+		//GFGumpPic(gump, x, y+20, gumpid) ;
+		GFTextLine(gump, x, y, 1153, nome + " [" + uso + "]" );
+		if (requisitos.size() )
+			desc := desc + "<cr> Pre-Requisitos: ";
+			foreach req in requisitos
+				desc := desc + req + " ";
+			endforeach
+		endif
+		GFHTMLArea( gump, x, y+20, 300, 90, desc, 1150, 0);
+
+		i := i + 1;
+		y := y + 110;
+		if (i == 6)
+			x := 355;
+			y := 80;
+		elseif (i == 11)
+			x := 670;
+			y := 80;
+		endif
+	endforeach
+
+	y := 80;
+	x := 355;
+	if (habsize > 10)
+		x := 985;
+		y := 80;
+	elseif (habsize > 5)
+		x := 670;
+		y := 80;
+	endif
+	i := 1;
+
+	foreach hab in habsfac
+		var habelem := FindConfigElem(habcfg, hab);
+		var desc := GetConfigString(habelem, "desc");
+		var uso := GetConfigString(habelem, "uso");
+		var nome := GetConfigString(habelem, "nome");
+		if (uso == "Ativa")
+			var delay := GetConfigInt(habelem, "delay");
+			nome := nome + " ["+delay+" s]";
+			var stam := GetConfigInt(habelem, "stam");
+			if (!stam)
+				stam := GetConfigInt(habelem, "mana");
+				nome := nome + " [" + stam + " mana]";
+			else
+				nome := nome + " [" + stam + " stam]";
+			endif
+		endif
+		var nivel := GetConfigInt(habelem, nivel);
+		var requisitos := getConfigstringArray(habelem, "requisito");
+		//var gumpid :=  Hex(GetConfigInt(habelem, "gump"));
+
+		GFAddButton(gump, x-20, y+4, 2103, 2104, 1, 20+i );
+		//GFGumpPic(gump, x, y+20, gumpid) ;
+		GFTextLine(gump, x, y, 1153, nome + " [" + uso + "]" );
+		if (requisitos.size() )
+			desc := desc + "<cr> Pre-Requisitos: ";
+			foreach req in requisitos
+				desc := desc + req + " ";
+			endforeach
+		endif
+		GFHTMLArea( gump, x, y+20, 300, 90, desc, 1150, 0);
+
+		i := i + 1;
+		y := y + 110;
+	endforeach
+
+	var input := GFSendGump(who, gump);
+	input := input[0];
+
+
+	if (input > 0)
+		if (input >= 20)
+			input := input-20;
+			return habsfac[input];
+		endif
+		return habs[input];
+	else
+		return 0;
+	endif
+
+endfunction
+
+function comprarHabilidade(who, item, nv:=-1)
+	//SendSysMessage(who,"[Interno] Tentando comprar Hab Level "+nv);
+	var nivel;
+	if (nv != -1)
+		nivel := nv;
+	elseif (item)
+		nivel := cint(GetObjProperty(item, "nivel"));
+	else
+		SendSysMessage(who,"Chamada inválida da função");
+		return;
+	endif
+	var classe := GetObjProperty(who, "classe");
+	var faccao := GetObjProperty(who, "faccao"); //facção
+
+	var habs := GetObjProperty(who, "buyhab");
+	if (habs[0] == error)
+		habs[0] := 1;
+		SetObjProperty(who, "buyhab", habs);
+	endif
+	var myhabs := GetObjProperty(who, "myhabs");
+	if ( (myhabs == error)  )
+		myhabs := dictionary;
+	endif
+
+	var possiveis := HabilidadesPorNivel(who, classe, nivel);
+	var possiveisfaccao := HabilidadesPorNivelFaccao(who, faccao, nivel); //facção
+
+	nivel := nivel*2;
+
+	if (habs[nivel] != 1)
+		SendSysMessageEx(who, "Voce nao pode comprar habilidade desse nivel " + nivel , SSM_FAIL);
+		return 0;
+	endif
+
+	if ( possiveis.size() > 0 || possiveisfaccao.size() > 0)
+
+			SendSysMessageEx(who, "Escolha sua habilidade.", SSM_REQUEST);
+			var escolhida := ComprarHabGump(who, possiveis, possiveisfaccao);
+			if (!escolhida)
+				SendSysMessageEx(who, "Voce cancelou a compra da habilidade.", SSM_FAIL);
+				return 0;
+			endif
+			//var escolhida := RadioGump(who, 300, 380, "Escolha a habilidade que quer aprender", possiveis);
+			if (!temRequisito(who, escolhida))
+				return 0;
+			endif
+			SendSysMessageEx(who, "Voce comprou a habilidade: " + escolhida, SSM_INFO);
+			if (escolhida == "Grande Fortitude")
+				var hitsmod := cint(GetObjProperty(who, "hitsmod"));
+				hitsmod := hitsmod + 20;
+				setObjProperty(who, "hitsmod", hitsmod);
+				recalcvitals(who);
+			elseif (escolhida == "Acuidade com Arma")
+				SendSysMessageEx(who, "Escolha qual vai ser sua arma preferida.", SSM_REQUEST);
+				var targ := Target(who);
+				while(!targ.isA(POLCLASS_WEAPON))
+					targ := Target(who);
+				endwhile
+				SetObjProperty(who, "armapreferida", targ.objtype);
+				SendSysMessageEx(who, "Arma escolhida.", SSM_INFO);
+			elseif (escolhida == "Arma Predileta")
+				SendSysMessageEx(who, "Escolha qual vai ser sua arma predileta.", SSM_REQUEST);
+				var targ := Target(who);
+				while(!targ.isA(POLCLASS_WEAPON))
+					targ := Target(who);
+				endwhile
+				SetObjProperty(who, "armapredileta", targ.objtype);
+				SendSysMessageEx(who, "Arma escolhida.", SSM_INFO);
+			elseif (escolhida == "Foco com Arma")
+				SendSysMessageEx(who, "Escolha qual vai ser sua arma para a habilidade foco com arma.", SSM_REQUEST);
+				var targ := Target(who);
+				while(!targ.isA(POLCLASS_WEAPON))
+					targ := Target(who);
+				endwhile
+				SetObjProperty(who, "fococomarma", targ.objtype);
+				SendSysMessageEx(who, "Arma escolhida.", SSM_INFO);
+			elseif (escolhida == "Inimigo Predileto")
+				var inimigo := RadioGump(who, 300, 380, "Escolha seu Inimigo Predileto", array{"Dragon","Undead","Giants","GiantAnimal","EvilHuman","Goblin"});
+				SetObjProperty(who, "InimigoPredileto", inimigo);
+			elseif (escolhida == "Senso da Natureza")
+				setObjProperty(who, "empatiacomanimais", 1);
+			elseif(escolhida == "Protecao Elemental Kitahne")
+				who.resist_fire_mod  := who.resist_fire_mod + 25;
+				who.resist_cold_mod  := who.resist_cold_mod + 25;
+				who.resist_poison_mod  := who.resist_poison_mod + 25;
+				who.resist_energy_mod  := who.resist_energy_mod + 25;
+			endif
+			myhabs[nivel] := escolhida;
+			habs[nivel] := 2;
+			SetObjProperty(who, "buyhab", habs);
+			SetObjProperty(who, "myhabs", myhabs);
+			return 1;
+	endif
+    RecalcVitals(who);
+    if(item)
+		DestroyItem(item);
+	endif
 endfunction
