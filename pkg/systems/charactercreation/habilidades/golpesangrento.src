@@ -22,5 +22,4 @@ program doubleattack(who)
 		return;
 	endif
 
-
 endprogram
