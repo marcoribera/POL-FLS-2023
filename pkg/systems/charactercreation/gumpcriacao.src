@@ -547,7 +547,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		foreach skill in primarias
 			if ( skill == "Alchemy")
 				primarias.erase(i);
-				secundarias.append("Magery");;
+				secundarias.append("Alchemy");;
 			endif
 			i := i + 1;
 		endforeach
