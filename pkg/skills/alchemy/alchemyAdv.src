@@ -152,8 +152,10 @@ function FazPotion(who, item)
 	if(objtype)
 		MakePotion( objtype, item, who, recipes[objtype].magic, cint(recipes[objtype].strength) );
 	else
-
-		if (RandomInt(100) <= 25)
+		var r:= RandomInt(100);
+		if (temHabilidade(who, "Formacao Academica") && r < 2)
+			FalhaCritica(who, item);
+		elseif (r < 25)
 			FalhaCritica(who, item);
 		else
 			var loop := 0;
@@ -207,7 +209,12 @@ function MakePotion ( pot, item, who, magic, strength := 0)
 		set_critical(1);
 		foreach item in EnumerateItemsInContainer(who.backpack)
 			if((item.objtype == UOBJECT_EMPTY_BOTTLE) && (item.container.objtype != 0x1940))
-				if(SubtractAmount(item, 1))
+				if (temHabilidade(who, "Extrato Eficiente"))
+					if(SubtractAmount(item, 2))
+						hasbottle := 1;
+						break;
+					endif
+				elseif (SubtractAmount(item, 1))
 					hasbottle := 1;
 					break;
 				endif
@@ -218,7 +225,11 @@ function MakePotion ( pot, item, who, magic, strength := 0)
 		if(hasbottle)
 			var thing;
 			if (!magic)//se nao tiver o flag magic como as tintas, cria o item
-				thing := CreateItemInBackpack(who, pot, 1);
+				if (temHabilidade(who, "Extrato Eficiente"))
+					thing := CreateItemInBackpack(who, pot, 2);
+				else
+					thing := CreateItemInBackpack(who, pot, 1);
+				endif
 			else //se nao cria so o extrato
 				thing := CreateItemInBackpack(who, 0xcfff, 1);
 				SetObjProperty(thing, "extrato", pot);
@@ -227,12 +238,22 @@ function MakePotion ( pot, item, who, magic, strength := 0)
 				endif
 			endif
 			if (GetObjProperty(who, "extratoinstantaneo"))
-					SendSysMessageEx(who, "Voce fez um extrato instantaneo.", SSM_INFO);
+				if (temHabilidade(who, "Extrato Eficiente"))
+					SendSysMessageEx(who, "Voce fez dois extratos instantaneamente.", SSM_INFO);
+					var amt := 2;
 					var pocao := GetObjProperty(thing, "extrato");
-       					var pot := CreateItemInBackpack(who, pocao, 1);
+    				var pot := CreateItemInBackpack(who, pocao, amt);
 					SetObjProperty(pot, "strength", cint(GetObjProperty(thing, "strength")));
 					DestroyItem(thing);
 					EraseObjProperty(who, "extratoinstantaneo");
+				else
+					SendSysMessageEx(who, "Voce fez um extrato instantaneo.", SSM_INFO);
+					var pocao := GetObjProperty(thing, "extrato");
+    				var pot := CreateItemInBackpack(who, pocao, 1);
+					SetObjProperty(pot, "strength", cint(GetObjProperty(thing, "strength")));
+					DestroyItem(thing);
+					EraseObjProperty(who, "extratoinstantaneo");
+				endif
 			endif
 			SetObjProperty(thing, "crafterskill", AP_GetSkill(who, ALCHEMY) );
 			PlaySoundEffect(who, SOUND_EFFECT_POUR);
