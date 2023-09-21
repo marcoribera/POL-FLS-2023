@@ -51,28 +51,47 @@ function CraftCheckSkill(who, craft_skill, difficulty, points, report:=0)
 endfunction
 
 
-function ExceptionalCraftChance(who, skillvalue, skillreq, theitem)
+function ExceptionalCraftChance(who, skillname, skillvalue, skillreq, theitem)
   var chance := CDbl(skillvalue - skillreq) / 5.0; //Variação de 0% a 20% de chance
   //SendSysMessage(who, "who:"+who.name+" skillvalue:"+ skillvalue+" skillreq:"+ skillreq+ " theitem:" +theitem);
   if(chance > 0.0) //A diferença de skill entre o crafter e o necessário passa a ser o percentual de fazer excepcional
-    if(TemHabilidade(who,"Maestria em Laminas") && (theitem.TipoAtaque == "Cortante"))
-      chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
-    endif
+    if(skillname == "MetalWorking")
+      if(TemHabilidade(who,"Maestria em Laminas") && (theitem.TipoAtaque == "Cortante"))
+        chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+      endif
 
-    if(TemHabilidade(who,"Maestria em Pontas") && (theitem.TipoAtaque == "Perfurante"))
-      chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
-    endif
+      if(TemHabilidade(who,"Maestria em Pontas") && (theitem.TipoAtaque == "Perfurante"))
+        chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+      endif
 
-    if(TemHabilidade(who,"Maestria em Impacto") && (theitem.TipoAtaque == "Contusivo"))
-      chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
-    endif
+      if(TemHabilidade(who,"Maestria em Impacto") && (theitem.TipoAtaque == "Contusivo"))
+        chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+      endif
 
-    if(TemHabilidade(who,"Maestria em Armaduras") && (theitem.TipoProtecao == "ArmaduraPesada" || theitem.TipoProtecao == "ArmaduraMedia" || theitem.TipoProtecao == "ArmaduraLeve"))
-      chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
-    endif
+      if(TemHabilidade(who,"Maestria em Armaduras") && (theitem.TipoProtecao == "ArmaduraPesada" || theitem.TipoProtecao == "ArmaduraMedia" || theitem.TipoProtecao == "ArmaduraLeve"))
+        chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+      endif
 
-    if(TemHabilidade(who,"Maestria em Escudos") && (theitem.TipoProtecao == "EscudoPesado" || theitem.TipoProtecao == "EscudoMedio" || theitem.TipoProtecao == "EscudoLeve"))
-      chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+      if(TemHabilidade(who,"Maestria em Escudos") && (theitem.TipoProtecao == "EscudoPesado" || theitem.TipoProtecao == "EscudoMedio" || theitem.TipoProtecao == "EscudoLeve"))
+        chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+      endif
+    elseif(skillname == "WoodWorking")
+      if(TemHabilidade(who,"Carpintaria Combativa"))
+        chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+      endif
+      if(TemHabilidade(who,"Mobiliario Exclusivo") && !theitem.isa(POLCLASS_WEAPON) && !theitem.isa(POLCLASS_ARMOR))
+        chance := 100.0;
+      endif
+    elseif(skillname == "DomesticWork")
+      if((CInt(theitem.resist_physical)==0)) //Não é armadura
+        if(TemHabilidade(who,"Maestria em Alfaiataria"))
+          chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+        endif
+      else
+        if(TemHabilidade(who,"Maestria em Curticao") && (theitem.TipoProtecao == "ArmaduraPesada" || theitem.TipoProtecao == "ArmaduraMedia" || theitem.TipoProtecao == "ArmaduraLeve"))
+          chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+        endif
+      endif
     endif
   else
     chance := 0.0;
@@ -81,10 +100,10 @@ function ExceptionalCraftChance(who, skillvalue, skillreq, theitem)
   return chance;
 endfunction
 
-function ExceptionalCraft( who, theitem, skillvalue, skillreq)
+function ExceptionalCraft( who, skillname, theitem, skillvalue, skillreq)
   var cfg:=ReadConfigFile(":combat:itemdesc");
   var elem := FindConfigElem(cfg, theitem.objtype);
-  var chance := Cdbl(ExceptionalCraftChance(who, skillvalue, skillreq, elem));
+  var chance := Cdbl(ExceptionalCraftChance(who, skillname, skillvalue, skillreq, elem));
   var teste := RandomFloat(100.0);
   //SendSysMessage(who, "Chance:"+chance+" Rolagem:"+teste);
   if(teste < chance)

@@ -22,7 +22,14 @@ const OFFSET_LENGTH_ID       := 0x13;
 const OFFSET_UNICODE_TEXT    := 0x14;
 
 function GetDmgStringDesc(elem, item)
-	return  CSTR(elem.MinDam) + "-" + CSTR(elem.MaxDam);
+	var dmg_mod := CInt(item.dmg_mod);
+	var resultado := CSTR(elem.MinDam) + "-" + CSTR(elem.MaxDam);
+	if (dmg_mod>0)
+		resultado := resultado + " (+" + CSTR(dmg_mod) +")";
+	elseif (dmg_mod<0)
+		resultado := resultado + " (" + CSTR(dmg_mod) +")";
+	endif
+	return resultado;
 	/*
 	var avgdmg := cint(elem.MinDam + elem.MaxDam)/2;
 
@@ -46,15 +53,27 @@ function GetDmgStringDesc(elem, item)
 endfunction
 
 function getQuality(num)
-
-	if (num >= 1.1)
-		return "Excepcional";
-	elseif(num  > 0.8)
-		return "Normal";
+	var rank;
+	if(num>3.0)
+		rank := "SSS";
+	elseif(num>2.9)
+		rank := "SS";
+	elseif(num>2.7)
+		rank := "S";
+	elseif(num>2.5)
+		rank := "A";
+	elseif(num>2.2)
+		rank := "B";
+	elseif(num>1.9)
+		rank := "C";
+	elseif(num>1.3)
+		rank := "D";
+	elseif(num>1.3)
+		rank := "E";
 	else
-		return "Baixa";
+		rank := "F";
 	endif
-
+	return "Excepcional [Rank "+rank+"]";
 endfunction
 
 function getCondition(item) //Durabilidade dos itens
@@ -142,33 +161,34 @@ function GetHitsInfo(entry)
 
 endfunction
 
+function getTipoStringDesc(elem, item) //Exibe o tipo de arma
+	if (item.isa(POLCLASS_WEAPON))
+		return CStr(elem.TipoAtaque) + "<br>" + CSTR(elem.Attribute);
+	elseif (item.isa(POLCLASS_ARMOR))
+		var tipo;
+		case (CStr(elem.TipoProtecao))
+			"ArmaduraLeve": tipo := "Armadura Leve"; break;
+			"ArmaduraMedia": tipo := "Armadura Media"; break;
+			"ArmaduraPesada": tipo := "Armadura Pesada"; break;
+			"EscudoLeve": tipo := "Escudo Leve"; break;
+			"EscudoMedio": tipo := "Escudo Medio"; break;
+			"EscudoPesado": tipo := "Escudo Pesado"; break;
+		endcase
+		return tipo;
+	endif
+endfunction
+
+
 function getVelStringDesc(elem, item) //Velocidade da arma. Mostra diferença pra item base
-	var difer := Cint(item.speed - elem.speed);
-	if (difer > 0)
-		return CSTR(item.speed) + " (+" + CSTR(difer) + ")";
-	elseif (difer < 0)
-		return CSTR(elem.speed) + " (" + CSTR(difer) + ")";
+	var speedI := Cint(item.speed_mod);
+	var speedE := Cint(elem.Speed);
+	if (speedI > 0)
+		return CSTR(elem.speed) + " (+" + CSTR(speedI) + ")";
+	elseif (speedI < 0)
+		return CSTR(elem.speed) + " (" + CSTR(speedI) + ")";
 	else
 		return CSTR(elem.speed);
 	endif
-	/*
-	if(speed >= 39)
-		return "Extrema";
-	elseif(speed >= 34)
-		return "Muito rapida";
-	elseif(speed >= 30)
-		return "Rapida";
-	elseif(speed >= 26)
-		return "Mediana";
-	elseif(speed >= 21)
-		return "Lenta";
-	elseif(speed >= 20)
-		return "Lentissima";
-	else
-		return "Extremamente Lenta";
-	endif
-	*/
-
 endfunction
 
 function getParryBonus(elem, item)
@@ -388,7 +408,7 @@ exported function MegaCliloc( who, byref packet )
 			var cfg := ReadConfigFile(":*:itemdesc");
 			var elem := FindConfigElem(cfg, item.objtype);
 			if (item.quality >= 1.1)
-				xDesc := xDesc + white + "Excepcional ["+Cstr(item.quality)+"]<br>";
+				xDesc := xDesc + white + getQuality(item.quality) + "<br>"; //exibe apenas dois digitos
 			endif
 
 			var cond := GetCondition(item);
@@ -398,6 +418,7 @@ exported function MegaCliloc( who, byref packet )
 				xDesc := xDesc + "Min Str: " + elem.strrequired + "<br>";
 				xDesc := xDesc + "Dano: " + GetDmgStringDesc(elem,  item) + "<br>";
 				xDesc := xDesc + "Velocidade: " + GetVelStringDesc(elem, item) + "<br>";
+				xDesc := xDesc + GetTipoStringDesc(elem, item) + "<br>";
 				var crits := GetCriticalInfo(elem);
 				if (crits != "")
 					xDesc := xDesc + red + crits;

@@ -487,8 +487,9 @@ function CalculateHitChance(attacker, defender)
 	if (TemHabilidade(defender, "Postura Defensiva"))
 		hit_chance := hit_chance - 10;
 	endif
-
-
+	if (TemHabilidade(defender, "Preservar Orgaos"))
+		hit_chance := hit_chance - 10;
+	endif
 	if (GetCooldown(attacker, "posturadecombate") > 0)
 		hit_chance := hit_chance + 10;
 	endif

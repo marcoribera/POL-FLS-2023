@@ -21,7 +21,7 @@ program skill_Anatomy(who)
 		return 0;
 	elseif(subject.graphic == 0x2006)
 		PrintText(who, "*examinando o corpo*");
-		if (valorInicial(who, MEDICINE) >= 40);
+		if (temHabilidade(who, "Formacao Academica"))
 			if (GetObjProperty(subject, "morto") == 1)
 				SendSysMessageEx(who, "Parece morto para voce.", SSM_INFO);
 				if( SkillCheck(who, MEDICINE, 50) > 0 )
@@ -57,7 +57,7 @@ program skill_Anatomy(who)
 		endif
 	elseif(subject.objtype == 0xEFFF)
 		PrintText(who, "*examinando os ossos*");
-		if (valorInicial(who, MEDICINE) >= 40)
+		if (temHabilidade(who, "Formacao Academica"))
 			SendSysMessageEx(who, "Parece inanimado para voce.", SSM_INFO);
 			if( SkillCheck(who, MEDICINE, 50) > 0 )
 				if (GetObjProperty(subject, "WeaponKill"))
@@ -117,16 +117,32 @@ program skill_Anatomy(who)
 	var hunger := CInt(AP_GetVital(subject, "Hunger") / 10);
 	PrintTextAbovePrivate(subject, "Niveis de fome: " + hunger , who);
 
-	if((SkillCheck(who, MEDICINE, 30, 11) > 0) || (who.serial == subject.serial))
-		SendSysMessageEx(who, strMsg + " parece " + streng + ", " + dext + " e " + endur + ".", SSM_INFO);
-		if ((valorInicial(who, MEDICINE) >= 40) || (who.serial == subject.serial))
-			SendSysMessageEx(who, strMsg + " parece " + fort + ", " + refl + " e "+ vont + ".", SSM_INFO);
+	if (temHabilidade(who, "Formacao Academica"))
+		if((SkillCheck(who, MEDICINE, 30, 11) > 0) || (who.serial == subject.serial))
+			SendSysMessageEx(who, strMsg + " parece " + streng +" (" +AP_GetStat(subject, "Strength") + "),", SSM_INFO);
+			SendSysMessageEx(who, dext +" (" + AP_GetStat(subject, "Dexterity") + "),", SSM_INFO);
+			SendSysMessageEx(who, endur + ".", SSM_INFO);
+			SendSysMessageEx(who, fort + " (" + GetResist(subject, FORTITUDE) + "),", SSM_INFO);
+			SendSysMessageEx(who, refl + " (" + GetResist(subject, REFLEXOS) + "),", SSM_INFO);
+			SendSysMessageEx(who, vont + " (" + GetResist(subject, VONTADE) + "),", SSM_INFO);
+			SendSysMessageEx(who, "O alvo esta " + DPMsg(subject,who), SSM_INFO);
+			return 1;
+		else
+			SendSysMessageEx(who, "Voce nao faz ideia " + strFail, SSM_FAIL);
+			return 0;
 		endif
-		SendSysMessageEx(who, "O alvo esta " + DPMsg(subject,who), SSM_INFO);
-		return 1;
 	else
-		SendSysMessageEx(who, "Voce nao faz ideia " + strFail, SSM_FAIL);
-		return 0;
+		if((SkillCheck(who, MEDICINE, 30, 11) > 0) || (who.serial == subject.serial))
+			SendSysMessageEx(who, strMsg + " parece " + streng + ", " + dext + " e " + endur + ".", SSM_INFO);
+			if ((valorInicial(who, MEDICINE) >= 40) || (who.serial == subject.serial))
+				SendSysMessageEx(who, strMsg + " parece " + fort + ", " + refl + " e "+ vont + ".", SSM_INFO);
+			endif
+			SendSysMessageEx(who, "O alvo esta " + DPMsg(subject,who), SSM_INFO);
+			return 1;
+		else
+			SendSysMessageEx(who, "Voce nao faz ideia " + strFail, SSM_FAIL);
+			return 0;
+		endif
 	endif
 endprogram
 
@@ -260,7 +276,21 @@ function DPMsg(who,medic)
 	if (GetObjProperty(who, "morto"))
 		return "morto";
 	endif
-	if(who.serial == medic.serial)
+	if(temHabilidade(medic, "Formacao Academica"))
+		var DPs := CInt(AP_GetVital(who, "DP") / 10);
+		case (DPs)
+			0: return "morto (0 DP)";
+			1: return "quase morto (1 DP)";
+			2: return "mal (2 DP)";
+			3: return "relativamente bem (3 DP)";
+			4: return "bastante disposto (4 DP)";
+			5: return "preparado para tudo (5 DP)";
+			6: return "mais do que preparado (6 DP)";
+			7: return "bem mais do que preparado (7 DP)";
+			8: return "extremamente preparado (8 DP)";
+			default: return "extremamente preparado ("+ DPs +" DP)";
+		endcase
+	elseif(who.serial == medic.serial)
 		var DPs := CInt(AP_GetVital(who, "DP") / 10);
 		case (DPs)
 			0: return "morto";
@@ -281,7 +311,8 @@ function DPMsg(who,medic)
 			1: return "quase morto";
 			2: return "mal";
 			3: return "relativamente bem";
-			4: return "bastante disposto";
+			4: return "relativamente bem";
+			5: return "bastante disposto";
 			default: return "quase morto";
 		endcase
 	endif

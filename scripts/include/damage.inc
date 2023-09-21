@@ -351,8 +351,12 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 		endif
 	endif
 
-	if (GetCooldown(who, "marcadacaca"))
-			other := other + 0.75; //75% - balanceamento depois da mudanca de calculo do dano
+//	if (GetCooldown(who, "marcadacaca"))
+//			other := other + 0.75; //75% - balanceamento depois da mudanca de calculo do dano
+//	endif
+var inimigo_caca := (GetObjProperty (defender, "marcadacaca") == 1);
+	if (TemHabilidade(who, "Marca da Caca") && inimigo_caca )
+		other := other + 2.0;
 	endif
 
 	if (TemHabilidade(who, "Precisao Cirurgica"))

@@ -32,6 +32,11 @@ exported function CheckToolWear (tool, who, craft_skill)
 		if((RandomInt(100)+1) > skill)
 			if(tool.isa(POLCLASS_WEAPON))
 				if(tool.hp > 1)
+					if (TemHabilidade(who, "Preservar Ferramentas") || TemHabilidade(who, "Cortador de Madeira"))
+						if (randomint(2) == 0)
+							return;
+						endif
+					endif
 					SetObjProperty(tool,"swings", CInt(swings - 1));
 					tool.hp := tool.hp - 1;
 				elseif((tool.hp > tool.maxhp) or (tool.hp == 1))

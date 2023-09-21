@@ -22,6 +22,7 @@ include ":attributes:vitals";
 include ":combat:hitscripts";
 include "include/say";
 include "include/damage";
+include ":tn:npcutil";
 
 //include ":spawnnet:spawnnet";
 //include ":spawnregion:spawn";
@@ -177,6 +178,19 @@ program core_npcDeath(params)
 	if (corpse)
 		var loot := NoLootCheck(corpse, npc_cfg);
 		var corp := NoCorpseCheck(corpse, npc_cfg);
+		var lastDamage := GetObjProperty(corpse, "LastDamage");
+		
+	if(!lastDamage)
+	else
+		var region := GetRegionName(corpse);
+		var char_name := lastDamage.serial;
+		var fin := SystemFindObjectBySerial(char_name, SYSFIND_SEARCH_OFFLINE_MOBILES);
+		var coords := GetObjProperty(corpse, "anchor");
+		if (isBoss(corpse) && (fin.cmdlevel <= 0))//Para acionar o DiscordWebhook
+			var tipo := "boss"; 
+			Start_script (":DiscordWebhook:discord", {tipo, lastDamage.name, fin.acctname, corpse_name, region, coords, 0});
+		ENDIF
+	endif
 
 		if (!(corp || loot))
 			MP_DeathUnmount(corpse);

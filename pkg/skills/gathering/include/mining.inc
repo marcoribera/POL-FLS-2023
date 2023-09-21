@@ -9,18 +9,21 @@ include ":chestspawn:treasurechest";
 const MAX_RESOURCE_AMOUNT := 10;
 
 function Garimpeiro(who)
-
-	if (randomint(200) <= 1)
-
+	var rand := randomint(200);
+	if(rand < 2)
 		var cfg := ReadConfigFile(":gems:itemdesc");
 		var keys := GetConfigStringKeys( cfg );
-
 		SendSysMessageEx(who, "Voce achou uma pedra preciosa!", SSM_INFO);
 		CreateItemInBackPack(who, keys[RandomInt(keys.size()+1)], 1);
-
+		PrinttextAbove(who, "*encontra algo reluzente*");
+	elseif(TemHabilidade(who, "Minerador Talentoso") && rand < 10)
+		var cfg := ReadConfigFile(":gems:itemdesc");
+		var keys := GetConfigStringKeys( cfg );
+		SendSysMessageEx(who, "So alguem talentoso acharia essa pedra preciosa!", SSM_INFO);
+		CreateItemInBackPack(who, keys[RandomInt(keys.size()+1)], 1);
+		PrinttextAbove(who, "*encontra algo reluzente*");
 	endif
 	return 1;
-
 endfunction
 
 function GetMapsInBackpack(who)

@@ -80,7 +80,7 @@ function FlameEffect(who, potion, lvl)
 	endforeach
 
 	efeitocascata(potion, who);
-        
+
 
 endfunction
 
@@ -91,7 +91,8 @@ function HalluEffect(who, potion, lvl)
 			TS_StartTimer(critter, "hallucination", 120, lvl);
 		endif
 	endforeach
-
+
+
 endfunction
 
 function PoisonEffect(who, potion, lvl)
@@ -101,7 +102,8 @@ function PoisonEffect(who, potion, lvl)
 			TS_StartTimer(critter, "defaultPoison", 30, lvl);
 		endif
 	endforeach
-
+
+
 endfunction
 
 function GlueEffect(who, potion)
@@ -128,7 +130,8 @@ function GlueEffect(who, potion)
 			endif
 		endif
 	endforeach
-
+
+
 endfunction
 
 function ExplosionEffect(who, potion, dmg)
@@ -145,11 +148,15 @@ function ExplosionEffect(who, potion, dmg)
 			PlaySoundEffect( critter, 0x208);
 			//ApplyDamageEX(critter, dmg, DMG_FIRE);
 			DamageFLS(critter, dmg, DMG_FIRE);
+			if (TemHabilidade(who, "Bomba de Fragmentacao"))
+				TS_StartTimer(critter, "bleed", 15);
+			endif
 		endif
 	endforeach
 
 	efeitocascata(potion, who);
-        
+
+
 endfunction
 
 function EfeitoCascata(potion, who)

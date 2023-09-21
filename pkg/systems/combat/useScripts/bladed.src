@@ -11,6 +11,7 @@ include ":attributes:attributes";
 include "include/client";
 include "include/say";
 include ":tn:cooldown";
+include ":charactercreation:habilidades";
 
 program use_Bladed(who, tool)
 	if (who.weapon != tool)
@@ -271,7 +272,11 @@ function CarveMobiles(who, tool, mobile)
 			return 0;
 		else
 			mobile.graphic := 223;
-			CreateItemInContainer(who.backpack, 0xf125, 3);
+			var qtd := 2;
+			if(TemHabilidade(who, "Sem Desperdicio"))
+				qtd := qtd + CInt(AP_GetSkill(who, SURVIVAL)/20);
+			endif
+			CreateItemInContainer(who.backpack, 0xf125, qtd);
 			SetCooldown(mobile, "wool", 900);
 			return 1;
 		endif

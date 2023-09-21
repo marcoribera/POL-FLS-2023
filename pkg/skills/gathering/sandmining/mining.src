@@ -10,6 +10,7 @@ include ":attributes:skillCheck";
 include ":crafting:toolWear";
 include ":gathering:mining";
 include "include/say";
+include ":charactercreation:habilidades";
 
 const SCOOP_OF_SAND := 0x6075;
 const MINING_ANIMATION := 0x0B;
@@ -39,15 +40,20 @@ program SandMining(who, scoop)
 	var my_facing := who.facing;
 
 	while(MiningLoop(who, scoop, my_x, my_y, my_facing, location_name) )
-
-		CheckToolWear(who, scoop, GATHERING);
-		//elseif ( !CheckLoop(who, scoop, my_x, my_y, my_facing))
-		//	break;
-		if ( AP_GetVital(who, "Stamina") < 5)
-			SendSysMessageEx(who, "Voce esta muito cansado para continuar.", SSM_FAIL);
-			break;
+		if(TemHabilidade(who, "Vigor do Extrator"))
+			if ( AP_GetVital(who, "Stamina") < 2)
+				SendSysMessageEx(who, "Voce esta muito cansado para continuar.", SSM_FAIL);
+				break;
+			endif
+			AP_ConsumeVital(who, "Stamina", 2);
+		else
+			if ( AP_GetVital(who, "Stamina") < 3)
+				SendSysMessageEx(who, "Voce esta muito cansado para continuar.", SSM_FAIL);
+				break;
+			endif
+			AP_ConsumeVital(who, "Stamina", 3);
 		endif
-		AP_ConsumeVital(who, "Stamina", 5);
+		CheckToolWear(who, scoop, GATHERING);
 		sleep(3);
 	endwhile
 	SendSysMessageEx(who, "Voce parou de cavar.", SSM_FAIL);
@@ -75,33 +81,29 @@ function MiningLoop(who, scoop, my_x, my_y, my_facing, location_name)
 		return 0;
 	endif
 
-
-
-
-	SetResource(resource_type, location_elem, resource_amount-1);
-
 	var difficulty := 20;//CInt(100 - (resource_amount * 100 / MAX_RESOURCE_AMOUNT));
 
 	var skill := Cint(AP_GetSkill(who, GATHERING));
 
 	if ( SkillCheck(who, GATHERING, difficulty) > 0 )
-		var areiasRemovidas;
-		if (skill>100)
-			areiasRemovidas := min(CInt(resource_amount),5); //Extrai ate 5 porcoes de areia por vez
-		elseif (skill>70)
-			areiasRemovidas := min(CInt(resource_amount),3); //Extrai ate 3 porcoes de areia por vez
-		elseif (skill>40)
-			areiasRemovidas := min(CInt(resource_amount),2);  //Extrai ate 2 porcoes de areia por vez
-		else
-			areiasRemovidas := min(CInt(resource_amount),1);  //Extrai ate 1 porcoes de areia por vez
+		var amt := min(CInt(resource_amount),CInt(skill/20));
+		if(TemHabilidade(who, "Minerador Talentoso"))
+			amt := amt + 2;
 		endif
-		if(areiasRemovidas>1)
-			SendSysMessageEx(who, "Voce pegou "+areiasRemovidas+" porcoes de areia.", SSM_INFO);
+		if (amt <= 0)
+			amt := 1;
+		endif
+		resource_amount := resource_amount - amt;
+		if (resource_amount < 0)
+			resource_amount := 0;
+		endif
+		if(amt>1)
+			SendSysMessageEx(who, "Voce pegou "+amt+" porcoes de areia.", SSM_INFO);
 		else
 			SendSysMessageEx(who, "Voce pegou uma porcao de areia.", SSM_INFO);
 		endif
-		SetResource(resource_type, location_elem, resource_amount-areiasRemovidas); //diminui a quantidade de areia disponivel no local
-		CreateItemInBackPack(who, SCOOP_OF_SAND, areiasRemovidas); //Coloca na mochila a quantidade de areia extraida
+		SetResource(resource_type, location_elem, resource_amount); //diminui a quantidade de areia disponivel no local
+		CreateItemInBackPack(who, SCOOP_OF_SAND, amt); //Coloca na mochila a quantidade de areia extraida
 		return 1;
 	else
 		SendSysMessageEx(who, "Voce e incapaz de pegar areia aqui.", SSM_FAIL);

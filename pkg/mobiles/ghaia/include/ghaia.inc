@@ -87,7 +87,7 @@ function CanFight(me, mobile, align)
 		endif
 
       //printtextabove(me, "mytemplate " + mytemplate + " " + cint(GetObjProperty(mobile, "empatiacomanimais")));
-      if ( (GetObjProperty(mobile, "kit") == "criado por lobos") || (cint(GetObjProperty(mobile, "empatiacomanimais")) == 1) || TemHabilidade(mobile, "Senso da Natureza" )) //verifica se tem empatia por animais
+      if ( (GetObjProperty(mobile, "kit") == "criado por lobos") || (cint(GetObjProperty(mobile, "empatiacomanimais")) == 1) || TemHabilidade(mobile, "Senso da Natureza" ) || TemHabilidade(mobile, "Campestre" )) //verifica se tem empatia por animais
         if ( (mytemplate == "giantbat") || (mytemplate == "giantrat") || (mytemplate == "gianttoad")
         || (mytemplate == "giantserpent") || (mytemplate == "snake") || (mytemplate == "mongbat") || (mytemplate == "naja")
         || (mytemplate == "warg") || (mytemplate == "polarbear") || (mytemplate == "lynx") ||  (mytemplate == "cougar")
@@ -130,9 +130,9 @@ function CanFight(me, mobile, align)
   else //se for um npc verifica se eh inimigo
     if (align == ALIGN_EVIL)
       if (mobile.master) //se for bicho tamado, é atacado!
-	if ( (mytemplate == "giantbat") || (mytemplate == "giantrat") || (mytemplate == "gianttoad") 
+	if ( (mytemplate == "giantbat") || (mytemplate == "giantrat") || (mytemplate == "gianttoad")
         	|| (mytemplate == "giantserpent") || (mytemplate == "snake") || (mytemplate == "mongbat") || (mytemplate == "naja")
-	        || (mytemplate == "warg") || (mytemplate == "wolf") || (mytemplate == "polarbear") || (mytemplate == "lynx") ||  (mytemplate == "cougar") 
+	        || (mytemplate == "warg") || (mytemplate == "wolf") || (mytemplate == "polarbear") || (mytemplate == "lynx") ||  (mytemplate == "cougar")
 	        ||  (mytemplate == "alligator")  || (mytemplate == "panther") || (mytemplate == "grizzlybear") || (mytemplate == "sapop"))
 	            return 0;
         endif
@@ -152,16 +152,16 @@ function CanFight(me, mobile, align)
 endfunction
 
 function AlertAllies(me, opponent)
-  
+
   /*var ev := struct;
   ev.type := EVID_ALERT_ALLIES;
   ev.source := me;
   ev.opponent := opponent;
   */
   /*var allies := GetConfigStringArray( npccfgfile[mytemplate], "allie" );
-  
+
  // printtextabove(me, " " + allies);
-  
+
   foreach mobile in ListMobilesNearLocation(me.x, me.y, me.z, 8)
     if (mobile.npctemplate)
       	if ( ParseTemplateName(mobile.npctemplate).template in allies)
@@ -174,7 +174,7 @@ function AlertAllies(me, opponent)
   endforeach*/
 
   var spawnpointserial := GetObjProperty(me, "spawnpoint");
-  var spawnpoint := SystemFindObjectBySerial(spawnpointserial);	
+  var spawnpoint := SystemFindObjectBySerial(spawnpointserial);
   var spawns := GetObjProperty(spawnpoint, "Children");
 
   var aliadosdoplayer := array;
@@ -194,7 +194,7 @@ function AlertAllies(me, opponent)
         myallies.append(realmob);
       endif
     endif
-  endforeach 
+  endforeach
 
   foreach mob in myallies
       var ev := struct;
@@ -204,9 +204,9 @@ function AlertAllies(me, opponent)
       SendEvent(mob, ev);
   endforeach
 
-  
+
 endfunction
-  
+
 //pega a lista de aliados proximos. se o npc for good, os players serao allies pra ele tbm
 function GetAlliesNear(me)
   var allies := GetConfigStringArray( npccfgfile[mytemplate], "allie" );
@@ -222,11 +222,11 @@ function GetAlliesNear(me)
       endif
     endif
   endforeach
-  
+
   return myallies;
-  
+
 endfunction
-  
+
 //pega a lista de inimigos proximo, se tiver player perto e a tendencia for evil ele vira inimigo
 function GetEnemiesNear(me)
   var enemies := GetConfigStringArray( npccfgfile[mytemplate], "enemy" );
@@ -245,11 +245,11 @@ function GetEnemiesNear(me)
       endif
     endif
   endforeach
-  
+
   return myenemies;
-  
-endfunction    
-    
+
+endfunction
+
 //toca um som random do bixo
 function PlayIdleSound()
 	var rint := RandomInt(4) + 1;
@@ -326,6 +326,7 @@ function InitializeNpc(mobile)
   SetupColor(mobile);
   SetupName(mobile);
   SetupEquip(mobile);
+  SetupGender(mobile);
   var loot := npccfgfile[mytemplate].Loot;
   if (loot)
     Loot_Generate(mobile.backpack, loot);
@@ -334,7 +335,7 @@ function InitializeNpc(mobile)
   SetupAmmo(mobile);
   SetObjProperty(mobile, "started", 1);
 
-  
+
 endfunction
 
 //substitui o antigo wander() basicamente checa se tem anchor
@@ -362,7 +363,7 @@ function MoveAround()
           wander();
         endif
       endif
-      
+
      PlayIdleSound();
 endfunction
 
@@ -505,7 +506,7 @@ function Firebreath(npc, opponent, byref dist)
 		sleepms(5);
 
 	endforeach
-    
+
 	PlaySoundEffect(opponent, 0x208);
 	var chars := ListMobilesNearLocation(opponent.x, opponent.y, opponent.z, CInt(npccfgfile[mytemplate].BreathRadius), npc.realm);
 
@@ -572,7 +573,7 @@ endfunction
 function teleport(npc, opponent)
 
 	var phase_coords := GetCoordsInLine(npc.x, npc.y, opponent.x, opponent.y);
-	phase_coords.Erase(phase_coords.Size()); 
+	phase_coords.Erase(phase_coords.Size());
 	TurnObjectToward(npc, opponent.x, opponent.y);
 	PlaySoundEffect(npc, CInt(npccfgfile[mytemplate].teleportSound));
 
@@ -583,7 +584,7 @@ function teleport(npc, opponent)
 		MoveObjectToLocation(npc, coord.x, coord.y, z, npc.realm, MOVEOBJECT_NORMAL);
 		sleepms(20);
 	endforeach
-  
+
 	return 1;
 
 endfunction

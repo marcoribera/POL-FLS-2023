@@ -9,12 +9,16 @@ program colheReagente(who, item)
 		SendSysMessage(who, "Voce nao alcanca este item.");
 		return 1;
 	endif
-	
+
 	var amt := 1;
-	
+
+	if (temHabilidade(who, "Sorte na Coleta"))
+		amt := amt + 1;
+	endif
+
 	if (temHabilidade(who, "Herbalista Experiente"))
 		if (RandomInt(100) < 30)
-			amt := 2;
+			amt := amt + 1;
 		endif
 	endif
 
@@ -36,8 +40,8 @@ program colheReagente(who, item)
 	elseif ( item.objtype == 6380)
 		newitem := CreateItemInBackpack(who, 0xF85, amt);
 	endif
-	
-	
+
+
 	if (!item)
 		SendSysMessage(who, "Voce nao tem espaço na sua mochila.");
 		return;
