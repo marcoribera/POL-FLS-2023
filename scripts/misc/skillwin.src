@@ -34,8 +34,8 @@ program core_skillWin(who)
 	var charGump := GFCreateGump();
 	var input;
 
-	GFResizePic(charGump, 0, 25, 3600, 310, 380);
-	GFResizePic(charGump, 15, 40, 0x13BE, 280, 350);
+	GFResizePic(charGump, 0, 25, 3600, 350, 380);
+	GFResizePic(charGump, 15, 40, 0x13BE, 320, 350);
 	GFTextMid(charGump, 15, 45, 300, 55, "Menu de Perícias");
 	GFTextLine(charGump, 50, 60, 300, "Perícias em Treinamento");
 	GFAddButton(charGump, 20, 64, 2103, 2104, 1, 900 );
@@ -61,19 +61,19 @@ program core_skillWin(who)
 	var trainingSkills := GetObjProperty(who, "trainingSkills");
 	foreach skill in (chardata.Skills.keys())
 		GFTextLine(charGump, x, y , 1153, skill + " [" + GetSkillDescValue(chardata.Skills[skill]) +"]" );
-		GFTextLine(charGump, x+150, y , GetSkillColor(AP_GetSKill(who, skill)), AP_GetLevelTitle(AP_GetSKill(who, skill)));
+		GFTextLine(charGump, x+150, y , GetSkillColor(AP_GetSKill(who, skill)), AP_GetLevelTitle(AP_GetSKill(who, skill)) + " " + CStr(AP_GetSKill(who, skill)));
 		if (AP_GetSkillScript(skill) != error)
 			var elem := AP_GetAttributeCfgElem(skill);
 			var id := elem.SkillId;
 			GFAddButton(charGump, x - 30, y+4, 2103, 2104, 1, id );
 		endif
 		if (cstr(skill) in trainingSkills)
-			GFGumpPic(charGump, x + 226, y+4, 2436);
+			GFGumpPic(charGump, x + 266, y+4, 2436);
 		else
 			if (trainingSkills)
-				GFGumpPic(charGump, x + 225, y+4, 2437);
+				GFGumpPic(charGump, x + 265, y+4, 2437);
 			else
-				GFGumpPic(charGump, x + 226, y+4, 2436);
+				GFGumpPic(charGump, x + 266, y+4, 2436);
 			endif
 		endif
 		y := y + 15;
@@ -172,7 +172,7 @@ function Habilidades(who)
 
 	if (input[0] > 0)
 		input := input[0]-1;
-		SendSysMessage(who,"Tentando comprar Hab Level "+input);
+		//SendSysMessage(who,"Tentando comprar Hab Level "+input);
 		if ( input % 2 == 1 )
 			SendSysMessageEx(who,  "Voce pode comprar +2 em algum status.", SSM_INFO);
             var gump2 := GFCreateGump();
@@ -211,7 +211,7 @@ function Habilidades(who)
                 SendSysMessage(who, "Voce nao pode comprar esse status.");
             endif
         else
-        	SendSysMessage(who,"Tentando comprar Hab Level "+input);
+        	//SendSysMessage(who,"Tentando comprar Hab Level "+input);
         	comprarHabilidade(who, 0, CInt(input/2));
 		endif
 
