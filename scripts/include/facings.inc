@@ -46,7 +46,8 @@ endfunction
  * Returns 0 if not.
  *
  */
- function IsFacing(mobile, x, y)
+
+function IsFacing(mobile, x, y)
 	return ( mobile.facing == GetFacing(mobile.x, mobile.y, x, y) );
 endfunction
 

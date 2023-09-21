@@ -12,9 +12,9 @@ program resinaelemental(who)
 
 	var custo := 10;
 	var prot := RadioGump(who, 200, 200, "Qual o elemento da resina?", {"Fogo","Eletricidade", "Gelo"});
-    
+
 	if (prot == "Fogo")
-	    
+
         SendSysMessageEX(who, "Voce precisa de " + custo + " cinzas de enxofre para o inicio", SSM_REQUEST);
 		var targ := Target(who);
 
@@ -35,7 +35,7 @@ program resinaelemental(who)
             endif
 
             SendSysMessageEX(who, "Agora voce precisa de " + custo + " madeiras mortas para continuar", SSM_REQUEST);
-			var targ2 := Target(who);	
+			var targ2 := Target(who);
 
 			if (!targ2)
                 SendSysMessageEX(who, "Cancelado.", SSM_FAIL);
@@ -53,7 +53,7 @@ program resinaelemental(who)
 					SendSysMessageEX(who, "Voce nao tem reagentes suficientes.", SSM_INFO);
 					return;
                 endif
-					
+
 				SendSysMessageEX(who, "Agora voce precisa de " + custo + " teias de aranha para continuar", SSM_REQUEST);
 				var targ3 := Target(who);
 
@@ -75,8 +75,8 @@ program resinaelemental(who)
 
 					SendSysMessageEX(who, "Em qual frasco voce vai colocar a resina elemental?", SSM_REQUEST);
 					var targ4 := Target(who);
-					
-									
+
+
 					if (!targ4)
 						SendSysMessageEX(who, "Cancelado.", SSM_FAIL);
 						return;
@@ -91,7 +91,7 @@ program resinaelemental(who)
 						SendSysMessageEX(who, "Voce nao tem frascos suficientes", SSM_INFO);
 						return;
                		endif
-                                    
+
 					PlaySoundEffect(who, 0x243);
 					PrintTextAbove(who, "*Misturando*");
 					sleep(2);
@@ -101,13 +101,13 @@ program resinaelemental(who)
 					PrintTextAbove(who, "*Misturando*");
 					sleep(2);
 					CreateItemInBackPack(who, 0x6071, 1);
-					PlaySoundEffect(who, 0x23F);                                  
-					return;    
+					PlaySoundEffect(who, 0x23F);
+					return;
                 else
                     SendSysMessageEx(who, "Isto nao sao reagentes.", SSM_FAIL);
 					return;
 				endif
-            endif        
+            endif
     	endif
 
     elseif (prot == "Eletricidade")
@@ -132,7 +132,7 @@ program resinaelemental(who)
             endif
 
             SendSysMessageEX(who, "Agora voce precisa de " + custo + " madeiras mortas para continuar", SSM_REQUEST);
-			var targ2 := Target(who);	
+			var targ2 := Target(who);
 
 			if (!targ2)
                 SendSysMessageEX(who, "Cancelado.", SSM_FAIL);
@@ -150,7 +150,7 @@ program resinaelemental(who)
 					SendSysMessageEX(who, "Voce nao tem reagentes suficientes.", SSM_INFO);
 					return;
                 endif
-					
+
 				SendSysMessageEX(who, "Agora voce precisa de " + custo + " teias de aranha para continuar", SSM_REQUEST);
 				var targ3 := Target(who);
 
@@ -172,8 +172,8 @@ program resinaelemental(who)
 
 					SendSysMessageEX(who, "Em qual frasco voce vai colocar a resina elemental?", SSM_REQUEST);
 					var targ4 := Target(who);
-					
-									
+
+
 					if (!targ4)
 						SendSysMessageEX(who, "Cancelado.", SSM_FAIL);
 						return;
@@ -188,7 +188,7 @@ program resinaelemental(who)
 						SendSysMessageEX(who, "Voce nao tem frascos suficientes", SSM_INFO);
 						return;
                		endif
-                                    
+
 					PlaySoundEffect(who, 0x243);
 					PrintTextAbove(who, "*Misturando Reagentes*");
 					sleep(1);
@@ -197,15 +197,15 @@ program resinaelemental(who)
 					PrintTextAbove(who, "*Misturando Reagentes*");
 					sleep(1);
 					PlaySoundEffect(who, 0x243);
-					CreateItemInBackPack(who, 0xBD12, 1);                                    
-					return;    
+					CreateItemInBackPack(who, 0xBD14, 1);
+					return;
                 else
                     SendSysMessageEx(who, "Isto nao sao reagentes.", SSM_FAIL);
 					return;
 				endif
-            endif        
+            endif
     	endif
-                    
+
     elseif (prot == "Gelo")
 
 		SendSysMessageEX(who, "Voce precisa de " + custo + " solanaceas para o inicio", SSM_REQUEST);
@@ -228,7 +228,7 @@ program resinaelemental(who)
             endif
 
             SendSysMessageEX(who, "Agora voce precisa de " + custo + " madeiras mortas para continuar", SSM_REQUEST);
-			var targ2 := Target(who);	
+			var targ2 := Target(who);
 
 			if (!targ2)
                 SendSysMessageEX(who, "Cancelado.", SSM_FAIL);
@@ -246,7 +246,7 @@ program resinaelemental(who)
 					SendSysMessageEX(who, "Voce nao tem reagentes suficientes.", SSM_INFO);
 					return;
                 endif
-					
+
 				SendSysMessageEX(who, "Agora voce precisa de " + custo + " teias de aranha para continuar", SSM_REQUEST);
 				var targ3 := Target(who);
 
@@ -268,8 +268,8 @@ program resinaelemental(who)
 
 					SendSysMessageEX(who, "Em qual frasco voce vai colocar a resina elemental?", SSM_REQUEST);
 					var targ4 := Target(who);
-					
-									
+
+
 					if (!targ4)
 						SendSysMessageEX(who, "Cancelado.", SSM_FAIL);
 						return;
@@ -284,7 +284,7 @@ program resinaelemental(who)
 						SendSysMessageEX(who, "Voce nao tem frascos suficientes", SSM_INFO);
 						return;
                		endif
-                                    
+
 					PlaySoundEffect(who, 0x243);
 					PrintTextAbove(who, "*Misturando Reagentes*");
 					sleep(1);
@@ -293,8 +293,8 @@ program resinaelemental(who)
 					PrintTextAbove(who, "*Misturando Reagentes*");
 					sleep(1);
 					PlaySoundEffect(who, 0x243);
-					CreateItemInBackPack(who, 0x6070, 1);                                    
-					return;    
+					CreateItemInBackPack(who, 0x6070, 1);
+					return;
                 else
                     SendSysMessageEx(who, "Isto nao sao reagentes.", SSM_FAIL);
 					return;
@@ -302,4 +302,4 @@ program resinaelemental(who)
 			endif
 		endif
 	endif
-endprogram   
+endprogram
