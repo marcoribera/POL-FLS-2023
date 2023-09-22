@@ -11,6 +11,7 @@ include "include/client";
 include ":disguise:disguise";
 include ":charactercreation:createchar";
 include ":datafile:datafile";
+include "include/say";
 
 //cores: 1153 -> 2103 -> 2105
 
