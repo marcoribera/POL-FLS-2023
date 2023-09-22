@@ -565,14 +565,15 @@ function CalculateHitChance(attacker, defender)
 		hit_chance := hit_chance + 100.0;
 	endif
 
-/*
-	if (TemHabilidade(defender, "Luta Defensiva"))
+
+	if (TemHabilidade(defender, "Artista Marcial"))
 		var cajados := array{ 0x0df0, 0x13f9, 0x0e8a, 0x0e81};
-		if ( defender.weapon.objtype in cajados)
-			hit_chance := hit_chance -15;
+        var tactics_bonus := CInt(AP_GetSkill(defender, TACTICS) / 5);
+		if ( defender.weapon.objtype in cajados || !defender.weapon)
+			hit_chance := hit_chance - tactics_bonus;
 		endif
 	endif
-*/
+
 	if (hit_chance < 5.0)
 		hit_chance := 5.0;
 	endif

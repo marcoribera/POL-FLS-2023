@@ -447,6 +447,14 @@ var inimigo_caca := (GetObjProperty (defender, "marcadacaca") == 1);
 		other := CDbl(GetObjProperty(who, "#SequenciaDevastadoraAcumulada")) * 0.2; //20% de bonus - balanceamento depois da mudanca de calculo do dano
 	endif
 
+    if (TemHabilidade(who, "Artista Marcial") )
+		var cajados := array{ 0x0df0, 0x13f9, 0x0e8a, 0x0e81};
+        var tactics_bonus := CInt(AP_GetSkill(defender, TACTICS) / 10);
+		if ( defender.weapon.objtype in cajados || !defender.weapon)
+			other := other + tactics_bonus / 10;
+		endif
+	endif
+
 	//Multiplicador de tactics X multiplicador de força X multiplicadores de habilidades e itens X Multiplicador de buff X multiplicador de Debuff
 
 	dmg := CInt(dmg*Pow(1.0+tatics,2.0)*(1.0+str)*(1.0+(weapon+other))*(inimigo_predileto)*(1.0+blessbonus)*(1.0-reducao_dano));
