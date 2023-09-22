@@ -128,6 +128,38 @@ function HabilidadesPorNivel(who, classe, lvl)
 
 endfunction
 
+function HabilidadesPorNivelPossiveis(who, classe, povo, lvl)
+	//sendsysmessage(who, "Procurando Habs!");
+	var possiveis := array;
+
+	var habcfg := ReadConfigFile(":charactercreation:config/habilidades");
+	var keys := getConfigStringKeys( habcfg );
+
+
+	foreach key in keys
+		var elem := FindConfigElem( habcfg, key );
+		var c := GetConfigStringDictionary( elem, "classe" );
+		//sendsysmessage(who, "classe" + CInt(c[classe]));
+		var p := GetConfigStringDictionary( elem, "povo");
+		//sendsysmessage(who, "povo" + CInt(p[povo]) + "PovoInP " + CInt(p.Exists(povo)));
+		var requisito := GetConfigString(elem, "requisito");
+
+		//sendsysmessage(who, "elem " + elem + " classe " + classe  + " c[1] " + c[1]+" c[2] " + c[2]+ " p[povo] " + p[povo] + "requisito:"+requisito);
+		if ((c[classe]!=error) && (cint(c[classe]) == lvl) && ((p[povo]==error) || (p.Exists(povo))))// && (povo in p))
+			//sendsysmessage(who, "classe" + CInt(c[classe]) + "povo" + CInt(p[povo]));
+			if(lvl > 2) //Se o level for maior que 4, verifique requisito
+				if(TemHabilidade(who,requisito))
+					possiveis.append(key);
+				endif
+			else
+				possiveis.append(key);
+			endif
+		endif
+	endforeach
+	return possiveis;
+
+endfunction
+
 function HabilidadesPorNivelFaccao(who, faccao, lvl)
 
 	var possiveis := array;
@@ -303,7 +335,7 @@ function comprarHabilidade(who, item, nv:=-1)
 		SendSysMessage(who,"Chamada inválida da função");
 		return;
 	endif
-	var classe := GetObjProperty(who, "classe");
+	//var classe := GetObjProperty(who, "classe");
 	var faccao := GetObjProperty(who, "faccao"); //facção
 
 	var habs := GetObjProperty(who, "buyhab");
@@ -315,9 +347,13 @@ function comprarHabilidade(who, item, nv:=-1)
 	if ( (myhabs == error)  )
 		myhabs := dictionary;
 	endif
+	//SendSysMessage(who, GetObjProperty(who, "chardata").classe +" "+ GetObjProperty(who, "chardata").povo + " " + nivel);
+	var possiveis := HabilidadesPorNivelPossiveis(who, GetObjProperty(who, "chardata").classe, GetObjProperty(who, "chardata").povo, nivel);
 
-	var possiveis := HabilidadesPorNivel(who, classe, nivel);
+	//var possiveis := HabilidadesPorNivel(who, classe, nivel);
 	var possiveisfaccao := HabilidadesPorNivelFaccao(who, faccao, nivel); //facção
+
+	//sendsysmessage(who, "Procurando Habs possiveis!");
 
 	nivel := nivel*2;
 
@@ -327,63 +363,66 @@ function comprarHabilidade(who, item, nv:=-1)
 	endif
 
 	if ( possiveis.size() > 0 || possiveisfaccao.size() > 0)
+		//sendsysmessage(who, "Tem alguma hab!");
 
-			SendSysMessageEx(who, "Escolha sua habilidade.", SSM_REQUEST);
-			var escolhida := ComprarHabGump(who, possiveis, possiveisfaccao);
-			if (!escolhida)
-				SendSysMessageEx(who, "Voce cancelou a compra da habilidade.", SSM_FAIL);
-				return 0;
-			endif
-			//var escolhida := RadioGump(who, 300, 380, "Escolha a habilidade que quer aprender", possiveis);
-			if (!temRequisito(who, escolhida))
-				return 0;
-			endif
-			SendSysMessageEx(who, "Voce comprou a habilidade: " + escolhida, SSM_INFO);
-			if (escolhida == "Grande Fortitude")
-				var hitsmod := cint(GetObjProperty(who, "hitsmod"));
-				hitsmod := hitsmod + 20;
-				setObjProperty(who, "hitsmod", hitsmod);
-				recalcvitals(who);
-			elseif (escolhida == "Acuidade com Arma")
-				SendSysMessageEx(who, "Escolha qual vai ser sua arma preferida.", SSM_REQUEST);
-				var targ := Target(who);
-				while(!targ.isA(POLCLASS_WEAPON))
-					targ := Target(who);
-				endwhile
-				SetObjProperty(who, "armapreferida", targ.objtype);
-				SendSysMessageEx(who, "Arma escolhida.", SSM_INFO);
-			elseif (escolhida == "Arma Predileta")
-				SendSysMessageEx(who, "Escolha qual vai ser sua arma predileta.", SSM_REQUEST);
-				var targ := Target(who);
-				while(!targ.isA(POLCLASS_WEAPON))
-					targ := Target(who);
-				endwhile
-				SetObjProperty(who, "armapredileta", targ.objtype);
-				SendSysMessageEx(who, "Arma escolhida.", SSM_INFO);
-			elseif (escolhida == "Foco com Arma")
-				SendSysMessageEx(who, "Escolha qual vai ser sua arma para a habilidade foco com arma.", SSM_REQUEST);
-				var targ := Target(who);
-				while(!targ.isA(POLCLASS_WEAPON))
-					targ := Target(who);
-				endwhile
-				SetObjProperty(who, "fococomarma", targ.objtype);
-				SendSysMessageEx(who, "Arma escolhida.", SSM_INFO);
-			elseif (escolhida == "Inimigo Predileto")
-				var inimigo := RadioGump(who, 300, 380, "Escolha seu Inimigo Predileto", array{"Dragon","Undead","Giants","GiantAnimal","EvilHuman","Goblin"});
-				SetObjProperty(who, "InimigoPredileto", inimigo);
-			elseif (escolhida == "Senso da Natureza")
-				setObjProperty(who, "empatiacomanimais", 1);
-			elseif(escolhida == "Protecao Elemental Kitahne")
-				who.resist_fire_mod  := who.resist_fire_mod + 25;
-				who.resist_cold_mod  := who.resist_cold_mod + 25;
-				who.resist_poison_mod  := who.resist_poison_mod + 25;
-				who.resist_energy_mod  := who.resist_energy_mod + 25;
-			endif
-			myhabs[nivel] := escolhida;
-			habs[nivel] := 2;
-			SetObjProperty(who, "buyhab", habs);
-			SetObjProperty(who, "myhabs", myhabs);
-			return 1;
+		SendSysMessageEx(who, "Escolha sua habilidade.", SSM_REQUEST);
+		var escolhida := ComprarHabGump(who, possiveis, possiveisfaccao);
+		if (!escolhida)
+			SendSysMessageEx(who, "Voce cancelou a compra da habilidade.", SSM_FAIL);
+			return 0;
+		endif
+		//var escolhida := RadioGump(who, 300, 380, "Escolha a habilidade que quer aprender", possiveis);
+		if (!temRequisito(who, escolhida))
+			return 0;
+		endif
+		SendSysMessageEx(who, "Voce comprou a habilidade: " + escolhida, SSM_INFO);
+		if (escolhida == "Grande Fortitude")
+			var hitsmod := cint(GetObjProperty(who, "hitsmod"));
+			hitsmod := hitsmod + 20;
+			setObjProperty(who, "hitsmod", hitsmod);
+			recalcvitals(who);
+		elseif (escolhida == "Acuidade com Arma")
+			SendSysMessageEx(who, "Escolha qual vai ser sua arma preferida.", SSM_REQUEST);
+			var targ := Target(who);
+			while(!targ.isA(POLCLASS_WEAPON))
+				targ := Target(who);
+			endwhile
+			SetObjProperty(who, "armapreferida", targ.objtype);
+			SendSysMessageEx(who, "Arma escolhida.", SSM_INFO);
+		elseif (escolhida == "Arma Predileta")
+			SendSysMessageEx(who, "Escolha qual vai ser sua arma predileta.", SSM_REQUEST);
+			var targ := Target(who);
+			while(!targ.isA(POLCLASS_WEAPON))
+				targ := Target(who);
+			endwhile
+			SetObjProperty(who, "armapredileta", targ.objtype);
+			SendSysMessageEx(who, "Arma escolhida.", SSM_INFO);
+		elseif (escolhida == "Foco com Arma")
+			SendSysMessageEx(who, "Escolha qual vai ser sua arma para a habilidade foco com arma.", SSM_REQUEST);
+			var targ := Target(who);
+			while(!targ.isA(POLCLASS_WEAPON))
+				targ := Target(who);
+			endwhile
+			SetObjProperty(who, "fococomarma", targ.objtype);
+			SendSysMessageEx(who, "Arma escolhida.", SSM_INFO);
+		elseif (escolhida == "Inimigo Predileto")
+			var inimigo := RadioGump(who, 300, 380, "Escolha seu Inimigo Predileto", array{"Dragon","Undead","Giants","GiantAnimal","EvilHuman","Goblin"});
+			SetObjProperty(who, "InimigoPredileto", inimigo);
+		elseif (escolhida == "Senso da Natureza")
+			setObjProperty(who, "empatiacomanimais", 1);
+		elseif(escolhida == "Protecao Elemental Kitahne")
+			who.resist_fire_mod  := who.resist_fire_mod + 25;
+			who.resist_cold_mod  := who.resist_cold_mod + 25;
+			who.resist_poison_mod  := who.resist_poison_mod + 25;
+			who.resist_energy_mod  := who.resist_energy_mod + 25;
+		endif
+		myhabs[nivel] := escolhida;
+		habs[nivel] := 2;
+		SetObjProperty(who, "buyhab", habs);
+		SetObjProperty(who, "myhabs", myhabs);
+		return 1;
+	else
+		SendSysMessageEx(who, "Falta comprar a habilidade level 4 ou esse nivel ainda nao tem habilidades.", SSM_FAIL);
 	endif
     RecalcVitals(who);
     if(item)

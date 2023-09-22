@@ -9,6 +9,7 @@ use uo;
 use os;
 use math;
 use cfgfile;
+USE math;
 
 include ":tn:cooldown";
 include ":brainAI:npcUtil";
@@ -65,11 +66,11 @@ function getNewDamageList(attacker)
 
 	else
 
-		list[DMG_PHYSICAL] := Cdbl(attacker.damage_physical/100.0);
-		list[DMG_FIRE] := Cdbl(attacker.damage_fire/100.0);
-		list[DMG_COLD] := Cdbl(attacker.damage_cold/100.0);
-		list[DMG_POISON] := Cdbl(attacker.damage_poison/100.0);
-		list[DMG_ENERGY] := Cdbl(attacker.damage_energy/100.0);
+		list[DMG_PHYSICAL] := Min(Cdbl(attacker.damage_physical/100.0),90.0);
+		list[DMG_FIRE] := Min(Cdbl(attacker.damage_fire/100.0),90.0);
+		list[DMG_COLD] := Min(Cdbl(attacker.damage_cold/100.0),90.0);
+		list[DMG_POISON] := Min(Cdbl(attacker.damage_poison/100.0),90.0);
+		list[DMG_ENERGY] := Min(Cdbl(attacker.damage_energy/100.0),90.0);
 
 		var elemental := GetObjProperty(attacker.weapon, "#elementalweapon");
 		if (elemental != error)
@@ -148,12 +149,13 @@ function CalculateDamage(defender, type, dmg)
 		endcase
 	endif
 
+/*
 	if (IsRaging(defender) && TemHabilidade(defender, "Pele de Rocha"))
 		if (resist < 0.5)
 			resist := 0.5;
 		endif
 	endif
-
+*/
 	if (type == DMG_PHYSICAL)
 		if (TemHabilidade(defender, "Exoesqueleto"))
 			resist := resist * 1.2;

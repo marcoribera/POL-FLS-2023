@@ -22,9 +22,9 @@ program MultiPortal(multiportal)
         SetObjProperty(multiportal, "sourceColor", 10);
 
         //Portal para Zharkia
-        SetObjProperty(multiportal,"magicword0","Zharkia");
-        SetObjProperty(multiportal,"destinationX0",1210);
-        SetObjProperty(multiportal,"destinationY0",1211);
+        SetObjProperty(multiportal,"magicword0","Valsharess Ilhar");
+        SetObjProperty(multiportal,"destinationX0",5298);
+        SetObjProperty(multiportal,"destinationY0",524);
         SetObjProperty(multiportal,"destinationZ0",0);
 
         //Portal para Thuria
@@ -44,6 +44,13 @@ program MultiPortal(multiportal)
         SetObjProperty(multiportal,"destinationX3",2321);
         SetObjProperty(multiportal,"destinationY3",2191);
         SetObjProperty(multiportal,"destinationZ3",0);
+
+// ### PIZZA - > adicionei a parte de baixo porque esta sem a opção de criar novos portais
+        //Portal para Zharkia
+        SetObjProperty(multiportal,"magicword0","");
+        SetObjProperty(multiportal,"destinationX0",0);
+        SetObjProperty(multiportal,"destinationY0",0);
+        SetObjProperty(multiportal,"destinationZ0",0);
     endif
 	
     while(multiportal)
