@@ -20,12 +20,32 @@ const MINING_SOUND	:= 0x126;
 
 program OreMining(who, tool)
 
+	SendSysMessage(who, "Minerando ores");
+
+
 	if ( GetEquipmentByLayer(who, LAYER_MOUNT) )
 		SendSysMessage(who, "Voce nao pode minerar montado.");
 		return;
 	endif
 	SendSysMessageEx(who, "Onde voce deseja minerar?", SSM_REQUEST);
 	var targ := TargetCoordinates(who);
+
+	var targ2 := target(who);
+	var quebravel:=GetObjProperty(targ2,"quebravel");
+
+	if (quebravel)
+		SendSysMessageEx(who, "Item quebravel", SSM_REQUEST);
+		SetObjProperty(targ2, "quebravel", quebravel - 1);
+		PerformAction(who, MINING_ANIMATION);
+		PlaySoundEffect(who, MINING_SOUND);
+		PrintTextAbove(targ2, "O item levou dano.");
+
+		if(quebravel <= 1)
+			PrintTextAbove(targ2, "Quebrou.");
+			DestroyItem(targ2);
+		endif
+		return;
+	endif
 
 
 	if ( CoordinateDistance(who.x, who.y, targ.x, targ.y) > 2 )
