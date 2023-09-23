@@ -52,6 +52,10 @@ program neve(params)
                 dif := dif + 30; // Quatro níveis mais difícil
             endif
 
+            if ( TemHabilidade(who, "Corpo diamante"))
+                dif := dif - 60;
+            endif
+
             if ( GetObjProperty(who, "chardata").povo == "Thuriao")
                 dif := dif - 60;
             endif
