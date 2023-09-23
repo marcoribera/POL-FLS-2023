@@ -157,6 +157,9 @@ function CalculateDamage(defender, type, dmg)
 	endif
 */
 	if (type == DMG_PHYSICAL)
+        if (TemHabilidade(defender, "Corpo diamante"))
+            resist := CInt(AP_GetSkill(defender, TACTICS) / 200);
+        endif
 		if (TemHabilidade(defender, "Exoesqueleto"))
 			resist := resist * 1.2;
 		endif
@@ -447,6 +450,13 @@ var inimigo_caca := (GetObjProperty (defender, "marcadacaca") == 1);
 
 	if (GetObjProperty(who, "#SequenciaDevastadoraAcumulada"))
 		other := CDbl(GetObjProperty(who, "#SequenciaDevastadoraAcumulada")) * 0.2; //20% de bonus - balanceamento depois da mudanca de calculo do dano
+	endif
+
+    if (TemHabilidade(who, "Artista Marcial") )
+		var cajados := array{ 0x0df0, 0x13f9, 0x0e8a, 0x0e81};
+		if ( who.weapon.objtype in cajados || !who.weapon)
+			other := other + 2.0;
+		endif
 	endif
 
 	//Multiplicador de tactics X multiplicador de força X multiplicadores de habilidades e itens X Multiplicador de buff X multiplicador de Debuff

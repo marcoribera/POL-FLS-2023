@@ -28,8 +28,8 @@ program doubleattack(params)
 	PlayHitSounds(attacker, defender);
 	
 	PrintTextAbove(attacker, "*desarmar*");
-
-	TS_StartTimer(defender, "desarmar", 30, 0, attacker);
+    var tactics_bonus := CInt(AP_GetSkill(attacker, TACTICS) / 1.5);
+	TS_StartTimer(defender, "desarmar", tactics_bonus, 0, attacker);
 	var defweapon := defender.weapon;
 	if (defweapon.objtype != 0xF020)
 		var x := defender.x + RandomInt(2)+1;

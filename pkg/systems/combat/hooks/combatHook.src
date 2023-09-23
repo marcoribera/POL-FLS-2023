@@ -536,6 +536,8 @@ function CalculateHitChance(attacker, defender)
 	endif
 
 
+
+
 	if (GetCooldown(defender, "resistenciaheroica") )
 		var hostiles := ListHostiles(defender, 3);
 		if ( hostiles.size() >= 5)
@@ -565,17 +567,25 @@ function CalculateHitChance(attacker, defender)
 		hit_chance := hit_chance + 100.0;
 	endif
 
-/*
-	if (TemHabilidade(defender, "Luta Defensiva"))
+
+	if (TemHabilidade(defender, "Artista Marcial"))
 		var cajados := array{ 0x0df0, 0x13f9, 0x0e8a, 0x0e81};
-		if ( defender.weapon.objtype in cajados)
-			hit_chance := hit_chance -15;
+        var tactics_bonus := CInt(AP_GetSkill(defender, TACTICS) / 5);
+		if ( defender.weapon.objtype in cajados || !defender.weapon)
+			hit_chance := hit_chance - tactics_bonus;
 		endif
 	endif
-*/
+
 	if (hit_chance < 5.0)
 		hit_chance := 5.0;
 	endif
+
+    var attacker_weapon := attacker.weapon.objtype;
+    var ranged_weapons := array{ 0x13B2, 0xe137, 0x26CC, 0xe139, 0x2d2b, 0x2d2a, 0x27A5, 0x0f4f, 0x13fd };
+
+    if (TemHabilidade(defender, "Desviar Disparos") && attacker_weapon in ranged_weapons)
+        hit_chance := 0;
+    endif
 
 	if (defender.acctname  )
 		if (!defender.warmode)
