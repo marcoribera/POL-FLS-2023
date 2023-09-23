@@ -451,9 +451,8 @@ var inimigo_caca := (GetObjProperty (defender, "marcadacaca") == 1);
 
     if (TemHabilidade(who, "Artista Marcial") )
 		var cajados := array{ 0x0df0, 0x13f9, 0x0e8a, 0x0e81};
-        var tactics_bonus := CInt(AP_GetSkill(defender, TACTICS) / 10);
 		if ( defender.weapon.objtype in cajados || !defender.weapon)
-			other := other + tactics_bonus / 10;
+			other := other + 2.0;
 		endif
 	endif
 
