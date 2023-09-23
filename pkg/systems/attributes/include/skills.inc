@@ -30,14 +30,18 @@ use uo;
  *
  */
 function AP_GetSkill(who, skill_name)
+	var bonus_corrucao := 0;
 	if (skill_name == MAGICLORE)
 		if (TemHabilidade(who, "Sensibilidade Arcana"))
 			if ( 70 > cint((AP_GetTrueSkill(who, skill_name)+AP_GetSkillMod(who, skill_name))))
 				return 70;
 			endif
 		endif
+		if (TemHabilidade(who, "Corrupcao Constante"))
+			bonus_corrucao := cInt(GetObjProperty(who, "corruption")/1000);
+		endif
 	endif
-	return AP_GetTrueSkill(who, skill_name)+AP_GetSkillMod(who, skill_name);
+	return AP_GetTrueSkill(who, skill_name) + AP_GetSkillMod(who, skill_name) + bonus_corrucao;
 endfunction
 
 /*
@@ -140,10 +144,10 @@ endfunction
 function AP_ModifySkillMod(mobile, stat_name, points)
 	var orig_mod := AP_GetStatMod(mobile, stat_name);
 	var new_mod := CDbl(points)+CDbl(orig_mod);
-	
+
 //	sendsysmessage(mobile, "nmod " + new_mod + " " + stat_name);
 	AP_SetSkillMod(mobile, stat_name, new_mod);
-	
+
 	return orig_mod;
 endfunction
 
@@ -219,7 +223,7 @@ function AP_GetSkillCap(mobile, skill_name)
 	return cap_val;
 
 	//useless code above, this is the FLS one:
-	//return GetSkillCap(mobile, skill_name); 
+	//return GetSkillCap(mobile, skill_name);
 
 endfunction
 
