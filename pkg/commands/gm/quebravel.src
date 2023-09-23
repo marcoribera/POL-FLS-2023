@@ -1,0 +1,18 @@
+use uo;
+use os;
+use util;
+
+program quebravel(who, param)
+	var item := target(who);
+	var life := param;
+	if (!item)
+		return;
+	endif
+
+	var objProp := GetObjProperty(item, "quebravel");
+
+		if(objProp == error)
+			SetObjProperty(item, "quebravel", param);
+		endif
+
+endprogram
