@@ -5,5 +5,5 @@ include "include/say";
 include ":attributes:attributes";
 
 program pergrad(who, item)
-	return comprarHabilidade(who, item, 0);
+	return comprarHabilidade(who, item, -1);
 endprogram
