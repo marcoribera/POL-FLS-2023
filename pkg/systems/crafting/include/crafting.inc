@@ -176,6 +176,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 					else	//caso em que ha o material necessario para fabricar o item
 						if (thing == "arrowhead") //verificacao diferenciada para pontas de flechas
 							arrowtype := GetconfigInt(theitemElem, "arrowtype");
+							//SendSysMessage(who, "DEBUG (arrowtype): " + GetObjProperty(ret[thing][1], "material") +"->"+ cstr(arrowtype));
 							if (cint(GetObjProperty(ret[thing][1], "material")) != arrowtype)
 								SendSysMessageEx(who, "Voce nao pode fabricar estas flechas com a ponta escolhida." , SSM_FAIL);
 								return OUT_OF_MATERIALS;
@@ -189,19 +190,22 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 					endif
 				endif
 			else	//os materiais que nao tem tipos variados
+				//SendSysMessageEx(who, "Procurando " + cstr(thing) + ")" , SSM_FAIL);
 				foreach item in (EnumerateItemsInContainer(who.backpack)) //Checa os itens na mochila para contabilizar o material
 					//sendsysmessage(who, " " + item.objtype + " " + cint(thing));
 					if (item.objtype == cint(thing))	//acha os itens do tipo do material pedido
 						if (targMaterials[thing])
 							targMaterials[thing] := targMaterials[thing] + item.amount;
+							//SendSysMessageEx(who, "Achou " + thing + ")" , SSM_FAIL);
 						else
+							//SendSysMessageEx(who, "Achou B", SSM_FAIL);
 							targMaterials[thing] :=  item.amount;
 						endif
 					endif
 				endforeach
-				SendSysMessage(who, "Não achou o material.", 0, 133);
+				//SendSysMessage(who, "Não achou o material.", 0, 133);
 				if ( targMaterials[thing] < ( ( materials[thing] * ( 1 + more ) ) ) )
-					SendSysMessageEx(who, "Faltou material." , SSM_FAIL);
+					SendSysMessageEx(who, "Faltou "+ TruncatePlural(thing) + "." , SSM_FAIL);
 					if((craft_skill == "WoodWorking") && (TemHabilidade(who,"Recursos Improvisados")))
 						if(RandomInt(100) < 10) //10% de chance
 							SendSysMessageEx(who, "Voce improvisou um dos materiais." , SSM_INFO);
@@ -217,7 +221,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 						return OUT_OF_MATERIALS;
 					endif
 				else
-					SendSysMessageEx(who, "Nao faltou material." , SSM_FAIL);
+					//SendSysMessageEx(who, "Nao faltou material." , SSM_FAIL);
 					targMaterials[thing] := materials[thing];
 				endif
 			endif
@@ -253,7 +257,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 					return theitems;
 				endif
 			endif
-			theitem := CreateItem(who, objtype, more);
+			theitem := CreateItem(who, objtype, chosenPrincipalMaterial, more);
 			if(!theitem)
 				SendSysMessageEx(who, "Voce nao tem espaco suficiente na sua mochila!", SSM_FAIL);
 				return theitems;
@@ -315,25 +319,25 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 	theitem.hp := theitem.maxhp;
 
 	//essa mudança de nove força o cliente a atualizar os dados do item
-	if(GetObjProperty(theitem, "material"))
-		SendSysMessage(who, resource_config[GetObjProperty(theitem, "material")]);
-		SetName(theitem, theitem.name + " [" + resource_config[GetObjProperty(theitem, "material")].name + "]");
-	else
+	//if(GetObjProperty(theitem, "material"))
+		//SendSysMessage(who, resource_config[GetObjProperty(theitem, "material")]);
+		//SetName(theitem, theitem.name + " [" + resource_config[GetObjProperty(theitem, "material")].name + "]");
+	//else
 		SetName(theitem, theitem.name);
-	endif
+	//endif
 	return theitems;
 endfunction
 
-function CreateItem(who, objtype, more:=0)
+function CreateItem(who, objtype, material, more:=0)
 	var theitem;
 	var extra := more;
-	if (objtype == 0x1BD4)
+	if (objtype == 0x1BD4 || objtype == 0x9087)
 		extra := extra + 4;
 	endif
 	var item;
 	var empilhou:=0;
 	foreach item in (EnumerateItemsInContainer(who.backpack))
-		if(item.objtype == objtype)
+		if(item.objtype == objtype && (GetObjProperty(item,"material") == material))
 			empilhou := AddAmount(item, 1+extra);
 			if(empilhou)
 				return empilhou;

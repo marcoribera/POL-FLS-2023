@@ -346,7 +346,12 @@ exported function MegaCliloc( who, byref packet )
 				endif
 			endif
 		elseif ( item.IsA(POLCLASS_ITEM) )
-			Object_Name := item.desc;
+			var resource_config := ReadConfigFile(":crafting:config/resourceList");
+			if(GetObjProperty(item, "material"))
+				Object_Name := item.desc + " [" + resource_config[GetObjProperty(item, "material")].name + "]";
+			else
+				Object_Name := item.desc;
+			endif
 		else
 			Object_Name := item.name;
 		endif
