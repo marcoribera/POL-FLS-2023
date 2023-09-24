@@ -34,10 +34,10 @@ program core_skillWin(who)
 	var charGump := GFCreateGump();
 	var input;
 
-	GFResizePic(charGump, 0, 25, 3600, 380, 380);
-	GFResizePic(charGump, 15, 40, 0x13BE, 350, 350);
+	GFResizePic(charGump, 0, 25, 3600, 355, 380);
+	GFResizePic(charGump, 15, 40, 0x13BE, 325, 350);
 	GFTextMid(charGump, 15, 45, 300, 55, "Menu de Perícias");
-	GFTextLine(charGump, 50, 60, 300, "Perícias em Treinamento");
+	GFTextLine(charGump, 40, 60, 300, "Perícias em Treinamento");
 	GFAddButton(charGump, 20, 64, 2103, 2104, 1, 900 );
 
 	var habs := GetObjProperty(who, "buyhab");
@@ -49,40 +49,43 @@ program core_skillWin(who)
 		endfor
 		SetObjProperty(who, "buyhab", habs);
 	endif
-	GfTextLine(charGump, 50, 75, 300, "Habilidades");
+	GfTextLine(charGump, 40, 75, 300, "Habilidades");
 	GFAddButton(charGump, 20, 79, 2103, 2104, 1, 901);
 
-	var x := 50;
+	var x := 40;
 	var y := 90;
 	var i;
 
 	GFPage(charGump, 1);
 	var chardata := GetObjProperty(who, "chardata");
 	var trainingSkills := GetObjProperty(who, "trainingSkills");
-	var valor_skill_string := "";
+	var valor_mod := "";
 	foreach skill in (chardata.Skills.keys())
-		valor_skill_string := CStr(AP_GetTrueSkill(who, skill));
 		if(AP_GetSkillMod(who, skill) > 0)
-			valor_skill_string := valor_skill_string + " (+" + CStr(AP_GetSkillMod(who, skill)) + ")";
+			valor_mod := " (+" + CStr(AP_GetSkillMod(who, skill)) + ")";
 		elseif (AP_GetSkillMod(who, skill) < 0)
-			valor_skill_string := valor_skill_string + " (" + CStr(AP_GetSkillMod(who, skill)) + ")";
+			valor_mod := " (" + CStr(AP_GetSkillMod(who, skill)) + ")";
+		else
+			valor_mod := "";
 		endif
 
 		GFTextLine(charGump, x, y , 1153, skill + " [" + GetSkillDescValue(chardata.Skills[skill]) +"]" );
-		GFTextLine(charGump, x+150, y , GetSkillColor(AP_GetSKill(who, skill)), AP_GetLevelTitle(AP_GetSKill(who, skill)) + " " + valor_skill_string);
+		GFTextLine(charGump, x+145, y , GetSkillColor(AP_GetSKill(who, skill)), CStr(AP_GetLevelTitle(AP_GetSKill(who, skill))) + valor_mod);
+		GFTextRight(charGump, x+279, y, GetSkillColor(AP_GetSKill(who, skill)), CStr(AP_GetTrueSkill(who, skill)));
+
 
 		if (AP_GetSkillScript(skill) != error)
 			var elem := AP_GetAttributeCfgElem(skill);
 			var id := elem.SkillId;
-			GFAddButton(charGump, x - 30, y+4, 2103, 2104, 1, id );
+			GFAddButton(charGump, x - 20, y+4, 2103, 2104, 1, id );
 		endif
 		if (cstr(skill) in trainingSkills)
-			GFGumpPic(charGump, x + 256, y+4, 2436);
+			GFGumpPic(charGump, x + 281, y+4, 2436);
 		else
 			if (trainingSkills)
-				GFGumpPic(charGump, x + 295, y+4, 2437);
+				GFGumpPic(charGump, x + 280, y+4, 2437);
 			else
-				GFGumpPic(charGump, x + 296, y+4, 2436);
+				GFGumpPic(charGump, x + 281, y+4, 2436);
 			endif
 		endif
 		y := y + 15;
