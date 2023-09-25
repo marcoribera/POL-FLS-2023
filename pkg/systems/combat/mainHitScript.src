@@ -642,9 +642,14 @@ function WeaponHitScripts(attacker, defender, weapon, armor, basedamage, rawdama
 		endif
 	endif
 
-	if (GetObjProperty(attacker, "#golpesangrento") ) // VIVISEC do Igor
+	if (GetObjProperty(attacker, "#golpesangrento")) // VIVISEC do Igor
 		// EraseObjProperty(attacker, "#golpesangrento");
-		var dmg := basedamage + CInt(rawdamage*(AP_GetSkill(attacker, ALCHEMY)/100));
+		var dmg := 1;
+        if (TemHabilidade(attacker, "Golpe Afiado"))
+            dmg := basedamage + CInt(rawdamage*(AP_GetSkill(attacker, TACTICS)/100));
+        else
+            dmg := basedamage + CInt(rawdamage*(AP_GetSkill(attacker, ALCHEMY)/100));
+        endif
 		start_script(":combat:weaponHitScripts/bleedingstrike", array{attacker, defender, weapon, armor, basedamage, dmg*2});
 	endif
 

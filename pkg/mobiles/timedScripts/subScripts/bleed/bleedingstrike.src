@@ -34,26 +34,26 @@ program default_poison(params)
 	var viewermsg := "";
 	poisonedmsg := "Voce sente um corte profundo!";
 	viewermsg := "*" + who.name + " esta sangrando!*";
-		
-			for ( i := 0; i < loops; i := i+1)
-				PrintTextAbovePrivate(who, poisonedmsg, who);
-					foreach mobile in ( ListMobilesInLineOfSight(who, 8) )
-						if( mobile.ip && mobile != who )
-							PrintTextAbovePrivate(who, viewermsg, mobile);
-						endif
-					sleepms(2);
-					endforeach		
-	
-			damageFLS(who, cint(dmg), DMG_FORCED, attacker);
-			MakeBleed(who);
 
-				if (who.dead)
-				break;
-				endif
+    for ( i := 0; i < loops; i := i+1)
+        PrintTextAbovePrivate(who, poisonedmsg, who);
+            foreach mobile in ( ListMobilesInLineOfSight(who, 8) )
+                if( mobile.ip && mobile != who )
+                    PrintTextAbovePrivate(who, viewermsg, mobile);
+                endif
+            sleepms(2);
+            endforeach		
 
-		
-			sleep(4);
-			endfor
+    damageFLS(who, cint(dmg), DMG_FORCED, attacker);
+    MakeBleed(who);
+
+        if (who.dead)
+        break;
+        endif
+
+
+    sleep(4);
+    endfor
 
 //	TS_CurePoison(who, 120,"P", 5);
 	TS_LowerDuration(who, "bleed", -1);

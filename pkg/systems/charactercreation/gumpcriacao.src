@@ -555,7 +555,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 
 		i := 1;
 		foreach skill in terciarias
-			if ( skill == "MeleeCombat1h")
+			if ( skill == "MeleeCombat1H")
 				terciarias.erase(i);
 				secundarias.append("MeleeCombat1H");;
 			endif
@@ -564,7 +564,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 
 		i := 1;
 		foreach skill in quaternarias
-			if ( skill == "MeleeCombat2h")
+			if ( skill == "MeleeCombat2H")
 				quaternarias.erase(i);
 				terciarias.append("MeleeCombat2H");
 			endif

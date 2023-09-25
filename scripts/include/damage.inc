@@ -453,9 +453,11 @@ var inimigo_caca := (GetObjProperty (defender, "marcadacaca") == 1);
 	endif
 
     if (TemHabilidade(who, "Artista Marcial") )
-		var monk_weapons := array{ 0x0df0, 0x13f9, 0x0e8a, 0x0e81, 0xF020};
-		if ( who.weapon.objtype in monk_weapons)
-			other := other + 2.0;
+		var monk_weapons := array{ 0x0df0, 0x13f9, 0x0e8a, 0x0e81};
+        if (who.weapon.objtype == 0x1F020)
+            other := other + 2.0;
+		elseif ( who.weapon.objtype in monk_weapons)
+			other := other + 1.0;
 		endif
 	endif
 
