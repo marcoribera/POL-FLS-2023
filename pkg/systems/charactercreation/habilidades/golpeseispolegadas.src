@@ -5,8 +5,8 @@ use util;
 include "include/damage";
 include "include/client";
 include "include/sounds";
-include "include/damage";
 include ":taming:taming";
+include ":tn:combat";
 
 function golpeseispolegadas(who, dist, delay, attacker)
 
@@ -50,7 +50,13 @@ function golpeseispolegadas(who, dist, delay, attacker)
 		endif
 	endfor
 
-	var distancia := GetCoordsInLine(attacker.x, attacker.y, attacker.x + dist, attacker.y + dist);
+	//calculo damage
+	var dmgList := dictionary;
+	dmgList := getNewDamageList(attacker);
+	var basedamage := CalculateRawDamage(attacker, attacker.weapon);
+    var distancia := GetCoordsInLine(attacker.x, attacker.y, who.x + dist, who.y + dist);
+
+	//lista inimigos e aplica dano
 	var alreadydamaged := array{};
 	foreach pontos in distancia
 		var mobiles := ListMobilesNearLocation(pontos.x, pontos.y, attacker.z, 1, attacker.realm);
@@ -58,7 +64,8 @@ function golpeseispolegadas(who, dist, delay, attacker)
 		foreach mobile in mobiles
 			if (!(mobile.serial in alreadydamaged) && (mobile != attacker) && !(mobile in attacker.party.members) && !(mobile in pets ))
 				alreadydamaged.Append(mobile.serial);
-				damageFLS(who, cint(dmg), DMG_FORCED, attacker);
+				var total := cint(CalculateTotalDamage(mobile, basedamage, attacker, dmgList));
+				DamageFLS(mobile, total*4, DMG_FORCED, attacker);
 			endif
 			sleepms(20);
 		endforeach
