@@ -6,15 +6,11 @@ include "include/say";
 include "include/damage";
 
 program manobra(attacker)
-
-
-	if (IsBloodied(attacker) || TemHabilidade(attacker, "Perseverança"))
+	if (IsBloodied(attacker) || TemHabilidade(attacker, "Artista Marcial"))
     	SendSysMessageEx(attacker, "Voce sente seus sangramentos diminuirem.", SSM_INFO);
 		TS_StartTimer(attacker, "recuperacaoaligera", 60);
 	else
         SendSysMessageEx(attacker, "Voce precisa estar em furia.", SSM_INFO);
 	endif
-
-
 endprogram
 

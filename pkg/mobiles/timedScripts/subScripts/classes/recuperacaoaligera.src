@@ -11,15 +11,28 @@ program default_poison(params)
 	var attacker := params[2];
 	var level := CInt(params[3]);
 
-	while( IsBloodied(who) )
+    var tactics_bonus := CInt(AP_GetSkill(who, TACTICS) / 10);
+    var time := CInt(AP_GetSkill(who, TACTICS) / 5);
+    var i := 0;
+    if (TemHabilidade(who, "Artista Marcial"))
+        while (1 < time)
+            if (who.dead)
+                break;
+            endif
+            HealFLS(who, tactics_bonus);
+            
+            sleep(2);
+        endwhile
+    else
+        while( IsBloodied(who) )
+            if (who.dead)
+                break;
+            endif
+            HealFLS(who, 5);
 
-		if (who.dead)
-			break;
-		endif
-		HealFLS(who, 5);
-
-		sleep(2);
-	endwhile
+            sleep(2);
+        endwhile
+    endif
 	var script := GetProcess(GetPid());
 	script.kill();
 	return;

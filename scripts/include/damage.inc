@@ -157,8 +157,8 @@ function CalculateDamage(defender, type, dmg)
 	endif
 */
 	if (type == DMG_PHYSICAL)
-        if (TemHabilidade(defender, "Corpo diamante"))
-            resist := CInt(AP_GetSkill(defender, TACTICS) / 200);
+        if (TemHabilidade(defender, "Corpo Diamante"))
+            resist := CDbl(AP_GetSkill(defender, TACTICS) / 200); // Ganha até 50% de bonus
         endif
 		if (TemHabilidade(defender, "Exoesqueleto"))
 			resist := resist * 1.2;
@@ -181,8 +181,7 @@ function CalculateDamage(defender, type, dmg)
 			resist := 0.8;
 		endif
 	endif
-
-
+    
 //	if ( (resistSpells+resistMod) > resist)
 //		return (dmg - (dmg*(resistSpells+resistMod)));
 //	else
@@ -453,9 +452,11 @@ var inimigo_caca := (GetObjProperty (defender, "marcadacaca") == 1);
 	endif
 
     if (TemHabilidade(who, "Artista Marcial") )
-		var monk_weapons := array{ 0x0df0, 0x13f9, 0x0e8a, 0x0e81, 0xF020};
-		if ( who.weapon.objtype in monk_weapons)
-			other := other + 2.0;
+		var monk_weapons := array{ 0x0df0, 0x13f9, 0x0e8a, 0x0e81};
+        if (who.weapon.objtype == 0x1F020)
+            other := other + 2.0;
+		elseif ( who.weapon.objtype in monk_weapons)
+			other := other + 1.5;
 		endif
 	endif
 
@@ -465,6 +466,7 @@ var inimigo_caca := (GetObjProperty (defender, "marcadacaca") == 1);
 	if (dmg < 1)
 		dmg := 1;
 	endif
+
 	return dmg;
 
 endfunction

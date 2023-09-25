@@ -54,7 +54,7 @@ program calor(params)
                 dif := dif - 60;
             endif
 
-            if ( TemHabilidade(who, "Corpo diamante"))
+            if ( TemHabilidade(who, "Corpo Diamante"))
                 dif := dif - 60;
             endif
 

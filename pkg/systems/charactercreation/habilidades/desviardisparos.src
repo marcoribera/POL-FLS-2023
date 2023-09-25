@@ -13,7 +13,6 @@ program doubleattack(who)
     var tactics_bonus := Cint(AP_GetSkill(who, TACTICS));
 	SendSysMessageEx(who, "Você eleva sua guarda.", SSM_INFO);
 	SetCooldown(who, "desviardisparos", tactics_bonus);
-	
 endprogram
 
 
