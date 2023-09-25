@@ -1,4 +1,6 @@
 use uo;
+use os;
+use util;
 
 include ":fls_core:packets";
 include ":combat:combat";
@@ -18,6 +20,7 @@ program doubleattack(who)
 		sleep(5);
 		EraseObjProperty(who, "#golpesangrento");
 		//SetObjProperty(who, "#attackbonus", 100);
+        PlaySoundEffect(who, 0x510);
 	else
 		SendSysMessageEx(who, "Voce precisa estar com uma arma apropriada para alvejar ponto vital", SSM_INFO);
 		return;

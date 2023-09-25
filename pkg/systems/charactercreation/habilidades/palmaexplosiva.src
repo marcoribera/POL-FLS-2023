@@ -27,6 +27,11 @@ program doubleattack(params)
     attacker.frozen := 0;
 	PlayAttackAnimation(attacker);
 	PlayHitSounds(attacker, defender);
+    if (attacker.graphic == 400)
+        PlaySoundEffect(attacker, 0x50E);
+    else
+        PlaySoundEffect(attacker, 0x50D);
+    endif
 	
 	PrintTextAbove(attacker, "*palma explosiva*");
 

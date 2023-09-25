@@ -31,7 +31,11 @@ program SpellScript(params)
     printtextabove(defender, "*K.O.*");
 	PlaySoundEffect(attacker, 0x658);
 	SendSysMessageEx(attacker, "O alvo apagou.", SSM_INFO);
-
+    if (attacker.graphic == 400)
+        PlaySoundEffect(attacker, 0x514);
+    else
+        PlaySoundEffect(attacker, 0x513);
+    endif
 	PlayObjectCenteredEffect(defender, 0xB8FB, 3, 56);
 	sleep(3);
 

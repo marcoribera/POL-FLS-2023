@@ -38,6 +38,9 @@ function golpeseispolegadas(who, dist, delay, attacker)
 	var i := 0;
     SetObjProperty(attacker, "#attackbonus", 100);
     attacker.attack_once(who);
+
+    PlaySoundEffect(attacker, 0x50F);
+	
 	for( i := 1; i <= dist; i := i + 1)
 		var finalx := (who.x + x);
 		var finaly := (who.y + y);
