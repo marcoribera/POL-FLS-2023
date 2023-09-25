@@ -202,6 +202,15 @@ var anim := wpn_a_elem.Anim;
       		endif
 	     endif
 
+        if (getCooldown(defender, "desviardisparos") > 0)
+            if ( (item_cfg[attacker.weapon.objtype]).Projectile )
+                PrintText(defender, "*desvia o disparo*");
+                SendSysMessageEx(defender, "O projetil foi desviado para longe de voce.", SSM_INFO);
+                SendSysMessageEx(attacker, "Seu projetil foi desviado do alvo.", SSM_FAIL);
+                return 1;
+            endif
+        endif
+
 		if (Cint(GetObjProperty(defender, "evasao")))
   			PrintText(defender, "*esquiva-se*");
   			EraseObjProperty(defender, "evasao");
@@ -581,7 +590,7 @@ function CalculateHitChance(attacker, defender)
 
     var attacker_weapon := attacker.weapon.objtype;
     var ranged_weapons := array{ 0x13B2, 0xe137, 0x26CC, 0xe139, 0x2d2b, 0x2d2a, 0x27A5, 0x0f4f, 0x13fd };
-
+    
     if (GetCooldown(defender, "Desviar Disparos") > 0 && attacker_weapon in ranged_weapons)
         printtext(defender, "*desviar disparos*");
         hit_chance := 0;

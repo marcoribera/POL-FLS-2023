@@ -36,6 +36,8 @@ function golpeseispolegadas(who, dist, delay, attacker)
 	endif
     var dmg := CInt(AP_GetSkill(attacker, TACTICS) / 2 );
 	var i := 0;
+    SetObjProperty(attacker, "#attackbonus", 100);
+    attacker.attack_once(who);
 	for( i := 1; i <= dist; i := i + 1)
 		var finalx := (who.x + x);
 		var finaly := (who.y + y);
