@@ -46,7 +46,7 @@ program DblClickNerve(params)
 				wait := 1;
 			endif
 		endif
-		
+
 		var ev := wait_for_event(wait);
 		if ( ev )
 			case ( ev.type )
@@ -60,4 +60,4 @@ program DblClickNerve(params)
 		endif
 	endwhile
 endprogram
- 
+
