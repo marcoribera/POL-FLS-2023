@@ -7,7 +7,7 @@ include ":containers:containers";
 include ":gumps:include/requestgump";
 include ":gumps:gumps";
 include ":gumps:yesno";
-include "include/say";   
+include "include/say";
 include ":keys:key";
 include ":tn:tngumps";
 
@@ -17,6 +17,11 @@ const BKGND_BLUESLAB		:= 3600;  // Raised edge (blocky)
 const GF_STDCOLOR		:= 1890;
 
 const MOEDAS			:= 47715;
+
+const MOEDAS_COBRE		:= 0xba63; //id das moedas de cobre
+const MOEDAS_PRATA		:= 0xba64; //id das moedas de prata
+const MOEDAS_OURO		:= 0xba65; //id das moedas de ouro
+const GOLD_COIN			:= 0xeed;  //id das moedas de ouro (outro tipo válido)
 
 var item_cfg := ReadConfigFile(":*:itemdesc");
 
@@ -40,11 +45,11 @@ program MerchantMenu(params)
 	var quartos := GetObjProperty(npc, "quartos");
 	var taxa;
 	var valortaxa;
-	
+
 	if (getObjProperty(npc, "taxap"))
 		taxa := (getObjProperty(npc, "taxap"));
 	endif
-	
+
 	var souInquilino := 0;
 	var meuquarto := -1;
 	var j := 1;
@@ -59,7 +64,7 @@ program MerchantMenu(params)
 
 	GFAddButton(gump, 20, 33, 2117, 2118, GF_CLOSE_BTN,  200);
 	GFTextLine(gump, 40, 30, GF_STDCOLOR, "Listar Quartos");
-	
+
 
 	if (souInquilino)
 		GFAddButton(gump, 20, 83, 2117, 2118, GF_CLOSE_BTN, 100);
@@ -67,35 +72,38 @@ program MerchantMenu(params)
 
 		GFAddButton(gump, 20, 133, 2117, 2118, GF_CLOSE_BTN, 400);
 		GFTextLine(gump, 40, 130, GF_STDCOLOR, "Entregar Quarto");
-		
+
 	endif
 
 	if (player.cmdlevel > 1)
 		GFAddButton(gump, 20, 183, 2117, 2118, GF_CLOSE_BTN,  300);
 		GFTextLine(gump, 40, 180, GF_STDCOLOR, "Adicionar Quarto");
-		
+
 		GFAddButton(gump, 20, 233, 2117, 2118, GF_CLOSE_BTN,  500);
 		GFTextLine(gump, 40, 230, GF_STDCOLOR, "Cobrar Aluguel");
-		
+
 		GFAddButton(gump, 20, 283, 2117, 2118, GF_CLOSE_BTN,  600);
 		GFTextLine(gump, 40, 280, GF_STDCOLOR, "Mural de Recados");
-		
+
 		if (!(npc.serial in getglobalproperty("InnKeeper")))
 			GFAddButton(gump, 20, 333, 2117, 2118, GF_CLOSE_BTN,  700);
 			GFTextLine(gump, 40, 330, GF_STDCOLOR, "Cobrar Automatico");
 		endif
+
+		GFAddButton(gump, 20, 433, 2117, 2118, GF_CLOSE_BTN,  900);
+		GFTextLine(gump, 40, 430, GF_STDCOLOR, "Opcoes do locador");
 	endif
-	
+
 	if (GetObjProperty(npc, "confiscados").Exists(""+player.serial))
 		GFAddButton(gump, 20, 383, 2117, 2118, GF_CLOSE_BTN,  800);
 		GFTextLine(gump, 40, 380, GF_STDCOLOR, "Objetos Confiscados");
 	endif
-	
+
 	var y_pos := 45;
 	var i := 1;
-	foreach quarto in quartos 
+	foreach quarto in quartos
 		var dono := SystemFindObjectBySerial(quarto.inquilino, SYSFIND_SEARCH_OFFLINE_MOBILES);
-		if (dono == error) //checa por via das duvidas pra ver se deletaram 
+		if (dono == error) //checa por via das duvidas pra ver se deletaram
 			quarto.inquilino := 0;
 			SetObjProperty(npc, "quartos", quartos);
 		endif
@@ -123,13 +131,13 @@ program MerchantMenu(params)
 		y_pos := y_pos + 15;
 		i := i + 1;
 	endforeach
-		
+
 	var input := GFSendGump(player, gump);
-	
+
 	if (input[0] == 300) //adicionar quarto
 		SendSysMessageEx(player, "Escolha a PORTA do quarto.", SSM_REQUEST);
 		var porta := Target(player);
-	
+
 		if (!porta.isDoor())
 			SendSysMessageEx(player, "Alvo invalido.", SSM_FAIL);
 		else
@@ -172,7 +180,7 @@ program MerchantMenu(params)
 			endif
 		endif
 	elseif (input[0] == 400)//entregar quarto
-	
+
 		var yes := yesno(player, "Deseja devolver o quarto?  Seus itens serão deletados." );
 		var quarto := quartos[meuquarto];
 		if (yes)
@@ -182,17 +190,17 @@ program MerchantMenu(params)
 				if (cent[4])
 					DestroyRentItens(cent[4], cent[5], cent[6], npc.realm);
 				endif
-			endif		
+			endif
 			var door := SystemFindObjectBySerial(quarto.door);
 			Eraseobjproperty(door, "LockId");
 			quartos[meuquarto].inquilino := 0;
 			SetObjProperty(npc, "quartos", quartos);
 
 		endif
-	
-	
+
+
 	elseif (input[0] == 500) // cobrar aluguel
-	
+
 		var i := 1;
 		foreach quarto in quartos
 			var bank_region := GetObjProperty(npc, "City");
@@ -220,16 +228,21 @@ program MerchantMenu(params)
 					else
 				valortaxa := (quartos[i].custo * 0.1);
 				endif
-				
-				if (GetObjProperty(npc, "cofreid"))
-					var cofser := getObjProperty(npc, "cofreid");
+
+				if (GetObjProperty(npc, "cofreAluguel"))
+					var cofser := getObjProperty(npc, "cofreAluguel");
 					var cofrereal := SystemFindObjectBySerial(cofser);
 					CreateItemInContainer( cofrereal, "moedacobre", valortaxa );
+				endif
+				if (GetObjProperty(npc, "cofreImpostos"))
+					var cofser1 := getObjProperty(npc, "cofreImpostos");
+					var cofrereal1 := SystemFindObjectBySerial(cofser1);
+					CreateItemInContainer( cofrereal1, "moedacobre", quartos[i].custo - valortaxa );
 				endif
 			endif
 			i := i +1;
 		endforeach
-		
+
 	elseif (input[0] == 600) //linkar mural
 		SendSysMessageEx(player, "Escolha o Mural que o NPC anunciara a cobrança de alugueis.");
 		var mural := Target(player, TGTOPT_NOCHECK_LOS+TGTOPT_NEUTRAL);
@@ -271,14 +284,19 @@ program MerchantMenu(params)
 				SendSysMessageEx(player, "Algo deu errado, voce nao recebe seus objetos de volta.",SSM_FAIL);
 			endif
 		endif
-	
+	elseif (input[0] == 900) //Opções do NPC
+		if (player.cmdlevel >= 3)
+			innerKeeperOpt(npc, player);
+		else
+			SendSysMessage(player, "Apenas o lider da Faccao pode alterar essas opcoes");
+		endif
 	elseif (input[0] < 100 && input[0] >= 1) //alugar quarto
-		
+
 		if (souInquilino)
 			SendSysMessageEx(player, "Voce ja tem um quarto.");
 			return 1;
 		endif
-		
+
 		if (player.cmdlevel >=3) //opcao de gm de remover quarto
 			var gmmenu :=  RadioGump(player, 250, 325, "Escolha uma opcao", array{"Mudar Nome","Mudar Preco","Remover Quarto", "Mudar Centro", "Informacoes"});
 
@@ -309,13 +327,13 @@ program MerchantMenu(params)
 					var cent2 := TargetCoordinates(player);
 					quartos[input[0]].centro := { cent.x, cent.y, cent.z, cent2.x, cent2.y, cent2.z };
 				endif
-				
-				setobjproperty(npc, "quartos", quartos);	
+
+				setobjproperty(npc, "quartos", quartos);
 				SendSysMessageEx(player, "Centro Alterado.",SSM_INFO);
 				return 1;
 			endif
 		endif
-		
+
 		var yes := yesNo(player, "Voce deseja alugar esse quarto por " +  quartos[input[0]].custo +" moedas");
 		if (yes)
 
@@ -337,7 +355,7 @@ program MerchantMenu(params)
 				SetObjProperty( key, "LockId", lockid );
 			endif
 		endif
-		
+
 	endif
 
 
@@ -345,39 +363,101 @@ endprogram
 
 
 
-function debitoEmConta(banco, player, amount)
+function debitoEmConta(bank_region, player, amount)
 
-	var bank_box := CP_GetStorageContainerForMobile(player,  banco, CP_NOCREATE);
+	var bank_box := CP_GetStorageContainerForMobile(player, bank_region, CP_NOCREATE);
 	if (!bank_box)
 		SendSysMEssage(player, "Voce nao tem banco");
 		return 0;
 	endif
-	
-	if (!CheckGoldAmount(bank_box, amount))
-		SendSysMessageEx(player, "Voce nao tem dinheiro.");
-		return 0;
-	endif
-	
-	ConsumeSubstance(bank_box, 47715, amount);
-	return 1;
-
-endfunction
-
-
-function CheckGoldAmount(bank_box, amount)
-
-	var prop := dictionary;
-	prop["objtype"] := 47715;
-	var total_gold := AmountInContainer(bank_box, prop );
-	print(" " + total_gold + " " + amount);
-	if ( amount == 0 )
-		return 0;
-	elseif ( amount > total_gold )
+	//Verifica o valos disnonível no banco
+	Set_Critical(1);
+	var recursosDisponiveis := CalculaRecursosDisponiveisBank(bank_box, MOEDAS_COBRE);
+	SendSysMessage(player, "Valor inicial disponivel no banco: " + recursosDisponiveis[5]);
+	if (recursosDisponiveis[5] < amount)
+		SendSysMessageEx(player, "Falta dinheiro no banco para pagar o aluguel.");
+		Set_Critical(0);
 		return 0;
 	else
-		return 1;
+		var totalPago := 0;
+		var faltaPagar := amount;
+		var dicionarioAtual := Dictionary;
+		var recursos := recursosDisponiveis[5];
+		var diferenca;
+		var moeda;
+		if (recursos >= faltaPagar)
+			if (faltaPagar > 0) //Tenta pagar com os cobres
+				dicionarioAtual := recursosDisponiveis[1];
+				foreach serial in dicionarioAtual //Verifica se da pra pagar só com moedas de cobre
+					moeda := SystemFindObjectBySerial(_serial_iter);
+					diferenca := faltaPagar - moeda.amount;
+					if (diferenca > 0)
+						totalPago += moeda.amount;
+						faltaPagar -= moeda.amount;
+						DestroyItem(moeda);
+					else
+						totalPago += faltaPagar;
+						SubtractAmount(moeda, faltaPagar);
+						faltaPagar := 0;
+						SendSysMessage(player, "Pagou o aluguel");
+						break;
+					endif
+				endforeach
+			endif
+			if (faltaPagar > 0) //Tenta pagar com as pratas
+				dicionarioAtual := recursosDisponiveis[2];
+				foreach serial in dicionarioAtual //Verifica se da pra pagar só com moedas de cobre
+					moeda := SystemFindObjectBySerial(_serial_iter);
+					diferenca := faltaPagar - moeda.amount*10;
+					if (diferenca > 0)
+						totalPago += moeda.amount*10;
+						faltaPagar -= moeda.amount*10;
+						DestroyItem(moeda);
+					else
+						var troco := moeda.amount*10 - faltaPagar;
+						DestroyItem(moeda);
+						totalPago += faltaPagar;
+						DarTrocoBank(player, bank_box, troco);
+						faltaPagar := 0;
+						SendSysMessage(player, "Pagou o aluguel.");
+						break;
+					endif
+				endforeach
+			endif
+			if (faltaPagar > 0) //Tenta pagar com os ouros
+				dicionarioAtual := recursosDisponiveis[3];
+				foreach serial in dicionarioAtual //Verifica se da pra pagar só com moedas de cobre
+					moeda := SystemFindObjectBySerial(_serial_iter);
+					//print("Serial: "+ _serial_iter +" Quantidade: "+ serial);
+					//print("Moeda: "+ moeda.amount +" ");
+					//print("Falta Pagar: "+ faltaPagar +" ");
+					diferenca := faltaPagar - moeda.amount*100;
+					if (diferenca > 0)
+						totalPago += moeda.amount*100;
+						faltaPagar -= moeda.amount*100;
+						DestroyItem(moeda);
+					else
+						//print("Vai pagar com ouro");
+						var troco := moeda.amount*100 - faltaPagar;
+						DestroyItem(moeda);
+						totalPago += faltaPagar;
+						DarTrocoBank(player, bank_box, troco);
+						faltaPagar := 0;
+						SendSysMessage(player, "Pagou o aluguel!");
+						break;
+					endif
+				endforeach
+			endif
+		else
+			SendSysMessage(player, "Voce nao tem moedas suficientes no banco para pagar o aluguel.");
+			Set_Critical(0);
+			return 0;
+		endif
 	endif
-	
+	recursosDisponiveis := CalculaRecursosDisponiveisBank(bank_box, MOEDAS_COBRE);
+	SendSysMessage(player, "Valor final disponivel no banco: " + recursosDisponiveis[5]);
+	Set_Critical(0);
+	return 1;
 endfunction
 
 function DestroyRentItens(x, y, z, r)
@@ -397,4 +477,160 @@ function DestroyRentItens(x, y, z, r)
 		sleepms(20);
 	endforeach
 	return 1;
+endfunction
+
+
+
+function CalculaRecursosDisponiveisBank(bank_box, cost_type)
+	var recursosDisponiveis := Dictionary;
+	recursosDisponiveis[1] := Dictionary; //Cobre
+	recursosDisponiveis[2] := Dictionary; //Prata
+	recursosDisponiveis[3] := Dictionary; //Ouro
+	recursosDisponiveis[4] := Dictionary; //Outros
+	recursosDisponiveis[5] := 0; //Total
+
+	foreach item in EnumerateItemsInContainer(bank_box)
+		if (item.objtype == MOEDAS_COBRE)
+			recursosDisponiveis[1][item.serial] := item.amount;
+			recursosDisponiveis[5] += item.amount;
+		elseif (item.objtype == MOEDAS_PRATA)
+			recursosDisponiveis[2][item.serial] := item.amount;
+			recursosDisponiveis[5] += item.amount*10;
+		elseif (item.objtype == MOEDAS_OURO || item.objtype == GOLD_COIN)
+			recursosDisponiveis[3][item.serial] := item.amount;
+			recursosDisponiveis[5] += item.amount*100;
+		endif
+	endforeach
+	return recursosDisponiveis;
+endfunction
+
+
+function DarTrocoBank(player, bank_box, ValorTroco)
+	var faltaPagar := ValorTroco;
+	/*
+	if(ValorTroco > 0)
+		SendSysMessage(player, "Restam no banco:"); //Comentar quando for colocar em produção
+	endif
+	*/
+	var ouro := CInt(faltaPagar/100);
+	if(ouro > 0)
+		CreateItemInContainer(bank_box, MOEDAS_OURO, ouro);
+		//SendSysMessage(player, ouro + " moedas de ouro");
+	endif
+	faltaPagar -= CInt(ouro*100);
+
+	var prata := CInt(faltaPagar/10);
+	if(prata > 0)
+		CreateItemInContainer(bank_box, MOEDAS_PRATA, prata);
+		//SendSysMessage(player, prata + " moedas de prata");
+	endif
+	faltaPagar -= CInt(prata*10);
+
+	var cobre := CInt(faltaPagar);
+	if(cobre > 0)
+		CreateItemInContainer(bank_box, MOEDAS_COBRE, cobre);
+		//SendSysMessage(player, cobre + " moedas de cobre");
+	endif
+	return 1;
+endfunction
+
+function innerKeeperOpt(npc, player)
+
+	var opt := array;
+	if ( GetObjProperty(npc, "secret"))
+		opt.append(1);
+	else
+		opt.append(0);
+	endif
+	if ( GetObjProperty(npc, "onlygmsells"))
+		opt.append(1);
+	else
+		opt.append(0);
+	endif
+	if ( GetObjProperty(npc, "oneplayersells"))
+		opt.append(1);
+	else
+		opt.append(0);
+	endif
+	if ( GetObjProperty(npc, "startbuy") || GetObjProperty(npc, "endbuy"))
+		opt.append(1);
+	else
+		opt.append(0);
+	endif
+	if ( GetObjProperty(npc, "cofreAluguel"))
+		opt.append(1);
+	else
+		opt.append(0);
+	endif
+	if ( GetObjProperty(npc, "cofreImpostos"))
+		opt.append(1);
+	else
+		opt.append(0);
+	endif
+	if ( GetObjProperty(npc, "Taxa") || GetObjProperty(npc, "taxap"))
+		opt.append(1);
+	else
+		opt.append(0);
+	endif
+	/*
+	if ( GetObjProperty(npc, "faccao") )
+	opt.append(1);
+	else
+	opt.append(0);
+	endif
+	*/
+
+
+	var result := CheckBoxGump(player, 350, 300, "Opcoes do Vendor", {"Secreto", "Apenas GM vende", "Apenas Um Player Vende", "Alterar Mensagens de Compra", "Cofre Aluguel", "Cofre Impostos", "Taxa"}, opt);
+
+	EraseObjProperty(npc, "secret");
+	EraseObjProperty(npc, "onlygmsells");
+	EraseObjProperty(npc, "oneplayersells");
+//	EraseObjProperty(npc, "startbuy");
+//	EraseObjProperty(npc, "endbuy");
+
+	foreach r in result
+		if (r == "Secreto")
+			SetObjProperty(npc, "secret", 1);
+		elseif ( r == "Apenas GM vende")
+			SetObjProperty(npc, "onlygmsells", 1);
+		elseif ( r == "Apenas Um Player Vende")
+			var oneplayer := cstr(RequestGump(player, "Qual o nome do player?"));
+			SetObjProperty(npc, "oneplayersells", oneplayer);
+		elseif ( r == "Alterar Mensagens de Compra")
+			var startbuy := cstr(RequestGump(player, "Qual a mensagem de boas-vindas? [Cancele para deixar padrao]"));
+			if (startbuy)
+				SetObjProperty(npc, "startbuy", startbuy);
+			endif
+			var endbuy := cstr(RequestGump(player, "Qual a mensagem de despedida? [Cancele para deixar padrao]"));
+			if (endbuy)
+				SetObjProperty(npc, "endbuy", endbuy);
+			endif
+		elseif ( r == "Cofre Aluguel")
+			SendSysMessageEx(player, "Escolha o cofre do aluguel", SSM_REQUEST);
+			var cofre := Target(player);
+			if (cofre.objtype == 40512 || cofre.objtype == 0x9AB || cofre.objtype == 0xE7C || cofre.objtype == 0xE41 || cofre.objtype == 0xE40 || cofre.objtype == 0xE43 || cofre.objtype == 0xE42)
+				SetObjProperty(npc, "cofreAluguel", cofre.serial);
+				SendSysMessageEx(player, "Os impostos do vendedor irao para este cofre, mantenha-o seguro", SSM_REQUEST);
+			else
+				SendSysMessageEx(player, "Escolha um bau grande o suficiente para recolher os impostos", SSM_REQUEST);
+				return 1;
+			endif
+		elseif ( r == "Cofre Impostos")
+			SendSysMessageEx(player, "Escolha o cofre dos impostos", SSM_REQUEST);
+			var cofre := Target(player);
+			if (cofre.objtype == 40512 || cofre.objtype == 0x9AB || cofre.objtype == 0xE7C || cofre.objtype == 0xE41 || cofre.objtype == 0xE40 || cofre.objtype == 0xE43 || cofre.objtype == 0xE42)
+				SetObjProperty(npc, "cofreImpostos", cofre.serial);
+				SendSysMessageEx(player, "Os impostos do vendedor irao para este cofre, mantenha-o seguro", SSM_REQUEST);
+			else
+				SendSysMessageEx(player, "Escolha um bau grande o suficiente para recolher os impostos", SSM_REQUEST);
+				return 1;
+			endif
+		elseif ( r == "Taxa")
+			var imposto := cint(RequestGump(player, "Insira a taxa cobrada em porcentagem [10 = 10%]"));
+			SetObjProperty(npc, "taxap", imposto);
+		endif
+
+	endforeach
+
 endfunction
