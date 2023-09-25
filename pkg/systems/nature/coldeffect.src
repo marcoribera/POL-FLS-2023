@@ -52,7 +52,7 @@ program neve(params)
                 dif := dif + 30; // Quatro níveis mais difícil
             endif
 
-            if ( TemHabilidade(who, "Corpo diamante"))
+            if ( TemHabilidade(who, "Corpo Diamante"))
                 dif := dif - 60;
             endif
 
