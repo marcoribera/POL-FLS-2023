@@ -237,6 +237,8 @@ function GetPH(who)
 
 	if ( (classe == "Guerreiro") || (GetObjProperty(who, "kit") == "Mago de Combate"))
 		ph := 125;
+    elseif (classe == "Artifice")
+		ph := 105;
 	elseif (classe == "Ladino")
 		ph := 100;
 	else
