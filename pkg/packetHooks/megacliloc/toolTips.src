@@ -396,9 +396,8 @@ exported function MegaCliloc( who, byref packet )
 		if (desc!=error)
 			var linguagem := GetObjProperty(item, "lingua");
 			if (linguagem!=error)
-				//var linguas := GetObjProperty(who, "linguas");
-				//if (linguagem in linguas)
-				if (temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica"))
+				var linguas := GetObjProperty(who, "linguas");
+				if (temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica") || linguagem in linguas)
 					xDesc := xDesc + white + "" + desc + "<BR>";
 				else
 					xDesc :=  xDesc + "*Inscrições em Língua Desconhecida*<BR>";
