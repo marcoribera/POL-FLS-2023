@@ -258,9 +258,14 @@ endprogram
 
 exported function MegaCliloc( who, byref packet )
 	var white := "<BASEFONT COLOR=#FFFFFF>";
-	var red := "<BASEFONT COLOR=#FF0000>";
-	var blue := "<BASEFONT COLOR=#0000FF>";
-	var orange :=  "<BASEFONT COLOR=#FFA500>";
+	var amareloclaro := "<BASEFONT COLOR=#f5d189>";
+	var roxo := "<BASEFONT COLOR=#d98cd9>";
+	var softgreen := "<BASEFONT COLOR=#a1eca7>";  
+	var blueice := "<BASEFONT COLOR=#79b6c9 >"; 
+	var redfire := "<BASEFONT COLOR=#e95c4b>"; 
+	var lilas := "<BASEFONT COLOR=#d998a0>";
+	var fisico := "<BASEFONT COLOR=#FFFFFF>";
+						
 
 	var Object_Name;
 
@@ -281,7 +286,7 @@ exported function MegaCliloc( who, byref packet )
 			if (item.npctemplate)
 				if (who.weapon.attribute != WRESTLING)
 					if ( (AP_GetSkill(item, WRESTLING) + 10) > AP_GetSkill(who, who.weapon.attribute))
-						Object_Name :=  "<BASEFONT COLOR=#CBA300>" + Object_Name;
+						Object_Name :=  "<BASEFONT COLOR=#f5d189>" + Object_Name;
 					endif
 				else
 					var sk1 := AP_GetSkill(who, MELEECOMBAT1H);
@@ -295,13 +300,13 @@ exported function MegaCliloc( who, byref packet )
 						maxsk := sk3;
 					endif
 					if (AP_GetSkill(item, WRESTLING)+10 > maxsk)
-						Object_Name :=  "<BASEFONT COLOR=#CBA300>" + Object_Name;
+						Object_Name :=  "<BASEFONT COLOR=#f5d189>" + Object_Name;
 					endif
 				endif
 			else
 				//Caso em que tá desconhecido
 				if(GetObjProperty(item, "realname"))
-					Object_Name := orange + "Incognito";
+					Object_Name := amareloclaro + "Incognito";
 				else
 
 					//Verifica se o char já foi reconhecido por who
@@ -371,7 +376,7 @@ exported function MegaCliloc( who, byref packet )
 
 		//EXIBE SE TEM PROPRIEDADE MAGICA
 		if (GetObjProperty(item,"magic"))
-			xDesc := xDesc + blue + "Mâgico<br>";
+			xDesc := xDesc + roxo + "Mâgico<br>";
 		endif
 
 		var descmods := GetObjProperty(item, "descmod");
@@ -425,26 +430,27 @@ exported function MegaCliloc( who, byref packet )
 				xDesc := xDesc + GetTipoStringDesc(elem, item) + "<br>";
 				var crits := GetCriticalInfo(elem);
 				if (crits != "")
-					xDesc := xDesc + red + crits;
+					xDesc := xDesc + amareloclaro + crits;
 				endif
 
 				var hits :=  GetHitsInfo(elem);
 				if (hits != "")
-					xDesc := xDesc + orange + hits;
+					xDesc := xDesc + amareloclaro + hits;
 				endif
 
 				xDesc := xDesc + white + "Fisico " + (item.damage_physical ) + "<br>";
+				
 				if ( (item.damage_cold + item.damage_cold_mod != 0))
-					xDesc := xDesc  + "Frio " + (item.damage_cold ) + "<br>";
+				xDesc := xDesc  + blueice + "Frio " + (item.damage_cold ) + "<br>";
 				endif
 				if ( (item.damage_fire + item.damage_fire_mod != 0))
-					xDesc := xDesc  + "Fogo " + (item.damage_fire ) + "<br>";
+					xDesc := xDesc + redfire + "Fogo " + (item.damage_fire ) + "<br>";
 				endif
 				if ( (item.damage_energy + item.damage_mod != 0))
-					xDesc := xDesc  + "Energia " + (item.damage_energy ) + "<br>";
+					xDesc := xDesc  + lilas + "Energia " + (item.damage_energy ) + "<br>";
 				endif
 				if ( (item.damage_poison + item.damage_poison_mod != 0))
-					xDesc := xDesc  + "Veneno " + (item.damage_poison ) + "<br>";
+					xDesc := xDesc  + softgreen + "Veneno " + (item.damage_poison ) + "<br>";
 				endif
 
 				//EXIBE AS GEMAS QUE TEM NA ARMA
@@ -455,21 +461,21 @@ exported function MegaCliloc( who, byref packet )
 					endforeach
 				endif
 				if (item.dmg_mod > 0 )
-					xDesc := xDesc + blue + "Bônus Dano";
+					xDesc := xDesc + roxo + "Bônus Dano";
 				endif
 				if (item.hp_mod > 0)
-					xDesc := xDesc + blue + "Bônus Item PVs";
+					xDesc := xDesc + roxo + "Bônus Item PVs";
 				endif
 
 				var hitsscripts := GetObjProperty(item, "HitScripts");
 				if (hitsscripts != error)
 					foreach hits in hitsscripts
 						if (hits == ":combat:weaponHitScripts/FireHit")
-							xDesc := xDesc + blue + "Dano de Fogo<br>";
+							xDesc := xDesc + roxo + "Dano de Fogo<br>";
 						elseif ( hits == ":combat:weaponHitScripts/IceHit")
-							xDesc := xDesc + blue + "Dano de Gelo<br>";
+							xDesc := xDesc + roxo + "Dano de Gelo<br>";
 						elseif ( hits == ":combat:weaponHitScripts/LightningHit")
-							xDesc := xDesc + blue + "Dano de Energia<br>";
+							xDesc := xDesc + roxo + "Dano de Energia<br>";
 						endif
 					endforeach
 				endif
@@ -490,18 +496,19 @@ exported function MegaCliloc( who, byref packet )
 				if (elem.parrydelay || GetObjProperty(item, "parrydelay_mod"))
 					xDesc := xDesc + "Delay Bonus: " + getParryDelay(elem, item) + "<br>";
 				endif
-				xDesc := xDesc + white + "Fisico " + (item.resist_physical ) + "<br>";
+				xDesc := xDesc + fisico + "Fisico " + (item.resist_physical ) + "<br>";
+
 				if ( (item.resist_cold + item.resist_cold_mod != 0))
-					xDesc := xDesc  + "Frio " + (item.resist_cold ) + "<br>";
+					xDesc := xDesc  + blueice + "Frio " + (item.resist_cold ) + "<br>";
 				endif
-				if ( (item.resist_fire + item.resist_fire_mod != 0))
-					xDesc := xDesc  + "Fogo " + (item.resist_fire ) + "<br>";
+				if ( (item.resist_fire +  item.resist_fire_mod != 0))
+					xDesc := xDesc + redfire + "Fogo " + (item.resist_fire ) + "<br>";
 				endif
 				if ( (item.resist_energy + item.resist_mod != 0))
-					xDesc := xDesc  + "Energia " + (item.resist_energy ) + "<br>";
+					xDesc := xDesc  + lilas + "Energia " + (item.resist_energy ) + "<br>";
 				endif
 				if ( (item.resist_poison + item.resist_poison_mod != 0))
-					xDesc := xDesc  + "Veneno " + (item.resist_poison ) + "<br>";
+					xDesc := xDesc  + softgreen + "Veneno " + (item.resist_poison ) + "<br>";
 				endif
 			endif
 		endif
@@ -516,29 +523,29 @@ exported function MegaCliloc( who, byref packet )
 				if (mods != error)
 					foreach mod in (mods.keys())
 						if (mod == "strmod")
-							xDesc := xDesc + blue + "Bônus For <br>";
+							xDesc := xDesc + white + "Bônus For <br>";
 						elseif (mod == "dexmod")
-							xDesc := xDesc + blue + "Bônus Des <br>";
+							xDesc := xDesc + white + "Bônus Des <br>";
 						elseif (mod == "intmod")
-							xDesc := xDesc + blue + "Bônus Int <br>";
+							xDesc := xDesc + white + "Bônus Int <br>";
 						elseif (mod == "hitsmod")
-							xDesc := xDesc + blue + "Bônus PVs<br>";
+							xDesc := xDesc + white + "Bônus PVs<br>";
 						elseif (mod == "manamod")
-							xDesc := xDesc + blue + "Bônus Mana <br>";
+							xDesc := xDesc + white + "Bônus Mana <br>";
 						elseif (mod == "stammod")
-							xDesc := xDesc + blue + "Bônus Stam <br>";
+							xDesc := xDesc + white + "Bônus Stam <br>";
 						elseif (mod == "PhysicalResistMod")
-							xDesc := xDesc + blue + "Resistencia Fisica <br>";
+							xDesc := xDesc + white + "Resistencia Fisica <br>";
 						elseif (mod == "ColdResistMod")
-							xDesc := xDesc + blue + "Resistencia Frio <br>";
+							xDesc := xDesc + blueice  + "Resistencia Frio <br>";
 						elseif (mod == "FireResistMod")
-							xDesc := xDesc + blue + "Resistencia Fogo <br>";
+							xDesc := xDesc + redfire + "Resistencia Fogo <br>";
 						elseif (mod == "EnergyResistMod")
-							xDesc := xDesc + blue + "Resistencia Energia <br>";
+							xDesc := xDesc + lilas  + "Resistencia Energia <br>";
 						elseif (mod == "PoisonResistMod")
-							xDesc := xDesc + blue + "Resistencia Veneno <br>";
+							xDesc := xDesc + softgreen  + "Resistencia Veneno <br>";
 						else
-							xDesc := xDesc + blue + "Bonus " + mod + "<br>";
+							xDesc := xDesc + roxo + "Bonus " + mod + "<br>";
 						endif
 					endforeach
 				endif
