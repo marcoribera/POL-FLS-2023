@@ -97,6 +97,7 @@ function SetupEquip(who)
   var group;
   var equipt;
   var npcelem := FindConfigElem(npccfgfile, ParseTemplateName(me.npctemplate).template);
+  var mobile_taxonomy := GetConfigString(npcelem, "Taxonomy");
   var categ := GetConfigString(npcelem, "Equip");
   categ := categ;
 
@@ -134,6 +135,18 @@ function SetupEquip(who)
       endforeach
     endif
   endif
+
+var montaria := Getobjproperty(who, "Montaria");
+if (!montaria)
+else
+Equipitem (who, montaria);
+endif
+
+if (!mobile_taxonomy)
+else
+SetupGender(who);
+SetupAnimalCritic(who);
+endif
 
 endfunction
 
@@ -243,7 +256,6 @@ endfunction
  */
 function SetupGender(mobile)
   var gender_set := npccfgfile[ParseTemplateName(mobile.npctemplate).template].Gender;
-	//var npc_elem := NPC_GetNPCConfig(mobile);
 
 	if ( gender_set == 0)
 		//var gender_new := Cint(randomint(2) + 1);
@@ -251,9 +263,66 @@ function SetupGender(mobile)
           0: Setobjproperty(mobile, "Sexo", 1);
           1: Setobjproperty(mobile, "Sexo", 2);
         endcase
-	elseif (!gender_set)
 	else
 		Setobjproperty(mobile, "Sexo", Cint(mobile.Gender) );
 	endif
+
+endfunction
+
+/*
+ * SetupAnimalCritic(mobile)
+ *
+ * Purpose
+ * Set the critic of the savage annimal npc  based on its category 'Critics'
+ * settings in its npcdesc.cfg template.
+ *
+ * mobile:	The npc that will be given the critic.
+ *
+ * Return value
+ * Returns 1
+ *
+ */
+function SetupAnimalCritic(mobile)
+  var gender_set := npccfgfile[ParseTemplateName(mobile.npctemplate).template].Gender;
+  var npcelem :=  FindConfigElem(npccfgfile, ParseTemplateName(mobile.npctemplate).template);
+  var taxonomy := GetConfigString(npcelem, "Taxonomy");
+
+if (taxonomy == "bovidae" || taxonomy == "cervidae")
+	case (RandomInt(1))
+	0:
+		SetObjProperty(mobile, "Critic", "Coice" );
+	1:
+		SetObjProperty(mobile, "Critic", "Chifrada");
+	endcase	
+elseif (taxonomy == "suidae" || taxonomy == "camelidae" || taxonomy == "equus")
+	SetObjProperty(mobile, "Critic", "Coice");
+elseif (taxonomy == "anura" || taxonomy == "serpentes")
+	case (RandomInt(1))
+	0:
+		SetObjProperty(mobile, "Critic", "Bote" );
+	1:
+		SetObjProperty(mobile, "Critic", "Glandulas_concentradas" );
+	endcase
+elseif (taxonomy == "primatomorpha" || taxonomy == "ursidae")
+	case (RandomInt(2))
+	0:
+		SetObjProperty(mobile, "Critic", "Frenesi" );
+	1:
+		SetObjProperty(mobile, "Critic", "Rugir" );
+	endcase
+elseif (taxonomy == "canidae" || taxonomy == "felidae" || taxonomy == "chiroptera" || taxonomy == "rodentia"|| taxonomy == "reptilia" || taxonomy == "crustacean" || taxonomy == "scarabaeidae")
+	case (RandomInt(2))
+	0:
+		SetObjProperty(mobile, "Critic", "Presas_profundas" );
+	1:
+		SetObjProperty(mobile, "Critic", "Garras_afiadas" );
+	endcase
+elseif (taxonomy == "immortuos" || taxonomy == "draco")
+	SetObjProperty(mobile, "Critic", "Baforada" );
+elseif (taxonomy == "aves" || taxonomy == "phasianidae")
+	SetObjProperty(mobile, "Critic", "Garras_afiadas");
+endif
+
+	SetObjProperty(mobile, "Selvagem", 1);
 
 endfunction

@@ -26,8 +26,9 @@ function GetResist(who, resist)
 	var classe := chardata.classe;
 	var vantagem := chardata.vantagemracial;
 	var kit := chardata.kit;
-
 	var valor := 0;
+
+	EraseResist(who, resist);//Para uso da barra de status, apaga o que tem para calcular de novo
 
  	// Faz a resistência de Vontade para utilizar o valor de Reflexos para quem tem habilidade "Mente Evasiva"
 	if (resist == VONTADE && (TemHabilidade(who, "Mente Evasiva")))
@@ -128,7 +129,22 @@ function GetResist(who, resist)
 		valor := valor + 10; // +100% do VALOR_REFERENCIA
     endif
 
+//print("o valor eh "+valor);
+//print("os valores sao "+who.lower_reagent_cost+who.spell_damage_increase+who.faster_casting);
+
+if (!who.npcdesc) //se nao for jogador passa reto
+	if(resist == FORTITUDE)
+		var fortitude_mod := Cint(who.lower_reagent_cost_mod) + valor;
+		who.lower_reagent_cost_mod := fortitude_mod;
+	elseif(resist == VONTADE)
+		var vontade_mod := Cint(who.spell_damage_increase_mod) + valor;
+		who.spell_damage_increase_mod := vontade_mod;
+	else
+		var reflexos_mod := Cint(who.faster_casting_mod) + valor;
+		who.faster_casting_mod := reflexos_mod;
+	endif
 	return valor;
+endif
 endfunction
 
 function CheckResist(who, resist, dif, mod := 0)
@@ -155,4 +171,21 @@ function CheckResist(who, resist, dif, mod := 0)
 		SendSysMessageEx(who, "Falhou no teste de resistencia", SSM_INFO);
 		return 0;
 	endif
+endfunction
+
+function EraseResist(who, resist)
+
+if (!who.npcdesc)
+	if(resist == FORTITUDE)
+		who.lower_reagent_cost_mod := 0;
+		who.lower_reagent_cost := 0;
+	elseif(resist == VONTADE)
+		who.spell_damage_increase_mod := 0;
+		who.spell_damage_increase := 0;
+	else
+		who.faster_casting_mod := 0;
+		who.faster_casting := 0;
+	endif
+endif
+	Recalcvitals(who);
 endfunction

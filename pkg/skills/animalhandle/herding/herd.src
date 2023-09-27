@@ -93,8 +93,13 @@ program herd(who)
 		endif
 	else
 		if ( SkillCheck(who, HANDLEANIMAL, CInt(cfg.TameDifficulty)) > 0 )
-			IrNpc(npc, location);
-			return;
+			if (GetObjProperty(npc,"owner") && (who.cmdlevel < 1) )
+				SendSysMessageEx(who, "Este animal nao pode ser pastoreado", SSM_FAIL);
+                return;
+			else
+				IrNpc(npc, location);
+				return;
+			endif
 		else
 			SendSysMessage(who, npc.name + " nao obedece ao seu comando."); // Falha no skillcheck
 			return;

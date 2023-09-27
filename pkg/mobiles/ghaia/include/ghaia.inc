@@ -15,6 +15,8 @@ include ":tn:cooldown";
 include ":brainAI:npcUtil";
 include ":awareness:awareness";
 include ":tn:boss";
+include ":combat:armorZones";
+include ":combat:include/combat";							 
 
 // estados do npc, todos comecam no INIT, depois podem ir pro WANDER, apos algum tempo no wander se nao for interrompido eles vao pro SLEEP. do WANDER e do SLEEP podem ir pro FIGHT e desse pro VICTORY
 enum STATES
@@ -326,7 +328,9 @@ function InitializeNpc(mobile)
   SetupColor(mobile);
   SetupName(mobile);
   SetupEquip(mobile);
-  SetupGender(mobile);
+  if ((GetObjProperty(mobile, "Mobnoturno") == 1) && (GetGlobalProperty( "dia") != "noite")) 
+           ApplyRawDamage(mobile, CInt(AP_GetVitalMaximumValue(mobile, "Hits")));
+      endif
   var loot := npccfgfile[mytemplate].Loot;
   if (loot)
     Loot_Generate(mobile.backpack, loot);
@@ -394,6 +398,39 @@ function doCombatSpecial(me)
 
 endfunction
 
+function hasAttack(me)
+  var str := GetConfigString(npccfgfile[mytemplate],  "SpecialAttack");
+  str := splitwords(str);
+  //printtextabove(me, " " + str);
+  if (str.size() >= 1)
+      return 1;
+  endif
+  return 0;
+endfunction
+
+
+function doCombatSpecialNotBoss(me, opponent)
+
+	var diff_aleatorio := RandomInt(100);
+	var script := GetConfigString(npccfgfile[mytemplate],  "SpecialAttack");
+	var delay := GetConfigInt(npccfgfile[mytemplate],  "SpecialAttackDelay");
+		if (!delay)
+			delay := 40;
+		endif
+	var armor :=  CS_GetEquipmentInArmorZone(opponent, CS_GetRandomArmorZone());
+
+TS_StartCooldown(me, "npc_special", delay);
+  //printtextabove(me, " " + TS_GetCooldown(me, str[1]))
+ if (CheckResist(opponent, REFLEXOS, diff_aleatorio))
+    printtextabove(opponent, "*Evitou o ataque especial do inimigo!*");
+	return 0;	
+ else
+	var e := Start_Script(script, array{me, opponent, 0, armor, GetRawDmg(me)});
+	printtextabove(me, " " + e +  " " + script);
+	return 1;
+endif
+
+endfunction
 
 function throwItem(npc, opponent, dist)
 	if ( dist < 3 || dist > 15 )

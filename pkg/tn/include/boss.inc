@@ -87,6 +87,7 @@ function CreateBossStructGump(who, byref boss)
 		GFTextLine(chargump, 50, 185, 1153, "Hits Mod: ");
 	endif
 
+
   	//if (cfg.specialai != error)
 	//	GFTextLine(chargump, 50, 200, 1153, "Special AI [" + cfg.specialai+ "]:"); ///////////////////////
 //	else
@@ -155,7 +156,7 @@ function CreateBossStructGump(who, byref boss)
 //		GFTextLine(chargump, 250, 260, 1153, "R. Spells Mod: ");
 //	endif
 
-	var template, nome, cor, statmod, resistmod, dmgmod, hitsmod, skillsmod, specialai;
+	var template, nome, cor, statmod, resistmod, dmgmod, hitsmod, skillsmod, specialai, descmod;
 	var firesistmod, coresistmod, enresistmod, poresistmod, phresistmod;
 	var str, dex, int;
 	var wrestling, tactics, magery, awareness;
@@ -264,10 +265,16 @@ function CreateBossStructGump(who, byref boss)
 	else
 		magery := GFTextEntry( chargump, 380, 245, 100, 20, 1150, boss.magery+"");
 	endif
-
+	
+	GFTextLine(chargump, 50, 205, 1153, "Desc: ");
+	GFAddButton( chargump, 35, 210, 2103, 2104, 1, 500);
+		if (boss.descmod)
+			GFHTMLArea(chargump, 90, 210, 160, 60, "[" + boss.descmod+ "]");
+		endif
 
 	GFTextLine(chargump, 50, 240, 1153, "Loot: ");
 	GFAddButton( chargump, 50, 263, 2103, 2104, 1, 10);
+
 
 	if (boss.loot)
 		var y := 0;
@@ -371,10 +378,16 @@ function CreateBossStructGump(who, byref boss)
 		boss.magery := Cint(GFExtractData(input, magery));
 	endif
 
+		//GFTextLine(chargump, 50, 205, 1153, "Desc [" + cfg.Desc+ "]:");
 	if (input[0] == 1 )
 		//SendSysMessage(who, " " + boss + " " );
 		//SendSysMessage(who, " " + boss + " " + Cstr(GFExtractData(input, template)) );
 		return;
+	elseif (input[0] == 500)
+	var str1 := SmallRequestGump(who, "Descreva o item", 0);
+			boss.descmod := str1;
+			CreateBossStructGump(who, boss);
+
 	elseif (input[0] == 10 || input[0] == 11 || input[0] == 12 || input[0] == 13 || input[0] == 14 || input[0] == 15 || input[0] == 16 || input[0] == 17 || input[0] == 18 || input[0] == 19)
 
 		var index := input[0] - 9;
@@ -495,16 +508,13 @@ function CreateBossStructGump(who, byref boss)
 	//return 0;
 endfunction
 
-
-
-
   //transforma um npc em boss
 function SetBoss(npc, boss)
 
 	SetName(npc, boss.name);
 	npc.color := boss.color;
 	npc.truecolor := boss.color;
-
+	SetObjProperty(npc, "descmod", Cstr(boss.descmod));
 	SetObjProperty(npc, "dmgbonus", Cdbl(boss.dmg));
 	if (boss.resist)
 		npc.resist_physical_mod := Cint(boss.resist);
