@@ -1337,7 +1337,7 @@ program createchar(who)
 	setObjproperty(who, "kit", chardata.kit);
 	if (chardata.kit == "Corpulento")
         if (chardata.povo == "Thuriao")
-            AP_SetTrueStat(who, STRENGTH, chardata.str+40);
+            AP_SetTrueStat(who, STRENGTH, chardata.str+30);
             AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
             AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
         else
