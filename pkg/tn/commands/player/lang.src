@@ -4,22 +4,54 @@ include ":attributes:attributes";
 include "include/say";
 
 program lingua(who)
-
-	var linguas := GetObjProperty(who, "linguas");
-	
-	if (linguas != error)
-		return;
-	endif
-	
+	SendSysMessageEx(who, "Teste.", SSM_FAIL);
 	var qt := cint((AP_GetTrueStat(who, INTELLIGENCE)-60)/10);
-	
-	if (qt > 0)
-		var minhaslinguas := CheckBoxGump(who, 200, 180, "Escolha " + qt + "linguas. ", array{"Silvestre", "Draconiano", "Antigo Comum", "Lambion", "Lingua dos Mortos", "Abissal"});
-		if (minhaslinguas.size() > qt)
-			SendSysMessageEx(who, "Voce escolheu mais do que devia.", SSM_FAIL);
+	var linguas := GetObjProperty(who, "linguas");
+	var qt_atual := linguas.size();
+	var linguasDesejadas;
+	if (linguas != error)
+		var qt_atual := linguas.size();
+		SendSysMessageEx(who, "Ja tem lingua.", SSM_FAIL);
+		if (qt > qt_atual)
+			linguasDesejadas := CheckBoxGump(who, 200, 300, "Escolha " + Cstr(qt-qt_atual) + "nova lingua. ", linguas);
+			foreach idioma in linguas
+				if(!(idioma in  linguasDesejadas))
+					SendSysMessageEx(who, "Voce deve manter os idiomas anteriores.", SSM_FAIL);
+					return;
+				endif
+			endforeach
+			SendSysMessageEx(who, "Idiomas conhecidos salvos.", SSM_FAIL);
+		else
+			if(temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica"))
+				linguas.append("Antigo Esquecido");
+				linguas.append("Alquimico");
+				linguas.append("Nobreza Memmar");
+				linguas.append("Memmar");
+				linguas.append("e le muitos outros.");
+			endif
+			SendSysMessageEx(who, "Conhece os seguintes idiomas: " + CStr(linguas), SSM_INFO);
 			return;
 		endif
-		SetObjProperty(who, "linguas", minhaslinguas);
+	else
+		if (qt > 0)
+			//SendSysMessageEx(who, "Escolha " + qt +" idiomas.", SSM_INFO);
+			var linguasOpt := array{"Antigo vanirio", "Antigo aquilrano", "Antigo thuriao", "Antigo Asanita", "Antigo Zharkiano", "Draconiano", "Abissal", "Silvestre", "Lingua dos Mortos"};
+			linguasDesejadas := CheckBoxGump(who, 200, 300, "Escolha " + qt + " linguas:", linguasOpt);
+			if (linguasDesejadas.size() > qt)
+				SendSysMessageEx(who, "Voce escolheu mais do que devia.", SSM_FAIL);
+				return;
+			endif
+			SetObjProperty(who, "linguas", linguasDesejadas);
+			if(temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica"))
+				linguasDesejadas.append("Antigo Esquecido");
+				linguasDesejadas.append("Alquimico");
+				linguasDesejadas.append("Nobreza Memmar");
+				linguasDesejadas.append("Memmar");
+				linguasDesejadas.append("e le muitos outros.");
+			endif
+			SendSysMessageEx(who, "Conhece os seguintes idiomas: " + CStr(linguasDesejadas) +".", SSM_INFO);
+		else
+			SendSysMessageEx(who, "Voce eh burro demais para aprender outro idioma.", SSM_FAIL);
+		endif
 	endif
-
 endprogram

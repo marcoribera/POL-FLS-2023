@@ -1,6 +1,7 @@
 // $Id: use.src 1178 2006-02-10 12:32:59Z austin $
 
 use uo;
+include ":attributes:attributes";
 include "include/say";
 include ":charactercreation:habilidades";
 include ":gumps:include/requestgump";
@@ -10,6 +11,10 @@ include ":charactercreation:habilidades";
 program useBook(who,book)
 	if ( !ReserveItem(book) )
 		SendSysMessage(who, "Outra pessoa esta usando este livro.", SSM_FAIL);
+		return 0;
+	endif
+	if(GetAttributeBaseValue(who, "Intelligence") < 40)
+		SendSysMessage(who, "Voce eh burro demais pra usar isso.", SSM_FAIL);
 		return 0;
 	endif
 
@@ -41,10 +46,10 @@ program useBook(who,book)
 	//fim do check pra cartas
 
 	var linguagem := GetObjProperty(book, "lingua");
-//	var linguas := GetObjProperty(who, "linguas");
+	var linguas := GetObjProperty(who, "linguas");
 
 	if (linguagem != error)
-		if (temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica"))
+		if (temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica") || linguagem in linguas)
 			SendOpenBook(who, book);
 		else
 			SendSysMessageEx(who, "Voce nao conhece essa lingua: " + linguagem);

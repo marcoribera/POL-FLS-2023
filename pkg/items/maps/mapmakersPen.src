@@ -23,12 +23,17 @@ program use_MapmakersPen(who, tool)
 	if(!can_access(who, tool))
 		return 0;
 	endif
-	if((!tool.movable) or !ReserveItem(tool))
+	if((!tool.movable) || !ReserveItem(tool))
 		SendSysMessageEx(who, "Voce nao pode usar isto.", SSM_FAIL);
 		return 0;
 	endif
 	if( !(tool in EnumerateItemsInContainer(who.backpack)) )
 		SendSysMessage(who, "O item precisa estar na sua mochila.", SSM_FAIL);
+		return 0;
+	endif
+
+	if(GetAttributeBaseValue(who, "Intelligence") < 40)
+		SendSysMessage(who, "Voce eh burro demais pra usar isso.", SSM_FAIL);
 		return 0;
 	endif
 
@@ -81,6 +86,8 @@ program use_MapmakersPen(who, tool)
 		if (!targ.isWritable() )
 			var content := targ.ExtractInfo();
 			var linguagem := GetObjProperty(targ, "lingua");
+			var linguas := GetObjProperty(who, "linguas");
+
 			if ( content.Contents.size() > 1)
 				SendSysMessageEx(who, "Escolha outro livro para copiar.", SSM_REQUEST);
 				var copy := target(who);
@@ -92,13 +99,22 @@ program use_MapmakersPen(who, tool)
 					SendSysMessageEx(who, "Voce nao pode escrever neste livro.", SSM_FAIL);
 					return;
 				elseif (linguagem != error)
-					if (!(temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica")))
+					if (!(temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica") || (linguas != error && linguagem in linguas)))
 						SendSysMessageEx(who, "Voce nao conhece essa lingua para copiar o livro.");
 						return;
 					else
-						var traduzir := YesNo(who, "Traduzir ou copiar o livro?" , "Traduzir", "Copiar");
-						if (!traduzir)
-							SetObjProperty(copy, "lingua", linguagem);
+						var traduzir := YesNo(who, "Traduzir pra idioma comum ou copiar o livro?" , "Traduzir", "Copiar");
+						if (traduzir)
+							if(temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica"))
+								linguas := array{"Antigo vanirio", "Antigo aquilrano", "Antigo thuriao", "Antigo Asanita", "Antigo Zharkiano", "Draconiano", "Abissal", "Silvestre", "Lingua dos Mortos"};
+								linguas.append("Antigo Esquecido");
+								linguas.append("Alquimico");
+								linguas.append("Nobreza Memmar");
+								linguas.append("Memmar");
+							endif
+							var idiomaEscrita := RadioGump(who, 200, 400, "Escolha o idioma da traducao:", linguas);
+							SetObjProperty(copy, "lingua", idiomaEscrita);
+							SendSysMessageEx(who, "Traduzindo para " + idiomaEscrita + ".", SSM_INFO);
 						endif
 					endif
 				endif

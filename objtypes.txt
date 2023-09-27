@@ -2967,7 +2967,8 @@
 # 0x1f023 - 0x1ff00 unused
 0x1ff01 SecureTradeContainer containers
 0x1ff02 WornItemsContainer containers
-# 0x1ff03 - 0xeefed unused
+# 0x1ff03 - 0xeefec unused
+0xeefed alertaarea ambience
 0xeefee protectedarea ambience
 0xeefef ambiencerune ambience
 # 0xeeff0 - 0xfe994 unused
