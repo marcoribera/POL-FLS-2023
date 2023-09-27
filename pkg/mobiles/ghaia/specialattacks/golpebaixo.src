@@ -5,6 +5,7 @@ include ":fls_core:packets";
 include ":combat:combat";
 include ":blood:blood";
 include "include/damage";
+include ":timedScripts:timedScripts";
 
 program doubleattack(params)
 	var attacker	:= params[1];
@@ -14,15 +15,20 @@ program doubleattack(params)
 	var basedamage	:= params[5];
 	var rawdamage	:= params[6];
 	params := 0; // Not needed anymore.
-
+	var dist := distance(attacker, defender);
+		if ( dist < 1 )
+		return 0;
+	elseif (Abs(attacker.z - defender.z) >= 4)
+		return 0;
+	elseif ( !CheckLineOfSight(attacker, defender) )
+		return 0;
+	endif
+	
 	PlayAttackAnimation(attacker);
 	PlayHitSounds(attacker, defender);
 	
-	PrintTextAbove(attacker, "*ataque devastador*");
+	PrintTextAbove(attacker, "*ataque atordoante*");
 
-	//TODO colocar isso em uma funcao depois
-	var dmgList := dictionary;
-	dmgList := getNewDamageList(attacker);
-	var total := cint(CalculateTotalDamage(defender, basedamage, attacker, dmgList));
-	DamageFLS(defender, total*2, DMG_FORCED, attacker);
-endprogram
+	TS_StartTimer(defender, "paralysis", 5);
+
+endprogram  

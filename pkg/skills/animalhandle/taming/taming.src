@@ -237,7 +237,7 @@ function taming(who)
 
 				var time := ReadGameClock();
 				SetObjProperty(targ,"countercheck", time);
-
+				EraseObjProperty(targ, "Selvagem");
 				targ.script := ":ghaia:tamed";
 				RestartScript(targ);
 

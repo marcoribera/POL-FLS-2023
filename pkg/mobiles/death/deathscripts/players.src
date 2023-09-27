@@ -137,6 +137,13 @@ program death(params)
 		endif
 	endif
 
+if(killer.acctname)
+	var region := GetRegionName(corpse);
+	var tipo := "pvp";
+	var coords := {corpse.x, corpse.y};
+	
+	Start_script(":DiscordWebhook:discord", {tipo, killer.name, killer.acctname, ghost.name, region, coords, ghost.acctname});
+endif				   
 	SendSysMessage(ghost, "Voce desmaiou.");
 
 	var pacto := PactoSepulturaCheck(ghost, corpse);

@@ -34,6 +34,7 @@ program HitScript(params)
 		printText(defender, "*A teia emaranha o alvo*");
 		TS_StartTimer(defender, "paralysis", 5);
 	elseif (pet_instinto == "Coice")
+		attacker.facing := attacker.facing + 2;
 		printText(attacker, "*Coice*");
 		PushBack(defender, 3);
 		AP_ConsumeVital(defender, STAMINA, dmg);	

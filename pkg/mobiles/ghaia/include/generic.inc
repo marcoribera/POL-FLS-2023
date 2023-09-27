@@ -5,7 +5,8 @@ use vitals;
 include "include/sysEvent";
 include ":attributes:attributes";
 include ":tn:boss";
-
+include ":combat:armorZones";
+include ":combat:include/combat";
 
 function hasSpecial(me)
   if (npccfgfile[mytemplate].Special)
@@ -196,10 +197,23 @@ function Fight(opponent, alerted := 0)
 	endforeach
   endif
 
-  if (hasCombat(me))
-    DoCombatSpecial(me); ////////////// SPECIALL
-  endif
+if(isBoss(me)) //Faz os SpecialCombats (p/ boss) e o SpecialAttacks (p/ mobs)
+	if (hasCombat(me))
+		DoCombatSpecial(me); ////////////// SPECIALL para boss
+	endif
+else
+	if (hasAttack(me))
+		var chance := CInt(npccfgfile[mytemplate].SpecialAttackChance); //para mobs do npcdesc
+		if (!chance)
+			chance := 10;
+		endif
+		if ((RandomInt(100) <= chance) && (!TS_GetCooldown(me, "npc_special")) )// Acertou!
+			DoCombatSpecialNotBoss (me, opponent);
+		endif
+	endif
+endif
 
+var armor :=  CS_GetEquipmentInArmorZone(opponent, CS_GetRandomArmorZone());
     if ( (dist > throwinfo.range) && (throwinfo.canthrow == 1) )
       throwItem(me, opponent, dist);
     endif
@@ -388,6 +402,10 @@ function sleepmode()
     if (CInt( AP_GetSkill(me, AWARENESS) ) > 0)
         procura_em_volta(me);
     endif
+
+if ((GetObjProperty(me, "Mobnoturno") == 1) && (GetGlobalProperty( "dia") != "noite")) 
+           ApplyRawDamage(me, CInt(AP_GetVitalMaximumValue(me, "Hits")));
+      endif
 
     repeat
     //npcs criam ovos ou outras coisas
