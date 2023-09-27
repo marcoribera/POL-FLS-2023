@@ -806,3 +806,14 @@ function MyHex(i)
 
 	return res;
 endfunction
+
+///////////////////////////////////////////////////////////
+// Speed Slower
+///////////////////////////////////////////////////////////
+function PlayerSpeedSlower(player, toggle:=0)
+       if ( toggle )
+            return SendPacket(player, "BF0006002602");
+       else
+            return SendPacket(player, "BF0006002600");
+       endif
+endfunction
