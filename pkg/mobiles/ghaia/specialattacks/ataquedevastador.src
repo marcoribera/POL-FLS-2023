@@ -15,6 +15,15 @@ program doubleattack(params)
 	var rawdamage	:= params[6];
 	params := 0; // Not needed anymore.
 
+var dist := distance(attacker, defender);
+		if ( dist < 1 )
+		return 0;
+	elseif (Abs(attacker.z - defender.z) >= 4)
+		return 0;
+	elseif ( !CheckLineOfSight(attacker, defender) )
+		return 0;
+	endif
+
 	PlayAttackAnimation(attacker);
 	PlayHitSounds(attacker, defender);
 	
