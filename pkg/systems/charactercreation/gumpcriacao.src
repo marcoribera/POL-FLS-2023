@@ -1265,7 +1265,6 @@ program createchar(who)
 	AP_SetTrueStat(who, INTELLIGENCE, chardata.int);
 	who.title_race := chardata.raca;
 	CreateItemInBackpack(who, 0xba63, 100); //dinheiro
-    CreateItemInBackpack(who, 0x6161, 1); // Pergaminho radiante 0
 	who.race := RACE_HUMAN;
 	RecalcVitals(who);
 
