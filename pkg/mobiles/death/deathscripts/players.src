@@ -13,6 +13,7 @@ include "include/say";
 include ":tn:cooldown";
 include ":charactercreation:habilidades";
 include ":attributes:advanceCheck";
+include ":charactercreation:resists";
 
 program death(params)
 
@@ -90,6 +91,32 @@ program death(params)
 			endif
 			//	//setcooldown(ghost, "deathtime", 30);
 			//endif
+            var tempo := 180;
+            if (AP_GetVital(ghost, "DP") <= 19)
+                SendSysMessage(ghost, "Voce esta bastante ferido, e melhor se cuidar");
+                TS_StartTimer(ghost, "fraturaexposta", 1);
+            elseif (AP_GetVital(ghost, "DP") < 30)
+                if (!CheckResist(ghost,  FORTITUDE, 100));
+                    tempo := 300;
+                    SendSysMessage(ghost, "Voce fraturou um osso!");
+                    SetCoolDown(ghost, "hurt", tempo);
+                    TS_StartTimer(ghost, "fraturaexposta", 1);
+                endif
+            elseif (AP_GetVital(ghost, "DP") < 40)
+                if (!CheckResist(ghost,  FORTITUDE, 80));
+                    tempo := 240;
+                    SendSysMessage(ghost, "Voce fraturou um osso!");
+                    SetCoolDown(ghost, "hurt", tempo);
+                    TS_StartTimer(ghost, "fraturaexposta", 1);
+                endif
+            elseif ((AP_GetVital(ghost, "DP") < 50))
+                if (!CheckResist(ghost,  FORTITUDE, 60));
+                    tempo := 180;
+                    SendSysMessage(ghost, "Voce fraturou um osso!");
+                    SetCoolDown(ghost, "hurt", tempo);
+                    TS_StartTimer(ghost, "fraturaexposta", 1);
+                endif
+            endif
 			if ( AP_GetVital(ghost, "DP") < 10 || CInt(GetObjProperty(ghost, "morto")) )
 				SendSysMessage(ghost, "Voce morreu.");
 				SetObjProperty(corpse, "morto", 1);
@@ -143,6 +170,8 @@ program death(params)
 		endif
 		if ( GetObjProperty(corpse, "curado") )
 			SendSysMessage(ghost, "Voce foi curado e acordara em 5 segundos!");
+            EraseObjProperty(ghost, "hurt");
+            TS_LowerDuration(ghost, "fraturaexposta", -1);
 			EraseObjProperty(corpse, "prolongardesmaio");
 			sleep(5);
 			break;
