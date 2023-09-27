@@ -409,7 +409,7 @@ var inimigo_caca := (GetObjProperty (defender, "marcadacaca") == 1);
 	endif
 
 	if ( IsRaging(who))
-		if (temHabilidade(who, "Furia") || GetObjProperty(who, "NpcFuria"))
+		if (temHabilidade(who, "Baixo Limiar de Furia") || GetObjProperty(who, "NpcFuria"))
 			other:= other + 0.5; //50% de bonus - balanceamento depois da mudanca de calculo do dano
 			PrintText(who, "*enfurecido*");
 		endif
