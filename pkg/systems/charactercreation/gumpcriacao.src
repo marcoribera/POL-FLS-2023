@@ -1408,7 +1408,7 @@ program createchar(who)
 	if (chardata.classe == "Sabio")
 		if (chardata.povo == "Asanita") //asanita eh sempre mesum
 				if (ganheispell == 0)
-				    chardata.+magia := "Mesum";
+				    chardata.magia := "Mesum";
 					var grimorio := createiteminbackpack(who, "grimorio", 1);
 					CreateItemInBackpack(who, "gravedust", 10);
 					CreateItemInBackpack(who, "BlackMoor", 10);
@@ -1431,7 +1431,7 @@ program createchar(who)
 				endif
         elseif (chardata.povo == "Zharkiano")
             if (ganheispell == 0)
-                chardata.+magia := "Sacerdote";
+                chardata.magia := "Sacerdote";
                 var robe := CreateItemInBackpack(who, 0x9945, 1); //bodysash
                 SetObjProperty(robe, "description", "Robe com bordado do simbolo do clero de Zharkia");
                 SetObjProperty(robe, "cannotdye", 1);
@@ -1453,7 +1453,7 @@ program createchar(who)
             endif
         elseif (chardata.povo == "Vanirio")
             if (ganheispell == 0)
-                chardata.+magia := "Kitah";
+                chardata.magia := "Kitah";
                 var gump3 := GFCreateGump();
                 GFDisposable(gump3, 0);
                 GFResizePic(gump3, 0, 25, 3600, 170, 200);
@@ -1490,7 +1490,7 @@ program createchar(who)
 	endif
 
 	ExibeGumpAparencia(who, chardata);
-
+    SetObjProperty(who, "chardata", chardata);
 	MoveObjectToLocation( who, 4230, 25, 1, who.realm, MOVEOBJECT_FORCELOCATION);
     AP_SetVital(who, "Hunger", 0);
 	HealDamage(who, 200);

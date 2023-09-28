@@ -6,8 +6,9 @@ include ":tn:cooldown";
 include ":charactercreation:habilidades";
 
 program usavarinha(who, wand)
-
-	if (GetObjProperty(who, "kit") != "Acolito do Panteao Zhark")
+    var chardata := GetObjProperty(who, "chardata");
+	if ( chardata.magia != "Sacerdote")
+        SendSysMEssageEx(who, "Voce nao esta em sintonia com o poder das runas", SSM_FAIL);
 		return 1;
 	endif
 
