@@ -302,7 +302,7 @@ program MainHitScript( params )
 		AP_ConsumeVital(defender, STAMINA, total);
 	endif
 
-	if (TemHabilidade(defender, "Trapacear a Morte") && (AP_GetVital(defender, HITS) < total))
+	if ((TemHabilidade(defender, "Furia Imortal") || TemHabilidade(defender, "Trapacear a Morte" )) && (AP_GetVital(defender, HITS) < total))
 		start_script(":charactercreation:habilidades/trapacearmorte", array{defender, total});
 	else
 		//printtextabove(attacker, "causa dano");
