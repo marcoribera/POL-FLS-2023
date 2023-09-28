@@ -1360,7 +1360,7 @@ program createchar(who)
             AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
             AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
         else
-            AP_SetTrueStat(who, STRENGTH, chardata.str+30);
+            AP_SetTrueStat(who, STRENGTH, chardata.str+20);
             AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
             AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
         endif
