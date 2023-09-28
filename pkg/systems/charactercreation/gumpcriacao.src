@@ -157,16 +157,30 @@ var gfdata := array{
 	if (chardata.raca == "Humano")
 		gfdata.append("Versatilidade");
 		gfdata.append("Homens são movidos pela curiosidade, o que faz com que explorem várias áreas de conhecimento. Começa com +2 pontos de skills.");
-		gfdata.append("Resistentes");
-		gfdata.append("Humanos se adaptam bem a condições adversas por piores que sejam. Ganha +10 em todos os testes de resistências.");
+        if (chardata.povo == "Zharkiano")
+            gfdata.append("Resistentes");
+	    	gfdata.append("Zharkianos se adaptam bem a condições adversas por piores que sejam. Ganha +10 em todos os testes de resistências.");
+        endif
+        if (chardata.povo == "Thuriao")
+            gfdata.append("Resiliente");
+	    	gfdata.append("Thuriões possuem uma constituição fora do normal. + 20 fortitude");
+        endif
+        if (chardata.povo == "Asanita")
+            gfdata.append("Pacto com Asan");
+	    	gfdata.append("Asanitas são favorecidos pelo seu deus. + 2DP");
+        endif
 	elseif ( chardata.raca == "Elfo")
-		gfdata.append("Vontade de Ferro");
-		gfdata.append("Elfos possuem uma grande força de vontade e autocontrole. Ganham +20 nos testes de Vontade.");
-		gfdata.append("Sabedoria dos Antigos");
-		gfdata.append("Elfos são mais antigos que os outros povos e aprenderam a dar mais valor ao conhecimento. Habilidades terciárias podem ir até 50%");
-        if (chardata.povo == "Numajene")
-		   gfdata.append("Aliado da Natureza");
-		   gfdata.append("O povo élfico possui uma ligação maior com a natureza que os humanos. Animais selvagens não o atacam.");
+        gfdata.append("Sabedoria dos Antigos");
+        gfdata.append("Elfos são mais antigos que os outros povos e aprenderam a dar mais valor ao conhecimento. Habilidades terciárias podem ir até 50%");
+        if (chardata.povo == "Vanirio")
+		    gfdata.append("Vontade de Ferro");
+		    gfdata.append("Elfos possuem uma grande força de vontade e autocontrole. Ganham +20 nos testes de Vontade.");
+        elseif (chardata.povo == "Numajene")
+		    gfdata.append("Aliado da Natureza");
+		    gfdata.append("O povo élfico possui uma ligação maior com a natureza que os humanos. Animais selvagens não o atacam.");
+        elseif (chardata.povo == "Aquilrano")
+            gfdata.append("Agilidade");
+	    	gfdata.append("Aquilranos confiam muito em sua agilidade natural. + 20 reflexos");
         endif
 	endif
 
@@ -174,16 +188,22 @@ var gfdata := array{
 	if (chardata.raca == "Humano")
 		if (1 in ret.keys)
 			chardata.+vantagemracial := "Versatilidade";
-		elseif (2 in ret.keys)
+		elseif (2 in ret.keys && chardata.povo == "Zharkiano")
 			chardata.+vantagemracial := "Resistentes";
+        elseif (2 in ret.keys && chardata.povo == "Thuriao")
+			chardata.+vantagemracial := "Resiliente";
+        elseif (2 in ret.keys && chardata.povo == "Asanita")
+			chardata.+vantagemracial := "Pacto com Asan";
 		endif
 	else
 		if (1 in ret.keys)
-			chardata.+vantagemracial := "Vontade de Ferro";
-		elseif (2 in ret.keys)
 			chardata.+vantagemracial := "Sabedoria dos Antigos";
-		elseif (3 in ret.keys)
+		elseif (2 in ret.keys && chardata.povo == "Vanirio")
+			chardata.+vantagemracial := "Vontade de Ferro";
+		elseif (2 in ret.keys && chardata.povo == "Numajene")
 			chardata.+vantagemracial := "Aliado da Natureza";
+        elseif (2 in ret.keys && chardata.povo == "Aquilrano")
+			chardata.+vantagemracial := "Agilidade";
 		endif
 	endif
 
@@ -1265,7 +1285,6 @@ program createchar(who)
 	AP_SetTrueStat(who, INTELLIGENCE, chardata.int);
 	who.title_race := chardata.raca;
 	CreateItemInBackpack(who, 0xba63, 100); //dinheiro
-    CreateItemInBackpack(who, 0x6161, 1); // Pergaminho radiante 0
 	who.race := RACE_HUMAN;
 	RecalcVitals(who);
 
@@ -1373,8 +1392,14 @@ program createchar(who)
 	endif
 	if (chardata.povo == "Asanita")
         SetObjProperty(who, "dpmod", 10);
+        if (chardata.vantagemracial == "Pacto com Asan")
+            SetObjProperty(who, "dpmod", 20);
+        endif
         if (chardata.kit == "Duro de Matar")
             SetObjProperty(who, "dpmod", 30);
+        endif
+        if (chardata.kit == "Duro de Matar" && chardata.vantagemracial == "Pacto com Asan")
+            SetObjProperty(who, "dpmod", 40);
         endif
     elseif (chardata.kit == "Duro de Matar")
         SetObjProperty(who, "dpmod", 20);
@@ -1383,7 +1408,7 @@ program createchar(who)
 	if (chardata.classe == "Sabio")
 		if (chardata.povo == "Asanita") //asanita eh sempre mesum
 				if (ganheispell == 0)
-				    chardata.+magia := "Mesum";
+				    chardata.magia := "Mesum";
 					var grimorio := createiteminbackpack(who, "grimorio", 1);
 					CreateItemInBackpack(who, "gravedust", 10);
 					CreateItemInBackpack(who, "BlackMoor", 10);
@@ -1406,7 +1431,7 @@ program createchar(who)
 				endif
         elseif (chardata.povo == "Zharkiano")
             if (ganheispell == 0)
-                chardata.+magia := "Sacerdote";
+                chardata.magia := "Sacerdote";
                 var robe := CreateItemInBackpack(who, 0x9945, 1); //bodysash
                 SetObjProperty(robe, "description", "Robe com bordado do simbolo do clero de Zharkia");
                 SetObjProperty(robe, "cannotdye", 1);
@@ -1428,7 +1453,7 @@ program createchar(who)
             endif
         elseif (chardata.povo == "Vanirio")
             if (ganheispell == 0)
-                chardata.+magia := "Kitah";
+                chardata.magia := "Kitah";
                 var gump3 := GFCreateGump();
                 GFDisposable(gump3, 0);
                 GFResizePic(gump3, 0, 25, 3600, 170, 200);
@@ -1465,7 +1490,7 @@ program createchar(who)
 	endif
 
 	ExibeGumpAparencia(who, chardata);
-
+    SetObjProperty(who, "chardata", chardata);
 	MoveObjectToLocation( who, 4230, 25, 1, who.realm, MOVEOBJECT_FORCELOCATION);
     AP_SetVital(who, "Hunger", 0);
 	HealDamage(who, 200);
