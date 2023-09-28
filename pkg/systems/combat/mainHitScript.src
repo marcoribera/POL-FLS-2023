@@ -211,7 +211,7 @@ program MainHitScript( params )
 			EraseObjProperty(attacker, "#tiropenetrante");
 			DamageFLS(defender, cint(basedamage-rawdamage*2), DMG_FORCED, attacker);
 		endif
-		
+
 		total := CalculateTotalDamage(defender, basedamage, attacker, dmgList);
 		if (GetObjProperty(attacker, "#ignorardefesas") >= 1);
 			var ignr := getObjPRoperty(attacker, "#ignorardefesas");
@@ -702,10 +702,10 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 		skillCriticalBonus := CInt(AP_GetSkill(attacker, MAGICLORE)/20); //Aplica bonus de magiclore na chance de critico quando é Mago de Combate
 	elseif (GetObjProperty(attacker, "kit") == "Medico de Combate")
 		skillCriticalBonus := CInt(AP_GetSkill(attacker, MEDICINE)/20); //Aplica bonus de medicine na chance de critico quando é Medico de Combate
-	else
+	elseif (GetObjProperty(attacker, "kit") == "Ranger")
 		skillCriticalBonus := CInt(AP_GetSkill(attacker, TACTICS)/20); //Aplica bonus de tactics na chance de critico quando não é nenhum caso específico
 		if(categoriaDefender == "GiantAnimal" || categoriaDefender == "Animal" || categoriaDefender == "EvilAnimal" || categoriaDefender == "Snow" || categoriaDefender == "Mount" || categoriaDefender == "Plantas" || categoriaDefender == "Terathan" || categoriaDefender == "Dragon")
-			skillCriticalBonus := skillCriticalBonus + CInt(AP_GetSkill(attacker, SURVIVAL)/10); //Aplica bonus de Survival se forem criaturas selvagens ou dragões
+			skillCriticalBonus := skillCriticalBonus + CInt(AP_GetSkill(attacker, SURVIVAL)/20); //Aplica bonus de Survival se forem criaturas selvagens ou dragões
 		endif
 	endif
 
@@ -769,7 +769,7 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 	var weapon_scripts := array;
 	var pet_instinto :=	GetObjProperty(attacker, "Group_savage");
 	var pet_critic := GetObjProperty(attacker, "Critic");
-	var pet_selvagem := GetObjProperty(attacker, "Selvagem"); //verifica se é animal selvagem - nunca tamado, para dar dano critico																																 
+	var pet_selvagem := GetObjProperty(attacker, "Selvagem"); //verifica se é animal selvagem - nunca tamado, para dar dano critico
 	//if ( weapon.objtype == 0xF020 ) // Intrinsic fist
 	//	weapon_scripts := GetObjProperty(attacker, "CriticalHitScripts");
 	if ( weapon.IsA(POLCLASS_WEAPON) && !pet_instinto && !pet_selvagem )
