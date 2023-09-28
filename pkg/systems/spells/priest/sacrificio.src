@@ -15,10 +15,10 @@ program SpellScript(params)
 	var targ := params[2];
 	params := 0; // No longer needed
 
-	if ( !targ.npctemplate && (targ == who))
-		SendSysMessageEx(who, "Voce nao pode ser alvejado por essa magia.", SSM_FAIL);
-		return;
-	endif
+	//if ( !targ.npctemplate && (targ == who))
+	//	SendSysMessageEx(who, "Voce nao pode ser alvejado por essa magia.", SSM_FAIL);
+	//	return;
+	//endif
 
 	if (!targ)
 		return;

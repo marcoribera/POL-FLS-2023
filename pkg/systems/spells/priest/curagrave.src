@@ -21,10 +21,10 @@ program SpellScript(params)
 		return;
 	endif
 
-	if ( !targ.npctemplate && (targ == who))
-		SendSysMessageEx(who, "Voce nao pode ser alvejado por essa magia.", SSM_FAIL);
-		return;
-	endif
+	//if ( !targ.npctemplate && (targ == who))
+	//	SendSysMessageEx(who, "Voce nao pode ser alvejado por essa magia.", SSM_FAIL);
+	//	return;
+	//endif
 
 
 	if (!targ.isa(POLCLASS_MOBILE))

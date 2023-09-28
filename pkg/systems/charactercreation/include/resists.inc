@@ -63,7 +63,9 @@ function GetResist(who, resist)
 		else
 			valor := valor + 10;
 		endif
-
+        if (vantagem == "Resiliente")
+			valor := valor + 20; // +200% do VALOR_REFERENCIA
+		endif
 		// Aplica bonus de Atributo atual para a resistência
 		valor := valor + CInt(AP_GetStat(who, STRENGTH)/4); // STRENGTH % do VALOR_REFERENCIA
 
@@ -82,7 +84,9 @@ function GetResist(who, resist)
 		else
 			valor := valor + 10;
 		endif
-
+        if (vantagem == "Agilidade")
+			valor := valor + 20; // +200% do VALOR_REFERENCIA
+		endif
 		// Aplica bonus de Atributo atual para a resistência
 		valor := valor + CInt(AP_GetStat(who, DEXTERITY)/4); // DEXTERITY % do VALOR_REFERENCIA
 
