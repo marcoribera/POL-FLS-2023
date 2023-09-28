@@ -10,7 +10,7 @@ endprogram
 
 const ITEM_ID := 3;
 const TEXT_TYPE := 9;
-const NAME := 18; //posição do Name de quem fala
+const NAME_ID := 18; //posição do Name de quem fala
 const SYS_MSG := 0x06;
 
 exported function handleUCOutgoing( character, byref packet )
@@ -19,6 +19,9 @@ exported function handleUCOutgoing( character, byref packet )
 	//	return 0;
 	//endif
 
+
+
+
 	var type := packet.GetInt8(TEXT_TYPE);
 
 	var serial := packet.GetInt32(ITEM_ID);
@@ -26,6 +29,49 @@ exported function handleUCOutgoing( character, byref packet )
 
 	var length_of_text := ( packet.GetInt16(1) - 49 ) / 2;
 	var message_txt := packet.GetUnicodeString(48, length_of_text);
+
+
+
+	var Object_Name;
+	if (source.IsA(POLCLASS_MOBILE))
+		//PREENCHE NOME DO MOBILE
+		Object_Name := source.name;
+
+		//Cor do nome dos NPC conforme skill de combate
+		if (!source.npctemplate)
+			//Caso em que tá desconhecido
+			if(GetObjProperty(source, "realname"))
+				Object_Name := "Incognito";
+			else
+				//Verifica se o char já foi reconhecido por character
+				var conhecidos := dictionary;
+				if(GetObjProperty(character, "conhecidos"))
+					var ID := Cstr(source.serial); //Salva o serial do personagem
+					if(GetObjProperty(source, "disfarce"))
+						ID := Cstr(GetObjProperty(source, "FakeID")); //Substitui o serial pelo falso quando o personagem observado está disfarçado
+					endif
+
+					conhecidos := GetObjProperty(character, "conhecidos"); //Lista de pessoas conhecidadas
+					if(conhecidos.Exists(ID))
+						Object_Name := conhecidos[ID];
+					else
+						Object_Name := "??????";
+					endif
+				else
+					Object_Name := "??????";
+				endif
+			endif
+			if (character.cmdlevel > 1) //Staff consegue ver o nome e raça
+
+				if(GetObjProperty(source, "disfarce"))
+					Object_Name := Object_Name + " [" + GetObjProperty(source, "disfarce").aparencia + "]";
+				else
+					Object_Name := Object_Name + " [" + source.name + "]";
+				endif
+			endif
+			packet.SetString(NAME_ID, Object_Name,1);
+		endif
+	endif
 
 /*
 	SendSysMessage(source,"cmd "+ packet.GetInt8(0));

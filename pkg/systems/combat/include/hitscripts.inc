@@ -21,7 +21,7 @@ function execgenerichit(attacker, defender, hitopt, rawdamage)
 		else
 
    //   printtextabove(attacker, " " + vital);
-    
+
 			if (vital == "Hits")
 				var hitdmg := dmg;
 				if (defender.npctemplate)
@@ -49,7 +49,7 @@ function execgenerichit(attacker, defender, hitopt, rawdamage)
 	if (hitopt.textatacante != error)
 		PrintText(attacker, hitopt.textatacante);
 	endif
-	
+
 	if (hitopt.textdefensor != error)
 		PrintText(defender, hitopt.textdefensor);
 	endif
@@ -57,7 +57,7 @@ function execgenerichit(attacker, defender, hitopt, rawdamage)
 	if (hitopt.fxatacante != error)
 		PlayObjectCenteredEffect(attacker, hitopt.fxatacante[1], hitopt.fxatacante[2], hitopt.fxatacante[3]);
 	endif
-	
+
 	if (hitopt.fxdefensor != error)
 		PlayObjectCenteredEffect(defender, hitopt.fxdefensor[1], hitopt.fxdefensor[2], hitopt.fxdefensor[3]);
 	endif
@@ -75,15 +75,15 @@ function execgenerichit(attacker, defender, hitopt, rawdamage)
 	endwhile
 	if(hitopt.timername != error)
 //		var timername := RemoveSpaces(hitopt.timername, CLR_ALL_SPACES);
-		sendsysmessage(attacker, "a" + tname  + "defender " + defender);
+		//sendsysmessage(attacker, "a" + tname  + "defender " + defender);
 		if (tname == "bleed")
-			TS_StartTimer(defender, "bleed", 40, 5, attacker); 
+			TS_StartTimer(defender, "bleed", 40, 5, attacker);
 		else
 			var e := TS_StartTimer(defender, tname, cint(hitopt.timerduration), cint(hitopt.level) );
 		endif
 	//	sendsysmessage(attacker, " " + e);
 	endif
-	
+
 	if (hitopt.createitem != error)
 		var x , y, z;
 		if (hitopt.itemloc == "Atacante")
@@ -105,18 +105,18 @@ function execgenerichit(attacker, defender, hitopt, rawdamage)
 endfunction
 
 function execonkill(attacker, defender)
-  
+
   var weapon := attacker.weapon;
   var opts := GetObjProperty(weapon, "generichit");
   if (opts == error)//ve no npc
     opts := GetObjProperty(attacker, "generichit");
   endif
-  if (opts == error) 
+  if (opts == error)
     return;
   endif
-  
+
   var onkill := opts.onkill;
-  
+
 
   if (onkill.text != "")
     printtext(defender, onkill.text);
@@ -155,7 +155,7 @@ endfunction
 function configurehitscript(who)
 
 	var options := CheckBoxGump(who, 300, 400, "Escolha as configuracoes do hitscript", array{"TimedScript", "Bonus Dano", "Dano Area", "Efeito Grafico", "Slayer", "Som", "Texto", "Criar Item", "OnKill"});
-	
+
 	var  hitopt := struct;
 	foreach option in options
 		if (option == "Bonus Dano") //stamina, mana
@@ -225,7 +225,7 @@ function configurehitscript(who)
               killopts.+itemamt := cint(RequestGump(who, "Qual a quantidade do item?", "", "", 1));
             elseif (op == "Criar Item Loot")
               killopts.+lootcreate := cint(RequestGump(who, "Qual o id do item?", "", "", 1));
-              killopts.+lootamt := cint(RequestGump(who, "Qual a quantidade do item?", "", "", 1));              
+              killopts.+lootamt := cint(RequestGump(who, "Qual a quantidade do item?", "", "", 1));
             endif
           endforeach
           hitopt.+onkill := killopts;
