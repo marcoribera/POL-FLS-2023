@@ -1332,6 +1332,7 @@ program createchar(who)
 	// Edmond - 15/02/2012
 	if (chardata.Skills["Alchemy"] == 2)
 		var book := createiteminbackpack(who, "alchemybook");
+        book.newbie := 1;
 		setobjproperty(book, "serialid", who.serial);
 		setobjproperty(book, "marked",who.name + " - " + who.acctname);
 
@@ -1343,10 +1344,11 @@ program createchar(who)
 		var book1:= CreateItemInBackpack(who, "alchemybook");
 		setobjproperty(book1, "serialid", who.serial);
 		setobjproperty(book1, "marked",who.name + " - " + who.acctname);
-
+        book1.newbie := 1;
         var recipes := array;
 		recipes := CreateBasicRecipes();
 		var book2 := createiteminbackpack(who, "alchemybook");
+        book2.newbie := 1;
 		setobjproperty(book2, "recipes", recipes);
 		setobjproperty(book2, "serialid",who.serial);
 		setobjproperty(book2, "marked",who.name + " - " + who.acctname);
@@ -1414,6 +1416,7 @@ program createchar(who)
 					CreateItemInBackpack(who, "BlackMoor", 10);
 					setobjproperty(grimorio, "serialid", who.serial);
 					setobjproperty(grimorio, "marked",who.name + " - " + who.acctname);
+                    grimorio.newbie := 1;
 					var spellinfo := struct;
 					var p1 := createiteminbackpack(who, "pergaminhomagico1");
 					spellinfo.+id := 1;
@@ -1444,6 +1447,7 @@ program createchar(who)
         elseif (chardata.povo == "Numajene")
             if (ganheispell == 0)
                 var totem := CreateItemInBackpack(who, "totem", 1);
+                totem.newbie := 1;
                 var s1 := CreateItemInBackpack(who, "invocarespiritolobo", 1);
                 var s2 := CreateItemInBackpack(who, "metamorfoselobo", 1);
                 CreateItemInBackpack(who, "Deadwood", 10);
