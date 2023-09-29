@@ -343,6 +343,14 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 
 	//Bonus de Habilidades especiais
 
+    if (TemHabilidade(who, "Taticas Arcanas"))
+		var manamoment 	:= AP_GetVital(who, "MANA");
+		var manatotal	:= AP_GetVitalMaximumValue(who, "MANA");
+		if 	(manamoment >= manatotal / 2)
+			other := other + 0.5;
+		endif
+	endif
+
 	var habesgrimista := cint(GetObjProperty(who, "#contraataquepoderoso"))-1.0;
 	if (habesgrimista > 0)
 		other := other +habesgrimista;
