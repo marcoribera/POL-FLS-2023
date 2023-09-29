@@ -400,12 +400,12 @@ endfunction
 
 function hasAttack(me)
   var str := GetConfigString(npccfgfile[mytemplate],  "SpecialAttack");
-  str := splitwords(str);
+  //str := splitwords(str);
   //printtextabove(me, " " + str);
-  if (str.size() >= 1)
-      return 1;
+  if (!str)//.size() >= 1)
+      return 0;
   endif
-  return 0;
+  return 1;
 endfunction
 
 
@@ -426,7 +426,7 @@ TS_StartCooldown(me, "npc_special", delay);
 	return 0;	
  else
 	var e := Start_Script(script, array{me, opponent, 0, armor, GetRawDmg(me)});
-	printtextabove(me, " " + e +  " " + script);
+	//printtextabove(me, " " + e +  " " + script);
 	return 1;
 endif
 

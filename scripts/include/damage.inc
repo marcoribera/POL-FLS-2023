@@ -343,6 +343,14 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 
 	//Bonus de Habilidades especiais
 
+    if (TemHabilidade(who, "Taticas Arcanas"))
+		var manamoment 	:= AP_GetVital(who, "MANA");
+		var manatotal	:= AP_GetVitalMaximumValue(who, "MANA");
+		if 	(manamoment >= manatotal / 2)
+			other := other + 0.5;
+		endif
+	endif
+
 	var habesgrimista := cint(GetObjProperty(who, "#contraataquepoderoso"))-1.0;
 	if (habesgrimista > 0)
 		other := other +habesgrimista;
@@ -450,14 +458,26 @@ var inimigo_caca := (GetObjProperty (defender, "marcadacaca") == 1);
 	if (GetObjProperty(who, "#SequenciaDevastadoraAcumulada"))
 		other := CDbl(GetObjProperty(who, "#SequenciaDevastadoraAcumulada")) * 0.2; //20% de bonus - balanceamento depois da mudanca de calculo do dano
 	endif
+    var itemdesc := ReadConfigFile("::itemdesc");
 
     if (TemHabilidade(who, "Artista Marcial") )
 		var monk_weapons := array{ 0x0df0, 0x13f9, 0x0e8a, 0x0e81};
+        var isArmor := array{"ArmaduraPesada", "ArmaduraMedia", "ArmaduraLeve"};
         if (who.weapon.objtype == 0x1F020)
             other := other + 2.0;
 		elseif ( who.weapon.objtype in monk_weapons)
 			other := other + 1.5;
 		endif
+        var i_config := ReadConfigFile(":*:itemdesc");
+		var this_item := "";
+        foreach item in ListEquippedItems(who)
+            this_item := i_config[item.objtype];
+            if (this_item.TipoProtecao in isArmor)
+                SendSysMessageEx(who, "Voce perde mobilidade por estar de armadura e consequentemente, dano.", SSM_INFO);
+                other := 0;
+                break;
+            endif
+        endforeach
 	endif
 
 	//Multiplicador de tactics X multiplicador de força X multiplicadores de habilidades e itens X Multiplicador de buff X multiplicador de Debuff
