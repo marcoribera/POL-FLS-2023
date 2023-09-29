@@ -125,7 +125,9 @@ program skill_Anatomy(who)
 			SendSysMessageEx(who, fort + " (" + GetResist(subject, FORTITUDE) + "),", SSM_INFO);
 			SendSysMessageEx(who, refl + " (" + GetResist(subject, REFLEXOS) + "),", SSM_INFO);
 			SendSysMessageEx(who, vont + " (" + GetResist(subject, VONTADE) + "),", SSM_INFO);
-			SendSysMessageEx(who, "O alvo esta " + DPMsg(subject,who), SSM_INFO);
+            if (who.serial == subject.serial)
+			    SendSysMessageEx(who, "O alvo esta " + DPMsg(subject,who), SSM_INFO);
+            endif
 			return 1;
 		else
 			SendSysMessageEx(who, "Voce nao faz ideia " + strFail, SSM_FAIL);
@@ -137,8 +139,10 @@ program skill_Anatomy(who)
 			if ((valorInicial(who, MEDICINE) >= 40) || (who.serial == subject.serial))
 				SendSysMessageEx(who, strMsg + " parece " + fort + ", " + refl + " e "+ vont + ".", SSM_INFO);
 			endif
-			SendSysMessageEx(who, "O alvo esta " + DPMsg(subject,who), SSM_INFO);
-			return 1;
+            if (who.serial == subject.serial)
+			    SendSysMessageEx(who, "O alvo esta " + DPMsg(subject,who), SSM_INFO);
+            endif
+            return 1;
 		else
 			SendSysMessageEx(who, "Voce nao faz ideia " + strFail, SSM_FAIL);
 			return 0;
