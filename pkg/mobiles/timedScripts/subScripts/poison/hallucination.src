@@ -15,7 +15,7 @@ program TimedScript_bard_alucinacao(params)
 		var i;
 		for(i:=0; i< 20; i:=i+1)
 			Hallucinate(alvo);
-    		Sleepms(3000);
+    		Sleepms(6000);
 	  	endfor
 	  	//set_critical(1);
   		//var x := alvo.x;
@@ -38,25 +38,25 @@ function Hallucinate(who)
 	var povo := chardata.povo;
 	case (povo)
 		"Asanita":
-			graphicarray := {102,306,311,174}; //DEMONIO, IMPALADOR, CAVALEIRO SOMBRIO, SUCUBBUS.
+			graphicarray := array {102,306,311,174}; //DEMONIO, IMPALADOR, CAVALEIRO SOMBRIO, SUCUBBUS.
 			break;
 		"Thuriao":
-			graphicarray := {1,2,49,55}; //OGRO, ETTIN, DRAGÃO WYRM, TROLL DO GELO.
+			graphicarray := array {1,2,49,55}; //OGRO, ETTIN, DRAGÃO WYRM, TROLL DO GELO.
 			break;
 		"Zharkiano":
-			graphicarray := {3,7,17,26}; //ZUMBI, GOBLIN CAPITÃO, ORC, GHOUL.
+			graphicarray := array {3,7,17,26}; //ZUMBI, GOBLIN CAPITÃO, ORC, GHOUL.
 			break;
 		"Aquilrano":
-			graphicarray := {59,281,788,787}; //DRAGÃO, MINOTAURO, ESFINGE, LEÃO FORMIGA.
+			graphicarray := array {59,281,788,787}; //DRAGÃO, MINOTAURO, ESFINGE, LEÃO FORMIGA.
 			break;
 		"Numajene":
-			graphicarray := {72,87,250,271}; //TERATHAN, OPHIDIAN, LOBISOMEM DE 3 CABEÇAS, SATIRO.
+			graphicarray := array {72,87,250,271}; //TERATHAN, OPHIDIAN, LOBISOMEM DE 3 CABEÇAS, SATIRO.
 			break;
 		"Vanirio":
-			graphicarray := {38,69,76,77}; //DEMONIO DA SANGRIA, GAZER, TITAN, KRAKEN.
+			graphicarray := array {38,69,76,77}; //DEMONIO DA SANGRIA, GAZER, TITAN, KRAKEN.
 			break;
 		default:
-			graphicarray := {3,7,17,26}; //ZUMBI, GOBLIN CAPITÃO, ORC, GHOUL.
+			graphicarray := array {3,7,17,26}; //ZUMBI, GOBLIN CAPITÃO, ORC, GHOUL.
 			break;
 		break;
 	endcase

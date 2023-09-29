@@ -207,7 +207,7 @@ else
 		if (!chance)
 			chance := 10;
 		endif
-		if ((RandomInt(100) <= chance) && (!TS_GetCooldown(me, "npc_special")) )// Acertou!
+		if ((RandomInt(500) <= chance) && (!TS_GetCooldown(me, "npc_special")) )// Acertou!
 			DoCombatSpecialNotBoss (me, opponent);
 		endif
 	endif

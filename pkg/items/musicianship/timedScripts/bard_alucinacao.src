@@ -14,7 +14,7 @@ program TimedScript_bard_alucinacao(params)
 		PrintTextAbovePrivate(alvo, "*Alucinado*", caster, BARD_FONT, BARD_FONT_COLOR_BAD);
 		while (GetObjProperty(alvo, "#Alucinado"))
 			Hallucinate(alvo);
-    		Sleepms(3000);
+    		Sleepms(6000);
 	  	endwhile
 	endif
 	return 1;
@@ -25,33 +25,33 @@ function Hallucinate(who)
 		return 0;
 	endif
 	var graphicarray;
-	/*var chardata := GetObjProperty(who, "chardata");
+	var chardata := GetObjProperty(who, "chardata");
 	var povo := chardata.povo;
 	case (povo)
-		"Asanita": */
-			graphicarray := {102,306,311,174,3,7,17,26,38,69,76,77,72,87,250,271,59,281,788,787,3,7,17,26,1,2,49,55}; //DEMONIO, IMPALADOR, CAVALEIRO SOMBRIO, SUCUBBUS.
-	/*		break;
+		"Asanita":
+			graphicarray := array {102,306,311,174}; //DEMONIO, IMPALADOR, CAVALEIRO SOMBRIO, SUCUBBUS.
+			break;
 		"Thuriao":
-			graphicarray := {1,2,49,55}; //OGRO, ETTIN, DRAGÃO WYRM, TROLL DO GELO.
+			graphicarray := array {1,2,49,55}; //OGRO, ETTIN, DRAGÃO WYRM, TROLL DO GELO.
 			break;
 		"Zharkiano":
-			graphicarray := {3,7,17,26}; //ZUMBI, GOBLIN CAPITÃO, ORC, GHOUL.
+			graphicarray := array {3,7,17,26}; //ZUMBI, GOBLIN CAPITÃO, ORC, GHOUL.
 			break;
 		"Aquilrano":
-			graphicarray := {59,281,788,787}; //DRAGÃO, MINOTAURO, ESFINGE, LEÃO FORMIGA.
+			graphicarray := array {59,281,788,787}; //DRAGÃO, MINOTAURO, ESFINGE, LEÃO FORMIGA.
 			break;
 		"Numajene":
-			graphicarray := {72,87,250,271}; //TERATHAN, OPHIDIAN, LOBISOMEM DE 3 CABEÇAS, SATIRO.
+			graphicarray := array {72,87,250,271}; //TERATHAN, OPHIDIAN, LOBISOMEM DE 3 CABEÇAS, SATIRO.
 			break;
 		"Vanirio":
-			graphicarray := {38,69,76,77}; //DEMONIO DA SANGRIA, GAZER, TITAN, KRAKEN.
+			graphicarray := array {38,69,76,77}; //DEMONIO DA SANGRIA, GAZER, TITAN, KRAKEN.
 			break;
 		default:
-			graphicarray := {3,7,17,26}; //ZUMBI, GOBLIN CAPITÃO, ORC, GHOUL.
+			graphicarray := array {3,7,17,26}; //ZUMBI, GOBLIN CAPITÃO, ORC, GHOUL.
 			break;
 		break;
 	endcase
-	*/
+
 	var graphic := graphicarray[RandomInt(len(graphicarray)) + 1];
 	var color := RandomInt(99) + 2;
 	DrawGamePlayer(who, graphic, color);
