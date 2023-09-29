@@ -2711,7 +2711,13 @@
 0xbffd TintaAzulClaro1 alchemy
 # 0xbffe - 0xc198 unused
 0xc199 levedura cooking
-# 0xc19a - 0xc7ff unused
+# 0xc19a - 0xc600 unused
+0xc601 couroogrocurtido domesticwork
+0xc602 couromarinhocurtido domesticwork
+0xc603 couroreptilianocurtido domesticwork
+0xc604 courohidracurtido domesticwork
+0xc605 couronegrocurtido domesticwork
+# 0xc606 - 0xc7ff unused
 0xc800 cornmeal cooking
 0xc801 sweetdough cooking
 0xc802 cakebatter cooking
@@ -2868,12 +2874,17 @@
 0xee99 formulanoventa alchemy
 # 0xee9a - 0xeeef unused
 0xeef0 CombineCloth domesticwork
-# 0xeef1 - 0xef01 unused
+# 0xeef1 - 0xeefc unused
+0xeefd couroanfibio survival
+0xeefe courohidra survival
+0xeeff couroreptiliano survival
+0xef00 couromarinho survival
+0xef01 couroogro survival
 0xef02 vomit vomit
 # 0xef03 - 0xef10 unused
 0xef11 couroescamoso survival
 0xef12 couroespesso survival
-# 0xef13 unused
+0xef13 couronegro survival
 0xef14 couroaspero survival
 0xef15 couropeludo survival
 0xef16 courotroll survival
