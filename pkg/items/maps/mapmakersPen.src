@@ -134,16 +134,57 @@ program use_MapmakersPen(who, tool)
 				return;
 			endif
 		else
+			var linguagem := GetObjProperty(targ, "lingua");
+			var linguas := GetObjProperty(who, "linguas");
 			var yes;
-			if (temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica"))
-				yes := YesNo(who, "Escrever em lingua antiga?");
+			var idiomaEscrita;
+
+			if(temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica"))
+				linguas := array{"Antigo vanirio", "Antigo aquilrano", "Antigo thuriao", "Antigo Asanita", "Antigo Zharkiano", "Draconiano", "Abissal", "Silvestre", "Lingua dos Mortos"};
+				linguas.append("Antigo Esquecido");
+				linguas.append("Alquimico");
+				linguas.append("Nobreza Memmar");
+				linguas.append("Memmar");
+			endif
+
+			if (targ.ExtractInfo().Contents.size() > 1) //O livro não está vazio
+				if(linguagem) //está escrito em linguas
+					if(linguas != error && linguagem in linguas)
+						yes:= RadioGump(who, 300, 200, "Escrito em "+ linguagem + ". O que fazer?", array{"Manter idioma","Mudar para Comum", "Mudar para Outros"});
+						if(yes == "Mudar para Comum")
+							EraseObjProperty(targ, "lingua");
+						elseif (yes == "Mudar para Outros")
+							idiomaEscrita := RadioGump(who, 200, 400, "Escolha o idioma de escrita:", linguas);
+							SetObjProperty(targ, "lingua", idiomaEscrita);
+						endif
+					else
+						yes:= YesNo(who, "Nao entende que esta escrito. Quer apagar o conteudo?");
+						if(yes)
+							PrintTextAbove(who, "*Apagando livro*");
+							EraseObjProperty(targ, "lingua");
+							return 0;
+						else
+							PrintTextAbove(who, "*fecha livro*");
+						endif
+					endif
+				else
+					yes:= YesNo(who, "Escrever em outra lingua");
+					if(yes)
+						idiomaEscrita := RadioGump(who, 200, 400, "Escolha o idioma de escrita:", linguas);
+						SetObjProperty(targ, "lingua", idiomaEscrita);
+					else
+						EraseObjProperty(targ, "lingua");
+					endif
+				endif
+			else //livro vazio
+				yes:= YesNo(who, "Escrever em outra lingua");
 				if(yes)
-					SetObjProperty(targ, "lingua", "idioma antigo");
-				elseif(GetObjProperty(targ, "lingua"))
+					idiomaEscrita := RadioGump(who, 200, 400, "Escolha o idioma de escrita:", linguas);
+					SetObjProperty(targ, "lingua", idiomaEscrita);
+				else
 					EraseObjProperty(targ, "lingua");
 				endif
 			endif
-
 			yes := YesNo(who, "Deseja lacrar o livro?");
 			if (yes)
 				targ.ReadOnly(1);
