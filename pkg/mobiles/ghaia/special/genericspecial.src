@@ -9,7 +9,7 @@ include "include/sysEvent";
 include ":ghaia:generic";
 
 program loko(params)
-
+print("entrou");
 	var who := params[1];
 	var event := params[2];
 
@@ -172,10 +172,10 @@ program loko(params)
 				endforeach	
 			endforeach
 		elseif (state.type == "Summon Npcs") // Summonar NPC
-	        var amt := 0;
+			var amt := 0;
 			while (amt < state.amount)
 				var npc;
-				if (state.x == 6 && state.y == 6 && state.z == 6)
+				if (Cint(state.x) == 6 && CInt(state.y) == 6 && Cint(state.z) == 6)
 					npc := CreateNpcFromTemplate( cstr(state.npctemplate), Cint(who.x) + RandomInt(2 * state.range) - state.range,
 												  Cint(who.y) + RandomInt(2 * state.range) - state.range, Cint(who.z));
 				else
