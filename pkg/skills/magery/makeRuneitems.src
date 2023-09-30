@@ -18,7 +18,7 @@ var craft_config    := ReadConfigFile(":magery:runecraft");
 program use_Runecraft(who, tool)
     var chardata := GetObjProperty(who, "chardata");
 
-	if (chardata.magia != "Sacerdote") && !(who.cmdlevel > 1))
+	if (chardata.magia != "Sacerdote" && !(who.cmdlevel > 1))
 		SendSysMEssageEx(who, "Apenas Acolitos e Paladinos dominam o conhecimento para confeccao de runas.", SSM_FAIL);
 		return 0;
 	endif

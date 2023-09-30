@@ -1435,6 +1435,7 @@ program createchar(who)
         elseif (chardata.povo == "Zharkiano")
             if (ganheispell == 0)
                 chardata.magia := "Sacerdote";
+                var malhoecinzel := CreateItemInBackpack(who, 0xf40, 1);
                 var robe := CreateItemInBackpack(who, 0x9945, 1); //bodysash
                 SetObjProperty(robe, "description", "Robe com bordado do simbolo do clero de Zharkia");
                 SetObjProperty(robe, "cannotdye", 1);
