@@ -9,9 +9,9 @@ CONST CYCLE_WAIT := 60*10;
 
 program GlobalPlantControl()
 	SetGlobalProperty("#GrowerControlPid", GetPid());
-	
+
 	sleep(1);
-	
+
 	//set_priority(1);
 	while(1)
 		GrowthChecks();
@@ -20,18 +20,18 @@ program GlobalPlantControl()
 endprogram
 
 function GrowthChecks()
-	SysLog("Running plant-grower growth cycle.");
-	
+	//SysLog("Running plant-grower growth cycle.");
+
 	var settings := FarmingGetSettingsCfgElem("GrowthUnit");
 	var max_produce;// := settings.MaxProduce;
-	
+
 	var data_file := DFOpenDataFile(":farming:growthunits", DF_CREATE);
 	foreach elem_name in DFGetElemNames(data_file)
 		var grower := SystemFindObjectBySerial(CInt(elem_name));
 		if ( grower.IsDead() )
 			continue;
 		endif
-		
+
 		if ( !grower.CanHarvest() )
 			//var phase_num := grower.GetGrowthPhase();
 			//phase_num := phase_num+1;
@@ -41,7 +41,7 @@ function GrowthChecks()
 			var t2 := grower.NewGrowIt();
 			//grower.SetGrowthPhase(phase_num);
 		endif
-		
+
 		//descomentado
 		var water_amt := grower.GetWaterAmount();
 		if ( !GetObjProperty(grower, "gmplant") )
@@ -52,7 +52,7 @@ function GrowthChecks()
 			endif
 		endif
 		//descomentado
-		
+
 		var produce_amt := grower.GetProduceAmount();
 		max_produce := grower.GetMaxProduceAmount();
 		if ( produce_amt < max_produce )
@@ -64,7 +64,7 @@ function GrowthChecks()
 				grower.SetProduceAmount(produce_amt);
 			endif
 		endif
-		
+
 		sleepms(30);
 	endforeach
 endfunction
@@ -82,7 +82,7 @@ function DestroyPlant(grower, candestroy:=0)
 			foreach objeto in (ListItemsAtLocation(grower.x, grower.y, grower.z, grower.realm))
 				if (GetObjProperty(objeto, "bottom"))
 					destroyitem(objeto);
-				endif				
+				endif
 			endforeach
 		endif
 		destroyitem(grower);

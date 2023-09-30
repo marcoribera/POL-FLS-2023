@@ -32,17 +32,21 @@ program use_scissors( who, scissors )
 		SendSysMessage(who, "Voce nao pode cortar algo que esta vestindo!");
 		return;
 	endif
-
+//	SendSysMessage(who, "tipo "+ cloth.objtype);
 	var material := Cint(scissors_cfg[cloth.objtype].material);
+//	SendSysMessage(who, "material "+ material);
 	var clr := cloth.color;
+//	SendSysMessage(who, "color "+ clr);
 	var cont := cloth.container;
 	var newitem := Cint(scissors_cfg[cloth.objtype].newitem);
+//	SendSysMessage(who, "newitem "+ newitem);
 	var amt, newcloth;
 
 	if(material)
 		amt := (material * cloth.amount);
+//		SendSysMessage(who, "amt: "+ amt);
 		if(SubtractAmount(cloth, amt))
-			newcloth := CreateItemAtLocation(who.x, who.y, who.z, newitem, amt, who.realm);
+			newcloth := CreateItemInBackpack(who, newitem, amt);
 			newcloth.color := clr;
 			if (cont)
 				MoveItemToContainer(newcloth, cont);
@@ -67,7 +71,7 @@ program use_scissors( who, scissors )
 			endif
 			material := Cint(cfg3[cloth.objtype].material);
 			leftover := 0x1067;
-			
+
 			if(!material)
 				SendSysMessage (who, "Voce nao pode usar as tesouras nisso.");
 				return;

@@ -192,12 +192,10 @@ function CheckSkillAdvance(mobile, skill_name, award_diff, pass_chance)
 	if(GetObjProperty(mobile, "bonus_tempo"))
 		bonus_tempo := bonus_tempo + 20;
 	endif
-  if ( (limiteportempo(mobile) + valorinicial(mobile, skill_name) + bonus_tempo)  <= true_skill )
-  		SkillDbgMsg(mobile, "Chegou no maximo do limite por tempo: " + limiteportempo(mobile) + " idade do char  " +
-  			idadeChar( mobile) + " valor inicial "  + valorinicial(mobile, skill_name) + " da skill " + skill_name);
-
+	if ( (limiteportempo(mobile) + valorinicial(mobile, skill_name) + bonus_tempo)  <= true_skill )
+  		SkillDbgMsg(mobile, "Chegou no maximo do limite por tempo: " + limiteportempo(mobile) + " idade do char  " + idadeChar( mobile) + " valor inicial "  + valorinicial(mobile, skill_name) + " da skill " + skill_name);
 		return 0;
-  endif
+  	endif
 
 	var settings := AP_GetSettingsCfgElem("Skills");
 	//verifica se ja nao subiu skills em 30 segundos
@@ -225,11 +223,15 @@ function CheckSkillAdvance(mobile, skill_name, award_diff, pass_chance)
 		return 0;
 	endif
 
+
+	//ESSA PARADA É A BATERIA DE CAP
+/*
 	if ( !CheckVitalSkillCap(mobile, true_skill) ) //verifica se tem cap pro temmpo ainda
 	//	printtextabove(mobile, "to sem cap");
 		SkillDbgMsg(mobile, "SkillCap insuficiente.");
 		return 0;
 	endif
+*/
 
 //	printtextabove(mobile, "oi, minha skill subiu");
 
@@ -418,13 +420,31 @@ function CalculateDaysInReal(days)// para 10000 deu 292 segundos 300
 endfunction
 
 function limiteportempo(who)
+	if (who.npctemplate)
+		return 100;
+	endif
 
-  if (who.npctemplate)
-    return 100;
-  endif
+	var dias := CInt(idadeChar(who)); // Colocar aqui a prop pra pegar os dias do char
+	var lim := 0;
 
-   var dias := CInt(idadeChar(who)); // Colocar aqui a prop pra pegar os dias do char
+	if(dias >= 0)
+		if(dias > 11)
+			if(dias > 67)
+				if(dias > 92) //dias 93 a 126 => Primárias até 10 (Até level 20)
+					dias := 50.0 + cdbl(dias-92) * 0.3;
+				else //dias 68 a 92 => Primárias até 90 (Até level 16)
+					dias := 40.0 + cdbl(dias-67) * 0.4;
+				endif
+			else // dias 13 a 67 => Primárias até 80 (Até level 13)
+				dias := 12.0 + cdbl(dias-11) * 0.5;
+			endif
+		else //dias 1 a 12 => Primárias 40-52 (Até level 4)
+			dias := 1.0 + cdbl(dias);
+		endif
+	endif
+	return lim;
 
+/*
    var lim := 6; // Valor inicial
 
    if (dias >= 5)
@@ -441,11 +461,9 @@ function limiteportempo(who)
 
    lim := lim + CDbl(FindAccount(who.acctname).getprop("nota"))*2.5; // Influencia de -10 -5 0 +5 +10 dependendo da nota RP
 
-/*
+
    if (lim < 2.5)
       lim := 2.5; // Valor minimo de 2.5
    endif
 */
-   return lim;
-
-endfunction
+ endfunction

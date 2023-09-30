@@ -730,9 +730,14 @@
 0xdf3 magicwand2 combat
 0xdf4 magicwand3 combat
 0xdf5 magicwand4 combat
-# 0xdf6 - 0xdf8 unused
-0xdf9 cotton domesticwork
-# 0xdfa - 0xdfd unused
+0xdf6 algodaoflamel domesticwork
+0xdf7 algodaorajal domesticwork
+# 0xdf8 unused
+0xdf9 algodaocomum domesticwork
+0xdfa fibramalva domesticwork
+0xdfb fibrasisal domesticwork
+0xdfc fibradenin domesticwork
+0xdfd fibrarami domesticwork
 0xdfe cuthair hair
 # 0xdff - 0xe07 unused
 0xe08 disguisekit disguise
@@ -900,7 +905,9 @@
 0xf8f VolcanicAsh alchemy
 0xf90 Deadwood alchemy
 0xf91 WormHeart alchemy
-# 0xf92 - 0xf94 unused
+0xf92 tecidoseda domesticwork
+# 0xf93 unused
+0xf94 fioalgodao domesticwork
 0xf95 bolt1 domesticwork
 0xf96 bolt2 domesticwork
 0xf97 bolt3 domesticwork
@@ -911,28 +918,33 @@
 0xf9c bolt8 domesticwork
 0xf9d SewingKit domesticwork
 0xf9e Scissors domesticwork
-# 0xf9f unused
+0xf9f tecidolinho domesticwork
 0xfa0 Thread1 domesticwork
 0xfa1 fechadura metalworking
-# 0xfa2 - 0xfa5 unused
+0xfa2 tecidomalva domesticwork
+# 0xfa3 - 0xfa5 unused
 0xfa6 tabuleirodexadrez woodworking
 # 0xfa7 - 0xfa8 unused
 0xfa9 dyes dyes
 0xfaa tabuleirodedamas woodworking
 0xfab dyetub dyes
 0xfac firepit lighting
-# 0xfad unused
+0xfad tecidosisal domesticwork
 0xfae barrel containers
-# 0xfaf - 0xfb0 unused
+0xfaf tecidodenin domesticwork
+# 0xfb0 unused
 0xfb1 smallforge gathering
-# 0xfb2 - 0xfb3 unused
+0xfb2 tecidorami domesticwork
+# 0xfb3 unused
 0xfb4 sledgehammer combat
 0xfb5 sledgehammer2 combat
 0xfb6 Horseshoes farming
-# 0xfb7 - 0xfba unused
+0xfb7 tecidoflamel domesticwork
+# 0xfb8 - 0xfba unused
 0xfbb tongs metalworking
 0xfbc tongs2 metalworking
-# 0xfbd - 0xfbe unused
+0xfbd tecidorajal domesticwork
+# 0xfbe unused
 0xfbf caneta e tinteiro fls_core
 0xfc0 cordaescalada traps
 # 0xfc1 - 0xfc4 unused
@@ -1394,7 +1406,9 @@
 0x172b cutlimes food
 0x172c peach food
 0x172d pear food
-# 0x172e - 0x1765 unused
+# 0x172e - 0x1763 unused
+0x1764 tecidoalgodao domesticwork
+0x1765 tecidola domesticwork
 0x1766 clothpiece domesticwork
 # 0x1767 - 0x182f unused
 0x1830 beker alchemy
@@ -1497,8 +1511,27 @@
 0x19bb brazier3 lighting
 # 0x19bc - 0x1a06 unused
 0x1a07 chain fls_core
-# 0x1a08 - 0x1a9b unused
-0x1a9c FlaxBundle domesticwork
+# 0x1a08 - 0x1a88 unused
+0x1a89 roloalgodao domesticwork
+0x1a8a rolorajal domesticwork
+0x1a8b roloflamel domesticwork
+0x1a8c rolorami domesticwork
+0x1a8d rolodenin domesticwork
+0x1a8e rolosisal domesticwork
+0x1a8f rolomalva domesticwork
+0x1a90 rololinho domesticwork
+0x1a91 roloseda domesticwork
+0x1a92 rolola domesticwork
+0x1a93 fiola domesticwork
+0x1a94 fioseda domesticwork
+0x1a95 fiolinho domesticwork
+0x1a96 fiomalva domesticwork
+0x1a97 fiosisal domesticwork
+0x1a98 fiodenin domesticwork
+0x1a99 fiorami domesticwork
+0x1a9a fioflamel domesticwork
+0x1a9b fiorajal domesticwork
+0x1a9c fibralinho domesticwork
 # 0x1a9d - 0x1aa1 unused
 0x1aa2 hopscones cooking
 # 0x1aa3 - 0x1ad2 unused
@@ -2711,7 +2744,13 @@
 0xbffd TintaAzulClaro1 alchemy
 # 0xbffe - 0xc198 unused
 0xc199 levedura cooking
-# 0xc19a - 0xc7ff unused
+# 0xc19a - 0xc600 unused
+0xc601 couroogrocurtido domesticwork
+0xc602 couromarinhocurtido domesticwork
+0xc603 couroreptilianocurtido domesticwork
+0xc604 courohidracurtido domesticwork
+0xc605 couronegrocurtido domesticwork
+# 0xc606 - 0xc7ff unused
 0xc800 cornmeal cooking
 0xc801 sweetdough cooking
 0xc802 cakebatter cooking
@@ -2868,12 +2907,17 @@
 0xee99 formulanoventa alchemy
 # 0xee9a - 0xeeef unused
 0xeef0 CombineCloth domesticwork
-# 0xeef1 - 0xef01 unused
+# 0xeef1 - 0xeefc unused
+0xeefd couroanfibio survival
+0xeefe courohidra survival
+0xeeff couroreptiliano survival
+0xef00 couromarinho survival
+0xef01 couroogro survival
 0xef02 vomit vomit
 # 0xef03 - 0xef10 unused
 0xef11 couroescamoso survival
 0xef12 couroespesso survival
-# 0xef13 unused
+0xef13 couronegro survival
 0xef14 couroaspero survival
 0xef15 couropeludo survival
 0xef16 courotroll survival
@@ -2931,7 +2975,7 @@
 # 0xf000 - 0xf021 unused
 0xf022 PuzzleChest mastermind
 # 0xf023 - 0xf124 unused
-0xf125 wool domesticwork
+0xf125 la domesticwork
 # 0xf126 - 0xfddd unused
 0xfdde bandages medicine
 # 0xfddf - 0xff03 unused

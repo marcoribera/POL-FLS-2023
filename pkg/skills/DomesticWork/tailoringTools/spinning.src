@@ -30,59 +30,102 @@ program use_wool(who, wool)
   endif
   var obj := use_on.objtype;
   if (((obj >= uobj_wheel_start) && (obj <= uobj_wheel_end)) || ((obj >= 0x10a4) && (obj <= 0x10a6)))
+  	var gfx;
+  	case(obj)
+    		4117:   gfx := 0x1016;
+    		4119:   gfx := 0x1016;
+    		4121:   gfx := 0x101a;
+    		4123:   gfx := 0x101a;
+    		4124:   gfx := 0x101d;
+    		4126:   gfx := 0x101d;
+    		4260:   gfx := 0x10a5;
+    		4262:   gfx := 0x10a5;
+  	endcase
 
+    var initx := who.x;
+    var inity := who.y;
 
-    	var gfx;
-    	case(obj)
-      		4117:   gfx := 0x1016;
-      		4119:   gfx := 0x1016;
-      		4121:   gfx := 0x101a;
-      		4123:   gfx := 0x101a;
-      		4124:   gfx := 0x101d;
-      		4126:   gfx := 0x101d;
-      		4260:   gfx := 0x10a5;
-      		4262:   gfx := 0x10a5;
-    	endcase
+    while (wool.amount >= 1)
 
-	var initx := who.x;
-	var inity := who.y;
+    	use_on.graphic := gfx;
+      Detach();
+    	sleep(1);
+    	use_on.graphic := use_on.objtype;
+    	if (FazFio(who, wool) == 0)
+    	  break;
+      endif
 
-	while (wool.amount >= 1)	
-
-		use_on.graphic := gfx;
-    		Detach();
-		sleep(3);
-		use_on.graphic := use_on.objtype;
-	
-    		if (Makeyarn(who, wool) == 0)
-			break;
-		endif
-
-		if ((who.x != initx) || (who.y != inity))
-			SendSysMessageEx(who, "Voce desviou sua atencao.", SSM_FAIL);
-			break;
-		endif
-
-	endwhile
-
+    	if ((who.x != initx) || (who.y != inity))
+    		SendSysMessageEx(who, "Voce desviou sua atencao.", SSM_FAIL);
+    		break;
+    	endif
+    endwhile
+    SendSysMessageEx(who, "parou de fiar.", SSM_INFO);
   else
     SendSysMessageEx(who, "Voce precisa usar isto na roda de fiar.", SSM_FAIL);
   endif
 endprogram
 
-function Makeyarn(who, item) 
-
-		if (!Accessible(who, item))
-			SendSysMessageEx(who, "Voce nao possui o material!", SSM_FAIL);
-			return 0;
-		endif
-		if(SubtractAmount(item, 1))
-			var yarn := CreateItemInBackpack(who, 0xe1f, 2);
-			SendSysMessageEx(who, "Voce criou o fio com o material.", SSM_INFO);
-			return 1;
-		else
-			SendSysMessageEx(who, "Voce nao possui mais material suficiente.", SSM_FAIL);
-			return 0;
-		endif
-
+function FazFio(who, item)
+  if (!Accessible(who, item))
+    SendSysMessageEx(who, "Voce nao possui o material!", SSM_FAIL);
+    return 0;
+  endif
+  var obj_type := item.objtype;
+  var obj_color := item.color;
+  var prod_type;
+  var prod_material;
+  case (obj_type)
+    0xdf9:
+    //algodao
+      prod_type := 0xf94; //fioalgodao
+      break;
+    0xf125:
+    //lã
+      prod_type := 0x1a93; //fiola
+      break;
+    0x1A9C:
+    //fibra linho
+      prod_type := 0x1a95; //fiolinho
+      break;
+    0xF8D:
+    //teia de aranha (seda)
+      prod_type := 0x1a94; //fioseda
+      break;
+    0xdfa:
+    //fibramalva
+      prod_type := 0x1a96; //fiomalva
+      break;
+    0xdfb:
+    //fibrasisal
+      prod_type := 0x1a97; //fiosisal
+      break;
+    0xdfc:
+    //fibradenin
+      prod_type := 0x1a98; //fiodenin
+      break;
+    0xdfd:
+    //fibrarami
+      prod_type := 0x1a99; //fiorami
+      break;
+    0xdf6:
+    //algodaoflamel
+      prod_type := 0x1a9a; //fio flamel
+      break;
+    0xdf7:
+    //algodaorajal
+      prod_type := 0x1a9b; //fio rajal
+      break;
+    default:
+      SendSysMessage (who, "Este item so serve para fiar.");
+      return 0;
+  endcase
+	if(SubtractAmount(item, 1))
+    CreateItemInBackpack(who, prod_type, 1);
+    PlaySoundEffect(who, 0x49);
+		return 1;
+	else
+		SendSysMessageEx(who, "Voce nao possui mais material suficiente.", SSM_FAIL);
+		return 0;
+	endif
 endfunction

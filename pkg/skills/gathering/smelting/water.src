@@ -140,32 +140,59 @@ function DeterminaLiga(metals, who)
 	var metais := array;
   foreach item in metals
      case(Cint(item))
-        25353: metais.append("ferro");
-        27025: metais.append("estanho");
-        25696: metais.append("argonil");
-        25360: metais.append("galvorn");
-        25361: metais.append("mithril");
-        25355: metais.append("helce");
-        25356: metais.append("sinque");
-        25357: metais.append("figin");
+        0x6309: metais.append("ferro");
+        0x6465: metais.append("cobre");
+        0x6991: metais.append("estanho");
+        0x6460: metais.append("argonil");
+        0x6310: metais.append("galvorn");
+        0x6311: metais.append("mithril");
+        0x630b: metais.append("helce");
+        0x630c: metais.append("sinque");
+        0x630d: metais.append("figin");
+        0x6993: metais.append("prata");
+        0x630a: metais.append("lithtan");
+        0x630e: metais.append("golden");
      endcase
   endforeach
-
-	if ( (metais.size() == 2) && ("ferro"  in metais ) && ("estanho" in metais)  )
-		return 0x6995;
-	elseif ( (metais.size() == 2) && ("galvorn" in metais) && ("helce" in metais)  )
-		return 0x6998;
-	elseif ( (metais.size() == 2) && ("galvorn" in metais) && ("sinque" in metais) )
-		return 0x6999;
-	elseif ( (metais.size() == 2) && ("galvorn" in metais) && ("figin" in metais) )
-		return 0x6997;
-	elseif ( (metais.size() == 2) && ("galvorn" in metais) && ("argonil" in metais) )
-		return 0x699A;
-	elseif ( (metais.size() == 5) && ("mithril" in metais) && ("helce" in metais) && ("sinque" in metais) && ("figin" in metais) && ("argonil" in metais) )
-		return 0x699B;
-        else
-           return "noIngot";
-        endif
+  if (metais.size() == 2)
+    if (("ferro"  in metais ) && ("estanho" in metais) )
+      return 0x6995; //aco
+    elseif (("prata" in metais) && ("estanho" in metais))
+      return 0x6601; //stalith
+    elseif (("cobre"  in metais ) && ("estanho" in metais))
+      return 0x6994; //bronze
+    elseif (("lithtan" in metais) && ("estanho" in metais))
+      return 0x6601; //stalith
+    elseif (("galvorn" in metais) && ("helce" in metais))
+      return 0x6998; //teslium
+    elseif (("galvorn" in metais) && ("sinque" in metais))
+      return 0x6999; //hissium
+    elseif (("galvorn" in metais) && ("figin" in metais))
+      return 0x6997; //solium
+    elseif (("galvorn" in metais) && ("argonil" in metais))
+      return 0x699A; //icelum
+    elseif (("prata" in metais) && ("helce" in metais))
+      return 0x6609; //lunium
+    endif
+  elseif (metais.size() == 3)
+    if (("lithtan" in metais) && ("estanho" in metais)  && ("figin" in metais))
+      return 0x6605; //ignarilith
+    elseif (("lithtan" in metais) && ("estanho" in metais)  && ("argonil" in metais))
+      return 0x6606; //glacialith
+    elseif (("lithtan" in metais) && ("estanho" in metais)  && ("sinque" in metais))
+      return 0x6607; //venerilith
+    elseif (("lithtan" in metais) && ("estanho" in metais)  && ("helce" in metais))
+      return 0x6608; //enerlith
+    elseif (("cobre" in metais) && ("prata" in metais)  && ("golden" in metais))
+      return 0x6604; //platinum
+    endif
+  elseif (metais.size() == 5)
+    if(("mithril" in metais) && ("helce" in metais) && ("sinque" in metais) && ("figin" in metais) && ("argonil" in metais))
+      return 0x699B; //oricalcum
+    endif
+  else
+    return "noIngot";
+  endif
 endfunction
 
 
