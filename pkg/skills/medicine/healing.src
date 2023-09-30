@@ -230,12 +230,12 @@ program UseBandage(mobile, bandage)
 		endif
 	else
 		if (targ.npctemplate && aux_skill < 10.0)
-			SendSysMessageEX(mobile, "Voce nao tem conhecimento suficiente para curar "+targ.name+".", SSM_FAIL);
+			SendSysMessageEX(mobile, "Voce nao tem conhecimento suficiente para curar esse paciente.", SSM_FAIL);
 			return 0;
 		endif
 
 		if (isBloodied(targ) && heal_skill < MIN_SKILL_FOR_BLOODIED)
-			SendSysMessageEx(mobile, "Voce nao tem conhecimento suficiente para curar "+targ.name+".", SSM_FAIL);
+			SendSysMessageEx(mobile, "Voce nao tem conhecimento suficiente para curar esse paciente.", SSM_FAIL);
 			return 0;
 		endif
 
@@ -306,7 +306,7 @@ function HealPatient(mobile, targ, heal_skill, aux_skill, bonus, poison)
 		SendSysMessage(mobile, "Seu paciente esta muito distante.");
 		return 1;
 	else
-		PrintText(mobile, "*tratando "+targ.name+"*");
+		PrintText(mobile, "*tratando o paciente*");
 	endif
 	if (!WaitCura(mobile, 5))
 		SendSysMessage(mobile, "Voce interrompeu a cura.");
@@ -373,7 +373,7 @@ endfunction
 function HealCorpse(mobile, targ, aux_skill, restauraDP)
 	var name := targ.desc;
 	name["corpo de "] := "";
-	PrintText(mobile, "*tentando estabilizar "+name+"*");
+	PrintText(mobile, "*tentando estabilizar o paciente*");
 	if ( !WaitCura(mobile, 10) )
 		SendSysMessage(mobile, "Voce interrompeu a cura.");
 		return 0;
@@ -387,7 +387,7 @@ function HealCorpse(mobile, targ, aux_skill, restauraDP)
 
 	if (  !GetObjProperty(targ,"morto") )
 		if ( SkillCheck(mobile, MEDICINE, diff) > 0 )
-			SendSysMessage(mobile, "Voce estabilizou "+name);
+			SendSysMessage(mobile, "Voce estabilizou o paciente");
 			SetObjProperty(targ, "curado", 1);
 			if (restauraDP)
 				var owner := SystemFindObjectBySerial(targ.ownerserial);
@@ -399,7 +399,7 @@ function HealCorpse(mobile, targ, aux_skill, restauraDP)
 			endif
 
 		else
-			SendSysMessage(mobile, "Voce nao conseguiu estabilizar "+name+".");
+			SendSysMessage(mobile, "Voce nao conseguiu estabilizar o paciente.");
 		endif
 	endif
 
@@ -411,7 +411,7 @@ endfunction
 function HealNpcCorpse(mobile, targ, aux_skill)
 	var name := targ.desc;
 	name["corpo de "] := "";
-	PrintText(mobile, "*tentando estabilizar "+name+"*");
+	PrintText(mobile, "*tentando estabilizar o paciente*");
 	if ( !Wait(mobile, 10) )
 		SendSysMessage(mobile, "Voce interrompeu a cura.");
 		return 0;
@@ -425,7 +425,7 @@ function HealNpcCorpse(mobile, targ, aux_skill)
 
 	if (  !GetObjProperty(targ,"morto") )
 		if ( SkillCheck(mobile, MEDICINE, diff) > 0 )
-			SendSysMessage(mobile, "Voce estabilizou "+name);
+			SendSysMessage(mobile, "Voce estabilizou o paciente.");
 			var npc := CreateNpcFromTemplate( GetObjProperty(targ, "npctemplate"), targ.x, targ.y, targ.z, 0, targ.realm);
 			npc.script := ":ghaia:tamed";
 			RestartScript(npc);
