@@ -110,12 +110,15 @@ function Habilidades(who)
 		SetObjProperty(who, "#gumphab", 1);
 		return;
 	endif
-
+	var myhabs := GetObjProperty(who, "myhabs");
 	var habcfg := ReadConfigFile(":charactercreation:config/habilidades");
 	var habs := GetObjProperty(who, "buyhab");
-	var myhabs := GetObjProperty(who, "myhabs");
 	if (!myhabs)
 		myhabs := dictionary;
+	endif
+
+	if (!habs[0])
+		habs[0] := 1;
 	endif
 
 	var chardata := GetObjProperty(who, "chardata");
@@ -131,9 +134,9 @@ function Habilidades(who)
 	primarias := primarias*3;
 	primSum := cint(primSum/primarias);
 
-	var i := 0;
-	for( i := 1; i <= primSum; i := i + 1)
-		if (habs[i] == 0)
+	var i;
+	for(i := 1; i <= primSum; i := i + 1)
+		if (!habs[i])
 			habs[i] := 1;
 		endif
 	endfor

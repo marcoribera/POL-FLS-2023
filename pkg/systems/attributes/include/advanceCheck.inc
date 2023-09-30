@@ -187,12 +187,15 @@ function CheckSkillAdvance(mobile, skill_name, award_diff, pass_chance)
 		SkillDbgMsg(mobile, "Chegou no maximo da classe: " + maximo);
 		return 0;
 	endif
-
+/*
 	var bonus_tempo := 0;
 	if(GetObjProperty(mobile, "bonus_tempo"))
 		bonus_tempo := bonus_tempo + 20;
 	endif
-	if ( (limiteportempo(mobile) + valorinicial(mobile, skill_name) + bonus_tempo)  <= true_skill )
+
+	SendSysMessage(mobile, "TL: "+ limiteportempo(mobile)+ " VI " + valorinicial(mobile, skill_name) + "TS" + true_skill);
+*/
+ 	if ( (limiteportempo(mobile) + valorinicial(mobile, skill_name))  <= true_skill )
   		SkillDbgMsg(mobile, "Chegou no maximo do limite por tempo: " + limiteportempo(mobile) + " idade do char  " + idadeChar( mobile) + " valor inicial "  + valorinicial(mobile, skill_name) + " da skill " + skill_name);
 		return 0;
   	endif
@@ -243,6 +246,7 @@ function CheckSkillAdvance(mobile, skill_name, award_diff, pass_chance)
 	//sobe a skill
 	SkillDbgMsg(mobile, "Passou.");
 	var temp := true_skill+0.1;
+	SendSysMessage(mobile, true_skill + "-> "+ temp);
 	while ( CInt(temp*10.0) == CInt(GetAttributeBaseValue(mobile, skill_name)) )
 		// Kludge for an old core precision bug.
 		// Makes sure it always goes up atleast 0.1.
@@ -431,17 +435,18 @@ function limiteportempo(who)
 		if(dias > 11)
 			if(dias > 67)
 				if(dias > 92) //dias 93 a 126 => Primárias até 10 (Até level 20)
-					dias := 50.0 + cdbl(dias-92) * 0.3;
+					lim := 50.0 + cdbl(dias-92) * 0.3;
 				else //dias 68 a 92 => Primárias até 90 (Até level 16)
-					dias := 40.0 + cdbl(dias-67) * 0.4;
+					lim := 40.0 + cdbl(dias-67) * 0.4;
 				endif
 			else // dias 13 a 67 => Primárias até 80 (Até level 13)
-				dias := 12.0 + cdbl(dias-11) * 0.5;
+				lim := 12.0 + cdbl(dias-11) * 0.5;
 			endif
 		else //dias 1 a 12 => Primárias 40-52 (Até level 4)
-			dias := 1.0 + cdbl(dias);
+			lim := 1.0 + cdbl(dias);
 		endif
 	endif
+	SendSysMessage(who,lim);
 	return lim;
 
 /*
