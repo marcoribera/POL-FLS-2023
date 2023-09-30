@@ -37,12 +37,10 @@ program swordmagegem(who, item)
 			return;
 		else
 			if (targ.isa(POLCLASS_WEAPON))
-				if(!TemHabilidade(who,"Maestria de Devastacao") || targ.attribute == RANGEDCOMBAT)
-					if (targ.attribute != MELEECOMBAT1H)
-					SendSysMessageEx(who, "Voce so pode usar gemas em armas de uma mao.", SSM_FAIL);
+				if(targ.attribute == RANGEDCOMBAT)
+					SendSysMessageEx(who, "Voce nao pode usar gemas em armas ranged.", SSM_FAIL);
 					return;
 				endif
-			endif
 				SetObjPRoperty(targ, "swordmage", who.serial);
 				SetObjPRoperty(targ, "cancast", 1);
 				SetObjPRoperty(targ, "can_cast", 1);
