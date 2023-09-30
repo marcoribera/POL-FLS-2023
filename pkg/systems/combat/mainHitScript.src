@@ -539,7 +539,7 @@ endfunction
 function WearDownWeapon(attacker, weapon)
 	if (weapon.IsA(POLCLASS_WEAPON))
 		//Se está desarmado não danifique a arma natural
-		if (weapon.objtype == 0xF020)
+		if (weapon.objtype == 0x1F020)
 			return 1;
 		//Calcula danos nas armas normais
 		else
@@ -992,7 +992,7 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 		usingweapon := 1;
 		shield := defender.weapon;
 		//Não bloqueia se estivem sem arma equipada ou utilizando arma de RangedCombat (Arcos e bestas)
-		if (shield.objtype == 0xF020 || shield.Attribute == RANGEDCOMBAT)
+		if (shield.objtype == 0x1F020 && !TemHabilidade(defender, "Artista Marcial") || shield.Attribute == RANGEDCOMBAT)
 			return 0;
 		endif
 	endif
@@ -1066,7 +1066,7 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 		//Pike desarma defensor que bloquear sem escudo
 		if ((attacker.weapon.graphic == 0x26C8) && ( usingWeapon ))
 			var defweapon := defender.weapon;
-			if (defweapon.objtype != 0xF020)
+			if (defweapon.objtype != 0x1F020)
 				var x := defender.x + RandomInt(2)+1;
 				var y := defender.y + RandomInt(2)+1;
 				MoveObjectToLocation(defweapon, x, y,  GetWorldHeight(x, y), attacker.realm, MOVEOBJECT_FORCELOCATION);
