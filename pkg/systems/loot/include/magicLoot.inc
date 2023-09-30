@@ -22,7 +22,7 @@ function Loot_CreateMagic(container, line)
 			sleepms(2);
 		endfor
 	endif
-	
+
 	return 1;
 
 endfunction
@@ -34,12 +34,12 @@ function CreateMagicItem(container, line)
 	if ( groups_cfg.errortext )
 		return error{"errortext" := "Error - Could not open loot-groups.cfg -> "+groups_cfg.errortext};
 	endif
-	
+
 	var groups_elem := groups_cfg[parsed.name];
 	if ( !groups_elem )
 		return error{"errortext" := "Error - loot-groups.cfg elem ["+parsed.name+"] does not exist."};
 	endif
-	
+
 	var items := GetConfigStringArray(groups_elem, "Item");
 	var num_items := items.size();
 	var i;
@@ -48,7 +48,7 @@ function CreateMagicItem(container, line)
 	var itemobj := cint(GetObjTypeByName(itemName));
 	var item := CreateItemInContainer(container, parsed2.name, 1);
 
-	SetMagicTemplateBonus(item, parsed);	
+	SetMagicTemplateBonus(item, parsed);
 
 	return 1;
 
@@ -58,9 +58,9 @@ function SetMagicTemplateBonus(item, parsed)
 
 	var cfg := ReadConfigFile(":loot:config/templates");
 	var elem := FindConfigElem(cfg, parsed.template);
-	print("cfg: "+ cfg);
-print("elem: "+ elem);
-	printtextabove(item, "elem " + elem + " cfg " + cfg + " elemname " + parsed.template);
+	//print("cfg: "+ cfg);
+	//print("elem: "+ elem);
+	//printtextabove(item, "elem " + elem + " cfg " + cfg + " elemname " + parsed.template);
 
 	if (!elem)
 		return elem;
@@ -75,24 +75,24 @@ print("elem: "+ elem);
 
 	var chosen; //escolhe um dos bonus magicos
 	foreach x in (possiveis.keys())
-	
+
 		var margem := SplitWords(possiveis[x]);
 		var minv := Cint(margem[1]);
 		var maxv := Cint(margem[2]);
-	
+
 		if ((rand >= minv) && (rand <= maxv))
 			chosen := x;
-			
+
 			break;
 		endif
-		
+
 	endforeach
-	
+
 	//seta o bonus magico no item
-	
+
 	if (chosen)
 		var bonus := GetConfigStringDictionary( elem, chosen );
-		
+
 		if (bonus != error)
 			var bonusKeys := bonus.keys();
 			var selected := bonusKeys[ RandomInt(bonusKeys.size())+1];
@@ -133,7 +133,7 @@ function GetBonusAmount(level, type)
 endfunction
 
 function GetRandomResistance()
-	
+
 	var resist := RandomDiceRoll("1d5");
 
 	if (resist == 1)
@@ -178,7 +178,7 @@ function SetMagicBonus(item, parsed)
 					mods["hitscript"] := ":combat:weaponHitScripts/LightningHit";
 				endif
 			endif
-		endif	
+		endif
 
 	//armaduras podem ter:
 	//1- aumento em alguma defesa
@@ -191,7 +191,7 @@ function SetMagicBonus(item, parsed)
 		mods[resistance] :=  parsed.level * 2;
 
 	//se for outros itens (roupas ou joias)
-	// 1- bonus no stat, 
+	// 1- bonus no stat,
   	// 2- vitals ou
 	// 3- skills
 	else
@@ -217,12 +217,12 @@ function SetMagicBonus(item, parsed)
 				mods["manamod"] :=  amt;
 			else
 				mods["stammod"] :=  amt;
-			endif			
+			endif
 		else
 			amt := (RandomInt(parsed.level)) + parsed.level*2;  //de 3 a 15
 			SetEquipMod(item, skilllist[RandomInt(skilllist.size())+1 ], amt);
 		endif
-				
+
 	endif
 
 	SetObjProperty(item, "magic", 1);
@@ -274,15 +274,15 @@ function ActivateMagicItem(item)
 			endif
 		endforeach
 		SetObjProperty(item, "equip", equip);
-	else 
+	else
 	//se for joia ou outro equi que de bonus de hits ou vitals
 		var equip := GetObjProperty(item, "equip");
 		if (!equip)
 			equip := dictionary;
 		endif
 		foreach key in (mods.keys())
-		
-		
+
+
 			if (key == "PhysicalResistMod")
 				item.resist_physical_mod := item.resist_physical_mod + cint(mods[key]);
 				printtext(item,"yaaaaa");
@@ -298,7 +298,7 @@ function ActivateMagicItem(item)
 				equip[key] := mods[key];
 			endif
 		endforeach
-		SetObjProperty(item, "equip", equip);		
+		SetObjProperty(item, "equip", equip);
 	endif
 
 	if (GetObjProperty(item, "magicColor") != error)
@@ -327,10 +327,10 @@ function Loot_ParseMagicString(line)
 	line := SplitWords(line);
 
 	var name := CStr(line[1]);
-	
+
 	var amount := CStr(line[2]);
 	amount := RandomDiceRoll(amount);
-	
+
 	var chance := CDbl(line[3]);
 	if ( !chance )
 		chance := 100.0;

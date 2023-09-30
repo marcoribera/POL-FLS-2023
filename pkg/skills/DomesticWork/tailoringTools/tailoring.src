@@ -4,6 +4,7 @@ use os;
 include "include/client";
 include ":itemutils:objtype";
 include ":itemutils:canAccess";
+include "include/say";
 
 program use_thread(who, thread)
   EraseObjProperty(who, "IsMeditating");
@@ -34,21 +35,70 @@ program use_thread(who, thread)
 endprogram
 
 function MakeCloth(character, yarn)
-  if(!Accessible(character, yarn))
-    SendSysMessage(character, "You don't have any thread!");
-    return;
+  if (!Accessible(character, yarn))
+    SendSysMessageEx(character, "Voce nao possui o material!", SSM_FAIL);
+    return 0;
   endif
   if(yarn.amount >= 5)
-    set_critical(1);
-    if( yarn.amount >= 5)
-      if(SubtractAmount(yarn, 5))
-        var cloth := CreateItemInBackpack(character, UOBJ_CLOTH, 1);
-        SendSysMessage(character, "You use some thread and create a bolt of cloth.");
-      endif
+    var obj_type := yarn.objtype;
+    var obj_color := yarn.color;
+    var prod_type;
+    var prod_material;
+    case (obj_type)
+      0xf94:
+        //algodao
+        prod_type := 0x1a89; //roloalgodao
+        break;
+      0x1a93:
+        //lã
+        prod_type := 0x1a92; //rolola
+        break;
+      0x1a95:
+        //fiolinho
+        prod_type := 0x1a90; //rololinho
+        break;
+      0x1a94:
+        //fioseda
+        prod_type := 0x1a91; //roloseda
+        break;
+      0x1a96:
+        //fiomalva
+        prod_type := 0x1a8F; //rolomalva
+        break;
+      0x1a97:
+      //fiosisal
+        prod_type := 0x1a8E; //rolosisal
+        break;
+      0x1a98:
+      //fiodenin
+        prod_type := 0x1a8D; //rolodenin
+        break;
+      0x1a99:
+      //fiorami
+        prod_type := 0x1a8C; //rolorami
+        break;
+      0x1a9a:
+      //fioflamel
+        prod_type := 0x1a8B; //roloflamel
+        break;
+      0x1a9b:
+      //fiorajal
+        prod_type := 0x1a8A; //rolorajal
+        break;
+      default:
+        SendSysMessage (character, "Este item so serve para tecer.");
+        return 0;
+    endcase
+    if(SubtractAmount(yarn, 5))
+      CreateItemInBackpack(character, prod_type, 1);
+      PlaySoundEffect(character, 0x49);
+      return 1;
     else
-       SendSysMessage(character, "You don't have enough thread for the bolt of cloth.");
+      SendSysMessageEx(character, "Voce nao possui mais material suficiente.", SSM_FAIL);
+      return 0;
     endif
   else
-    SendSysMessage(character, "You don't have enough thread for the bolt of cloth.");
+    SendSysMessageEx(character, "Voce nao possui mais material suficiente.", SSM_FAIL);
+    return 0;
   endif
 endfunction
