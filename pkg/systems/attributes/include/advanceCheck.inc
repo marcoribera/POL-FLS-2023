@@ -246,7 +246,7 @@ function CheckSkillAdvance(mobile, skill_name, award_diff, pass_chance)
 	//sobe a skill
 	SkillDbgMsg(mobile, "Passou.");
 	var temp := true_skill+0.1;
-	SendSysMessage(mobile, true_skill + "-> "+ temp);
+	//SendSysMessage(mobile, true_skill + "-> "+ temp);
 	while ( CInt(temp*10.0) == CInt(GetAttributeBaseValue(mobile, skill_name)) )
 		// Kludge for an old core precision bug.
 		// Makes sure it always goes up atleast 0.1.
@@ -446,7 +446,7 @@ function limiteportempo(who)
 			lim := 1.0 + cdbl(dias);
 		endif
 	endif
-	SendSysMessage(who,lim);
+	//SendSysMessage(who,lim);
 	return lim;
 
 /*
