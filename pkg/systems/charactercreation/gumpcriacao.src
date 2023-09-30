@@ -554,6 +554,35 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		endforeach
 	endif
 
+        if (chardata.kit == "Mago de Combate")
+    	var i := 1;
+  
+		i := 1;
+		foreach skill in terciarias 
+			if ( skill == "MeleeCombat1H")
+				terciarias.erase(i);
+				secundarias.append("MeleeCombat1H");;
+			endif
+			i := i + 1;
+		endforeach
+		i := 1;
+		foreach skill in quaternarias 
+			if ( skill == "MeleeCombat2H")
+				quaternarias.erase(i);
+				terciarias.append("MeleeCombat2H");
+			endif
+			i := i + 1;
+		endforeach
+        i := 1;
+		foreach skill in quaternarias 
+			if ( skill == "Parry")
+				quaternarias.erase(i);
+				terciarias.append("Parry");
+			endif
+			i := i + 1;
+		endforeach
+	endif
+
     if (chardata.kit == "Medico de Combate")
     	var i := 1;
 		foreach skill in primarias
