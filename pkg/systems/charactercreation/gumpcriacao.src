@@ -453,7 +453,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		foreach skill in terciarias
 			if ( skill == "Gathering")
 				terciarias.erase(i);
-				secundarias.append("Gathering");;
+				secundarias.append("Gathering");
 			endif
 			i := i + 1;
 		endforeach
@@ -485,7 +485,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		foreach skill in terciarias
 			if ( skill == "Gathering")
 				terciarias.erase(i);
-				secundarias.append("Gathering");;
+				secundarias.append("Gathering");
 			endif
 			i := i + 1;
 		endforeach
@@ -539,7 +539,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		foreach skill in terciarias
 			if ( skill == "Sneak")
 				terciarias.erase(i);
-				secundarias.append("Sneak");;
+				secundarias.append("Sneak");
 			endif
 			i := i + 1;
 		endforeach
@@ -554,12 +554,12 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		endforeach
 	endif
 
-    if (chardata.kit == "Mago de Combate")
+    if (chardata.kit == "Medico de Combate")
     	var i := 1;
 		foreach skill in primarias
 			if ( skill == "Magery")
 				primarias.erase(i);
-				secundarias.append("Magery");;
+				secundarias.append("Magery");
 			endif
 			i := i + 1;
 		endforeach
@@ -568,7 +568,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		foreach skill in primarias
 			if ( skill == "Alchemy")
 				primarias.erase(i);
-				secundarias.append("Alchemy");;
+				secundarias.append("Alchemy");
 			endif
 			i := i + 1;
 		endforeach
@@ -577,7 +577,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		foreach skill in terciarias
 			if ( skill == "MeleeCombat1H")
 				terciarias.erase(i);
-				secundarias.append("MeleeCombat1H");;
+				secundarias.append("MeleeCombat1H");
 			endif
 			i := i + 1;
 		endforeach
