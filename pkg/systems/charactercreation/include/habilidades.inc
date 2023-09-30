@@ -335,7 +335,7 @@ function comprarHabilidade(who, item, nv:=-1)
 		SendSysMessage(who,"Chamada inválida da função");
 		return;
 	endif
-	//var classe := GetObjProperty(who, "classe");
+	var classe := GetObjProperty(who, "classe");
 	var faccao := GetObjProperty(who, "faccao"); //facção
 
 	var habs := GetObjProperty(who, "buyhab");

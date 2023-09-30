@@ -85,10 +85,6 @@ var gfdata := array{
 		chardata.+raca := "Humano";
 		chardata.+povo := "Asanita";
 	elseif (2 in ret.keys)
-		//if (who.graphic != 400)
-		//	SendSysMessageEx(who, "Apenas personagens homens podem ser thurioes.", SSM_FAIL);
-		//	return;
-		//endif
 		chardata.+raca := "Humano";
 		chardata.+povo := "Thuriao";
 	elseif (3 in ret.keys)
@@ -141,14 +137,14 @@ var gflayout := array{
 		"text 180 290 2105 5",
 		"Radio 150 287 9726 9729 0 2",
 		"HtmlGump 150 320 330 60 6 3000 0"};
-
+/*
 	if (chardata.povo == "Numajene")
 		gflayout.append("text 180 390 2105 7");
 		gflayout.append("Radio 150 387 9726 9729 0 3");
 		gflayout.append("HtmlGump 150 420 330 60 8 3000 0");
 	endif
-
-var gfdata := array{
+*/
+	var gfdata := array{
 		"Forgotten Lore Shard", //0
 		"Próximo", //1
 		"Escolha uma vantagem racial:" //2
@@ -457,9 +453,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 			endif
 			i := i + 1;
 		endforeach
-	endif
-
-	if (chardata.kit == "Aprendiz de Trabalhador Domestico")
+	elseif (chardata.kit == "Aprendiz de Trabalhador Domestico")
 		var i := 1;
 		foreach skill in quaternarias
 			if ( skill == "DomesticWork")
@@ -468,9 +462,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 			endif
 			i := i + 1;
 		endforeach
-	endif
-
-	if (chardata.kit == "Aprendiz de Carpinteiro")
+	elseif (chardata.kit == "Aprendiz de Carpinteiro")
 
 		var i := 1;
 		foreach skill in quaternarias
@@ -489,25 +481,9 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 			endif
 			i := i + 1;
 		endforeach
-	endif
-
-	if (chardata.kit == "Alquimista Combatente")
-
-		var novasquaternarias := array;
-
-		foreach skill in quaternarias
-			if (skill != "Alchemy")
-				novasquaternarias.append(skill);
-			endif
-
-		endforeach
-		quaternarias := novasquaternarias;
+	elseif (chardata.kit == "Alquimista Combatente")
 		quaternarias.append("Alchemy");
-
-	endif
-
-	if (chardata.kit == "Ranger")
-
+	elseif (chardata.kit == "Ranger")
 		var i := 1;
 		foreach skill in primarias
 			if ( skill == "Tactics")
@@ -552,13 +528,11 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 			endif
 			i := i + 1;
 		endforeach
-	endif
-
-        if (chardata.kit == "Mago de Combate")
+	elseif (chardata.kit == "Mago de Combate")
     	var i := 1;
-  
+
 		i := 1;
-		foreach skill in terciarias 
+		foreach skill in terciarias
 			if ( skill == "MeleeCombat1H")
 				terciarias.erase(i);
 				secundarias.append("MeleeCombat1H");;
@@ -566,7 +540,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 			i := i + 1;
 		endforeach
 		i := 1;
-		foreach skill in quaternarias 
+		foreach skill in quaternarias
 			if ( skill == "MeleeCombat2H")
 				quaternarias.erase(i);
 				terciarias.append("MeleeCombat2H");
@@ -574,16 +548,14 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 			i := i + 1;
 		endforeach
         i := 1;
-		foreach skill in quaternarias 
+		foreach skill in quaternarias
 			if ( skill == "Parry")
 				quaternarias.erase(i);
 				terciarias.append("Parry");
 			endif
 			i := i + 1;
 		endforeach
-	endif
-
-    if (chardata.kit == "Medico de Combate")
+	elseif (chardata.kit == "Medico de Combate")
     	var i := 1;
 		foreach skill in primarias
 			if ( skill == "Magery")
@@ -616,6 +588,14 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 			if ( skill == "MeleeCombat2H")
 				quaternarias.erase(i);
 				terciarias.append("MeleeCombat2H");
+			endif
+			i := i + 1;
+		endforeach
+
+		foreach skill in quaternarias
+			if ( skill == "RangedCombat")
+				quaternarias.erase(i);
+				terciarias.append("RangedCombat");
 			endif
 			i := i + 1;
 		endforeach
@@ -781,7 +761,7 @@ var gfdata := array{
 			//sendsysmessage(who, "skillname " + skillname + " custo " + custo + " input " + input);
 			if (skillspoints >= custo) //se tem pontos pra comprar
 				if (chardata.Skills[skillname] == 3)//se ja for primaria
-					SendSysMessage(who, "Voce ja tem essa skill primaria!");
+					//SendSysMessage(who, "Voce ja tem essa skill primaria!");
 				elseif (chardata.Skills[skillname] == 2) //se for secundaria
 					if (chardata.Primarias > 0)
 						chardata.Skills[skillname] := CInt(chardata.Skills[skillname])+1;
@@ -1228,7 +1208,7 @@ var gfdata := array{
 			points := points + 5;
 			atributos(who, chardata,points);
 		elseif (input == 99)
-			sendsysmessage(who, "keys" + ret.keys);
+			//sendsysmessage(who, "keys" + ret.keys);
 			if (points > 0)
 				SendSysMessageEx(who, "Voce ainda possui pontos para gastar.", SSM_FAIL);
 				atributos(who, chardata,points);
@@ -1321,16 +1301,18 @@ program createchar(who)
 	var privalue := 40.0;
 	var secvalue := 20.0;
 	var tercvalue := 0.0;
+
+	/*
 	FindAccount(who.acctname).setprop("nota", 0);
 	if ( (CInt(FindAccount(who.acctname).getprop("nota")) == 4) || (FindAccount(who.acctname).getprop("mortelog") > 3888000))
 		privalue := 60.0;
 		secvalue := 40.0;
 		tercvalue := 20.0;
-
 		//Seta o prop de bonus, para ser usado no check de habs
 		SetObjProperty(who, "bonus_tempo", 1);
 	endif
-		foreach primaria in primarias
+	*/
+	foreach primaria in primarias
 		AP_setTrueSkill(who, primaria, privalue);
 	endforeach
 	var secundarias := GetSecundarias(who);
@@ -1524,6 +1506,9 @@ program createchar(who)
 	endif
 
 	ExibeGumpAparencia(who, chardata);
+
+	//SendSysMessage(who, CSTR(chardata));
+	//SendSysMessage(who, GetObjProperty(who, "chardata"));
     SetObjProperty(who, "chardata", chardata);
 	MoveObjectToLocation( who, 4230, 25, 1, who.realm, MOVEOBJECT_FORCELOCATION);
     AP_SetVital(who, "Hunger", 0);
