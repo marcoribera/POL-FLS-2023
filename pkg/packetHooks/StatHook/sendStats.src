@@ -78,6 +78,9 @@ exported function HandleSendStats( character, byref packet )
 					Object_Name := source.name;
 				endif
 			endif
+			if (character.cmdlevel > 1) //Staff consegue ver mais
+				Object_Name := Object_Name + " [" + GetObjProperty(source, "nome_inicial") + "]";
+			endif
 			packet.SetString(NAME_ID, Object_Name,1);
 		endif
 	endif
