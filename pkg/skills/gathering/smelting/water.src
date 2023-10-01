@@ -59,7 +59,9 @@ function EsfriarLiga(user, item)
     	else
         SendSysMessage(user, "Voce esfriou o metal derretido e fez as barras.", FONT_NORMAL, 90);
     	  CreateItemInBackpack(user, ingot, amt);
-        smeltaImpurezasRaras(user, amt);
+        if(TemHabilidade(user,"Tesouro do Lixo"))
+          smeltaImpurezasRaras(user, amt);
+        endif
     	endif
       EraseObjProperty(item, "ingType");
       EraseObjProperty(item, "numMetal");
