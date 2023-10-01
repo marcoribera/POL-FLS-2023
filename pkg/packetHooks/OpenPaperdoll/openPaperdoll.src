@@ -53,7 +53,7 @@ exported function HandleOpenPaperdoll( character, byref packet )
 			if(GetObjProperty(source, "realname"))
 				Object_Name := "Incognito";
 			else
-				//Verifica se o char já foi reconhecido por character
+				//Verifica se o char já foi reconhecido por who
 				var conhecidos := dictionary;
 				if(GetObjProperty(character, "conhecidos"))
 					var ID := Cstr(source.serial); //Salva o serial do personagem
@@ -63,20 +63,19 @@ exported function HandleOpenPaperdoll( character, byref packet )
 
 					conhecidos := GetObjProperty(character, "conhecidos"); //Lista de pessoas conhecidadas
 					if(conhecidos.Exists(ID))
-						Object_Name := conhecidos[ID];
+						Object_Name := conhecidos[ID] + " (" + source.name + ")";
 					else
-						Object_Name := "??????";
+						Object_Name := "Desconhecido (" + source.name + ")";
 					endif
 				else
-					Object_Name := "??????";
+					Object_Name := "Desconhecido (" + source.name + ")";
 				endif
 			endif
 			if (character.cmdlevel > 1) //Staff consegue ver o nome e raça
-
 				if(GetObjProperty(source, "disfarce"))
-					Object_Name := Object_Name + " [" + GetObjProperty(source, "disfarce").aparencia + "]";
+					Object_Name := Object_Name + " [" + GetObjProperty(source, "disfarce").aparencia;
 				else
-					Object_Name := Object_Name + " [" + source.name + "]";
+					Object_Name := Object_Name + " [" + GetObjProperty(source, "nome_inicial");
 				endif
 			endif
 			packet.SetString(TEXT_ID, Object_Name,1);
