@@ -320,30 +320,16 @@ exported function MegaCliloc( who, byref packet )
 
 						conhecidos := GetObjProperty(who, "conhecidos"); //Lista de pessoas conhecidadas
 						if(conhecidos.Exists(ID))
-							Object_Name := conhecidos[ID] + " (" + item.name + ")";
+							Object_Name := conhecidos[ID];
 						else
-							Object_Name := "Desconhecido (" + item.name + ")";
+							Object_Name := item.name;
 						endif
 					else
-						Object_Name := "Desconhecido (" + item.name + ")";
+						Object_Name := item.name;
 					endif
 				endif
 				if (who.cmdlevel > 1) //Staff consegue ver o nome e raça
-
-					if(GetObjProperty(item, "disfarce"))
-						Object_Name := Object_Name + " [" + GetObjProperty(item, "disfarce").aparencia;
-					else
-						Object_Name := Object_Name + " [" + GetObjProperty(item, "nome_inicial");
-					endif
-
-					var povo;
-					if (GetObjProperty(item, "chardata"))
-						povo := GetObjProperty(item, "chardata").povo;
-					endif
-					if (povo)
-						Object_Name := Object_Name + " - " + povo;
-					endif
-					Object_Name := Object_Name + "]";
+					Object_Name := Object_Name + " [" + item.acctname + "]";
 				endif
 			endif
 		elseif ( item.IsA(POLCLASS_ITEM) )
@@ -368,6 +354,22 @@ exported function MegaCliloc( who, byref packet )
 
 		//PREENCHE A DESCRIÇÃO COMUM A QUALQUER ITEM OU MOBILE
 		xDesc := "";
+
+		if (!item.npctemplate)
+			if (who.cmdlevel > 1) //Staff consegue ver o nome e raça
+				if(GetObjProperty(item, "disfarce"))
+					xDesc := xDesc + white + " [disfarce] [" + item.acctname + "]" + "<br>";
+				endif
+				var povo;
+				if (GetObjProperty(item, "chardata"))
+					povo := GetObjProperty(item, "chardata").povo;
+				endif
+				if (povo)
+					xDesc := xDesc + white + povo + "<br>";
+				endif
+			endif
+		endif
+
 		desc := GetObjProperty(item, "description");
 
 		//EXIBE SE TEM PROPRIEDADE MAGICA

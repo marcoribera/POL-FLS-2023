@@ -53,19 +53,12 @@ exported function handleUCOutgoing( character, byref packet )
 
 					conhecidos := GetObjProperty(character, "conhecidos"); //Lista de pessoas conhecidadas
 					if(conhecidos.Exists(ID))
-						Object_Name := conhecidos[ID] + " (" + source.name + ")";
+						Object_Name := conhecidos[ID];
 					else
-						Object_Name := "Desconhecido (" + source.name + ")";
+						Object_Name := source.name;
 					endif
 				else
-					Object_Name := "Desconhecido (" + source.name + ")";
-				endif
-			endif
-			if (character.cmdlevel > 1) //Staff consegue ver o nome e raça
-				if(GetObjProperty(source, "disfarce"))
-					Object_Name := Object_Name + " [" + GetObjProperty(source, "disfarce").aparencia;
-				else
-					Object_Name := Object_Name + " [" + GetObjProperty(source, "nome_inicial");
+					Object_Name := source.name;
 				endif
 			endif
 			packet.SetString(NAME_ID, Object_Name,1);
