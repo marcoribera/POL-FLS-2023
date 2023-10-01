@@ -1020,8 +1020,8 @@ function DoWithdraw(npc, player)
 	var account := data_elem.GetProp(Hex(player.serial));
 	var moedas := 0;
 	foreach item in account
-		//print("Item: "+item);
-		//print("Item (objType: "+item.objtype);
+		print("Item: "+item);
+		print("Item (objType: "+item.objtype);
 		if(item.objtype == MOEDAS_OURO || item.objtype == GOLD_COIN)
 			moedas += item.amount * 100;
 		elseif(item.objtype == MOEDAS_PRATA)
@@ -1041,7 +1041,7 @@ function DoWithdraw(npc, player)
 		endif
 		sleepms(2);
 	endforeach
-
+	DarTroco(player, npc, moedas);
 	data_elem.EraseProp(Hex(player.serial));
 	Set_Critical(0);
 endfunction
