@@ -7,7 +7,7 @@ program spirit(who ,item)
 	SendSysMessageEx(who, "Escolha o totem para armazenar o espirito.", SSM_INFO);
 	var targ := Target(who);
 	
-	if  (targ.graphic  ==  8450)
+	if  (targ.graphic  ==  16912)
 		
 		var spells := GetObjProperty(targ, "spells");
 		if (spells == error)

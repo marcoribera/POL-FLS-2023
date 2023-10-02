@@ -6,10 +6,12 @@ include ":gumps:requestgump";
 
 program totem(who, wand)
 
-	var kit := GetObjProperty(who, "kit");
-	if (kit != "Totemista")
+	var chardata := dictionary;
+	chardata:=GetObjProperty(who,"chardata");
+	if(chardata["magia"] != "Totemista")
 		return;
-	endif 
+	endif
+
 
 	var gump := GFCreateGump();
         GFDisposable(gump, 0);
