@@ -24,6 +24,8 @@ program Logon(who)
 				SetObjProperty(who, "nome_inicial", who.name);
 				SetName(who, who.title_race);
 			endif
+		else
+			SetName(who, who.title_race);
 		endif
 	endif
 
