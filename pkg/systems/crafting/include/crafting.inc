@@ -310,7 +310,6 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 		else
 			SubtractMaterial(who, targMaterials, 0.5); //consome metade do material
 			SendSysMessageEx(who, "Voce falhou ao fazer o item e perdeu material." , SSM_FAIL);
-			return 0;
 		endif
 		sleepms(100);
 	endwhile
