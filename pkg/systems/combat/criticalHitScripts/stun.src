@@ -38,6 +38,8 @@ program HitScript(params)
 		printText(attacker, "*Coice*");
 		PushBack(defender, 3);
 		AP_ConsumeVital(defender, STAMINA, dmg);	
+	else
+		TS_StartTimer(defender, "paralysis", 5);
 	endif
 	
 	return 1;
