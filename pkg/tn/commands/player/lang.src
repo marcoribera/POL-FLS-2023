@@ -11,8 +11,8 @@ program lingua(who)
 	if (linguas != error)
 		var qt_atual := linguas.size();
 		SendSysMessageEx(who, "Ja tem lingua.", SSM_FAIL);
-		if (qt > qt_atual)
-			linguasDesejadas := CheckBoxGump(who, 200, 300, "Escolha " + Cstr(qt-qt_atual) + "nova lingua. ", linguas);
+		if (qt_atual < qt)
+			linguasDesejadas := CheckBoxGump(who, 200, 300, "Escolha " + Cstr(qt-qt_atual) + " nova lingua. ", linguas);
 			foreach idioma in linguas
 				if(!(idioma in  linguasDesejadas))
 					SendSysMessageEx(who, "Voce deve manter os idiomas anteriores.", SSM_FAIL);

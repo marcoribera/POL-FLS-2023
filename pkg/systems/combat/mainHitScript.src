@@ -380,6 +380,12 @@ endfunction
 
 function SkillChecks(attacker, defender, weapon, rawdamage)
 
+	var skillUsedForCritical := TACTICS;
+	if(GetObjProperty(attacker, "kit") == "Mago de Combate")
+		skillUsedForCritical := MAGICLORE;
+	elseif(GetObjProperty(attacker, "kit") == "Medico de Combate")
+		skillUsedForCritical := MEDICINE;
+	endif
 	//Testa se é possivel ganhar skill com o NPC alvo
 	if (defender.npctemplate && attacker.connected)
 		//se a skill do atacante for maior que a do defender +10, nao sobe
@@ -396,10 +402,12 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 			endif
 		endif
 
+		/*
 		if ( skillDefender - 10 < skillAttacker )
 			//printtextabove(attacker, "return " + skillDefender);
 			return 0;
 		endif
+		*/
 	endif
 
 	//Sendo o alvo um personagem jogador ou NPC com combate melhor que o atacante, permite o up de skill de combate
@@ -418,7 +426,7 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 		SetObjProperty(attacker, "#CS_GainTime", ReadGameClock()+gain_wait);
 		if ( rawdamage > 0 )
 			SkillCheck(attacker, weapon.attribute, -1);
-			//SkillCheck(attacker, TACTICS, -1); //Sobe tactics TODO: Calcular isso no damage.inc
+			SkillCheck(attacker, skillUsedForCritical, -1);
 		endif
 	endif
 endfunction
@@ -681,6 +689,12 @@ function WeaponHitScripts(attacker, defender, weapon, armor, basedamage, rawdama
 endfunction
 
 function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage, byref rawdamage)
+	var skillUsedForCritical := TACTICS;
+	if(GetObjProperty(attacker, "kit") == "Mago de Combate")
+		skillUsedForCritical := MAGICLORE;
+	elseif(GetObjProperty(attacker, "kit") == "Medico de Combate")
+		skillUsedForCritical := MEDICINE;
+	endif
 	var autoCritical := 0;
 	if (GetObjProperty(attacker, "#nextcritical"))
 		EraseObjProperty(attacker, "#nextcritical");
@@ -710,8 +724,7 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 	endif
 
 	//critico base da arma, critico extra da CProp da da arma, critico extra do CProp do personagem, critico extra da skill do personagem, critico extra de Habilidade especial do personagem
-	var chance := CInt((item_cfg[weapon.objtype]).CriticalChance) + Cint(GetObjProperty(weapon, "CriticalChance")) + Cint(GetObjProperty(attacker, "CriticalChance")) + skillCriticalBonus + Cint(GetObjProperty(attacker, "#CriticalChance"));
-	//Limpa a CProp de bonus critico para o próximo ataque
+	var chance := Cint( Cint(GetObjProperty(weapon, "CriticalChance")) + Cint(GetObjProperty(attacker, "CriticalChance")) + Cint((item_cfg[weapon.objtype]).CriticalChance )) + CInt(AP_GetSkill(attacker, skillUsedForCritical)/20) + Cint(GetObjProperty(attacker, "#CriticalChance"));	//Limpa a CProp de bonus critico para o próximo ataque
 	EraseObjProperty(attacker, "#CriticalChance");
 
 	if (!chance)
@@ -1079,22 +1092,31 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 
 	endif
 
-	//Sobe a skill PARRY do defensor se a skill de ataque do oponente estiver num nível que implica em dificuldade
+	//sobe a skill
 	if (attacker.npctemplate && defender.connected)
-		skill := CInt(skill) - 10;
+		skill := cint(skill) + 15;
 		var skillAttacker := cint(AP_GetSkill(attacker, attacker.weapon.attribute));
 		if ( skill < skillAttacker )
-			SkillCheck(defender, PARRY, -1);
+			//printtextabove(attacker, "return " + skillDefender);
+		else
+			if (defendeu)
+					PerformAction(defender, 13);
+				SkillCheck(defender, PARRY, -1);
+			else
+				if ( RandomInt(5) == 1 )
+					SkillCheck(defender, PARRY, -1);
+				endif
+			endif
 		endif
 	endif
-
 	//Exibe o efeito visual do bloqueio
-	PerformAction(defender, 13);
 
 	if (blocker)
+		PerformAction(defender, 13);
 		printtext(blocker, "*defende o golpe pelo aliado*");
 		SetCooldown(attacker, "parrydelay", parryDelay*2);
 	else
+		PerformAction(defender, 13);
 		PrintText(defender, "*defende o golpe*");
 		SetCooldown(attacker, "parrydelay", parryDelay);
 	endif

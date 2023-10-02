@@ -251,12 +251,15 @@ function usarDisfarce(who, disfarce)
 
 	SetObjProperty(who, "disfarce", original);
 
+	SetName(who, who.name);
+
+/*	//Antes de ajusatar o .r para mostrar raça dos desconhecidos
 	if (disfarce.aparencia != "")
 		SetName(who, disfarce.aparencia);
 	else
 		SetName(who, who.name);
 	endif
-
+*/
 	if (!temHabilidade(who, "Disfarces"))
 		TS_StartTimer(who, "kitdisfarce", 600);
 	endif

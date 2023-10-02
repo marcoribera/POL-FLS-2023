@@ -16,6 +16,19 @@ include ":gumps:gumpprompt";
 include ":charactercreation:resists";
 
 program Logon(who)
+
+	//Inicializa exibir apenas nome da raca
+	if(!who.npctemplate && !GetObjProperty(who, "nome_inicial"))
+		if(who.name != who.title_race)
+			if(who.name != "" && GetObjProperty(who, "chardata"))
+				SetObjProperty(who, "nome_inicial", who.name);
+				SetName(who, who.title_race);
+			endif
+		else
+			SetName(who, who.title_race);
+		endif
+	endif
+
 	EraseObjProperty(who, "#pegueiesse"); // evitar bugs no stealing.
 	EraseObjProperty(who, "#torobando");
 	SetObjProperty(who, "ConnectTime", polcore().systime);

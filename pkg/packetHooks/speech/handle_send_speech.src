@@ -43,7 +43,7 @@ exported function handleUCOutgoing( character, byref packet )
 			if(GetObjProperty(source, "realname"))
 				Object_Name := "Incognito";
 			else
-				//Verifica se o char já foi reconhecido por character
+				//Verifica se o char já foi reconhecido por who
 				var conhecidos := dictionary;
 				if(GetObjProperty(character, "conhecidos"))
 					var ID := Cstr(source.serial); //Salva o serial do personagem
@@ -55,18 +55,10 @@ exported function handleUCOutgoing( character, byref packet )
 					if(conhecidos.Exists(ID))
 						Object_Name := conhecidos[ID];
 					else
-						Object_Name := "??????";
+						Object_Name := source.name;
 					endif
 				else
-					Object_Name := "??????";
-				endif
-			endif
-			if (character.cmdlevel > 1) //Staff consegue ver o nome e raça
-
-				if(GetObjProperty(source, "disfarce"))
-					Object_Name := Object_Name + " [" + GetObjProperty(source, "disfarce").aparencia + "]";
-				else
-					Object_Name := Object_Name + " [" + source.name + "]";
+					Object_Name := source.name;
 				endif
 			endif
 			packet.SetString(NAME_ID, Object_Name,1);

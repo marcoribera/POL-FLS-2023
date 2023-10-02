@@ -1295,6 +1295,12 @@ program createchar(who)
 	who.title_race := chardata.raca;
 	CreateItemInBackpack(who, 0xba63, 100); //dinheiro
 	who.race := RACE_HUMAN;
+
+	//Esconde o nome de todas as mecanicas diretas do jogo
+	SetObjProperty(who, "nome_inicial", who.name);
+	who.name := who.title_race;
+
+
 	RecalcVitals(who);
 
 	var primarias := GetPrimarias(who);

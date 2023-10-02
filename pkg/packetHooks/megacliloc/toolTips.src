@@ -260,12 +260,12 @@ exported function MegaCliloc( who, byref packet )
 	var white := "<BASEFONT COLOR=#FFFFFF>";
 	var amareloclaro := "<BASEFONT COLOR=#f5d189>";
 	var roxo := "<BASEFONT COLOR=#d98cd9>";
-	var softgreen := "<BASEFONT COLOR=#a1eca7>";  
-	var blueice := "<BASEFONT COLOR=#79b6c9 >"; 
-	var redfire := "<BASEFONT COLOR=#e95c4b>"; 
+	var softgreen := "<BASEFONT COLOR=#a1eca7>";
+	var blueice := "<BASEFONT COLOR=#79b6c9 >";
+	var redfire := "<BASEFONT COLOR=#e95c4b>";
 	var lilas := "<BASEFONT COLOR=#d998a0>";
 	var fisico := "<BASEFONT COLOR=#FFFFFF>";
-						
+
 
 	var Object_Name;
 
@@ -322,32 +322,14 @@ exported function MegaCliloc( who, byref packet )
 						if(conhecidos.Exists(ID))
 							Object_Name := conhecidos[ID];
 						else
-							Object_Name := "??????";
+							Object_Name := item.name;
 						endif
 					else
-						Object_Name := "??????";
-					endif
-
-					if(item.title_race)
-						Object_Name := Object_Name + " [" + item.title_race + "]";
+						Object_Name := item.name;
 					endif
 				endif
 				if (who.cmdlevel > 1) //Staff consegue ver o nome e raça
-
-					if(GetObjProperty(item, "disfarce"))
-						Object_Name := Object_Name + " [" + GetObjProperty(item, "disfarce").aparencia;
-					else
-						Object_Name := Object_Name + " [" + item.name;
-					endif
-
-					var povo;
-					if (GetObjProperty(item, "chardata"))
-						povo := GetObjProperty(item, "chardata").povo;
-					endif
-					if (povo)
-						Object_Name := Object_Name + " - " + povo;
-					endif
-					Object_Name := Object_Name + "]";
+					Object_Name := Object_Name + " [" + item.acctname + "]";
 				endif
 			endif
 		elseif ( item.IsA(POLCLASS_ITEM) )
@@ -372,6 +354,22 @@ exported function MegaCliloc( who, byref packet )
 
 		//PREENCHE A DESCRIÇÃO COMUM A QUALQUER ITEM OU MOBILE
 		xDesc := "";
+
+		if (!item.npctemplate)
+			if (who.cmdlevel > 1) //Staff consegue ver o nome e raça
+				if(GetObjProperty(item, "disfarce"))
+					xDesc := xDesc + white + " [disfarce] [" + item.acctname + "]" + "<br>";
+				endif
+				var povo;
+				if (GetObjProperty(item, "chardata"))
+					povo := GetObjProperty(item, "chardata").povo;
+				endif
+				if (povo)
+					xDesc := xDesc + white + povo + "<br>";
+				endif
+			endif
+		endif
+
 		desc := GetObjProperty(item, "description");
 
 		//EXIBE SE TEM PROPRIEDADE MAGICA
@@ -439,7 +437,7 @@ exported function MegaCliloc( who, byref packet )
 				endif
 
 				xDesc := xDesc + white + "Fisico " + (item.damage_physical ) + "<br>";
-				
+
 				if ( (item.damage_cold + item.damage_cold_mod != 0))
 				xDesc := xDesc  + blueice + "Frio " + (item.damage_cold ) + "<br>";
 				endif

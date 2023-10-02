@@ -42,7 +42,7 @@ program spawnpointcontrol(spawnpoint)
 		childrenSerial := GetObjProperty(spawnpoint, "Children");
 		spawnqueue := GetObjProperty(spawnpoint, "SpawnQueue");
 		for( i := 1; i <= amount; i := i + 1 );
-			if( /*(children[i] != error) &&*/ (childrenSerial[i] != "Empty") ) 
+			if( /*(children[i] != error) &&*/ (childrenSerial[i] != "Empty") )
 				x := SystemFindObjectBySerial(childrenSerial[i]);
 				if((!x) || (x.dead == 1) || (x.master))
 					spawnqueue[i] := "Empty";
@@ -181,25 +181,34 @@ function CreateSpawn(spawnpoint)
 
 
     if(!loscheck)
-      if(CheckLosAt(spawnpoint, x, y, z))
-        var i := CreateNpcFromTemplate(spawn, x, y, z, 0, spawnpoint.realm);
-	SetObjProperty(i, "spawnpoint", spawnpoint.serial);
-        success := 1;
-        return i.serial;
-      endif
+      while(!CheckLosBetween( x, y, z, spawnpoint.x, spawnpoint.y, spawnpoint.z, spawnpoint.realm))
+        if(z < spawnpoint.z)
+          z := z+1;
+        elseif(z < spawnpoint.z+10)
+          z := z+1;
+        else
+          x := spawnpoint.x;
+          y := spawnpoint.y;
+          z := spawnpoint.z;
+          break;
+        endif
+      endwhile
+      var i := CreateNpcFromTemplate(spawn, x, y, z, 0, spawnpoint.realm);
+      SetObjProperty(i, "spawnpoint", spawnpoint.serial);
+      success := 1;
+      return i.serial;
     else
       var i := CreateNpcFromTemplate(spawn, x, y, z, 0, spawnpoint.realm);
-
-	SetObjProperty(i, "spawnpoint", spawnpoint.serial);
+      SetObjProperty(i, "spawnpoint", spawnpoint.serial);
       success := 1;
       return i.serial;
     endif
-    i := i + 1;
-    if(i > 10)
-      var i := CreateNpcFromTemplate(spawn, spawnpoint.x, spawnpoint.y, spawnpoint.z, 0, spawnpoint.realm);
+      i := i + 1;
+      if(i > 10)
+        var i := CreateNpcFromTemplate(spawn, spawnpoint.x, spawnpoint.y, spawnpoint.z, 0, spawnpoint.realm);
 
-      success := 1;
-	SetObjProperty(i, "spawnpoint", spawnpoint.serial);
+        success := 1;
+        SetObjProperty(i, "spawnpoint", spawnpoint.serial);
       return i.serial;
     endif
   endwhile
