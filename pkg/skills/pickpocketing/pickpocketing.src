@@ -180,8 +180,11 @@ program skill_Stealing(mobile)
 				//var coords := GetObjProperty(mobile, "anchor");
 				var tipo := "furto";
 				var coords := {mobile.x, mobile.y};
+
+				var nome1 := GetObjProperty(mobile, "nome_inicial");
+				var nome2 := GetObjProperty(targ, "nome_inicial");
 				if ( targ.connected == 1 )
-					Start_script(":DiscordWebhook:discord", {tipo, mobile.name, fin.acctname, targ.name, region, coords, steal.desc});
+					Start_script(":DiscordWebhook:discord", {tipo, nome1, fin.acctname, nome2, region, coords, steal.desc});
 				endif
 			else
 				SendSysMessageEx(mobile, "Voce nao conseguiu roubar "+steal.desc+".", SSM_FAIL);

@@ -26,7 +26,8 @@ var primeira := GetObjProperty(item, "primeiro_dono");
 		var fin := SystemFindObjectBySerial(char_name, SYSFIND_SEARCH_OFFLINE_MOBILES);
 		var coords := {character.x, character.y};
 		var tipo := "unico";
-		Start_script(":DiscordWebhook:discord", {tipo, character.name, fin.acctname, container.name, region, coords, item.desc});
+		var nome := GetObjProperty(character, "nome_inicial");
+		Start_script(":DiscordWebhook:discord", {tipo, nome, fin.acctname, container.name, region, coords, item.desc});
 	endif
 
 

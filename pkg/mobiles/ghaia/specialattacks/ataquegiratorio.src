@@ -15,13 +15,16 @@ program doubleattack(params)
 	var rawdamage	:= params[6];
 	params := 0; // Not needed anymore.
 	
-	var dist := distance(attacker, defender);
-		if ( dist < 1 )
-		return 0;
+var dist := distance(attacker, defender);
+	if ( dist > 1 )
+		SendSysMessage(defender, "O atacante lancou o ataque a esmo, desperdicando-o!");
+		return;
 	elseif (Abs(attacker.z - defender.z) >= 4)
-		return 0;
+		SendSysMessage(defender, "O atacante lancou o ataque a esmo, desperdicando-o!");
+		return;
 	elseif ( !CheckLineOfSight(attacker, defender) )
-		return 0;
+		SendSysMessage(defender, "O atacante lancou o ataque a esmo, desperdicando-o!");
+		return;
 	endif
 	
 	PrintTextAbove(attacker, "*ataque giratorio*");
