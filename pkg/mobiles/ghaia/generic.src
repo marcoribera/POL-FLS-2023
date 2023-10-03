@@ -9,7 +9,7 @@ include ":ghaia:objective";
 
 var npccfgfile := ReadConfigFile( ":brainai:npcdesc" );
 var me := self();
-var idlesnd1; 
+var idlesnd1;
 var idlesnd2;
 var areasize;
 var alert_allies := 0;
@@ -37,8 +37,8 @@ program KillPlayers()
 	EnableMainEvents();
 	Set_Event_Queue_Size(1000);
 
-    	while(me)
-	
+    while(me)
+
 		//se tem objetivo, anda na direcao dele, se nao tem so wander
 		if (GetObjProperty(me, "objloc") != error)
 			wanders := 0;
@@ -46,7 +46,7 @@ program KillPlayers()
 		else
 			MoveAround();
 		endif
-		
+
 		wanders := wanders +1;
 		if(wanders >= 30)
 			wanders := 0;
@@ -55,11 +55,11 @@ program KillPlayers()
 		else
 			ev := os::wait_for_event(10);
 		endif
-		
-		
+
+
 		if(ev)
 			case(ev.type)
-				SYSEVENT_ENTEREDAREA:   
+				SYSEVENT_ENTEREDAREA:
 					if (CheckLineOfSight(me, ev.source))
 						if(CanFight(me, ev.source, align)) //verifica se eh inimigo
 							wanders := 0;
@@ -79,10 +79,10 @@ program KillPlayers()
 								flee(ev.source);
 							endif
 			endcase
-		endif	
+		endif
 
 		look_around();
-		sleepms(2);
+		sleepms(200);
 	endwhile
 
 endprogram
@@ -101,7 +101,7 @@ var sleepdelay := 275 - me.run_speed;//(CInt(GetDexterity(me)) * 1.5);
 
 
     case (CoordinateDistance( me.x, me.y, opponent.x, opponent.y ))
-        1:              
+        1:
         0:
             return 1;
         default:
@@ -120,19 +120,19 @@ var sleepdelay := 275 - me.run_speed;//(CInt(GetDexterity(me)) * 1.5);
 				endif
 			else //se calculou o path
 				var coord := path[1]; //pega a primeira coordenada
-				if (coord) 
-					SetObjProperty(me, "#coordtry", ReadGameClock()); 
+				if (coord)
+					SetObjProperty(me, "#coordtry", ReadGameClock());
 					RunTowardLocation( coord.x, coord.y ); //anda na direcao
 					sleepms(sleepdelay);
 					Opendoors(me, opponent); //tenta abrir possiveis portas
-					if (CoordinateDistance(me.x, me.y, coord.x, coord.y) <= 1) //se chegou onde devia 
+					if (CoordinateDistance(me.x, me.y, coord.x, coord.y) <= 1) //se chegou onde devia
 						path.erase(1); //deleta a coordenada e vai pra proxima
 						if (path.size() > 0)
 							SetObjProperty(me, "path", path);
 						else
 							EraseObjProperty(me, "path");
 						endif
-					else // se nao consegue chegar na coord 
+					else // se nao consegue chegar na coord
 						if ( cint(GetObjProperty(me, "#coordtry")) > ReadGameClock()+5) //se ta tentando chegar la a mais de 5 segundos
 							EraseObjProperty(me, "path"); //deleta o path atual
 							ChooseAnotherOpponent(me); //procura outro oponente TODO: se nao tiver outro oponente?
@@ -140,7 +140,7 @@ var sleepdelay := 275 - me.run_speed;//(CInt(GetDexterity(me)) * 1.5);
 					endif
 				else
 					RunToward( opponent );
-					sleepms(sleepdelay);				
+					sleepms(sleepdelay);
 				endif
 			endif
 		else

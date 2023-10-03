@@ -14,7 +14,7 @@ program spawnpointcontrol(spawnpoint)
 	var childrenSerial := array{};
 	npctemplate := GetObjProperty(spawnpoint, "Spawn");
 	while(npctemplate == "NONE")
-		sleep(10);
+		sleep(60);
 		npctemplate := GetObjProperty(spawnpoint, "Spawn");
 	endwhile
 	//KillChildren(spawnpoint);
@@ -34,7 +34,7 @@ program spawnpointcontrol(spawnpoint)
 		//tenta pegar o template
 		npctemplate := GetObjProperty(spawnpoint, "Spawn");
 		while(npctemplate == "NONE")
-			sleep(10);
+			sleep(60);
 			npctemplate := GetObjProperty(spawnpoint, "Spawn");
 		endwhile
 
@@ -191,6 +191,7 @@ function CreateSpawn(spawnpoint)
           y := spawnpoint.y;
           z := spawnpoint.z;
           break;
+          sleepms(20);
         endif
       endwhile
       var i := CreateNpcFromTemplate(spawn, x, y, z, 0, spawnpoint.realm);
@@ -203,14 +204,15 @@ function CreateSpawn(spawnpoint)
       success := 1;
       return i.serial;
     endif
-      i := i + 1;
-      if(i > 10)
-        var i := CreateNpcFromTemplate(spawn, spawnpoint.x, spawnpoint.y, spawnpoint.z, 0, spawnpoint.realm);
+    i := i + 1;
+    if(i > 10)
+      var i := CreateNpcFromTemplate(spawn, spawnpoint.x, spawnpoint.y, spawnpoint.z, 0, spawnpoint.realm);
 
-        success := 1;
-        SetObjProperty(i, "spawnpoint", spawnpoint.serial);
+      success := 1;
+      SetObjProperty(i, "spawnpoint", spawnpoint.serial);
       return i.serial;
     endif
+    sleepms(40);
   endwhile
 endfunction
 
