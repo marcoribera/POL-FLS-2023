@@ -264,7 +264,7 @@ function ItemTrackGump(who, items)
 						y := 0;
 					endif
 				temcoisa := 1;
-				
+
 		elseif(item.objtype == 0x6008 || item.objtype == 0x6009 || item.objtype == 0xf6C || item.objtype == 0xDDA || item.objtype == 0x1FD4 || item.objtype == 0x1FE7 )
 				itemarray.append(item);
 				GFTextLine(gump, (47 + x), (70 + y), 800, "Portal");
@@ -338,10 +338,10 @@ function CreatureTrack(who, mobontrack, mobname)
 	if ((mobname != 0) && (mobname != 1))
 		GFTextLine(gump, 47, 140, 800, "Profundidade do Rastro");
 		GFAddButton(gump, 30, 144,  2103, 2104, GF_CLOSE_BTN, 3 );
-//if (TemHabilidade(who, "Sobrevivencia do Grupo"))												
+//if (TemHabilidade(who, "Sobrevivencia do Grupo"))
 		GFTextLine(gump, 47, 160, 800, "Verificar Resistências e Dano");
 		GFAddButton(gump, 30, 164,  2103, 2104, GF_CLOSE_BTN, 4 );
-//endif	   
+//endif
 	endif
 	GFTextLine(gump, 47, 180, 800, "Mudar de Alvo");
 	GFAddButton(gump, 30, 184,  2103, 2104, GF_CLOSE_BTN, 5 );
@@ -665,7 +665,7 @@ var creature := mobontrack;
 
 		GFGumpPic(gump, 140, 138, 2091);
         GFGumpPic(gump, 140, 371, 2091);
-		
+
 		GFPage(gump, 1);
         GFGumpPic(gump, 128, 152, 2086);
         GFHTMLArea(gump, 147, 150, 160, 18, "<basefont color=#A52A2A>Resistencias");
@@ -675,7 +675,7 @@ var creature := mobontrack;
         GFHTMLArea(gump, 320, 186,  35, 18, "<basefont color=#4A3929><div align=right>"+rf+"</div>");
         GFHTMLArea(gump, 153, 204, 160, 18, "<basefont color=#4A3929>Frio");
         GFHTMLArea(gump, 320, 204,  35, 18, "<basefont color=#4A3929><div align=right>"+rc+"</div>");
-		
+
         GFHTMLArea(gump, 153, 222, 160, 18, "<basefont color=#4A3929>Energia");
         GFHTMLArea(gump, 320, 222,  35, 18, "<basefont color=#4A3929><div align=right>"+re+"</div>");
         GFHTMLArea(gump, 153, 240, 160, 18, "<basefont color=#4A3929>Veneno");
@@ -695,7 +695,7 @@ var creature := mobontrack;
         GFHTMLArea(gump, 320, 353,  35, 18, "<basefont color=#4A3929><div align=right>"+arp+"</div>");//333
      //   GFAddButton(gump, 317, 358, 5603, 5607, GF_PAGE_BTN, 1);
       //  GFAddButton(gump, 340, 358, 5601, 5605, GF_PAGE_BTN, 3);
-		
+
 		return gump;
 
 
@@ -724,4 +724,4 @@ endfunction
 		return "Voce tem quase certeza que nao existe um bando.";
 	endif
 endfunction
-*/						
+*/
