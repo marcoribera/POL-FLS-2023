@@ -64,7 +64,8 @@ function createSpawngump(who, type,  oldspawns := 0, start := 0, end := 0)
 		endif
 	elseif (type == 4) //Registrar
 		var npc_target := Target(who); //TGTOPT_CHECK_LOS+TGTOPT_HELPFUL);
-		if ( !npc_target.IsA(POLCLASS_MOBILE) || npc_target.acctname )
+		var nome := GetObjProperty(npc_target, "nome_inicial");
+		if ( !npc_target.IsA(POLCLASS_MOBILE) || nome )
 		SendSysMessageEx(who, "Isso nao eh um alvo valido! Somente npcs!", SSM_FAIL);
 		return;
 		endif
@@ -81,9 +82,8 @@ function createSpawngump(who, type,  oldspawns := 0, start := 0, end := 0)
 			sleepms(2);
 		endforeach
 		var mina := df.createelement(""+Cint(spawn_serial));
-		var number := spawns.size() + 1;
 		mina.setprop("Povo", rect);
-		mina.setprop("Index",number);
+		//mina.setprop("Index",number);
 		sleepms(2);
 		SendSysMessageEx(who, "Npc registrado com sucesso!", SSM_INFO);
 		createSpawngump(who, 1);
