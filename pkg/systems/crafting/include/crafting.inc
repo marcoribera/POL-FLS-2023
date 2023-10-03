@@ -213,7 +213,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 						else
 							SendSysMessageEx(who, "Tentou Improvisar um dos materiais, mas nao deu certo." , SSM_FAIL);
 							SubtractMaterial(who, targMaterials, 0.5); //consome metade do material
-							return 0;
+							return OUT_OF_MATERIALS;
 						endif
 					else
 						//SendSysMessageEx(who, "DEBUG: " + cstr(targMaterials[thing]) + " < " + cstr((materials[thing] + more)) + " - GAMA", SSM_FAIL);	//quando a quantidade de um material for insuficiente, exibe mensagem de erro.
@@ -241,12 +241,17 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 			PrintTextAbove(item, "*item em brasa*");
 			MoveObjectToLocation(anvil.x, anvil.y, (anvil.z+7), anvil.realm);
 		endif
-		playCraftWork(who, craft_sound, craft_loops, craft_delay, craft_action);
+
+		//Caso saia do lugar durante o trabalho, para;
+		if(!playCraftWork(who, craft_sound, craft_loops, craft_delay, craft_action))
+			return 1;
+		endif
+
 		if (item)
 			DestroyItem(item);
 		endif
 
-		check := Skillcheck(who, craft_skill, diff, pts) ;
+		check := Skillcheck(who, craft_skill, diff, pts);
 
 		if(check > 0)
 			if (!SubtractMaterial(who, targMaterials, 1+more))
@@ -328,22 +333,25 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 endfunction
 
 function CreateItem(who, objtype, material, more:=0)
-	var theitem;
-	var extra := more;
-	if (objtype == 0x1BD4 || objtype == 0x9087)
-		extra := extra + 4;
-	endif
-	var item;
-	var empilhou:=0;
-	foreach item in (EnumerateItemsInContainer(who.backpack))
-		if(item.objtype == objtype && (GetObjProperty(item,"material") == material))
-			empilhou := AddAmount(item, 1+extra);
-			if(empilhou)
-				return empilhou;
-			endif
+	var theitem := 0;
+	var cfg:=ReadConfigFile(":crafting:stackingitens");
+	var elem := FindConfigElem(cfg, "stacks");
+	var stackingitens:=ListConfigElemProps( elem );
+	if(cstr(objtype) in stackingitens)
+		var stacknow := FindObjtypeInContainer( who.backpack, objtype );
+		if (objtype == 0x1bd4 || objtype == 0x9087) //Pontas e shafts
+			more := more + 9;
 		endif
-	endforeach
-	return CreateItemInBackpack(who, objtype, 1+extra);
+		if ( stacknow )
+			AddAmount (stacknow, 1+more);
+			theitem := stacknow;
+		else
+			theitem := CreateItemInBackpack(who, objtype, 1+more);
+		endif
+	else
+		theitem := CreateItemInBackpack(who, objtype, 1+more);
+	endif
+	return theitem;
 endfunction
 
 
@@ -736,22 +744,26 @@ endfunction
 // (none) if none sent. Who is who the info is to be sent to.
 // All delays are in seconds.
 function playCraftWork(who, craftSound, loops:=0, delay:=2, craftAction:=0)
-
-
-  if(loops)
-    for i := 1 to loops
-      if(craftAction)
-        PerformAction( who, craftAction );
-      endif
-      PlaySoundEffect(who, craftSound);
-      sleep(delay);
-    endfor
-  else
-    PlaySoundEffect(who, craftSound);
-    sleep(delay);
-  endif
-
-  return;
+	var initialX:= who.x;
+	var initialY:= who.y;
+	if(loops)
+		for i := 1 to loops
+			if ( (who.x != initialX) || (who.y != initialY) )
+				SendSysMessageEx(who, "Voce parou de se concentrar no que estava fazendo.", SSM_FAIL);
+				return 0;
+			endif
+			if(craftAction)
+				PerformAction( who, craftAction );
+			endif
+				PlaySoundEffect(who, craftSound);
+				sleep(delay);
+		endfor
+	else
+		PlaySoundEffect(who, craftSound);
+		sleep(delay);
+	endif
+	return 1;
+return;
 
 endfunction
 

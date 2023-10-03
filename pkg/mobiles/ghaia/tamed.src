@@ -49,7 +49,7 @@ program TamedAI()
   //var parms := {};
   //parms[1] := me;
   //parms[2] := time;
-  //start_script(":taming:happyCounter", parms);
+  start_script(":taming:happyCounter", {me, ReadGameClock()});
 
 	while ( me )
 		if ( wait_time < 1 )
@@ -63,7 +63,7 @@ program TamedAI()
 		 var parms := {};
 		parms[1] := me;
 		parms[2] := time;
-		start_script(":taming:happycounter", {me, time});
+		//start_script(":taming:happycounter", {me, ReadGameClock()});
 
         //npcs criam ovos ou outras coisas
         //if ( (GetCooldown(me, "dropitem" ) == 0) && (CInt(npccfgfile[mytemplate].DropDelay) > 0) )
@@ -741,15 +741,27 @@ function ProcessDoubleClick(ev)
 			var input := GFSendGump(owner, gump);
 			input  := input[0];
 			if (input == 10)
+			    if(obediencecheck()== 0)
+					return;
+				endif
 				guarding := targ.mobile;
 			elseif (input ==  20)
+			    if(obediencecheck()== 0)
+					return;
+				endif
 				following := targ.mobile;
 			elseif (input == 30)
+			    if(obediencecheck()== 0)
+					return;
+				endif				
 				opponent := targ.mobile;
 			endif
 
 		elseif (!Cint(targ.mobile))//se nao for nem item nem mobile anda ate la
 			if (!Cint(targ.item))
+			    if(obediencecheck()== 0)
+					return;
+				endif
 				following := 0;
 				going_loc := struct;
 				going_loc.+x := targ.x;
@@ -836,7 +848,7 @@ var orneriness := npccfgfile[me.npctemplate].PetSlot;
 var dmgsound := npccfgfile[me.npctemplate].damagedsound;
 var hit := npccfgfile[me.npctemplate].attackhitsound;
 	
-  var maslore    := AP_GetSkill(owner, HANDLEANIMAL)/5;
+  var maslore    := AP_GetSkill(owner, HANDLEANIMAL)/2;
   var mastaming  := CInt(AP_GetSkill(owner, HANDLEANIMAL)+ maslore);
   var checkvalue := CInt(mastaming - 20);
   var happiness := GetObjProperty(me, "happiness");
@@ -854,7 +866,7 @@ var hit := npccfgfile[me.npctemplate].attackhitsound;
   var finaldefiance := CInt(defiance + RandomInt(40) );
   if( (GetObjProperty(me, "summoned")== 1) || (GetObjProperty(me, "NeverRelease") == 1) )// se for summon ou fiel/bond não destama não desobedece
 	return 1;
-  elseif(finaldefiance > checkvalue)
+  elseif ( (happiness < 37) && (finaldefiance > checkvalue))
     PrintTextAbovePrivate(me, "*O animal te ignora*", owner);
 	PlaySoundEffect(me, dmgsound);
     happiness := happiness - orneriness;
