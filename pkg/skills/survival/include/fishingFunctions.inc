@@ -259,7 +259,7 @@ function GetSOSTreasure(who, targetsquare, sosmsg)
 			DestroyItem(sosmsg);
 		endif
 	else
-		SendSysMessage(who, "Alguma coida grande caiu de seu anzol!");
+		SendSysMessage(who, "Alguma coisa grande caiu de seu anzol!");
 	endif
 
 	return 0;
@@ -267,7 +267,7 @@ function GetSOSTreasure(who, targetsquare, sosmsg)
 endfunction
 
 function FindPeixePretendido(who, isca)
-	if (isca.objtype == 0x9980) return "Lambari"; 
+	if (isca.objtype == 0x9980) return "Manjuba"; 
  	elseif (isca.objtype == 0x9981) return "Atum"; 
  	elseif (isca.objtype == 0x9982) return "Dourado"; 
  	elseif (isca.objtype == 0x9983) return "Anchova";  
@@ -275,7 +275,7 @@ function FindPeixePretendido(who, isca)
 	elseif (isca.objtype == 0xdd7) return "Perca"; 
 	elseif (isca.objtype == 0xdd6) return "Robalo"; 
  	elseif (isca.graphic == 0x0C82) return "PeixeGalo";
-	elseif (isca.graphic == 0x1CEF) return "Manjuba";
+	elseif (isca.graphic == 0x1CEF) return "Lambari";
 	endif
 endfunction
 

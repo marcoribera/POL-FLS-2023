@@ -71,7 +71,7 @@ program use_FishNets(who, fishnet)
 			else
 				SendSysMessage(who,"Seus sonhos de uma bela pescaria foram atendidos!");
 				var fishcatch := PesoPeixe(who, peixeexiste, targetsquare);
-				var peixecriado := CreateItemAtLocation(who.x, who.y, who.z, peixeexiste, 5+ CInt((skill-60)/2), who.realm);
+				var peixecriado := CreateItemAtLocation(who.x, who.y, who.z, peixeexiste, 5+ CInt((skill-60)/4), who.realm);
 				var newname := peixecriado.name + " [ Peso: " + fishcatch + " ]";
 				Setname(peixecriado, newname );
 			endif
