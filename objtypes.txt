@@ -2891,7 +2891,10 @@
 0xee5d cabecadetitan survival
 0xee5e cabecadebruto survival
 0xee5f RabbitStew food
-# 0xee60 - 0xee65 unused
+# 0xee60 - 0xee62 unused
+0xee63 boardaquileia fls_carpentry
+0xee64 boardtoxigno fls_carpentry
+0xee65 boardsacra fls_carpentry
 0xee66 boardpinheiro fls_carpentry
 0xee67 boardcarvalho fls_carpentry
 0xee68 boardnogueira fls_carpentry
@@ -2900,9 +2903,8 @@
 0xee70 boardsipestre fls_carpentry
 0xee71 cabo fls_carpentry
 0xee72 pregos fls_carpentry
-0xee73 boardescuro fls_carpentry
-0xee74 boardcogumelo fls_carpentry
-# 0xee75 - 0xee8f unused
+0xee73 boardangelim fls_carpentry
+# 0xee74 - 0xee8f unused
 0xee90 gumpcriacao charactercreation
 # 0xee91 - 0xee98 unused
 0xee99 formulanoventa alchemy

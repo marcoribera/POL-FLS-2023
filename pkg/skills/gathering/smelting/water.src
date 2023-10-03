@@ -160,7 +160,7 @@ function DeterminaLiga(metals, who)
     if (("ferro"  in metais ) && ("estanho" in metais) )
       return 0x6995; //aco
     elseif (("prata" in metais) && ("estanho" in metais))
-      return 0x6601; //stalith
+      return 0x6603; //cristalith
     elseif (("cobre"  in metais ) && ("estanho" in metais))
       return 0x6994; //bronze
     elseif (("lithtan" in metais) && ("estanho" in metais))
@@ -185,6 +185,8 @@ function DeterminaLiga(metals, who)
       return 0x6607; //venerilith
     elseif (("lithtan" in metais) && ("estanho" in metais)  && ("helce" in metais))
       return 0x6608; //enerlith
+    elseif (("lithtan" in metais) && ("estanho" in metais)  && ("ferro" in metais))
+      return 0x6602; //acielith
     elseif (("cobre" in metais) && ("prata" in metais)  && ("golden" in metais))
       return 0x6604; //platinum
     endif

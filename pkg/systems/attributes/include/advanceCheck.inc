@@ -216,7 +216,7 @@ function CheckSkillAdvance(mobile, skill_name, award_diff, pass_chance)
 		pass_chance := CInt(settings.MinChance);
 	endif
 	//aumenta chance com base na inteligencia
-	pass_chance := pass_chance + CInt(AP_GetTrueStat(mobile, INTELLIGENCE)/4.0);
+	pass_chance := CInt(pass_chance * (1.0 + (AP_GetTrueStat(mobile, INTELLIGENCE)/100.0)));
 
 	if ( pass_chance > settings.MaxChance )
 		pass_chance := CInt(settings.MaxChance);
