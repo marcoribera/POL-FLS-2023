@@ -2290,7 +2290,8 @@
 0x6159 lvl3hab charactercreation
 0x615a almaaprisionada spells
 0x615b runamantodosolinvicto spells
-# 0x615c - 0x615f unused
+0x615c metamorfoselicantropa spells
+# 0x615d - 0x615f unused
 0x6160 lvl4hab charactercreation
 0x6161 lvl0hab charactercreation
 0x6162 lvl5hab charactercreation
@@ -2481,7 +2482,8 @@
 0x908c flechadeargonil woodworking
 0x908d flechademithril woodworking
 0x908e flechadeprata woodworking
-# 0x908f - 0x9097 unused
+0x908f flechadecobre woodworking
+# 0x9090 - 0x9097 unused
 0x9098 virotedeguerra woodworking
 0x9099 virotedehelce woodworking
 0x909a virotedefigin woodworking
@@ -2489,7 +2491,11 @@
 0x909c virotedeargonil woodworking
 0x909d virotedemithril woodworking
 0x909e virotedeprata woodworking
-# 0x909f - 0x9106 unused
+# 0x909f unused
+0x90a0 virotedecobre woodworking
+0x90a1 flechadebronze woodworking
+0x90a2 virotedebronze woodworking
+# 0x90a3 - 0x9106 unused
 0x9107 bestaderepeticao woodworking
 # 0x9108 - 0x9669 unused
 0x966a VendorContainer containers
@@ -2890,7 +2896,10 @@
 0xee5d cabecadetitan survival
 0xee5e cabecadebruto survival
 0xee5f RabbitStew food
-# 0xee60 - 0xee65 unused
+# 0xee60 - 0xee62 unused
+0xee63 boardaquileia fls_carpentry
+0xee64 boardtoxigno fls_carpentry
+0xee65 boardsacra fls_carpentry
 0xee66 boardpinheiro fls_carpentry
 0xee67 boardcarvalho fls_carpentry
 0xee68 boardnogueira fls_carpentry
@@ -2899,9 +2908,8 @@
 0xee70 boardsipestre fls_carpentry
 0xee71 cabo fls_carpentry
 0xee72 pregos fls_carpentry
-0xee73 boardescuro fls_carpentry
-0xee74 boardcogumelo fls_carpentry
-# 0xee75 - 0xee8f unused
+0xee73 boardangelim fls_carpentry
+# 0xee74 - 0xee8f unused
 0xee90 gumpcriacao charactercreation
 # 0xee91 - 0xee98 unused
 0xee99 formulanoventa alchemy
