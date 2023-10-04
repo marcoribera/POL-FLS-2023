@@ -18,9 +18,9 @@ endprogram
 
 function createSpawngump(who, type,  oldspawns := 0, start := 0, end := 0)
 
-	var df := OpenDataFile(":tn:summons");
+	var df := OpenDataFile(":tn:summonsall");
 	if (!df)
-		df := CreateDataFile( ":tn:summons", DF_KEYTYPE_INTEGER);
+		df := CreateDataFile( ":tn:summonsall", DF_KEYTYPE_STRING);
 	endif
 	
 	var spawns := array;
