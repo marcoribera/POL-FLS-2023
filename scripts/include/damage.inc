@@ -460,6 +460,10 @@ var inimigo_caca := (GetObjProperty (defender, "marcadacaca") == 1);
 	endif
     var itemdesc := ReadConfigFile("::itemdesc");
 
+    if (TemHabilidade(who, "Brigador de Taverna") && (who.weapon.objtype == 0x1F020))
+        other := other + 2.0;
+    endif
+
     if (TemHabilidade(who, "Artista Marcial") )
 		var monk_weapons := array{ 0x0df0, 0x13f9, 0x0e8a, 0x0e81};
         var isArmor := array{"ArmaduraPesada", "ArmaduraMedia", "ArmaduraLeve"};
