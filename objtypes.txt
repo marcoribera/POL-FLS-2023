@@ -2482,7 +2482,8 @@
 0x908c flechadeargonil woodworking
 0x908d flechademithril woodworking
 0x908e flechadeprata woodworking
-# 0x908f - 0x9097 unused
+0x908f flechadecobre woodworking
+# 0x9090 - 0x9097 unused
 0x9098 virotedeguerra woodworking
 0x9099 virotedehelce woodworking
 0x909a virotedefigin woodworking
@@ -2490,7 +2491,11 @@
 0x909c virotedeargonil woodworking
 0x909d virotedemithril woodworking
 0x909e virotedeprata woodworking
-# 0x909f - 0x9106 unused
+# 0x909f unused
+0x90a0 virotedecobre woodworking
+0x90a1 flechadebronze woodworking
+0x90a2 virotedebronze woodworking
+# 0x90a3 - 0x9106 unused
 0x9107 bestaderepeticao woodworking
 # 0x9108 - 0x9669 unused
 0x966a VendorContainer containers

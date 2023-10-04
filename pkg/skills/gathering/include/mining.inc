@@ -261,7 +261,9 @@ function GetResourceId(oreToSearch)
 	case (oreToSearch)
 
 		"areia": return 0x6075;
-
+		
+		"cobre": return 0x6450;
+		
 		"argila": return 0x6074;
 
 		"ferro": return 0x6300; //TN USED
@@ -286,7 +288,7 @@ function GetResourceId(oreToSearch)
 
 		//"gromril": return 0x6452; //TN USED
 
-		//"cobre": return 0x6450; //TN USED
+	
 
 		"prata": return 0x6992; //TN USED
 
@@ -376,6 +378,7 @@ function DetermineMiningDifficulty(oretype)
 		0x6451: return 80; //argonil
 		0x6307: return 90; //galvorn
 		0x6308: return 90; //mithril
+		0x6450: return 20; //cobre
 
 		0x6992: return 50; //prata
  		0x6990: return 30; //estanho
