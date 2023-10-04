@@ -227,7 +227,7 @@ function taming(who)
 			if ( SkillCheck(who, HANDLEANIMAL, CInt(info.difficulty)) > 0 )
 				SendSysMessageEx(who, "Voce ganhou a confianca de "+targ.name+".", SSM_INFO);
 				targ.SetMaster(who);
-
+				var erase_selvagem := GetObjProperty(targ, "Selvagem");
 				SetObjProperty(targ, "owner", who.serial);
 				SetObjProperty(targ, "name", targ.name);
 				SetObjproperty(targ, "script", targ.script);
@@ -237,7 +237,10 @@ function taming(who)
 
 				var time := ReadGameClock();
 				SetObjProperty(targ,"countercheck", time);
-				EraseObjProperty(targ, "Selvagem");
+				if (erase_selvagem == 1)
+					EraseObjProperty(targ, "Selvagem");
+					EraseObjProperty(targ, "Critic");
+				endif
 				targ.script := ":ghaia:tamed";
 				RestartScript(targ);
 
