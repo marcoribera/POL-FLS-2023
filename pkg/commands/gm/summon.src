@@ -117,7 +117,7 @@ function createSpawngump(who, type,  oldspawns := 0, start := 0, end := 0)
 	GFTextLine(gump, 40, 115, 1153, "Registrar um Npc");
 	//GFTextLine(gump, 40, 130, 1153, "Listar por tipo de npc");
 	
-	GFTextLine(gump, 200, 70, 1153, "Carregar todos summons");
+	//GFTextLine(gump, 200, 70, 1153, "Carregar todos summons");
 	GFTextLine(gump, 200, 85, 1153, "Summonar selecionado(s)");
 	GFTextLine(gump, 200, 100, 1153, "Deletar/MATAR o(s) Npc(s)");
 	if (oldspawns)
@@ -144,7 +144,7 @@ function createSpawngump(who, type,  oldspawns := 0, start := 0, end := 0)
 	GFAddButton( gump, 20, 118, 2103, 2104, 1, 4); //Registrar npc
 	//GFAddButton( gump, 20, 133, 2103, 2104, 1, 5);
 	
-	GFAddButton( gump, 180, 73, 2103, 2104, 1, 6); //carregar todos os npcs
+	//GFAddButton( gump, 180, 73, 2103, 2104, 1, 6); //carregar todos os npcs
 	GFAddButton( gump, 180, 88, 2103, 2104, 1, 7); // Spawnar
 	GFAddButton( gump, 180, 103, 2103, 2104, 1, 8); //Deletar npcs selecionados
 	
@@ -272,7 +272,7 @@ function createSpawngump(who, type,  oldspawns := 0, start := 0, end := 0)
 			createSpawngump(who, 100, oldspawns, newstart, newend);
 			return 1;
 		elseif( result[0] >= 1000)
-			MoveObjectToLocation( who, spawns[result[0]-1000].x, spawns[result[0]-1000].y, spawns[result[0]-1000].z, spawns[result[0]-1000].realm, MOVEOBJECT_FORCELOCATION );
+			MoveObjectToLocation( who, SystemFindObjectBySerial(spawns[result[0]-1000]).x, SystemFindObjectBySerial(spawns[result[0]-1000]).y, SystemFindObjectBySerial(spawns[result[0]-1000]).z, SystemFindObjectBySerial(spawns[result[0]-1000]).realm, MOVEOBJECT_FORCELOCATION );
 		else
 			CreateSpawnGump(who, result[0]);
 		endif
@@ -284,12 +284,12 @@ function GetNpcBySerial(who, serial_npc, opt1, opt2, opt3)
 var npc_summon := SystemFindObjectBySerial(serial_npc);
 
 if (opt1 == 1)
-npc_summon.frozen := 1;
+npc_summon.concealed := 1;
 else
 endif
 
 if (opt2 == 1)
-npc_summon.concealed := 1;
+npc_summon.frozen := 1;
 else
 endif
 
@@ -297,9 +297,9 @@ if (opt3 == 1)
 var result := CheckBoxGump(who, 150, 200, "Opcoes de Summon", {"Invisivel","Freeze"});
 foreach r in result
 		if (r == "Invisivel")
-			npc_summon.frozen := 1;
-		elseif (r ==  "Freeze")
 			npc_summon.concealed := 1;
+		elseif (r ==  "Freeze")
+			npc_summon.frozen := 1;
 		endif
 	endforeach
 endif
