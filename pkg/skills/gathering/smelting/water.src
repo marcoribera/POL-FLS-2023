@@ -46,83 +46,70 @@ program coolOff(user, water)
 endprogram
 
 function EsfriarLiga(user, item)
-  var hasestanho, hascobre;
-  var num := CINT(GetObjProperty(item, "numMetal"));
-  if (num)
-    if (num == 1)
-      PlaySoundEffect(user, 0x23f);
-      sleepms(1500);
-      var amt := CINT(GetObjProperty(item, "amt1"));
-      var ingot := GetObjProperty(item, "oreObj1");
-    	if (ingot == "carvao")
-    	   SendSysMessage(user, "Voce apenas estragou carvao!", FONT_NORMAL, 40);
-    	else
-        SendSysMessage(user, "Voce esfriou o metal derretido e fez as barras.", FONT_NORMAL, 90);
-    	  CreateItemInBackpack(user, ingot, amt);
-        if(TemHabilidade(user,"Tesouro do Lixo"))
-          smeltaImpurezasRaras(user, amt);
-        endif
-    	endif
-      EraseObjProperty(item, "ingType");
-      EraseObjProperty(item, "numMetal");
-      EraseObjProperty(item, "amt1");
-      EraseObjProperty(item, "oreObj1");
-      item.color := 951;
-    else
-      var metals := {};
-      var metal;
-      var i := 1;
-      while ( i<=num) //pega a lista de metais que tem no pot
-         metal := GetObjProperty(item, "oreObj"+i);
-         metals.append(metal);
-         i := i +1;
-      endwhile
-    	//printtextabove(item, " " + metals);
-    	PlaySoundEffect(user, 0x23f);
-    	sleepms(1500);
-      var amt := CINT(GetObjProperty(item, "amt1"));
-      var ingot := DeterminaLiga(metals, user);
-
-
-      if (ingot == "noIngot")
-        if(TemHabilidade(user,"Tesouro do Lixo"))
-          foreach met in metals
-            CreateItemInBackpack(user, met, amt);
-            SendSysMessage(user, "Voce nao conseguiu fazer uma liga, mas aproveitou todo o material!", FONT_NORMAL, 40);
-          endforeach
-        else
-          foreach met in metals
-            CreateItemInBackpack(user, met, amt/2);
-          endforeach
-          SendSysMessage(user, "Voce nao conseguiu fazer uma liga, mas nao perdeu todo material!", FONT_NORMAL, 40);
-        endif
-        deleteProp(item);
+   var hasestanho, hascobre;
+   var num := CINT(GetObjProperty(item, "numMetal"));
+   if (num)
+      if (num == 1)
+	PlaySoundEffect(user, 0x23f);
+	sleepms(1500);
+        var amt := CINT(GetObjProperty(item, "amt1"));
+        var ingot := GetObjProperty(item, "oreObj1");
+	if (ingot == "carvao")
+	   SendSysMessage(user, "Voce apenas estragou carvao!", FONT_NORMAL, 40);
+	else   
+           SendSysMessage(user, "Voce esfriou o metal derretido e fez as barras.", FONT_NORMAL, 90);
+	   CreateItemInBackpack(user, ingot, amt);
+	endif
+        EraseObjProperty(item, "ingType");
+        EraseObjProperty(item, "numMetal");
+        EraseObjProperty(item, "amt1");
+        EraseObjProperty(item, "oreObj1");
         item.color := 951;
-        return;
-      endif
+     else
+        var metals := {};
+        var metal;
+        var i := 1;
+        while ( i<=num) //pega a lista de metais que tem no pot
+           metal := GetObjProperty(item, "oreObj"+i);
+           metals.append(metal);
+           i := i +1;
+        endwhile
+	//printtextabove(item, " " + metals);
+	PlaySoundEffect(user, 0x23f);
+	sleepms(1500);
+        var amt := CINT(GetObjProperty(item, "amt1"));
+        var ingot := DeterminaLiga(metals, user);
 
-      SendSysMessage(user, "Voce esfriou a liga metalica derretida e fez as barras.", FONT_NORMAL, 90);
-      item.color := 951;
-      deleteProp(item);
-      if (ingot == 0x6317) //metal liquido, nao foi implementado no shard ainda mas quandofor
-                 //eh so consertar isso
-        var hasbottle:= 0;
-        foreach item in EnumerateItemsInContainer(user.backpack)
-          if(item.objtype == UOBJECT_EMPTY_BOTTLE)
-          SubtractAmount(item, 1);
-          hasbottle := 1;
-          break;
-          endif
-        endforeach
-        if (hasbottle)
-          CreateItemInBackpack(user, ingot, amt);
-        else
-           SendSysMessage(user, "Voce deixou o metal liquido derramar no chao.", FONT_NORMAL, 40);
-           return;
+	
+        if (ingot == "noIngot")
+          deleteProp(item);
+          item.color := 951;
+          SendSysMessage(user, "Voce nao conseguiu fazer uma liga com esses metais", FONT_NORMAL, 40);
+          return;
         endif
-      else
-          CreateItemInBackpack(user, ingot, amt);
-      endif
+
+        SendSysMessage(user, "Voce esfriou a liga metalica derretida e fez as barras.", FONT_NORMAL, 90);
+        item.color := 951;
+        deleteProp(item);
+        if (ingot == 0x6317) //metal liquido, nao foi implementado no shard ainda mas quandofor
+	                     //eh so consertar isso
+             var hasbottle:= 0;
+              foreach item in EnumerateItemsInContainer(user.backpack)
+                if(item.objtype == UOBJECT_EMPTY_BOTTLE)
+                SubtractAmount(item, 1);
+                hasbottle := 1;
+                break;
+                endif
+              endforeach
+              if (hasbottle)
+                CreateItemInBackpack(user, ingot, amt);
+              else
+                 SendSysMessage(user, "Voce deixou o metal liquido derramar no chao.", FONT_NORMAL, 40);
+                 return;
+              endif
+        else
+            CreateItemInBackpack(user, ingot, amt);
+        endif
      endif
   endif
 endfunction
