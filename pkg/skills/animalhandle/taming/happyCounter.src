@@ -45,8 +45,10 @@ program happyCounter(parms)
 		 break;
        endif
         happiness := GetObjProperty(me,"happiness");
+		if(!GetObjProperty(me, "previous_location"))
         happiness := happiness - 1;
         SetObjProperty(me,"happiness", happiness);
+		endif
         sleep(60);
       endwhile
     endif
