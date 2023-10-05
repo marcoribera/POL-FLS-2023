@@ -75,7 +75,7 @@ function makeTinkeringItems(who, what, amt, tool)
 		return 0;
 	endif
 
-	if (what == 0x1085 || what == 0x1086 || what == 0x1087 || what == 0x1088 || what == 0x1089 || what == 0x108a || what == 0x2b6e || what == 0x2b6f || what == 0x2b70 || what ==  4001 || what == 0x376a || what == 0xff97 || what == 0xff98)
+	if (what == 0x1085 || what == 0x1086 || what == 0x1087 || what == 0x1088 || what == 0x1089 || what == 0x108a || what == 0x2b6e || what == 0x2b6f || what == 0x2b70 || what ==  4001 || what == 0x376a /*|| what == 0xff97 ||  what == 0xff98 */)
 		amt := 1;
 	endif
 
@@ -130,7 +130,7 @@ function makeTinkeringItems(who, what, amt, tool)
 			SetObjProperty(key, "LockId", lockid);
 			SetObjProperty(theitem, "level", lvl);
 			SendSysMessageEx(who, "Voce fez a fechadura e a chave.", SSM_INFO);
-		elseif ( theitem.objtype == 0x367a)
+	/*	elseif ( theitem.objtype == 0x367a)
 			SendSysMessageEx(who, "Escolha a pocao do gas venenoso.", SSM_REQUEST);
 			var pot := Target(who);
 			if (!pot)
@@ -190,13 +190,13 @@ function makeTinkeringItems(who, what, amt, tool)
 					endif
 					DestroyItem(pot);
 				else
-					SendSysMessageEx(who, "Esta nao e a pocao certa.", SSM_FAIL);
+					SendSysMEssageEx(who, "Esta nao e a pocao certa.", SSM_FAIL);
 					DestroyItem(theitem);
 					return;
 				endif
 			endif
 		elseif (theitem.objtype == 0xff98)
-			SetObjProperty(theitem, "traplevel", Cint( AP_GetSkill(who, METALWORKING)/20 ));
+			SetObjProperty(theitem, "traplevel", Cint( AP_GetSkill(who, METALWORKING)/20 ));  */
 
 		endif
 	endforeach

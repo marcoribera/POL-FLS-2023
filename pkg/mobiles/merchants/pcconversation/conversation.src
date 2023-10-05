@@ -75,7 +75,7 @@ function ConversationPlayer(who, npc, conversation)
 				endif
 				if (answer.noagain.type != 2 || polcore().systime > waiting )
 					GFTextLine(gump, 55, x, 1153, answer.text);
-					GFAddButton(gump, 20, x, 0xFAE, 0xFAF, GF_CLOSE_BTN, i);
+					GFAddButton(gump, 20, x, 0xFAE, 0x1764, GF_CLOSE_BTN, i);
 					x := x+20;
 					i := i+1;
 				endif
