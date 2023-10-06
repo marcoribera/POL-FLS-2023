@@ -19,7 +19,7 @@ program use_SmithTool(who, tool)
 	if(!can_access(who, tool))
 		return 0;
 	endif
-	if((!tool.movable) || !ReserveItem(tool))
+	if((!tool.movable) or !ReserveItem(tool))
 		SendSysMessageEx(who, "Voce nao pode usar isto.", SSM_FAIL);
 		return 0;
 	endif
@@ -32,8 +32,6 @@ program use_SmithTool(who, tool)
 
 	EraseObjProperty(who, "IsMeditating");
 	EraseObjProperty(who, "HealTimer");
-
-	//MONTA O MENU DE FERREIRO
 
 	var rinfo := sendCraftGump(who, "Blacksmithy");
 
@@ -61,6 +59,7 @@ program use_SmithTool(who, tool)
 endprogram
 
 function makeBlacksmithItems(who, what, amt, tool )
+
 
 	if(!what)
 		SendSysMessageEx(who, "Cancelado.", SSM_FAIL);

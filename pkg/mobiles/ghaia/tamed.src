@@ -164,7 +164,7 @@ program TamedAI()
 
 		endcase
 
-		if ( CInt(GetObjProperty(me, "happiness")) < 10 )
+		if ( CInt(GetObjProperty(me, "happiness")) < 10 && !GetCooldown(me,"aviso") )
 
 			//var skill := AP_GetSkill(owner,ANIMAL_TAMING);
 
@@ -172,19 +172,20 @@ program TamedAI()
 
 			//SetTrueSkill(owner, "Taming", skill);
 
-			//SendSysMessageEX(owner, "You become less proficient in Animal Taming.", SSM_INFO_IC);
+			SendSysMessageEX(owner, me.name+" esta infeliz e o proximo comando sera o ultimo!", SSM_INFO_IC);
+			SetCooldown(me, "aviso", 2);
 
 
+			//if ( me.graphic in mountables )
 
-			if ( me.graphic in mountables )
+				//MP_Unmount (owner);
 
-				MP_Unmount (owner);
+			//endif
 
-			endif
+			//UnTame();
+		endif
 
-			UnTame();
-
-		elseif ( opponent && !IsDead(opponent) && !opponent.concealed && !opponent.hidden )
+		if ( opponent && !IsDead(opponent) && !opponent.concealed && !opponent.hidden )
 
 			Fight();
 			Follow();
@@ -394,7 +395,7 @@ function TakeItem(ev)
  //check se quer fidelizar ou nao
   var fidelizar := GetObjProperty(me, "Fidelizar?");
  
- if ( cfgeat[(ev.item).objtype].script["eat"]) //evento comida checando tds os itemdesc para ver se são comíveis
+ //if ( cfgeat[(ev.item).objtype].script["eat"]) //evento comida checando tds os itemdesc para ver se são comíveis
 	if (Cstr(ev.item.objtype) in foodarray)
 		if (ev.item.amount >1)
 			SendSysMessage(ev.source, "Quer engasgar o animal? Pegue um de cada vez!", 0, 1255);
@@ -445,7 +446,7 @@ function TakeItem(ev)
 		return;
 	endif
 
-endif
+//endif
 		
 if ( ev.item.objtype IN {2482, 3701} && !(me.graphic in pack_animals) ) //usar backpack em montaria para transformar em animal de carga
 		if ((EnumerateItemsInContainer(ev.item)).size() > 0)
@@ -864,6 +865,11 @@ var hit := npccfgfile[me.npctemplate].attackhitsound;
   var petcount := tamedPets.size();
   defiance := defiance + petcount;
   var finaldefiance := CInt(defiance + RandomInt(40) );
+  	if(happiness < 10)
+		SendSysMessage(owner, "*Seu pet "+me.name+" decidiu que eh melhor ficar sozinho*");
+		UnTame();
+		return 0;
+	endif
   if( (GetObjProperty(me, "summoned")== 1) || (GetObjProperty(me, "NeverRelease") == 1) )// se for summon ou fiel/bond não destama não desobedece
 	return 1;
   elseif ( (happiness < 37) && (finaldefiance > checkvalue))
@@ -871,11 +877,6 @@ var hit := npccfgfile[me.npctemplate].attackhitsound;
 	PlaySoundEffect(me, dmgsound);
     happiness := happiness - orneriness;
     SetObjProperty(me, "happiness",(happiness-1));
-		if(happiness < 10)
-			SendSysMessage(owner, "*Seu pet "+me.name+" decidiu que eh melhor ficar sozinho*");
-			UnTame();
-		endif
-    return 0;
   else
     PlaySoundEffect(me,hit);
     return 1;

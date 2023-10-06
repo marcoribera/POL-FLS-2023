@@ -309,9 +309,14 @@ if(!ownerarray)
 			SendSysMessageEx(who, "Voce assustou "+targ.name+" .", SSM_FAIL);
 		endif
 		return 0;
-	/*else
-		SendSysMessage(who, "Voce falhou completamente ao domar esse animal!");
-		var critical := GetObjProperty(targ, "#critical");
+	else
+		SendSysMessageEx(who, "Voce falhou ao domar esse animal!", SSM_FAIL);
+		return 0;
+		//var dist := Distance(who, targ);
+		//SetObjProperty(targ, "#ForceFlee", 10);
+		//AI_Move(targ, who, NEMOVE_AWAY, NEMOVE_RUN, NOWAKE, 100);
+		//sleepms(160);
+		/*var critical := GetObjProperty(targ, "#critical");
 		if (!critical)
 			critical := array;
 			critical[1] := who.serial;

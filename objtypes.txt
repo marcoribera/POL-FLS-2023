@@ -745,7 +745,8 @@
 0xe17 Cards
 # 0xe18 - 0xe1b unused
 0xe1c tabuleirodegamao woodworking
-# 0xe1d - 0xe1e unused
+0xe1d forja gathering
+0xe1e bigorna gathering
 0xe1f yarn domesticwork
 0xe20 bloody bandages medicine
 0xe21 bandages medicine
@@ -932,8 +933,7 @@
 0xfad tecidosisal domesticwork
 0xfae barrel containers
 0xfaf tecidodenin domesticwork
-# 0xfb0 unused
-0xfb1 smallforge gathering
+# 0xfb0 - 0xfb1 unused
 0xfb2 tecidorami domesticwork
 # 0xfb3 unused
 0xfb4 sledgehammer combat
@@ -1423,7 +1423,7 @@
 0x184e heatingstand4 lighting
 # 0x184f - 0x1850 unused
 0x1851 scales metalworking
-# 0x1852 unused
+0x1852 oleoexotico alchemy
 0x1853 skullcandle1 lighting
 0x1854 skullcandle2 lighting
 # 0x1855 - 0x1856 unused
@@ -1639,7 +1639,8 @@
 0x1e5d ank4b
 0x1e5e BulletinBoard bulletinboard
 0x1e5f BulletinBoard2 bulletinboard
-# 0x1e60 - 0x1e87 unused
+0x1e60 quebracanelas combat
+# 0x1e61 - 0x1e87 unused
 0x1e88 skinnedgoat survival
 # 0x1e89 unused
 0x1e8a lard food
@@ -1863,12 +1864,23 @@
 0x26cd RepeatingCrossbow combat
 # 0x26ce unused
 0x26cf GreatSword combat
-# 0x26d0 - 0x277c unused
-0x277d cotamalhatoramril combat
-# 0x277e - 0x278d unused
+# 0x26d0 - 0x2778 unused
+0x2779 pescococouroCazarreforcado combat
+0x277a pescocoCazar combat
+0x277b bustoCazar combat
+# 0x277c unused
+0x277d bustocouroCazarreforcado combat
+0x277e bracosCazar combat
+0x277f bracosCazarplacas combat
+0x2780 bracoscouroCazarreforcado combat
+# 0x2781 - 0x278d unused
 0x278e capuz combat
 0x278f Hood domesticwork
-# 0x2790 - 0x27a4 unused
+# 0x2790 - 0x279c unused
+0x279d pescocoCazarplacas combat
+# 0x279e - 0x27a1 unused
+0x27a2 yatagan combat
+# 0x27a3 - 0x27a4 unused
 0x27a5 ArcoYumi combat
 0x27a6 clavadosgigantes combat
 # 0x27a7 - 0x27a8 unused
@@ -1877,7 +1889,15 @@
 0x27ab Garras combat
 # 0x27ac - 0x27ae unused
 0x27af dualknives combat
-# 0x27b0 - 0x2803 unused
+# 0x27b0 - 0x27c6 unused
+0x27c7 bustoCazarplacas combat
+# 0x27c8 - 0x27d0 unused
+0x27d1 pernasCazar combat
+0x27d2 pernasCazarplacas combat
+0x27d3 pernascouroCazarreforcado combat
+# 0x27d4 - 0x27ee unused
+0x27ef espadacurta combat
+# 0x27f0 - 0x2803 unused
 0x2804 dardo tn
 0x2805 flute musicianship
 # 0x2806 unused
@@ -1918,7 +1938,22 @@
 0x2b79 RangerTunicFemale combat
 # 0x2b7a - 0x2be0 unused
 0x2be1 biscuit food
-# 0x2be2 - 0x2d29 unused
+# 0x2be2 - 0x2cd3 unused
+0x2cd4 escudowazif combat
+# 0x2cd5 - 0x2cde unused
+0x2cdf capaceteclerigo combat
+0x2ce0 bustoclerigo combat
+0x2ce1 pernasclerigo combat
+0x2ce2 bracosclerigo combat
+0x2ce3 luvasclerigo combat
+# 0x2ce4 unused
+0x2ce5 pescococlerigo combat
+0x2ce6 bracadeirasbariya combat
+0x2ce7 bustobariya combat
+0x2ce8 luvasbariya combat
+0x2ce9 pescoceirabariya combat
+0x2cea pernasbariya combat
+# 0x2ceb - 0x2d29 unused
 0x2d2a ArcoLongoNumaja combat
 0x2d2b ArcoCurtoNumaja combat
 # 0x2d2c unused
@@ -1931,7 +1966,14 @@
 0x2d33 CimitarradeUnnam combat
 0x2d34 machadodebatalhathuria combat
 0x2d35 FacaodaCaveira combat
-# 0x2d36 - 0x2de2 unused
+# 0x2d36 - 0x2daa unused
+0x2dab bustoferun combat
+0x2dac bracosferun combat
+0x2dad pernasferun combat
+# 0x2dae unused
+0x2daf luvasferun combat
+0x2db0 pescocoferun combat
+# 0x2db1 - 0x2de2 unused
 0x2de3 OrnateElvenChair woodworking
 # 0x2de4 - 0x2dea unused
 0x2deb BigElvenChair woodworking
@@ -2461,7 +2503,9 @@
 0x76ad Fruta2 tn
 0x76ae Fruta3 tn
 0x76af Fruta4 tn
-# 0x76b0 - 0x790a unused
+# 0x76b0 - 0x7817 unused
+0x7818 escudodavirtude combat
+# 0x7819 - 0x790a unused
 0x790b furiaprimordialcast spells
 0x790c luzdivina spells
 # 0x790d - 0x791b unused
@@ -2997,7 +3041,9 @@
 0xff9a beartrap traps
 # 0xff9b - 0xffe0 unused
 0xffe1 mushrooms2 food
-# 0xffe2 - 0xffe6 unused
+# 0xffe2 - 0xffe4 unused
+0xffe5 armaduracouropicta combat
+0xffe6 malhaferune combat
 0xffe7 aljavacintura woodworking
 # 0xffe8 - 0x10fff unused
 0x11000 SmallBoat boat
