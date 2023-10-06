@@ -168,7 +168,7 @@ function Fight(opponent, alerted := 0)
 
     dist := CoordinateDistance(me.x, me.y, opponent.x, opponent.y);
     if ( dist > 20)
-	/*if ( isBloodied(opponent) && TemHabilidade(opponent, "Furia") )
+	if ( isBloodied(opponent) && TemHabilidade(opponent, "Baixo Limiar de Furia") )
 		LogToFile(":fls_core:berserker.log", opponent.name+" ("+opponent.acctname+") peidou pra "+me.name+" em "+opponent.x+" "+opponent.y, LOG_DATETIME);
 		foreach x in EnumerateOnlineCharacters()
 			if (x.cmdlevel > 0)
@@ -176,7 +176,7 @@ function Fight(opponent, alerted := 0)
 			endif
 		endforeach
 	endif
-*/
+
       break;
     endif
 
