@@ -661,9 +661,7 @@
 0xb6e mesa3 woodworking
 # 0xb6f - 0xb74 unused
 0xb75 mesa4 woodworking
-# 0xb76 - 0xb90 unused
-0xb91 bancogrande woodworking
-# 0xb92 - 0xb96 unused
+# 0xb76 - 0xb96 unused
 0xb97 suportedeplacas woodworking
 # 0xb98 unused
 0xb99 suportedeplacas2 woodworking
@@ -1104,7 +1102,8 @@
 0x119a FloorSpikeTrap traps
 # 0x119b - 0x119f unused
 0x11a0 FloorSpikeTrap2 traps
-# 0x11a1 - 0x11ab unused
+# 0x11a1 - 0x11aa unused
+0x11ab bancogrande woodworking
 0x11ac FloorSawTrap traps
 # 0x11ad - 0x11af unused
 0x11b0 [n/a] fls_carpentry

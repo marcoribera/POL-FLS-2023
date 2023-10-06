@@ -36,7 +36,7 @@ program usekeg(who, item)
 				SetName(item, name);
 				return 1;
 			else
-				SendSysMessageEx(who, "O vinho ainda nao esta pronto.", SSM_FAIL);
+				SendSysMEssageEx(who, "O vinho ainda nao esta pronto.", SSM_FAIL);
 				return 1;
 			endif 
 		elseif (bebida.type == "cidra incompleta")
@@ -147,7 +147,7 @@ program usekeg(who, item)
 				SetName(item, name);
 				return 1;
 			else
-				SendSysMessageEx(who, "A cidra ainda nao esta pronta.", SSM_FAIL);
+				SendSysMEssageEx(who, "A cidra ainda nao esta pronta.", SSM_FAIL);
 				return 1;
 			endif 
 		elseif (bebida.type == "cerveja fermentando")
@@ -162,7 +162,7 @@ program usekeg(who, item)
 				SetName(item, name);
 				return 1;
 			else
-				SendSysMessageEx(who, "A cerveja ainda nao esta pronta.", SSM_FAIL);
+				SendSysMEssageEx(who, "A cerveja ainda nao esta pronta.", SSM_FAIL);
 				return 1;
 			endif 
 		else
@@ -184,7 +184,7 @@ function addDrink(who, item)
 
 	var  targ := Target(who);
 	if  (!targ)
-		SendSysMessageEx(who, "Cancelado.", SSM_FAIL);
+		SendSysMEssageEx(who, "Cancelado.", SSM_FAIL);
 		return 1;
 	endif
 
@@ -192,7 +192,7 @@ function addDrink(who, item)
 	if ( (targ.graphic == 3849) || (targ.graphic == 0x09C7) || (targ.graphic == 0x099b) || (targ.graphic == 0x099F) || (targ.graphic == 0x09c8) || (targ.graphic == 0xC960)  ||
 	(targ.graphic == 0xC961) || (targ.graphic == 0xC962) || (targ.graphic == 0xC964) )
 		if (getobjproperty(targ, "fullness") != error)
-			SendSysMessageEx(who, "Voce so pode armazenar garrafas cheias.", SSM_FAIL);
+			SendSysMEssageEx(who, "Voce so pode armazenar garrafas cheias.", SSM_FAIL);
 			return 1;
 		endif
 	elseif (targ.objtype == 0x09d0 )
@@ -223,7 +223,7 @@ function addDrink(who, item)
 		SendSysMessageEx(who, "Voce precisa colocar 10 jarras de agua e levedura.", SSM_INFO);
 		return 1;
 	else 
-		SendSysMessageEx(who, "Alvo invalido.", SSM_FAIL);
+		SendSysMEssageEx(who, "Alvo invalido.", SSM_FAIL);
 		return;
 	endif
 	
@@ -271,7 +271,7 @@ endfunction
 
 function subDrink(who, item)
 
-	var bebida := GetObjProperty(item, "bebida");
+	var bebida := GetObjPRoperty(item, "bebida");
 
 	if (bebida.doses > 0)
 		SendSysMessageEx(who, "Este barril tem ainda " + bebida.doses + " doses.  Escolha uma garrafa vazia para enche-la.", SSM_REQUEST);

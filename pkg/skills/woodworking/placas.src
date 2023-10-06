@@ -20,25 +20,26 @@ var marked	:=	GetObjProperty(item,"marked");
 var playerid	:=	(who.name + " - " + who.acctname);
 
 if (GetObjProperty(item,"danificada") == 1)
-	SendSysMessageEx(who,"Você não pode usar este item.",SSM_FAIL);
+	SendSysMessageEx(who,"Voc� n�o pode usar este item.",SSM_FAIL);
 	return 1;
 endif
 	if (description != error)
 		if (marked != error)
-				if (GetObjProperty(item,"marked") != playerid)
-					PrintText(who, "*você danificou a placa ao retira-la*");
-					if (item.movable == 0)
-						item.movable:=1;
-					endif
-					MoveItemToContainer( item, who.backpack);
-					SetObjProperty(item,"danificada",1);
-					EraseObjProperty(item,"canfix");
-					SetName(item,item.name + " [Danificada]");
-					SetObjProperty(item,"retirada",(who.name + " - " + who.acctname));
-					return 0;
-				else
-					return 0;
-				endif
+			return 0;
+				// if (GetObjProperty(item,"marked") != playerid)
+				// 	PrintText(who, "*voc� danificou a placa ao retira-la*");
+				// 	if (item.movable == 0)
+				// 		item.movable:=1;
+				// 	endif
+				// 	MoveItemToContainer( item, who.backpack);
+				// 	SetObjProperty(item,"danificada",1);
+				// 	EraseObjProperty(item,"canfix");
+				// 	SetName(item,item.name + " [Danificada]");
+				// 	SetObjProperty(item,"retirada",(who.name + " - " + who.acctname));
+				// 	return 0;
+				// else
+				// 	return 0;
+				// endif
 		endif
 	endif
 
@@ -47,7 +48,7 @@ endif
 endprogram
 
 function AddTexto(who, item)
-	var texto	:=	SmallRequestGump(who, "Conteúdo da placa:", 1);
+	var texto	:=	SmallRequestGump(who, "Conte�do da placa:", 1);
 	var marked	:=	who.name + " - " + who.acctname;
 	
 	SetObjProperty(item, "description", texto); 
