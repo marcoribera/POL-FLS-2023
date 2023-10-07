@@ -130,6 +130,15 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 	var skill := craft_config[objtype].skill;
 	var theitem;
 	var mainSkill := CInt(AP_GetSkill(who, craft_skill));
+
+	var skillreq := Cint(craft_config[objtype].skill);
+	var pts  := Cint(craft_config[objtype].points);
+	var diff := Cint(craft_config[objtype].difficulty);
+	if(mainSkill >= skill)
+		pts += diff;
+	endif
+
+/*
 	var modpts := 0;
 	if(mainSkill >= skill)
 		modpts := (mainSkill - (skill - 10));
@@ -138,6 +147,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 	var skillreq := Cint(craft_config[objtype].skill);
 	var pts  := Cint(craft_config[objtype].points);
 	pts := pts + modpts;
+*/
 	var chk := 0;
 
 	//verifica se tem os objtypes na bag
@@ -251,7 +261,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 			DestroyItem(item);
 		endif
 
-		check := Skillcheck(who, craft_skill, diff, pts);
+		check := SkillCheck(who, craft_skill, diff, pts);
 
 		if(check > 0)
 			if (!SubtractMaterial(who, targMaterials, 1+more))
