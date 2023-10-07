@@ -21,7 +21,20 @@ program UseBloodyBandage(mobile, bandage)
 	if (CoordinateDistance(mobile.x, mobile.y, targ.x, targ.y) > 2)
 		SendSysMessage(mobile, "Voce esta muito longe de onde deseja lavar as bandagens.");
 	elseif (/*IsCleanWater(targ)*/ IsWater(targ, locinfo))
-		while (bandage)
+        var five_times := bandage.amount / 5;
+        var one_time := bandage.amount % 5;
+		while (five_times > 0)
+			if (!Wait(mobile, 2))
+				SendSysMessage(mobile, "Voce parou de lavar as bandagens.");
+				break;
+			endif
+			SubtractAmount(bandage, 5);
+			CreateItemInBackpack(mobile, 0xE21, 5);
+			PlaySoundEffect(mobile, 0x26);
+			PrintText(mobile, "*lavando bandagem*");
+            five_times--;
+		endwhile
+        while (one_time > 0)
 			if (!Wait(mobile, 2))
 				SendSysMessage(mobile, "Voce parou de lavar as bandagens.");
 				break;
@@ -30,6 +43,7 @@ program UseBloodyBandage(mobile, bandage)
 			CreateItemInBackpack(mobile, 0xE21, 1);
 			PlaySoundEffect(mobile, 0x26);
 			PrintText(mobile, "*lavando bandagem*");
+            one_time--;
 		endwhile
 	else
 		SendSysMessage(mobile, "Voce precisa de agua para limpar o sangue.");
