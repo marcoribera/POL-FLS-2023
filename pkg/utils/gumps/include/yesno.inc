@@ -41,7 +41,7 @@ function YesNo( mobile, prompt:="", yes_text:="Yes", no_text:="No", delay:=0, yn
 
         var script := Run_Script( ":gumps:scripts/yesNo/yesNoGump", params );
         if( script.errortext )
-                SendSysMessage( mobile, "Error starting script <:gumps:yesNoGump> -->"+script.errortext );
+                SendSysMessage( mobile, "Error starting script <:gumps:yesnoGump> -->"+script.errortext );
                 return 0;
         endif
 

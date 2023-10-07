@@ -19,7 +19,7 @@ use cfgfile;
 use datafile;
 
 include ":gumps:selectionGump";
-include ":gumps:gumpPrompt";
+include ":gumps:gumpprompt";
 
 program	text_command_createnpc(who, template)
 

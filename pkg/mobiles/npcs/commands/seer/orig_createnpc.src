@@ -1,7 +1,7 @@
 // use uo;
 use cfgfile;
 
-include ":gumps:gumpPrompt";
+include ":gumps:gumpprompt";
 
 program	text_command_createnpc(who, template)
 
