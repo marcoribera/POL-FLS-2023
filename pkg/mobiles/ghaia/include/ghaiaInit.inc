@@ -286,6 +286,10 @@ function SetupAnimalCritic(mobile)
   var gender_set := npccfgfile[ParseTemplateName(mobile.npctemplate).template].Gender;
   var npcelem :=  FindConfigElem(npccfgfile, ParseTemplateName(mobile.npctemplate).template);
   var taxonomy := GetConfigString(npcelem, "Taxonomy");
+  var evil := (mobile.alignment == 1);
+if (!evil)
+return;
+endif
 
 if (taxonomy == "bovidae" || taxonomy == "cervidae")
 	case (RandomInt(1))

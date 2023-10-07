@@ -28,19 +28,31 @@ function MilkIt(who, mobile, bucket)
 		SendSysMessage(who, "O alvo esta muito distante.");
 		return;
 	elseif ( CInt(GetObjProperty(mobile, "#MilkWait")) > ReadGameClock() )
-		SendSysMessage(who, "A vaquinha esta sem leite.");
+		SendSysMessage(who, "A femea esta sem leite.");
 		return;
 	endif
 	
-	var cows := array(":brainai:cow", ":brainai:cow2", ":brainai:cow3", ":brainai:goat");
+	var cows := array(":brainai:cow", ":brainai:cow2", ":brainai:cabra");
 	var template := lower(mobile.npctemplate);
 	if ( template in cows )
 		SetObjProperty(mobile, "#MilkWait", ReadGameClock()+90);
+		if (mobile.npctemplate == ":brainai:cabra")
+		PlaySoundEffect(mobile, 0x099);
+		else
 		PlaySoundEffect(mobile, 0x7A);
+		endif
 		sleep(3);
-		PlaySoundEffect(mobile, 0x7B);
+		if (mobile.npctemplate == ":brainai:cabra")
+			PlaySoundEffect(mobile, 0x09D);
+		else
+			PlaySoundEffect(mobile, 0x7B);;
+		endif
 		sleep(3);
-		PlaySoundEffect(mobile, 0x7A);
+		if (mobile.npctemplate == ":brainai:cabra")
+			PlaySoundEffect(mobile, 0x099);
+		else
+			PlaySoundEffect(mobile, 0x7A);
+		endif
 		SendSysMessage(who, "Voce encheu o balde de leite.");
 		
 		ReleaseItem(bucket);
