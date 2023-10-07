@@ -9,7 +9,8 @@ use uo;
 enum VITALS
 	HITS			:= "Hits",
 	MANA			:= "Mana",
-	STAMINA			:= "Stamina"
+	STAMINA			:= "Stamina",
+	HUNGER			:= "Hunger"
 endenum
 
 enum STATS
@@ -39,7 +40,7 @@ enum SKILLS
 
 	MEDICINE		:= "Medicine",
 	SURVIVAL		:= "Survival",
-	
+
 	METALWORKING		:= "MetalWorking",
 	WOODWORKING		:= "WoodWorking",
 	DomesticWork		:= "DomesticWork",

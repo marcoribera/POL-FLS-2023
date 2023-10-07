@@ -12,7 +12,8 @@
 
 include ":fls_core:fls_characters";
 include ":charactercreation:habilidades";
-
+include ":attributes:attributes_ex";
+include "include/eventID";
 use uo;
 
 /*
@@ -280,4 +281,124 @@ function AP_CheckSkillsTotal(mobile)
 
 	return total;
 
+endfunction
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+//	AP_GetPlayerTotalSkillPoints( player )
+//
+//	Purpose:	Totals all of the attribute (skill) points for a player.
+//
+//	Parameter:	mobileref::player
+//
+//	Returns:	The aggregate of a player's skill points.
+//
+//	Created:	2022-10-08 18:44:06 by Yukiko
+//
+//////////////////////////////////////////////////////////////////////////////////////////
+function AP_GetPlayerTotalSkillPoints( player )
+
+	var attrib_names := AP_ListAttributesByType( "Skill" );
+	var attrib_points := 0;
+	foreach attrib_name in attrib_names
+		attrib_points := attrib_points + GetAttributeBaseValue( player, attrib_name );
+	endforeach
+	return attrib_points;
+
+endfunction
+
+// The following function will replace SetBaseSkill
+function SetBaseAttribute(who, skillid, skill)
+  return SetBaseAttributeBaseValue(who, skillid, Cint(skill*10));
+endfunction
+
+
+
+//////////////////////////////////////////////////////
+//
+//  These are wrapper functions to suport function
+// calls for scripts written prior to Austin's
+// attributes package for Distro 0.98.
+// Hopefully this will provide a transition phase
+// and eventually lead to those scripts being
+// rewritten to take advantage of direct calls
+// to the proper functions.
+//
+//////////////////////////////////////////////////////
+const CORE_SETTINGS_MIN_ATTRIBUTE  := 0;
+const CORE_SETTINGS_MAX_ATTRIBUTE  := 60000;
+const CORE_SETTINGS_MIN_VITAL      := 100;
+const CORE_SETTINGS_MAX_VITAL      := 10000000;
+
+
+
+/////////////////////////////////////////////////////////
+//
+// Function returns an array of the skill numbers
+// from uoskills.cfg
+//
+/////////////////////////////////////////////////////////
+
+function GetSkillIDs()
+
+var uoskillsfile := ReadConfigFile(":attributes:uoskills");
+return GetConfigIntKeys(uoskillsfile);
+
+endfunction
+
+function GetEffectiveSkill(who, skillid)
+  return AP_GetSkill(who, AP_SkillIdToAttributeName(skillid));
+endfunction
+
+function GetBaseSkill(who, skillid)
+  return Cint(AP_GetTrueSkill(who, AP_SkillIdToAttributeName(skillid)));
+endfunction
+
+function GetBaseSkillBaseValue(who, skillid)
+  return AP_GetTrueSkill(who, AP_SkillIdToAttributeName(skillid) * 10);
+endfunction
+
+function GetTrueEffectiveSkill(who, skillid)
+  var id   := AP_SkillIdToAttributeName(skillid);
+  var base := GetAttributeBaseValue(who, id);
+  var mod1 := GetAttributeTemporaryMod(who, id);
+  var mod2 := GetAttributeIntrinsicMod(who, id);
+  var true := Cdbl((base + mod1 + mod2)/ 10.0);
+  if(true < 0.0)
+    return 0.0;
+  else
+    return true;
+  endif
+endfunction
+
+function SetBaseAttributeBaseValue(who, attribid, skill)
+  var skill_tenth := Cint(skill*10);
+  if(skill_tenth < CORE_SETTINGS_MIN_ATTRIBUTE)
+    skill_tenth := CORE_SETTINGS_MIN_ATTRIBUTE;
+  elseif(skill_tenth > CORE_SETTINGS_MAX_ATTRIBUTE)
+    skill_tenth := CORE_SETTINGS_MAX_ATTRIBUTE;
+  endif
+  return SetAttributeBaseValue(who, attribid, Cint(skill_tenth));
+endfunction
+
+function SetBaseSkill(who, skillid, skill)
+  return SetBaseSkillBaseValue(who, skillid, Cint(skill*10));
+endfunction
+
+function SetBaseSkillBaseValue(who, skillid, skill_tenth)
+  if(skill_tenth < CORE_SETTINGS_MIN_ATTRIBUTE)
+    skill_tenth := CORE_SETTINGS_MIN_ATTRIBUTE;
+  elseif(skill_tenth > CORE_SETTINGS_MAX_ATTRIBUTE)
+    skill_tenth := CORE_SETTINGS_MAX_ATTRIBUTE;
+  endif
+  return SetAttributeBaseValue(who, AP_SkillIdToAttributeName(skillid), Cint(skill_tenth));
+endfunction
+
+function ModifyAttributeTemporaryMod(who, attributeid, moda)
+  return SetAttributeTemporaryMod(who, attributeid, Cint(GetAttributeTemporaryMod(who, attributeid)+ Cint(moda*10)));
+endfunction
+
+function ModifyAttributeTemporaryModBaseValue(who, attributeid, moda)
+  return SetAttributeTemporaryMod(who, attributeid, Cint(GetAttributeTemporaryMod(who, attributeid)+ moda));
 endfunction

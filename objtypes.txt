@@ -821,9 +821,7 @@
 0xed0 bones3 containers
 0xed1 bones2 containers
 0xed2 bones containers
-# 0xed3 - 0xeec unused
-0xeed GoldCoin metalworking
-# 0xeee - 0xef9 unused
+# 0xed3 - 0xef9 unused
 0xefa Spellbook magery
 # 0xefb - 0xf0d unused
 0xf0e EmptyBottle alchemy
@@ -1819,7 +1817,40 @@
 0x204c medlongbeard hair
 0x204d VandykeHair hair
 0x204e deathshroud
-# 0x204f - 0x234e unused
+# 0x204f - 0x20ce unused
+0x20cf BrownBear animaltrainer
+# 0x20d0 - 0x20e5 unused
+0x20e6 Sheep animaltrainer
+# 0x20e7 - 0x20f5 unused
+0x20f6 Llama animaltrainer
+# 0x20f7 - 0x2100 unused
+0x2101 Pig animaltrainer
+0x2102 Panther animaltrainer
+0x2103 Cow animaltrainer
+# 0x2104 - 0x2107 unused
+0x2108 Goat animaltrainer
+# 0x2109 - 0x2117 unused
+0x2118 BlackBear animaltrainer
+# 0x2119 unused
+0x211a Bird animaltrainer
+0x211b Cat animaltrainer
+0x211c Dog animaltrainer
+0x211d Eagle animaltrainer
+0x211e GrizzlyBear animaltrainer
+0x211f GreyHorse animaltrainer
+0x2120 BeigeHorse animaltrainer
+0x2121 BrownHorse animaltrainer
+0x2122 Wolf animaltrainer
+0x2123 Rat animaltrainer
+0x2124 BayHorse animaltrainer
+0x2125 Rabbit animaltrainer
+0x2126 PackHorse animaltrainer
+0x2127 PackLlama animaltrainer
+# 0x2128 - 0x2134 unused
+0x2135 DesertOstard animaltrainer
+0x2136 FrenziedOstard animaltrainer
+0x2137 ForestOstard animaltrainer
+# 0x2138 - 0x234e unused
 0x234f QuadroGrande1 quadros
 # 0x2350 - 0x240c unused
 0x240d Quadro4 quadros
@@ -2754,9 +2785,9 @@
 # 0xb01b unused
 0xb01c ElvenbedbigS woodworking
 # 0xb01d - 0xba62 unused
-0xba63 moedacobre fls_core
-0xba64 moedaprata fls_core
-0xba65 moedaouro fls_core
+0xba63 moedacobre currency
+0xba64 moedaprata currency
+0xba65 moedaouro currency
 # 0xba66 - 0xbd10 unused
 0xbd11 pedrapequena gathering
 0xbd12 pedramedia gathering
@@ -3058,7 +3089,11 @@
 0x11014 LargeDragonBoat boat
 # 0x11015 - 0x11fff unused
 0x12000 PedraAventureiro charactercreation
-# 0x12001 - 0x1f00f unused
+# 0x12001 - 0x13fff unused
+0x14000 bankersorder currency
+# 0x14001 - 0x18886 unused
+0x18887 vendorpack playervendor
+# 0x18888 - 0x1f00f unused
 0x1f010 Tillerman boat
 0x1f011 gangplank boat
 0x1f012 gangplank2 boat
@@ -3084,6 +3119,8 @@
 0xff993 olhonegro tn
 0xff994 pergaminhodrider tn
 0xff995 combatrecipe tn
-# 0xff996 - 0xeefefd unused
+# 0xff996 - 0x1002ff unused
+0x100300 ShrunkenNPC body
+# 0x100301 - 0xeefefd unused
 0xeefefe tocamusica ambience
 # 0xeefeff - 0xffffffff unused

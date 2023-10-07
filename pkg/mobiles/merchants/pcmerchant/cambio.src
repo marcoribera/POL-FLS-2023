@@ -13,16 +13,16 @@ program troca(params)
 
 	SendSysMessage(who,"Selecione as moedas que deseja trocar");
 	var moedas:=Target( who, options := TGTOPT_CHECK_LOS+TGTOPT_NEUTRAL);
-	
+
 if ((moedas.objtype == 0xba63) || (moedas.objtype == 0xba64) || (moedas.objtype == 0xba65))
-	
+
 	var gump := GFCreateGump();
         GFDisposable(gump, 0);
 	var sizey := 3;
-	GFResizePic(gump, 0, 25, 3600, 250, 180);	
+	GFResizePic(gump, 0, 25, 3600, 250, 180);
 	GFResizePic(gump, 15, 40, 0x13BE, 220, 150);
 	GFTextLine(gump, 30, 50, 1153, "Deseja trocar para: ");
-	
+
 	var prata:=GFRadioButton(gump, 30, 80, 210, 211, 0, 1);
 	GFTextLine(gump, 50, 80, 1153, "Moedas de Prata");
 
@@ -82,7 +82,7 @@ if ((moedas.objtype == 0xba63) || (moedas.objtype == 0xba64) || (moedas.objtype 
 			endif
 		elseif (moedas.objtype == 0xba65) // Ouro
 			SendSysMessage(who,"Nao foi possivel realizar a troca");
-		else	
+		else
 			return 0;
 		endif
 
@@ -100,9 +100,9 @@ if ((moedas.objtype == 0xba63) || (moedas.objtype == 0xba64) || (moedas.objtype 
 		else
 			return 0;
 		endif
- 		
+
    endif
-   
+
 else
 	SendSysMessage(who,"Selecione apenas moedas.");
 endif

@@ -4,6 +4,7 @@ include ":attributes:attributes";
 include "include/say";
 include ":tn:cooldown";
 include "include/sysEvent";
+include "include/eventID";
 include "include/client";
 
 
@@ -28,4 +29,4 @@ program manobra(attacker)
 		SetCooldown(targ, "desafioheroico", cint(AP_GetSkill(attacker, TACTICS)));
 		SetObjProperty(targ, "#desafiante", attacker.serial);
 
-endprogram 
+endprogram

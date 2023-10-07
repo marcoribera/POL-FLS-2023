@@ -28,6 +28,10 @@ const CP_CREATE		:= 0x1;
 
 const CP_DEFAULT_AREA	:= "World Bank";
 const CP_DEFAULT_PREFIX	:= "[Root Container] ";
+CONST CP_AUCTION_AREA           := "Auction Storage";
+CONST CP_BANK_AREA              := "World Bank";
+CONST CP_KEYRING_AREA           := "Keyring Storage";
+CONST CP_MERCHANT_AREA          := "Merchant Storage";
 
 /*
  * Set the 'box_type' variable to the object name of the container type
@@ -41,10 +45,30 @@ const CP_DEFAULT_PREFIX	:= "[Root Container] ";
  * Ideally, you should make an object type with the name 'BankBox' to better
  * control the number of items that can be put in the storage container.
  */
+
+/*
+ * Set the 'box_type' variable to the object name of the container type
+ * you want to be used for bank box.
+ * Example: "pouch" "metalchest" "barrel"
+ *
+ * This is ONLY used when a new root container is created. It can be  changed on
+ * the fly inside of a script for when you want to use specific container
+ * types for special storage areas.
+ *
+ * Ideally, you should make an object type with the name 'BankBox' to better
+ * control the number of items that can be put in the storage container.
+ */
 var container_type	:= "BankBox";
 
 // Toggles the bank related debug messages on and off.
 var STORAGE_DEBUG	:= 1;
+
+function CP_ListStorageAreas()
+
+    return { CP_AUCTION_AREA, CP_BANK_AREA, CP_KEYRING_AREA, CP_MERCHANT_AREA };
+endfunction
+
+
 
 /*
  * CP_GetMobileContainerID(mobile)
@@ -65,6 +89,35 @@ function CP_GetMobileContainerID(mobile)
 	else
 		return "Owner="+Hex(mobile.serial);
 	endif
+endfunction
+
+/*
+ * CP_GetStorageArea( storage_area_name, create:=CP_NOCREATE )
+ *
+ * Purpose
+ * Retrieves the storage area or if set, creates and then returns storage area.
+ *
+ * Parameters
+ * storage_area_name:   Name of the storage area to retrieve and/or create.
+ * create:      Controls if the container will be created if it does not already exist.
+ *
+ * Return value
+ * A storage area object
+ *
+ */
+function CP_GetStorageArea( storage_area_name, create:=CP_NOCREATE )
+
+    var storage_area := FindStorageArea( storage_area_name );
+    if( !storage_area && create == CP_CREATE )
+        // The storage area does not exist - so create it.
+        storage_area := CreateStorageArea( storage_area_name );
+    endif
+
+    if( storage_area.errortext )
+        CP_StorageDebugMsg( "Error::CP_GetStorageArea() - "+storage_area.errortext );
+    endif
+
+    return storage_area;
 endfunction
 
 /*

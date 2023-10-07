@@ -11,6 +11,7 @@ include ":tn:npcutil";
 include ":tn:cooldown";
 include ":ghaia:ghaia";
 include "include/sysEvent";
+include "include/eventID";
 
 
 program skill_animal_lore( who )
@@ -211,7 +212,7 @@ else
 endif
 
 var num_partos :=	Cint(Getobjproperty(creature, "Gravida")); //Qtas vezes engravidou
-			
+
         var gump := GFCreateGump();
         GFGumpPic(gump, 100, 100, 2080);
         GFGumpPic(gump, 118, 137, 2081);
@@ -317,7 +318,7 @@ var num_partos :=	Cint(Getobjproperty(creature, "Gravida")); //Qtas vezes engrav
 	   if (GetObjProperty(creature, "Sexo") == 2)
        GFHTMLArea(gump, 135, 222, 260, 18, "<basefont color=#4A3929>Ja pariu "+num_partos+" vezes");
 	   endif
-		
+
         GFAddButton(gump, 317, 358, 5603, 5607, GF_PAGE_BTN, 3);
         GFAddButton(gump, 340, 358, 5601, 5605, GF_PAGE_BTN, 1);
 

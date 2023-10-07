@@ -18,7 +18,7 @@ CONST B_XCOORD_TXT	:= 0xB006;
 CONST B_YCOORD_TXT	:= 0xB007;
 CONST B_ZCOORD_TXT	:= 0xB008;
 const CANCEL_BTN	:= 0xE000;
-CONST OKAY_BTN		:= 0xE001;
+//CONST OKAY_BTN		:= 0xE001;
 
 program command_MakeTele(who)
 	var gump := GFCreateGump();
@@ -81,14 +81,14 @@ program command_MakeTele(who)
 			SendSysMessage(who, "Nao criou essa porra no who.x, who.y, who.z.");
 			return 0;
 		endif*/
-		
+
 		dest_b.realm := GFExtractData(input, B_REALM_TXT);
 		dest_b.x := CInt(GFExtractData(input, B_XCOORD_TXT));
 		dest_b.y := CInt(GFExtractData(input, B_YCOORD_TXT));
 		dest_b.z := CInt(GFExtractData(input, B_ZCOORD_TXT));
-		
+
 		CreateTeleTile(who, dest_b.realm, dest_b.x, dest_b.y, dest_b.z, dest_a);
-		
+
 		if ( dest_b.realm && dest_b.x && dest_b.y )
 			if ( !CreateTeleTile(who, dest_a.realm, dest_a.x, dest_a.y, dest_a.z, dest_b) )
 				SendSysMessage(who, "Nao criou essa porra no destino.");
@@ -98,11 +98,11 @@ program command_MakeTele(who)
 			endif
 		else
 			SendSysMessage(who, "One way teleporter created.");
-		endif		
+		endif
 	else
 		SendSysMessage(who, "Cancelled.");
 	endif
-	
+
 	return 1;
 endprogram
 

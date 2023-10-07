@@ -10,6 +10,7 @@ include ":tn:npcutil";
 include ":tn:cooldown";
 include ":ghaia:ghaia";
 include "include/sysEvent";
+include "include/eventID";
 
 program textcmd_acalmar(who)
 	SendSysMessageEx(who, "Selecione a criatura que você deseja acalmar.", SSM_REQUEST);

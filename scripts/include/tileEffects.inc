@@ -1,3 +1,4 @@
+/*
 enum TILE_EFFECTS
 	// * general *
 	FX_SPLASH         :=  0x352d, //
@@ -7,8 +8,8 @@ enum TILE_EFFECTS
 	FX_FIREBALL       :=  0x36d4, //
 	FX_MAGIC_ARROW    :=  0x36e4, //
 	FX_FIRE_BOLT      :=  0x36f4, // Firesnake. (pagan?)
-	FX_EXPLODE_BALL   :=  0x36fe, // Not used.
 
+	FX_EXPLODE_BALL   :=  0x36fe, // Not used.
 	FX_FLAMESTRIKE    :=  0x3709, //
 	FX_SMOKE          :=  0x3728,
 	FX_TELE_VANISH    :=  0x372a, // Teleport vanish.
@@ -34,11 +35,12 @@ enum TILE_EFFECTS
 	FX_PARA_F_NS      :=  0x3979, // Paralyze field.
 	FX_FIRE_F_EW      :=  0x398c, // Fire field.
 	FX_FIRE_F_NS      :=  0x3996,  // Fire field.
+	FX_POISON_GAS     := 0x113a,
 	FX_SLEEP_EFFECT   :=  0x3C1F, //Sleeping effect
 	FX_BIRDS_EFFECT   :=  0x3C27, //Birds moving around effect
 	FX_HEALING_EFFECT :=  0x3C2B, //Healing effect
 	FX_PWINGS_EFFECT  :=  0x3C3B, //Phoenix wing effect
-	FX_POISON_GAS     := 0x113a,
 	FX_PUFF_SMOKE     := 0x9DAC,
 	FX_HEARTS         := 0x4AA4
 endenum
+	*/

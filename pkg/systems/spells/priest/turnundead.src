@@ -11,6 +11,7 @@ include ":timedScripts:timedScripts";
 include ":brainai:npcUtil";
 include ":charactercreation:resists";
 include "include/sysEvent";
+include "include/eventID";
 
 program SpellScript(params)
 	var who := params[1];

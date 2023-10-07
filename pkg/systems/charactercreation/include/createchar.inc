@@ -95,31 +95,6 @@ function getPrimarias(who)
 
 endfunction
 
-
-function AP_AttributeNameToSkillId(skill)
-	if (skill == "Alchemy")
-		return 90;
-	endif
-	var elem := AP_GetAttributeCfgElem(skill);
-	var id := elem.SkillId;
-	return id;
-endfunction
-
-function AP_SkillIdToAttributeName(skillid)
-	if (skillid == 90)
-		return "Alchemy";
-	endif
-	var cfg := AP_GetAttributesCfgFile();
-	var keys := GetConfigStringKeys( cfg );
-	foreach key in keys
-		var elem := FindConfigElem( cfg, key );
-		if (elem.SkillId == skillid)
-			return key;
-		endif
-	endforeach
-	return "";
-endfunction
-
 function CreateBasicRecipes()
 
 	var x := array;

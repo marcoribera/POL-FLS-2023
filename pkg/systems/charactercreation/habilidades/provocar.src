@@ -6,6 +6,7 @@ include "include/sysEvent";
 include "include/client";
 include "include/say";
 include "include/sysEvent";
+include "include/eventID";
 include ":tn:cooldown";
 
 program taunt(who)

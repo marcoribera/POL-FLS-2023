@@ -1,6 +1,7 @@
 include ":attributes:attributes";
 include ":tn:cooldown";
 include ":charactercreation:habilidades";
+include "include/say";
 
 const FORTITUDE := "Fortitude";
 const REFLEXOS := "Reflexos";

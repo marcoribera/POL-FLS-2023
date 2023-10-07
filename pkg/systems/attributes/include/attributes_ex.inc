@@ -26,18 +26,19 @@ include ":attributes:include/attributes";
  * Returns a string.
  *
  */
-function AP_SkillIdToAttributeName(skill_number)
-	var skills_cfg := ReadConfigFile(":attributes:uoskills");
-	if ( skills_cfg.errortext )
-		SysLog("Error::AP_IDToAttributeName() - Unable to open :attributes:uoskills.cfg ->"+skills_cfg.errortext);
+function AP_SkillIdToAttributeName(skillid)
+	if (skillid == 90)
+		return "Alchemy";
 	endif
-	
-	var cfg_elem := skills_cfg[skill_number];
-	if ( cfg_elem.errortext )
-		SysLog("Error::AP_IDToAttributeName() - unable to find cfg elem ["+skill_number+"] ->"+cfg_elem.errortext);
-	endif
-	
-	return cfg_elem.Attribute;
+	var cfg := AP_GetAttributesCfgFile();
+	var keys := GetConfigStringKeys( cfg );
+	foreach key in keys
+		var elem := FindConfigElem( cfg, key );
+		if (elem.SkillId == skillid)
+			return key;
+		endif
+	endforeach
+	return "";
 endfunction
 
 /*
@@ -54,8 +55,11 @@ endfunction
  * Returns an integer.
  *
  */
-function AP_AttributeNameToSkillId(attribute_name)
-	var cfg_elem := AP_GetAttributeCfgElem(attribute_name);
-	
-	return cfg_elem.SkillId;
+function AP_AttributeNameToSkillId(skill)
+	if (skill == "Alchemy")
+		return 90;
+	endif
+	var elem := AP_GetAttributeCfgElem(skill);
+	var id := elem.SkillId;
+	return id;
 endfunction

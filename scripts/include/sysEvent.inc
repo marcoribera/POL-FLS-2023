@@ -5,20 +5,12 @@
 // See documentation for details.
 //
 // DO NOT MODIFY THIS FILE!  These are system events.  New core distributions
-// will include new versions of this file.  User events should be placed in 
+// will include new versions of this file.  User events should be placed in
 // eventid.inc, and must have more than one bit set (ie not be any of the
 // values found in this file)
 //
 // Last modification: 11/16/2000
 //
-
-//ghagha adicionou esses dois:
-const EVID_HERDING          := 0x1111;
-const EVID_PEACEMADE         := 0x90000000;
-const EVID_TAUNT		:= 0x2222;
-const EVID_FLEE			:= 0x3333;
-const EVID_COMBAT_MOVE			:= 0x4444;
-
 
 const SYSEVENT_SPEECH               := 0x00000001;
 

@@ -139,17 +139,17 @@ CONST GFINIT_RADIO		:= 0x801;	// Radio Buttons (KeyIDs)
 
 // 'gumpid' CONSTants for the GFResizePic() function
 /////////////////////////////////////////////////////////////////
-CONST BKGND_SILVERTRIM		:= 83;    // Fancy, dark-grey backing
-CONST BKGND_SCROLL		:= 2520;  // UO journal scroll
+CONST BKGND_SILVERTRIM		      := 83;    // Fancy, dark-grey backing
+CONST BKGND_SCROLL		          := 2520;  // UO journal scroll
 CONST BKGND_OLD_JOURNAL_SCROLL	:= 5150;  // Old journal scroll
-CONST BKGND_GOLDTRIM		:= 2620;  // Gold-press, black backing
+CONST BKGND_GOLDTRIM		        := 2620;  // Gold-press, black backing
 CONST BKGND_PAPER               := 3000;  // Very thin edging
-CONST BKGND_PAPER_EX		:= 3500;  //  \_with fancy inner border
-CONST BKGND_BLUESLAB		:= 3600;  // Raised edge (blocky)
-CONST BKGND_SANDSTONE		:= 5054;  // Custom sandstone background
-CONST BKGND_STONESLAB		:= 5064;  // Gray stone slab background
-CONST BKGND_STONE		:= 5100;  // Marble stone, rounded edge
-CONST BKGND_DARK_STONE		:= 5120;  // Same as previous, but much darker
+CONST BKGND_PAPER_EX		        := 3500;  //  \_with fancy inner border
+CONST BKGND_BLUESLAB		        := 3600;  // Raised edge (blocky)
+CONST BKGND_SANDSTONE		        := 5054;  // Custom sandstone background
+CONST BKGND_STONESLAB		        := 5064;  // Gray stone slab background
+CONST BKGND_STONE		            := 5100;  // Marble stone, rounded edge
+CONST BKGND_DARK_STONE		      := 5120;  // Same as previous, but much darker
 /////////////////////////////////////////////////////////////////
 CONST GF_MAIN_BKGND		:= BKGND_BLUESLAB;
 CONST GF_MAIN_FRGND		:= BKGND_STONESLAB;
@@ -885,15 +885,15 @@ var aGFTlength := struct;
          "`',.;:::::::::"+//  3
          "!!!!!!!!!!!!!!"+//  4
          "il1[]]]]]]]]]\""+//  5
-         "bcejot‚Äù(){}==="+//  6
-         "adfpqrszI‚Äû~~~~"+//  7
-         "ghnuvy¬Å <>----"+//  8
+         "bcejotî(){}==="+//  6
+         "adfpqrszIÑ~~~~"+//  7
+         "ghnuvyÅ <>----"+//  8
          "xJ578$?+++++++"+//  9
          "kCE2369^/**** "+// 10
-         "mwABDFOP≈Ω‚Ñ¢40%%"+// 11
+         "mwABDFOPéô40%%"+// 11
          "GLNQSZ@#######"+// 12
          "HRT&__________"+// 13
-         "K≈°UYYYYYYYYYYY"+// 14
+         "KöUYYYYYYYYYYY"+// 14
          "XXXXXXXXXXXXXX"+// 15
          "VVVVVVVVVVVVVV"+// 16
          "MMMMMMMMMMMMMM"+// 18
