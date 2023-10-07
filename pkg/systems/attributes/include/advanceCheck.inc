@@ -178,10 +178,23 @@ function CheckSkillAdvance(mobile, skill_name, award_diff, pass_chance)
 		return 0;
 	endif
 
+    if(TemHabilidade(mobile, "Artista Marcial") && skill_name == "Wrestling")
+    	var chardata := GetObjProperty(mobile, "chardata");
+        var skillsmap := chardata.Skills;
+        var skillsArray := skillsmap.keys();
+        foreach skill in skillsArray
+            if (skill == "MeleeCombat1H")
+                skill_name := "MeleeCombat1H";
+                break;
+            elseif (skill == "MeleeCombat2H")
+                skill_name := "MeleeCombat2H";
+                break;
+            endif
+        endforeach
+    endif
+
 	var true_skill := AP_GetTrueSkill(mobile, skill_name);
-
 	var maximo := AP_CheckClassSkillCap(mobile, skill_name);
-
 	if ( true_skill >= maximo ) //verifica quanto pode subir com base na classe
 	//	printtextabove(mobile, "to no maximo da skill");
 		SkillDbgMsg(mobile, "Chegou no maximo da classe: " + maximo);
