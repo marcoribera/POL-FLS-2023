@@ -44,7 +44,7 @@ include ":gumps:gumps_ex";
 include ":gumps:htmlgump";
 include ":gumps:playerselectiongump";
 include ":gumps:requestgump";
-include ":gumps:selectionGump";
+include ":gumps:selectiongump";
 include ":gumps:textConsts";
 include ":gumps:yesno";
 

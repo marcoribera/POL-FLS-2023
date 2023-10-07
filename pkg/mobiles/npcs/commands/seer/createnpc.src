@@ -18,7 +18,7 @@ use cliloc;
 use cfgfile;
 use datafile;
 
-include ":gumps:selectionGump";
+include ":gumps:selectiongump";
 include ":gumps:gumpprompt";
 
 program	text_command_createnpc(who, template)
