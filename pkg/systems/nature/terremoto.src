@@ -42,7 +42,7 @@ program terremoto(params)
             endif
             EfeitosTerremoto(who,danobase,danoale,dif);
             EraseObjProperty(who, "terremoto");
-        elseif (70 >= RandomInt(100)) //chance de teleport
+        elseif (20 >= RandomInt(100)) //chance de teleport
             var hasNumajene := 0;
             if (GetObjProperty(who, "chardata").povo != "Numajene")
                 foreach player in (who.party.members)
