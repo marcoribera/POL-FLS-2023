@@ -235,7 +235,7 @@ function CP_RemoveStorageAreaContainer(container_id, storage_area_name:=0)
 	var storage_area := FindStorageArea(storage_area_name);
 	var container_name := CP_DEFAULT_PREFIX + container_id;
 
-	CP_StorageDebugMsg("Removed root container. Storage area: ["+storage_area_name+"] ID: ["+container_id+"]");
+	//CP_StorageDebugMsg("Removed root container. Storage area: ["+storage_area_name+"] ID: ["+container_id+"]");
 
 	return DestroyRootItemInStorageArea(storage_area, container_name);
 endfunction

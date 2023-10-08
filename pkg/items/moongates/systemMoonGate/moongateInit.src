@@ -1,4 +1,4 @@
-/* $Id: moongateInit.src 1385 2006-05-13 09:36:49Z austin $
+/* $Id$
  *
  */
 
@@ -14,7 +14,7 @@ include ":gumps:gumps_ex";
 
 program CreateSystemMoonGates()
 	MG_ReportText("---=[ MOONGATE INIT SCRIPT HAS STARTED UP ]=---", MG_REPORT_SYSLOG);
-	var config := ReadConfigFile(":moongates:config/moongate");
+	var config := ReadConfigFile(":moongates:moongate");
 	if ( config.errortext )
 		MG_ReportText("ERROR: Could not open moongate.cfg - "+config.errortext, MG_REPORT_SYSLOG);
 		return 0;
@@ -34,12 +34,18 @@ program CreateSystemMoonGates()
 			foreach entry in ( GetConfigStringDictionary(cfg_elem, "Town") )
 				var gate := CreateMoongate(realm_name, _entry_iter, entry);
 				BuildGumpForGate(gate, _entry_iter, config);
-				sleepms(200);
+				SleepMS(2);
 			endforeach
 		endif
 
-		sleepms(200);
+		SleepMS(2);
 	endforeach
+
+	UnloadConfigFile(":moongates:moongate");
+
+	MG_ReportText("---=[ MOONGATE INIT SCRIPT HAS FINISHED ]=---", MG_REPORT_SYSLOG);
+
+	return 1;
 endprogram
 
 function CreateMoongate(byref realm_name, byref town_name, byref entry)
@@ -59,8 +65,8 @@ endfunction
 
 function BuildGumpForGate(gate, byref town_name, byref config)
 	var gump := GFCreateGump();
-	GFResizePic(gump, 0, 0, GFCfgConst("Defaults", "BackGround"), 340, 330);
-	GFResizePic(gump, 15, 15, GFCfgConst("Defaults", "ForeGround"), 310, 300);
+	GFResizePic(gump, 0, 0, GFGetCfgConst("Defaults", "BackGround"), 340, 330);
+	GFResizePic(gump, 15, 15, GFGetCfgConst("Defaults", "ForeGround"), 310, 300);
 
 	GFTextMid(gump, 20, 20, 310, 2100, "Select a Destination");
 	GFAddButton(gump, 35, 250, 2128, 2129, GF_CLOSE_BTN, MG_OKAY_BTN);
@@ -73,9 +79,8 @@ function BuildGumpForGate(gate, byref town_name, byref config)
 		var cfg_elem := config[_realm_iter];
 		GFAddButton(gump, 20, y_pos+3, 2117, 2118, GF_PAGE_BTN, page);
 		GFTextLine(gump, 40, y_pos, 2100, cfg_elem.Faction);
-		y_pos := y_pos+20;
-		page := page+2;
-		sleepms(200);
+		y_pos += 20;
+		page += 2;
 	endforeach
 
 	page := 2;
@@ -86,21 +91,29 @@ function BuildGumpForGate(gate, byref town_name, byref config)
 		var cfg_elem := config[_realm_iter];
 		GFPage(gump, page);
 
-		foreach entry in ( GetConfigStringDictionary(cfg_elem, "Town") )
+                var configdict := GetConfigStringDictionary(cfg_elem, "Town");
+
+		if ( configdict.errortext )
+			SysLog("Error::Loading config ->"+configdict.errortext);
+			return error{"errortext" := "Unable to read config file: :Moongates:Town"};
+		endif
+
+		foreach entry in ( configdict )
 			entry := entry; // To avoid compiler warnings.
+
 			if ( _entry_iter == town_name && _realm_iter == gate.realm )
 				GFGumpPic(gump, 153, y_pos+5, 2104);
 			else
 				GFRadioButton(gump, 150, y_pos, 210, 211, 0, btn_id+MG_LOCATION_START);
 			endif
 			GFTextLine(gump, 173, y_pos, 2100, _entry_iter);
-			y_pos := y_pos+20;
-			btn_id := btn_id+1;
-			sleepms(200);
+			y_pos += 20;
+			btn_id += 1;
+			SleepMS(2);
 		endforeach
 
-		sleepms(200);
-		page := page+2;
+		SleepMS(2);
+		page += 2;
 	endforeach
 
 	gate.SaveGump(gump);
@@ -118,7 +131,7 @@ function CleanupOldMoongates()
 			DestroyItem(item);
 		endif
 		data_file.DeleteElement(elem_name);
-		sleepms(200);
+		SleepMS(2);
 	endforeach
 
 	return 1;
