@@ -461,7 +461,7 @@ var inimigo_caca := (GetObjProperty (defender, "marcadacaca") == 1);
     var itemdesc := ReadConfigFile("::itemdesc");
 
     if (TemHabilidade(who, "Brigador de Taverna") && (who.weapon.objtype == 0x1F020))
-        who.weapon.dmg_mod := 5;
+        dmg += 5;
     endif
 
     if (TemHabilidade(who, "Artista Marcial") )
