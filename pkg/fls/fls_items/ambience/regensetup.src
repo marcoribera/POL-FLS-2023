@@ -1,6 +1,6 @@
 use uo;
 include ":tn:tngumps";
-include ":gumps:include/requestgump";
+include ":gumps:requestGump";
 
 program setupsound(who, rune)
 	if (who.cmdlevel < 2)
@@ -12,8 +12,8 @@ program setupsound(who, rune)
 		range :=1;
 	endif
 	SetObjProperty(rune, "range", CInt(range));
-	
-	
+
+
 	var opt := array;
 	if ( GetObjProperty(rune, "hits"))
 		opt.append(1);
@@ -32,11 +32,11 @@ program setupsound(who, rune)
 	endif
 	SendSysMessage(who, "Atributos que devem ser regenerados.");
 	var result := CheckBoxGump(who, 150, 200, "Opcoes de Regen", {"Hitpoints","Manapoints","Staminapoints"}, opt);
-	
+
 	EraseObjProperty(rune, "hits");
 	EraseObjProperty(rune, "mana");
 	EraseObjProperty(rune, "stam");
-	
+
 	foreach r in result
 		if (r == "Hitpoints")
 			var value := cint(RequestGump(who, "Quantos Hitpoints quer regenerar?"));
@@ -49,6 +49,6 @@ program setupsound(who, rune)
 			SetObjProperty(rune, "stam", value);
 		endif
 	endforeach
-	
+
 	SendSysMessage(who, "Pronto");
 endprogram

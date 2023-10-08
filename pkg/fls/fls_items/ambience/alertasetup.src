@@ -1,6 +1,6 @@
 use uo;
 include ":tn:tngumps";
-include ":gumps:include/requestgump";
+include ":gumps:requestGump";
 
 program setupalerta(who, rune)
 	if (who.cmdlevel < 2)
