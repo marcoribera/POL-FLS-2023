@@ -2,17 +2,17 @@ use os;
 use uo;
 
 include ":tn:tngumps";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 
 program renameboat(you, tillerman)
 
 	if (GetObjProperty(tillerman, "viagem") != error)
 		var destinos := GetObjProperty(tillerman, "viagem");
 		var options := array;
-		foreach dest in destinos 
+		foreach dest in destinos
 			options.append(dest.name + " [" + dest.cost + " moedas]");
 		endforeach
-	
+
 		var destname := RadioGump(you, 350, 200, "Escolha o destino da viagem. ", options);
 		if (destname)
 			foreach dest in destinos

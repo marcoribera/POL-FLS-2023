@@ -11,7 +11,7 @@ include "include/damage";
 include "include/tileEffects";
 include "include/say";
 include "include/facings";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 
 program SpellScript(params)
 
@@ -42,7 +42,7 @@ program SpellScript(params)
 
 	SetObjProperty(who,"savegame", savegame);
 
-	PlaySoundEffect(who, SFX_SPELL_TELEKINESIS );	
+	PlaySoundEffect(who, SFX_SPELL_TELEKINESIS );
 
 	SendSysMessageEx(who, "O estado foi salvo.", SSM_INFO);
 
@@ -51,4 +51,4 @@ program SpellScript(params)
 endprogram
 
 
- 
+

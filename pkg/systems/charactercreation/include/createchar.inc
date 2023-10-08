@@ -4,7 +4,7 @@ use cfgfile;
 include ":gumps:gumps";
 include "include/arrays";
 include ":attributes:attributes";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 
 function ApplySkillCap(who)
 

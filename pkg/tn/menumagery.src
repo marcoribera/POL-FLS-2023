@@ -5,15 +5,15 @@ use math;
 /*
 include ":timedScripts:timedScripts";
 include ":gumps:gumps";
-include ":gumps:yesno";
-include ":gumps:requestgump";
+include ":gumps:yesNo";
+include ":gumps:requestGump";
 include ":tn:tngumps";
 include ":tn:tnmagery";
 
 program menumagery(who)
 	var gump := GFCreateGump(220, 70);
 	//GFGumpPic(gump, 0, 0, 0x254E);
-	GFResizePic(gump, 0, 0, 0x254E, 100, 100);	
+	GFResizePic(gump, 0, 0, 0x254E, 100, 100);
 	GFTextLine(gump, 30, 15, 2100, "Pesquisar");
 	GFTextLine(gump, 30, 35, 2100, "Aprender");
 	GFAddButton(gump, 15, 17, 2117, 2118, 1, 10);

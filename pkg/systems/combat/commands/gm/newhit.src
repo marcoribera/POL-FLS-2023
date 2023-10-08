@@ -2,12 +2,12 @@ use uo;
 use vitals;
 
 include "include/say";
-include ":gumps:requestgump";
-include ":gumps:yesno";
+include ":gumps:requestGump";
+include ":gumps:yesNo";
 include ":unicos:item_template";
 include ":attributes:attributes";
 include ":tn:tngumps";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":combat:hitscripts";
 
 program createhit(who)
@@ -18,7 +18,7 @@ program createhit(who)
 		SendSysMessage(who, "Cancelado");
 		return;
 	endif
-	
+
 	var hitopt := configurehitscript(who);
 
 	SetObjProperty(item, "generichit", hitopt);

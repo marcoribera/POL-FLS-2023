@@ -9,8 +9,8 @@ use file;
 include ":datafile:datafile";
 include ":gumps:gumps";
 include ":gumps:gumps_ex";
-include ":gumps:requestgump";
-include ":gumps:yesno";
+include ":gumps:requestGump";
+include ":gumps:yesNo";
 include ":tn:tngumps";
 
 
@@ -20,15 +20,15 @@ program MOTDNEW(who)
 		SendSysMessage(who, "Voce optou por nao mudar a Mensagem do Dia");
 		return;
 	endif
-	
+
 	var newmotd := cstr(BigRequestGump(who , "Digite o novo texto da Mensagem do Dia:"));
-	
+
 	SendSysMessage(who, FileExists("motd.txt"));
 	var file := WriteFile( "motd.txt", { newmotd } );
 	if (file)
-		SendSysMessage(who, "Voce alterou a mensagem do dia para uma nova. Todos os Players receberao a noticia ao logarem.");	
+		SendSysMessage(who, "Voce alterou a mensagem do dia para uma nova. Todos os Players receberao a noticia ao logarem.");
 	else
 		SendSysMessage(who, "Error: " + file );
 	endif
-	
+
 endprogram

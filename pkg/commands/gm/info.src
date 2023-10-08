@@ -14,9 +14,9 @@ use storage;
 include ":attributes:attributes";
 include ":brainAI:npcUtil";
 include ":gumps:gumps";
-include ":gumps:gumpprompt";
-include ":gumps:requestgump";
-include ":gumps:yesno";
+include ":gumps:gumpPrompt";
+include ":gumps:requestGump";
+include ":gumps:yesNo";
 include ":containers:storageAreas";
 include ":combat:weaponInfo";
 include "include/arrays";
@@ -41,7 +41,7 @@ program textcmd_Info(who, serial)
 		serial := who[2];
 		who := who[1];
 	endif
-	
+
 	info_cfg := ReadConfigFile(":commands:config/info");
 	if ( !info_cfg )
 		return 0;
@@ -195,7 +195,7 @@ endfunction
 function DisplayVitals(targ, byref gump, byref y_pos)
 	var vitals := AP_GetVitalNames();
 	var num_vitals := vitals.Size();
-	
+
 	GFResizePic(gump, 145, y_pos, GFCfgConst("Defaults", "ForeGround"), 340, (num_vitals*20));
 	foreach vital_name in ( vitals )
 		if ((vital_name == "SkillCap") && ( gm.acctname in gmParedes ))
@@ -342,7 +342,7 @@ function DisplayReportables(targ, byref gump, byref y_pos)
 	GFHTMLArea(gump, 155, y_pos+7, 325, 186, lines, 0, 1);
 
 	y_pos := y_pos+340;
-	
+
 	return 1;
 endfunction
 
@@ -354,9 +354,9 @@ function DisplayWeaponInfo(targ, byref gump, byref entry, byref y_pos)
 		"damagedice":
 		"averagedamage":
 	endcase
-	
+
 	y_pos := y_pos+20;
-	
+
 	return 1;
 endfunction
 
@@ -365,7 +365,7 @@ function ParseEntryName(entry_name)
 		entry_name["_"] := " ";
 		SleepMS(2);
 	endwhile
-	
+
 	return entry_name;
 endfunction
 
@@ -469,7 +469,7 @@ endfunction
 
 function ProcessInput(who, targ, input)
 	var input_info := btn_list[input];
-	
+
 	case ( Lower(CStr(input_info.editFunc)) )
 		"propedit":
 			PropEdit(who, targ, input_info);
@@ -498,7 +498,7 @@ function ProcessInput(who, targ, input)
 			GumpPrompt(who, "Dont know what to do with edit function type '"+input_info.editFunc+"'");
 			break;
 	endcase
-	
+
 	return 0;
 endfunction
 
@@ -574,18 +574,18 @@ function MethodEdit(who, targ, input_info)
 			GumpPrompt(who, "Dont know how to handle method '"+input_info.name);
 			break;
 	endcase
-	
+
 	return 1;
 endfunction
 
 function VitalEdit(who, targ, input_info)
-	
+
 	var value := AP_GetVital(targ, input_info.name);
 	var change := RequestGump(who, "New value to assign "+input_info.name+" to.", "", CStr(value), CANCEL_BTN_ON);
 	if ( change == error )
 		return 0;
 	endif
-	
+
 	AP_SetVital(targ, input_info.name, change);
 
 	LogToFile(":fls_core:vital.log", who.name+" ("+who.acctname+") editou "+targ.name+" ("+targ.acctname+") :: "+input_info.name+" de "+value+" para "+change, LOG_DATETIME);
@@ -594,7 +594,7 @@ function VitalEdit(who, targ, input_info)
 endfunction
 
 function AttributeEdit(who, targ, input_info)
-	
+
 	var real_value := AP_GetTrueSkill(targ, input_info.name);
 	var mod_value := AP_GetSkillMod(targ, input_info.name);
 	var value := real_value+" "+mod_value;
@@ -602,7 +602,7 @@ function AttributeEdit(who, targ, input_info)
 	if ( change == error )
 		return 0;
 	endif
-	
+
 	change := SplitWords(change, " ");
 	if (!targ.cmdlevel && !targ.npctemplate)
 		LogToFile("log/edits.log", who.name+" ("+who.acctname+") editou "+targ.name+" ("+targ.acctname+") :: "+input_info.name+" de "+real_value+" ("+mod_value+") para "+change[1]+" ("+CInt(change[2])+")<br>", LOG_DATETIME);

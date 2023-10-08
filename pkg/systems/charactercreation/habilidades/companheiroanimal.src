@@ -3,7 +3,7 @@ use uo;
 
 include "include/say";
 include ":taming:taming";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":attributes:attributes";
 include ":timedScripts:timedScripts";
 
@@ -55,6 +55,6 @@ program pet(who)
 		endif
 
 	endif
-			
 
-endprogram 
+
+endprogram

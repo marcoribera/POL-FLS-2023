@@ -3,7 +3,7 @@ use uo;
 
 include "include/say";
 include ":taming:taming";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":attributes:attributes";
 include ":timedScripts:timedScripts";
 include "include/client";
@@ -47,7 +47,7 @@ program pet(who)
 		if ( targ.serial in tamed )
 
 			var pettemplate := selectpet(who);
-			
+
 			var z := targ.z+60;
 			if (z > 100)
 				z := 100;
@@ -56,7 +56,7 @@ program pet(who)
 			PlayMovingEffectXYZEx( targ.x, targ.y, z, targ.x, targ.y, targ.z, targ.realm, GFX_LARGE_FIREBALL, 1, 10, 2320);
 			sleep(2);
 			var npc := CreateNpcFromTemplate(pettemplate, targ.x, targ.y, targ.z, 0, targ.realm );
-		
+
 			if (npc)
 				SetObjProperty(npc, "owner", who.serial);
 				SetObjProperty(npc, "name", npc.name);
@@ -64,7 +64,7 @@ program pet(who)
 				SetObjProperty(npc, "AntigoTreinadorID", who.serial);
 				SetObjProperty(npc, "aprimorado", 1);
 				SetObjProperty(who, "companheiro", npc.serial);
-			
+
 				npc.script := ":ghaia:tamed";
 				RestartScript(npc);
 
@@ -80,15 +80,15 @@ program pet(who)
 		endif
 
 	endif
-			
 
-endprogram 
- 
+
+endprogram
+
 function selectpet(who)
 
 	var gump := GFCreateGump();
         GFDisposable(gump, 0);
-	GFResizePic(gump, 0, 25, 3600, 220, 350);	
+	GFResizePic(gump, 0, 25, 3600, 220, 350);
 	GFResizePic(gump, 15, 40, 0x13BE, 190, 320);
 	GFTextLine(gump, 60, 50, 1153, "Companheiro Animal");
 

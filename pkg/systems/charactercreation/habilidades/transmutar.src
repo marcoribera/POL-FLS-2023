@@ -6,7 +6,7 @@ include "include/client";
 include "include/say";
 include ":tn:tngumps";
 include "include/damage";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 
 program resinaelemental(who)
 

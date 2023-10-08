@@ -1,7 +1,7 @@
 use uo;
 
 include ":tn:quests";
-include ":gumps:gumpprompt";
+include ":gumps:gumpPrompt";
 include ":tn:tngumps";
 
 //script utilizando pelo npc quester
@@ -13,10 +13,10 @@ program SendQuestMenu(params)
 	//quests := quests[1];
 
 	quests := RadioGump(player, 200, 300, "Aventuras que conheco", quests);
-	
+
 	var elem := GetQuestElem(quests);
 	var questinfo := elem.getprop("questinfo");
-	
+
 	var gump := GFCreateGump();
 	GFResizePic(gump, 15, 50, 2620, 310, 380);
 
@@ -35,9 +35,9 @@ program SendQuestMenu(params)
 		GFTextLine(gump, 35, y_pos, 2100, cstr(questinfo.description[i]) );
 		y_pos := y_pos+19;
 	endfor
-	
+
 	var input := GFSendGump(player, gump);
-	
+
 	if (input[0] == 20)
 		//vai pegar a quest:
 		// testa se nao ja fez antes

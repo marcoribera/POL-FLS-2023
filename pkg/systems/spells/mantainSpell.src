@@ -1,13 +1,13 @@
 use uo;
 include ":timedScripts:timedScripts";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":attributes:attributes";
 include "include/say";
 include ":gumps:gumps";
 include ":charactercreation:habilidades";
 
 function SpellYesNo(who, nome, targname)
-	
+
 
 	var gump := GfCreateGump(140, 100);
 	GfResizePic(gump, 0, 0, 0x53 ,200, 140);
@@ -28,7 +28,7 @@ function SpellYesNo(who, nome, targname)
 	else
 		return 0;
 	endif
-//sendsysmessage(who, "Manter Encantamento");	
+//sendsysmessage(who, "Manter Encantamento");
 endfunction
 
 program spell(params)

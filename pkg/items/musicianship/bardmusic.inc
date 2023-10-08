@@ -2,8 +2,8 @@ use util; //funcoes de gerar aleatorio
 
 //includes para gumps. Nao sei se todos sao usados
 include ":gumps:gumps";
-include ":gumps:requestgump";
-include ":gumps:yesno";
+include ":gumps:requestGump";
+include ":gumps:yesNo";
 include ":charactercreation:habilidades"; //Contem as funcoes de testar habilidades
 include ":attributes:attributes";//AP_GetSkill()
 include ":timedScripts:timedScripts"; //TS_StartTimer()

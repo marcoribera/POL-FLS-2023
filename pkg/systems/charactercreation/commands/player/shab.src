@@ -11,8 +11,8 @@ include ":attributes:attributes";
 include ":containers:containers";
 include ":timedScripts:timedScripts";
 include ":gumps:gumps";
-include ":gumps:yesno";
-include ":gumps:requestgump";
+include ":gumps:yesNo";
+include ":gumps:requestGump";
 include ":tn:tngumps";
 include ":spells:tnmagery";
 include "include/client";
@@ -49,11 +49,11 @@ program habilidade(who, text)
 		return;
 	endif
 
-		
+
 		ProccessHab(who, text);
 
 endprogram
-		
+
 
 function ProccessHab(who, hab)
 	hab := lower(hab);
@@ -78,7 +78,7 @@ function ProccessHab(who, hab)
 		SendSysMessageEx(who, "Voce nao pode usar essa habilidade agora.", SSM_FAIL);
 		return 1;
 	endif
-	
+
 	var stam := cint(GetConfigInt(habelem, "stam"));
 	if (stam != error)
 		if (!AP_ConsumeVital(who, STAMINA, stam))
@@ -129,7 +129,7 @@ function ProccessHab(who, hab)
 		endif
 		//sendsysmessage(who, " " + e );
 	endif
-	
+
 	TS_StartCooldown(who, hab, delay);
 
 endfunction
@@ -142,7 +142,7 @@ function CreateGumpHabilidade(who)
 	var gump := GFCreateGump();
 
         GFDisposable(gump, 0);
-	GFResizePic(gump, 0, 25, 3600, 380, 650);	
+	GFResizePic(gump, 0, 25, 3600, 380, 650);
 	GFResizePic(gump, 15, 40, 0x13BE, 350, 620);
 	GFTextMid(gump, 80, 50, 250, 1153, "Habilidades de Classe");
 
@@ -150,12 +150,12 @@ function CreateGumpHabilidade(who)
 	if (!habilidades)
 		habilidades := dictionary;
 	endif
-	
+
 	var habcfg := ReadConfigFile(":charactercreation:config/habilidades");
-	
+
 	var x := 40;
 	var y := 80;
-	
+
 	foreach hab in (habilidades.keys())
 		var habelem := FindConfigElem(habcfg, hab);
 		var desc := GetConfigString(habelem, "desc");
@@ -163,17 +163,17 @@ function CreateGumpHabilidade(who)
 		var nome := GetConfigString(habelem, "nome");
 		var nivel := GetConfigInt(habelem, nivel);
 		//var gumpid :=  Hex(GetConfigInt(habelem, "gump"));
-		
+
 		//GFGumpPic(gump, x, y+20, gumpid) ;
 		GFTextLine(gump, x, y, 1153, nome + " [" + uso + "]" );
 		GFHTMLArea( gump, x, y+20, 300, 90, desc, 1150, 0);
-		
+
 		y := y + 110;
 	endforeach
-	
+
 	var input := GFSendGump(who, gump);
 	input := input[0];
 
 
 
-endfunction 
+endfunction

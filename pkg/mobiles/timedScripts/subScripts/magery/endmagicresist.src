@@ -1,9 +1,9 @@
- 
+
 use uo;
 use os;
 
 include ":attributes:attributes";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":fls_magery:basicMagery";
 
 program TimedScript_Clumsy(params)
@@ -31,7 +31,7 @@ program TimedScript_Clumsy(params)
 				endif
 			endif
 		endif
-	endif	
+	endif
 
 	return 1;
 endprogram

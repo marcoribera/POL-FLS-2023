@@ -3,7 +3,7 @@ use os;
 use util;
 
 include ":attributes:attributes";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include "include/say";
 include ":charactercreation:habilidades";
 

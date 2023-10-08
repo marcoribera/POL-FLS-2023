@@ -7,7 +7,7 @@ use uo;
 use os;
 use vitals;
 
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":attributes:attributes";
 
 program Massacre(who, range)
@@ -15,9 +15,9 @@ program Massacre(who, range)
 	if ( !range )
 		range := CInt(RequestGump(who, "Enter the radius to kill npcs.", "", 0));
 	endif
-	
+
 	var mobile_list := ListMobilesNearLocationEX(who.x, who.y, who.z, CInt(range), LISTEX_FLAG_NORMAL+LISTEX_FLAG_HIDDEN, who.realm);
-	
+
 	foreach mobile in (mobile_list)
 		if ( mobile.npctemplate )
 			moveobjecttolocation(mobile, 10, 10, 10, who.realm, MOVEOBJECT_FORCELOCATION);
@@ -27,7 +27,7 @@ program Massacre(who, range)
 		destroyitem(mobile);
 		sleepms(2);
 	endforeach
-	
-	
+
+
 	return 1;
 endprogram

@@ -2,13 +2,13 @@
 use uo;
 use vitals;
 include "include/say";
-include ":gumps:requestgump";
-include ":gumps:yesno";
+include ":gumps:requestGump";
+include ":gumps:yesNo";
 include ":unicos:item_template";
 include ":attributes:attributes";
 include ":tn:tngumps";
 include ":tn:questevent";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include "include/client";
 
 function GetBossStruct(targ)
@@ -93,7 +93,7 @@ function CreateBossStructGump(who, byref boss)
 //	else
 		//GFTextLine(chargump, 50, 200, 1153, "Special AI: ");
 	//endif
-  
+
 	GFTextLine(chargump, 250, 80, 1153,  "Resistencias");
 	if (cfg)
 		GFTextLine(chargump, 250, 95, 1153, "Physical [" + cfg.PhysicalResist + "]:");
@@ -265,7 +265,7 @@ function CreateBossStructGump(who, byref boss)
 	else
 		magery := GFTextEntry( chargump, 380, 245, 100, 20, 1150, boss.magery+"");
 	endif
-	
+
 	GFTextLine(chargump, 50, 205, 1153, "Desc: ");
 	GFAddButton( chargump, 35, 210, 2103, 2104, 1, 500);
 		if (boss.descmod)
@@ -394,7 +394,7 @@ function CreateBossStructGump(who, byref boss)
 		//sendsysmessage(who, " " + input[0] + " " + boss.loot[index]);
 
 		if ( boss.loot[index] != error )
-			var opt := RadioGump(who, 180, 220, "Editar item", array{"Criar", "Deletar", "Alterar Chance"});			
+			var opt := RadioGump(who, 180, 220, "Editar item", array{"Criar", "Deletar", "Alterar Chance"});
 			if (opt == "Deletar")
 				boss.loot.erase(index);
 				SendSysMessageEx(who, "O item foi removido.", SSM_INFO);
@@ -403,11 +403,11 @@ function CreateBossStructGump(who, byref boss)
 				if (!retitem)
 					SendSysMessageEx(who, "erro: " + retitem);
 				endif
-				SendSysMessageEx(who, "Voce criou o item na sua mochila."); 
+				SendSysMessageEx(who, "Voce criou o item na sua mochila.");
 			elseif (opt == "Alterar Chance")
 				boss.loot[index].chance := Cint(RequestGump(who, "Digite a chance do item aparecer. 1 a 100:", "", "", 1));
-			endif 
-							
+			endif
+
 		else
 
 			SendSysMessage(who, "Escolha o item do loot.");
@@ -426,12 +426,12 @@ function CreateBossStructGump(who, byref boss)
 		CreateBossStructGump(who, boss);
 
 	elseif ( input[0] == 20 || input[0] == 21 || input[0] == 22 || input[0] == 23 || input[0] == 24|| input[0] == 25)
-		
+
 		var index := input[0] - 19;
 		if (boss.deathevent[index] != error )
 			var yes := YesNo(who, "Deletar o evento?");
 			if (yes == 1)
-				boss.deathevent.erase(index);				
+				boss.deathevent.erase(index);
 				SendSysMessageEx(who, "Evento deletado.", SSM_INFO);
 			else
 				SendSysMessageEx(who, "Cancelado.", SSM_INFO);
@@ -447,7 +447,7 @@ function CreateBossStructGump(who, byref boss)
 		endif
 		CreateBossStructGump(who, boss);
 	elseif ( input[0] == 40 || input[0] == 41 || input[0] == 42 || input[0] == 43 || input[0] == 44 || input[0] == 45)
-		
+
 		var index := input[0] - 39;
 		if (boss.combatevent[index] != error )
 			var yes := YesNo(who, "Editar ou Deletar Evento?", "Editar", "Deletar");
@@ -458,7 +458,7 @@ function CreateBossStructGump(who, byref boss)
 					(boss.combatevent).append(nevent);
 				endif
 			else
-				boss.combatevent.erase(index);				
+				boss.combatevent.erase(index);
 				SendSysMessageEx(who, "Evento deletado.", SSM_INFO);
 			endif
 		else
@@ -478,7 +478,7 @@ function CreateBossStructGump(who, byref boss)
 		if (boss.special[index] != error)
 			var yes := YesNo(who, "Deletar a habilidade?");
 			if (yes == 1)
-				boss.special.erase(index);				
+				boss.special.erase(index);
 				SendSysMessageEx(who, "Habilidade deletada.", SSM_INFO);
 			else
 				SendSysMessageEx(who, "Cancelado.", SSM_INFO);
@@ -536,7 +536,7 @@ function SetBoss(npc, boss)
 		AP_SetTrueStat(npc, DEXTERITY, Cint(boss.dex) + AP_GetStat(npc, DEXTERITY));
 		AP_SetTrueStat(npc, INTELLIGENCE, Cint(boss.int) + AP_GetStat(npc, INTELLIGENCE));
 	endif
-	
+
 	if(boss.skills)
 		AP_SetTrueSkill(npc, TACTICS, Cint(boss.skills) + AP_GetSkill(npc, TACTICS) );
 		AP_SetTrueSkill(npc, WRESTLING, Cint(boss.skills) + AP_GetSkill(npc, WRESTLING));
@@ -647,21 +647,21 @@ function SetBoss(npc, boss)
             restartscript(npc);
 			endif
 		endforeach
-	endif	
+	endif
 
 	return npc;
-  
+
 endfunction
-	
+
 //cria um boss
 function CreateBoss(boss, x, y, z, realm)
-	
+
 	var npc := CreateNpcFromTemplate(boss.npctemplate, x, y, z, 0 , realm);
 	if (npc == error)
     //print("createboss " + npc + " " + boss.npctemplate);
 		return error{"errortext":="Nao foi possivel criar o boss em x " + x + " y " + y + " z  " + z};
 	endif
-	
+
 	SetName(npc, boss.name);
 	npc.color := boss.color;
 	npc.truecolor := boss.color;
@@ -685,7 +685,7 @@ function CreateBoss(boss, x, y, z, realm)
 		AP_SetStatMod(npc, DEXTERITY, Cint(boss.dex));
 		AP_SetStatMod(npc, INTELLIGENCE, Cint(boss.int));
 	endif
-	
+
 	if(boss.skills)
 		AP_SetSkillMod(npc, TACTICS, Cint(boss.skills));
 		AP_SetSkillMod(npc, WRESTLING, Cint(boss.skills));
@@ -784,9 +784,9 @@ function CreateBoss(boss, x, y, z, realm)
             restartscript(npc);
 			endif
 		endforeach
-	endif	
+	endif
 
-	
+
 	return npc;
 endfunction
 
@@ -806,14 +806,14 @@ function ConfigureCombatEvent(who, event := 0)
 	var gumpcombat := GFCreateGump();
 
 	GFDisposable(gumpcombat, 0);
-	GFResizePic(gumpcombat, 0, 25, 3600, 250, 430);	
+	GFResizePic(gumpcombat, 0, 25, 3600, 250, 430);
 	GFResizePic(gumpcombat, 15, 40, 0x13BE, 220, 400);
 	GFTextMid(gumpcombat, 20, 50, 250, 1153, "Combat Events");
-	
+
 	var y := 64;
 	GFTextLine(gumpcombat, 35, y, 1153, "Adicionar Novo ");
 	GFAddButton(gumpcombat, 20, y+2, 2117, 2118, 1, 100);
-	
+
 	var i := 1;
 	foreach state in (event.steps)
 		y := y+ 15;
@@ -824,7 +824,7 @@ function ConfigureCombatEvent(who, event := 0)
 
 	GFAddButton(gumpcombat, 180, 387, 4502, 4502, 1, 1000 );
 	GFTextLine(gumpcombat, 140, 400, 1153, "Fim");
-	
+
 	var input := GFSendGump(who, gumpcombat);
 
 	if (input[0] == 100)
@@ -851,7 +851,7 @@ function ConfigureCombatEvent(who, event := 0)
 endfunction
 
 function CombatEventsOptions(who, state)
-		var opt := RadioGump(who, 180, 370, "Adicionar Estado", array{"Move", "Teleport", "TimedScript", "Perform Action", "Text", "Play Sound", "Heal", "Dmg", "Graphic Effect",  "Create Items", "Summon Npcs", "Custom HitScript", "Delay"});	
+		var opt := RadioGump(who, 180, 370, "Adicionar Estado", array{"Move", "Teleport", "TimedScript", "Perform Action", "Text", "Play Sound", "Heal", "Dmg", "Graphic Effect",  "Create Items", "Summon Npcs", "Custom HitScript", "Delay"});
 
 		state.type := opt;
 		if (opt == "Move")
@@ -922,7 +922,7 @@ function CombatEventsOptions(who, state)
 					state.+speed := 7;
 					state.+loops := 16;
 				endif
-				
+
 			elseif (state.graphictype == "Moving")
 				var fxid := RadioGump(who, 180, 280, "Qual o efeito?", array{"Small Fireball", "Large Fireball", "Wavy Fireball", "Other"});
 				state.+direction := RadioGump(who, 200, 180, "Qual vai ser a direcao do efeito?", array{"Mob->Player", "Player->Mob"});
@@ -951,7 +951,7 @@ function CombatEventsOptions(who, state)
                	 			state.+startz :=  loc[3];
  					var radius :=   RequestGump(who, "Qual o raio de onde o efeito vai aparecer:", "0 se for sempre no mesmo lugar", "0", 1);
 					state.startradius := radius;
-	
+
 					if (state.graphictype == "Moving")
 						var loc2 := RequestGump(who, "Digite o x y z da posicao final do efeito:", "", "", 1);
 	                			loc2 := splitwords(loc);

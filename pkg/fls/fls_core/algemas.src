@@ -3,7 +3,7 @@ use os;
 use util;
 
 include ":attributes:attributes";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include "include/say";
 
 program rope(who, item)
@@ -30,7 +30,7 @@ program rope(who, item)
 
 		if (!char)
 			SendSysMessage(who, "Voce nao pode usar corda nesse corpo!");
-			return;	
+			return;
 		endif
 
 		PrintText(who, "*amarra "+char.name+"*");

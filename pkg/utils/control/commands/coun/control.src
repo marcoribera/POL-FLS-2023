@@ -5,10 +5,10 @@ use uo;
 use os;
 
 include ":datafile:datafile";
-include ":gumps:include/gumpprompt";
+include ":gumps:gumpPrompt";
 include ":gumps:include/gumps";
 include ":gumps:include/gumps_ex";
-include ":gumps:include/yesno";
+include ":gumps:yesNo";
 include ":control:include/icp-commands";
 include ":control:include/icp-generalinfo";
 include ":control:include/icp-gumps";
@@ -49,6 +49,6 @@ program textcmd_ICPSystem(who, pkg_name)
 		endif
 	endwhile
 	SendSysMessage(who, "Done");
-	
+
 	return 1;
 endprogram

@@ -15,7 +15,7 @@ include "include/findCity";
 include ":currency:currency";
 include ":itemUtils:itemdesc";
 include ":gumps:gumps";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":gumps:confirmationSizable";
 include ":currency:currency";
 include ":accounts:accounts";

@@ -10,7 +10,7 @@ include ":attributes:skillCheck";
 include ":crafting:toolWear";
 include ":gathering:mining";
 include ":tn:tngumps";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include "include/say";
 include ":charactercreation:habilidades";
 

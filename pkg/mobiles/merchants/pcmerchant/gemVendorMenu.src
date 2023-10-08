@@ -10,14 +10,14 @@
 use uo;
 use os;
 
-include ":gumps:include/requestgump";
+include ":gumps:requestGump";
 include "include/string";
 include ":gumps:gumps";
 include ":merchants:merchant";
 include	":merchants:crafthelp";
 include ":brainAI:npcCommands";
-include ":gumps:yesno";
-include "include/say";    
+include ":gumps:yesNo";
+include "include/say";
 include ":charactercreation:habilidades";
 
 //const ADD_ITEM_SELL_BTN		:= 0x1;
@@ -74,7 +74,7 @@ program MerchantMenu(params)
 		var linha := 0;
 		var limitepagfrente :=  MAX_ITEM_PAG * pagina;
 		var limitepagtras := limitepagfrente - MAX_ITEM_PAG;
-		
+
 		var gump := GFCreateGump(0, 0);
 		GFPage(gump, 0);
 		GFResizePic(gump, 0, 0, BKGND_BLUESLAB, 480, 480);
@@ -83,7 +83,7 @@ program MerchantMenu(params)
 		//	GFAddButton(gump, 20, 33, 2117, 2118, GF_CLOSE_BTN, SHOW_ITEMS_SOLD_BTN);
 		GFTextLine(gump, 20, 30, 2000, "Clique no item que deseja vender.");
 		GFTextLine(gump, 340, 30, 2000, "Valor Oferecido:");
-		
+
 		foreach gema in (EnumerateItemsInContainer(player.backpack))
 			var valor := GetObjProperty(gema, "valorgem"); // pega somente os itens que tenham valor de gema. CProp
 			if (valor != error)
@@ -96,25 +96,25 @@ program MerchantMenu(params)
 						GFTextLine(gump, 40 , 30 + (20 * linha), GF_STDCOLOR, gema.desc);
 						GFTextLine(gump, 340 , 30 + (20 * linha),2005, valor * gema.amount);
 						GFAddButton(gump, 20, 33 + (20 * linha), 2117, 2118, GF_CLOSE_BTN,  linha);
-						dicindex := pagina + CStr(linha); 
+						dicindex := pagina + CStr(linha);
 						listaprodutos[dicindex] := gema;
 					endif
 				endif
 			endif
 		endforeach
-		
+
 		if (pagina > 1 )
 			GFAddButton(gump, 20, 430, 2117, 2118, GF_CLOSE_BTN,  201);
 			GFTextLine(gump, 40, 433, 2000, "Pagina Anterior");
 		endif
-		
+
 		if (item >= limitepagfrente )
 			GFAddButton(gump, 315, 430, 2117, 2118, GF_CLOSE_BTN,  202);
 			GFTextLine(gump, 225, 433, 2000, "Proxima Pagina");
 		endif
-		
+
 		var input := GFSendGump(player, gump);
-		
+
 		if (input[0] == 0 || GetObjProperty(player, "#Online")) // cancela o Gump.
 			AI_Speak(npc, "Muito Obrigado. Volte Sempre!");
 			break;

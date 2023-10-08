@@ -3,14 +3,14 @@ use util;
 
 include ":gumps:gumps";
 include ":combat:hitscripts";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 
 var blood_graphics := array(4650, 4651, 4652, 4653, 4654);
 
 program Setup(altar)
 
 
-	
+
 
 	var i, j;
 	var item;
@@ -40,7 +40,7 @@ program Setup(altar)
 		item.color:=0x497;		item.movable := 0;
 		item :=CreateItemAtLocation( altar.x-2, altar.y+i, altar.z+5,0x754,1);
 		item.color:=0x497;		item.movable := 0;
-	endfor 
+	endfor
 
 	item :=CreateItemAtLocation( altar.x-2, altar.y-2, altar.z+5,0x759,1);
 	item.color:=0x497;		item.movable := 0;
@@ -65,7 +65,7 @@ program Setup(altar)
 	item :=CreateItemAtLocation( altar.x, altar.y+1, altar.z+10,0xfec,1);
 	item.movable := 0;		item.name:= "champion altar";
 	pent.append(item.serial);
-	
+
 	item :=CreateItemAtLocation( altar.x-1, altar.y, altar.z+10,0xfe6,1);
 	item.movable := 0;		item.name:= "champion altar";
 	pent.append(item.serial);
@@ -75,7 +75,7 @@ program Setup(altar)
 	item :=CreateItemAtLocation( altar.x-1, altar.y+1, altar.z+10,0xfe9,1);
 	item.movable := 0;		item.name:= "champion altar";
 	pent.append(item.serial);
-	
+
 	item :=CreateItemAtLocation( altar.x+1, altar.y, altar.z+10,0xfee,1);
 	item.movable := 0;		item.name:= "champion altar";
 	pent.append(item.serial);

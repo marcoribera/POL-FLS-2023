@@ -36,9 +36,9 @@ use datafile;
 
 include ":datafile:datafile";
 include ":gumps:include/gumps";
-include ":gumps:include/gumpprompt";
+include ":gumps:gumpPrompt";
 include ":gumps:include/gumps_ex";
-include ":gumps:include/yesno";
+include ":gumps:yesNo";
 include ":commands:include/goAdd";
 include ":commands:include/goEdit";
 include ":commands:include/goText";

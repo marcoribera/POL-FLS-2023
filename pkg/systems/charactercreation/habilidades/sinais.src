@@ -2,7 +2,7 @@ use uo;
 use basic;
 
 include "include/say";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":charactercreation:habilidades";
 
 program sinais(who)
@@ -15,7 +15,7 @@ program sinais(who)
 	elseif(tam > 10)
 		PrintText(who, "*faz alguns gestos*");
 	endif
-	
+
 	SendSysMessageEx(who, "Escolha os personagens que irao lhe entender. (Esc para Cancelar)",SSM_INFO);
 	while (1)
 		var player := Target(who);
@@ -32,5 +32,5 @@ program sinais(who)
 
 	return 1;
 
-endprogram 
+endprogram
 

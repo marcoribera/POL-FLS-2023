@@ -1,7 +1,7 @@
 use uo;
 
 include "include/say";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 
 function CheckIngredients(master, ritualid)
 
@@ -36,9 +36,9 @@ function CheckIngredients(master, ritualid)
 	var objects := ListObjectNearLocation(master.x, master.y, master.z, 2, master.realm);
 
 	var objectsToDestroy := array;
-	foreach thing in (objtypes.keys()) 
+	foreach thing in (objtypes.keys())
 		var found := 0;
-		foreach item in object	
+		foreach item in object
 			if (item.objtype ==  thing)
 				if ( item.amount == objtypes[thing] )
 					found := 1;
@@ -67,7 +67,7 @@ function CheckIngredients(master, ritualid)
 				ritualmages.append(mob);
 			endif
 		endif
-	endforeach	
+	endforeach
 
 	if ( mages > maxmages )
 		SendSysMessageEx(master, "Existem muitos magos participando do ritual.", SSM_FAIL);
@@ -83,7 +83,7 @@ function CheckIngredients(master, ritualid)
 	var minmana := GetConfigInt(element, "Mana");
 	var skill := 0;
 	var mana := 0;
-	
+
 	foreach mob in ritualmages
 		skill := skill + AP_GetSkill(mob, MAGERY);
 		mana := mana + AP_GetVital(mob, "Mana");
@@ -114,7 +114,7 @@ function CheckIngredients(master, ritualid)
 			PerformAction(mobile, ANIM_CAST_AREA);
 		endforeach
 		sleepms(delay);
-	endforeach	
+	endforeach
 
 
 	Start_Script(ritualscript, {master, ritualid});

@@ -4,8 +4,8 @@ use uo;
 include ":attributes:attributes";
 include "include/say";
 include ":charactercreation:habilidades";
-include ":gumps:include/requestgump";
-include ":gumps:yesno";
+include ":gumps:requestGump";
+include ":gumps:yesNo";
 include ":charactercreation:habilidades";
 
 program useBook(who,book)

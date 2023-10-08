@@ -2,7 +2,7 @@
 use uo;
 
 include ":keys:key";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include "include/string";
 include "include/say";
 include ":charactercreation:habilidades";
@@ -12,7 +12,7 @@ include ":traps:traps";
 program UseKey(who, key)
 	SendSysMessageEx(who, "Onde voce deseja usar a chave magica?", SSM_REQUEST);
 	var targ := Target(who);
-	
+
 	if ( !targ.IsA(POLCLASS_ITEM) )
 		SendSysMessageEx(who, "Cancelado.", SSM_FAIL);
 		return 0;
@@ -35,7 +35,7 @@ program UseKey(who, key)
 		SendSysMessageEx(who, "Voce esta muito longe do alvo!", SSM_FAIL);
 		return;
 	endif
-	
+
 	if (GetObjProperty(targ, "TrapList") != error)
 		if (GetObjProperty(targ, "trap_inativa"))
 		else
@@ -46,7 +46,7 @@ program UseKey(who, key)
 			SetName(targ, name);
 		endif
 	endif
-	
+
 	KP_ToggleLock(targ, who);
 	SetObjProperty(targ, "arrombado", "" + who.name);
 	SetObjProperty(targ, "locktime", polcore().systime);
@@ -54,15 +54,15 @@ program UseKey(who, key)
 	PlayObjectCenteredEffect(targ, 0x3763, 1, 16);
 	SendSysMessageEX(who, "A chave se molda magicamente e abre a fechadura.", SSM_INFO);
 	SubtractAmount(key,1);
-	
-	
+
+
 	return 1;
 endprogram
 
 function RenameKey(who, key)
 	var new_name := RequestGump(who, "Escreva o nome para a chave", "Tamanho maximo sao 30 caracteres.", key.desc, CANCEL_BTN_ON);
 	var name_len := Len(new_name);
-	
+
 	if ( !new_name )
 		SendSysMessageEX(who, "Cancelado.", SSM_FAIL);
 		return 0;

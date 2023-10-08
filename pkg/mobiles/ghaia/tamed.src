@@ -44,13 +44,13 @@ program TamedAI()
 	EnableMainEvents();
 	Setup();
 
-  //Detach();
-  //var time := ReadGameClock();
-  //SetObjProperty(me,"countercheck", time);
-  //var parms := {};
-  //parms[1] := me;
-  //parms[2] := time;
-  start_script(":taming:happyCounter", {me, ReadGameClock()});
+  Detach();
+  var time := ReadGameClock();
+  SetObjProperty(me,"countercheck", time);
+  var parms := {};
+  parms[1] := me;
+  parms[2] := time;
+  start_script(":taming:happyCounter", parms);
 
 	while ( me )
 		if ( wait_time < 1 )
@@ -825,11 +825,11 @@ function Setup()
 	me.facing := me.facing+1;
 	TurnToward(me.master);
 
-	if ( !GetProcess(GetObjProperty(me, "#happypid")) )
+//	if ( !GetProcess(GetObjProperty(me, "#happypid")) )
 
-		start_script(":taming:happycounter", {me, ReadGameClock()});
+	//	start_script(":taming:happycounter", {me, ReadGameClock()});
 
-	endif
+	//endif
 
 	me.cmdlevel := 4;
 	SetWarMode(0);

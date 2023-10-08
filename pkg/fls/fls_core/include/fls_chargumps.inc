@@ -6,7 +6,7 @@ include ":gumps:gumps";
 include "include/arrays";
 include ":fls_core:fls_chargumps_ex";
 include ":attributes:attributes";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 
 
 function HairColor(who, byref chardata)
@@ -28,7 +28,7 @@ function HairColor(who, byref chardata)
 	var myraca := GetObjProperty(who, "raca");
 
 	repeat
-	
+
 		if (!who.connected)
 			break;
 		endif
@@ -40,12 +40,12 @@ function HairColor(who, byref chardata)
 		GFTextLine(chargump, 50, 105, 1153, "Escolher Cabelo");
 		GFTextLine(chargump, 50, 135, 1153, "Escolher Cabelo Facial");
 		GFTextLine(chargump, 50, 165, 1153, "Escolher Cor do Cabelo");
-		
+
 		GFAddButton(chargump, 30, 75, 2117, 2118, 1, 2);
 		GFAddButton(chargump, 30, 105, 2117, 2118, 1, 3);
 		GFAddButton(chargump, 30, 135, 2117, 2118, 1, 4);
 		GFAddButton(chargump, 30, 165, 2117, 2118, 1, 5);
-	
+
 		GFAddButton(chargump, 230, 450, 4502, 4502, 1, 1 );
 		GFTextLine(chargump, 190, 460, 1153, "Proximo");
 
@@ -54,7 +54,7 @@ function HairColor(who, byref chardata)
 
 		if (input == 2)
 			FLSkinGump(who, new_look);
-		elseif (input == 3) 
+		elseif (input == 3)
 			FLHairGump(who, new_look);
 		elseif (input == 4)
 			if ( (myraca == "anao") || (myraca == "humano") )
@@ -111,7 +111,7 @@ function HairColor(who, byref chardata)
 		barba.color := new_look.HairColor;
 		EquipItem(who, barba);
 	endif
-	
+
 	//se for anao equipa sempre a long beard
 	//if ( raca == "anao" )
 	//	var barba := GetEquipmentByLayer(who, LAYER_BEARD);
@@ -119,7 +119,7 @@ function HairColor(who, byref chardata)
 	//	barba := CreateItemAtLocation(who.x, who.y, who.z, 8268, 1, who.realm);
 	//	barba.color := new_look.HairColor;
 	//	EquipItem(who, barba);
-	//endif	
+	//endif
 
 	//se for mulher tira a barba
 	if ( who.graphic == 401 )
@@ -144,7 +144,7 @@ function NameClassRace(who, byref chardata)
 
 	GFClosable(chargump, 0);
 	GFDisposable(chargump, 0);
-	GFResizePic(chargump, 0, 25, 3600, 350, 480);	
+	GFResizePic(chargump, 0, 25, 3600, 350, 480);
 	GFResizePic(chargump, 15, 40, 0x13BE, 320, 450);
 
 	GFTextMid(chargump, 20, 50, 300, 1153, "Criacao do Personagem");
@@ -159,17 +159,17 @@ function NameClassRace(who, byref chardata)
 
 	GFTextLine(chargump, 30, 195, 1153, "Escolha a Classe");
 	GFTextLine(chargump, 60, 215, 1153, "Combatente");
-	GFTextLine(chargump, 60, 235, 1153, "Ladino");	
-	GFTextLine(chargump, 60, 255, 1153, "Sabio");	
-	GFTextLine(chargump, 60, 275, 1153, "Artifice");	
+	GFTextLine(chargump, 60, 235, 1153, "Ladino");
+	GFTextLine(chargump, 60, 255, 1153, "Sabio");
+	GFTextLine(chargump, 60, 275, 1153, "Artifice");
 
 	GFTextLine(chargump, 30, 315, 1153, "Escolha a Raca");
 	GFTextLine(chargump, 60, 335, 1153, "Humano");
-	GFTextLine(chargump, 60, 355, 1153, "Elfo");	
-	GFTextLine(chargump, 60, 375, 1153, "Anao");	
-	GFTextLine(chargump, 60, 395, 1153, "Hobbit");	
-	GFTextLine(chargump, 60, 415, 1153, "Drow");	
-	GFTextLine(chargump, 60, 435, 1153, "Orc");	
+	GFTextLine(chargump, 60, 355, 1153, "Elfo");
+	GFTextLine(chargump, 60, 375, 1153, "Anao");
+	GFTextLine(chargump, 60, 395, 1153, "Hobbit");
+	GFTextLine(chargump, 60, 415, 1153, "Drow");
+	GFTextLine(chargump, 60, 435, 1153, "Orc");
 
 	GFSetRadioGroup(chargump, 1);
 	GFRadioButton(chargump, 30, 215, 210, 211, 1, 1);
@@ -187,12 +187,12 @@ function NameClassRace(who, byref chardata)
 
 	//GFTextLine(chargump, 190, 195, 1153, "Escolha a Tendencia");
 	//GFTextLine(chargump, 220, 215, 1153, "Leal e Bom");
-	//GFTextLine(chargump, 220, 235, 1153, "Neutro e Bom");	
-	//GFTextLine(chargump, 220, 255, 1153, "Caotico e Bom");	
+	//GFTextLine(chargump, 220, 235, 1153, "Neutro e Bom");
+	//GFTextLine(chargump, 220, 255, 1153, "Caotico e Bom");
 	//GFTextLine(chargump, 220, 275, 1153, "Leal e Neutro");
 	//GFTextLine(chargump, 220, 295, 1153, "Neutro");
-	//GFTextLine(chargump, 220, 315, 1153, "Caotico e Neutro");	
-	//GFTextLine(chargump, 220, 335, 1153, "Leal e Mau");	
+	//GFTextLine(chargump, 220, 315, 1153, "Caotico e Neutro");
+	//GFTextLine(chargump, 220, 335, 1153, "Leal e Mau");
 	//GFTextLine(chargump, 220, 355, 1153, "Neutro e Mau");
 
 	//GFSetRadioGroup(chargump, 3);
@@ -287,15 +287,15 @@ function NameClassRace(who, byref chardata)
 				elseif (key == 38)
 					SendSysMessage(who, "Sua tendencia sera Neutro e Mau!");
 					SetObjProperty(who, "tendencia", "Neutro e Mau");
-				
+
 				endif
-				
+
 
 			endforeach
 		endif
 
 	endif
-	
+
 
 endfunction
 
@@ -320,7 +320,7 @@ function attributesGump(who, byref chardata)
 			break;
 		endif
 		repeatGump := GumpAttr(who, chardata, stats, str, int, vit, dex);
-	endwhile	
+	endwhile
 
 
 endfunction
@@ -461,10 +461,10 @@ function skillsgump(who, byref chardata)
 		skillspoints := skillspoints + 1;
 	endif
 	var repeatGump := 0;
-	
+
 	chardata.+Skills := dictionary;
 	chardata.+Primarias := 0;
-	
+
 	while ( (repeatGump != 1) )
 		if (!who.connected)
 			break;
@@ -500,7 +500,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 	var primarias    := GetConfigStringArray(elem, "P");
 	var secundarias  := GetConfigStringArray(elem, "S");
 	var terciarias   := GetConfigStringArray(elem, "T");
-	var quaternarias := GetConfigStringArray(elem, "Q");	
+	var quaternarias := GetConfigStringArray(elem, "Q");
 
 	GFClosable(chargump, 0);
 	GFDisposable(chargump, 0);
@@ -519,7 +519,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 	GFTextLine(chargump, 320, 460, 38, "Vermelho: 4 ");
 
 	var x := 50;
-	var y := 75;	
+	var y := 75;
 	var x2 := 150;
 	var x3 := 30;
 	foreach skill in primarias
@@ -529,7 +529,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 			value := "";
 		endif
 		//valor da skill (P, S ou T)
-		GFTextLine(chargump, x2, y, 88, GetSkillDescValue(value)); 
+		GFTextLine(chargump, x2, y, 88, GetSkillDescValue(value));
 		GFAddButton(chargump, x3, y+4, 2103, 2104, 1, FL_GetSkillID(skill) );
 		y := y + 15;
 		if (y >= 450)
@@ -546,7 +546,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		if (value == error)
 			value := "";
 		endif
-		GFTextLine(chargump, x2, y, 80, GetSkillDescValue(value)); 
+		GFTextLine(chargump, x2, y, 80, GetSkillDescValue(value));
 		GFAddButton(chargump, x3, y+4, 2103, 2104, 1, FL_GetSkillID(skill) );
 		y := y + 15;
 		if (y >= 450)
@@ -563,7 +563,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		if (value == error)
 			value := "";
 		endif
-		GFTextLine(chargump, x2, y, 52, GetSkillDescValue(value)); 
+		GFTextLine(chargump, x2, y, 52, GetSkillDescValue(value));
 		GFAddButton(chargump, x3, y+4, 2103, 2104, 1, FL_GetSkillID(skill) );
 		y := y + 15;
 		if (y >= 450)
@@ -580,7 +580,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		if (value == error)
 			value := "";
 		endif
-		GFTextLine(chargump, x2, y, 38, GetSkillDescValue(value)); 
+		GFTextLine(chargump, x2, y, 38, GetSkillDescValue(value));
 		GFAddButton(chargump, x3, y+4, 2103, 2104, 1, FL_GetSkillID(skill) );
 		y := y + 15;
 		if (y >= 450)
@@ -620,7 +620,7 @@ function GumpSkills(who, byref chardata, byref skillspoints)
 		return 1;
 	endif
 
-	
+
 
 endfunction
 

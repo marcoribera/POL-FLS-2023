@@ -10,19 +10,19 @@
 use uo;
 use os;
 
-include ":gumps:include/requestgump";
+include ":gumps:requestGump";
 include "include/string";
 include ":gumps:gumps";
-include ":gumps:include/gumpprompt";
+include ":gumps:gumpPrompt";
 include ":merchants:merchant";
 include ":merchants:item_template";
 include	":merchants:crafthelp";
 include ":brainAI:npcCommands";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include "include/say";
 include ":charactercreation:habilidades";
 include ":tn:tngumps";
-include ":gumps:htmlgump";
+include ":gumps:htmlGump";
 //include ":faccao:faccao";
 include "include/arrays";
 //include "include/ghaia";

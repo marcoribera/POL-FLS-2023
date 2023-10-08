@@ -21,7 +21,7 @@ include ":attributes:titles";
 include "include/say";
 include ":charactercreation:createchar";
 include ":charactercreation:habilidades";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 
 var skillList := array{"Alchemy", "MagicLore", "Magery", "Survival", "HandleAnimal", "Awareness", "Medicine", "DomesticWork", "Sneak", "MechanicalApitude", "Pickpocketing", "WoodWorking", "MetalWorking", "RangedCombat", "MeleeCombat2H", "MeleeCombat1H", "Parry", "Tactics", "Gathering"};
 

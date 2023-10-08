@@ -6,9 +6,12 @@ program bcitem(who,item)
 	var texto;
 	var cor;
 
+SendSysMessage (who, "Configure o <texto> e <cor> com o .propedit no sino");
+
 	texto:=GetObjProperty(item,"texto");
 	
 	cor:=GetObjProperty(item,"cor");
+	
 
 	if (texto == error) 
 		SetObjProperty(item,"texto","*Os Sinos do Templo De Zharkia Soam*");
@@ -20,5 +23,9 @@ program bcitem(who,item)
 		cor:=GetObjProperty(item,"cor");
 	endif
 	
+	PlaysoundeffectXYZ(item.x, item.y, item.z, 0x66D, item.realm);
+
 	Broadcast(texto, font := 0, color := cor);
+
 endprogram
+

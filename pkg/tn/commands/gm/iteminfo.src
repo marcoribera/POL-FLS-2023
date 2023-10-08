@@ -2,9 +2,9 @@ use uo;
 
 include ":gumps:gumps";
 include ":gumps:gumps_ex";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":tn:tngumps";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":merchants:item_template";
 include ":attributes:attributes";
 include ":tn:recipes";
@@ -27,27 +27,27 @@ program iteminfo(who)
 endprogram
 
 function ShowAllRecipes(who)
-	
+
 	var df := OpenDataFile( ":tn:recipes" );
 	var spawns := df.Keys();
-	
+
 	var gump := GFCreateGump();
 
         GFDisposable(gump, 0);
-	GFResizePic(gump, 0, 25, 3600, 380, 470);	
+	GFResizePic(gump, 0, 25, 3600, 380, 470);
 	GFResizePic(gump, 15, 40, 0x13BE, 350, 440);
 	GFTextMid(gump, 20, 50, 250, 1153, "Recipes");
-	
+
 	GFPage(gump, 0);
-	
+
 	GFTextLine(gump, 40, 70, 1153, "Nome");
 	GFTextLine(gump, 140, 70, 1153, "Lvl");
 	GFTextLine(gump, 170, 70, 1153, "Item");
 	GFTextLine(gump, 200, 70, 1153, "Rcp");
 	GFTextLine(gump, 230, 70, 1153, "Del");
 	GFTextLine(gump, 260, 70, 1153, "Edit");
-	
-	
+
+
 	var x := 40;
 	var y := 90;
 	var i := 1;
@@ -77,9 +77,9 @@ function ShowAllRecipes(who)
 		endif
 		sleepms(2);
 	endforeach
-	
+
 	SendSysMessage(who, "Total de recipes: " + spawns.size());
-	
+
 	var result := GFSendGump(who, gump);
 
 	if ( result[0] > 100 && result[0] < 200)
@@ -101,10 +101,10 @@ function iteminfogump(who, item)
 	var gump := GFCreateGump();
 
         GFDisposable(gump, 0);
-	GFResizePic(gump, 0, 25, 3600, 380, 470);	
+	GFResizePic(gump, 0, 25, 3600, 380, 470);
 	GFResizePic(gump, 15, 40, 0x13BE, 350, 440);
 	GFTextMid(gump, 20, 50, 250, 1153, "Modifique o Item");
-	
+
 	GFPage(gump, 0);
 	GFTextLine(gump, 40, 70, 1153, "Principal");
 	GFTextLine(gump, 40, 85, 1153, "Scripts");
@@ -112,17 +112,17 @@ function iteminfogump(who, item)
 	GFTextLine(gump, 40, 115, 1153, "Criar Recipe");
 	GFTextLine(gump, 40, 130, 1153, "Historia");
 	GFTextLine(gump, 200, 70, 1153, "Loots");
-	
+
 	GFAddButton( gump, 20, 73, 2103, 2104, 0, 2);
 	GFAddButton( gump, 20, 88, 2103, 2104, 0, 3);
 	GFAddButton( gump, 20, 103, 2103, 2104, 0, 4);
 	GFAddButton( gump, 20, 118, 2103, 2104, 1,99);
 	GFAddButton( gump, 20, 133, 2103, 2104, 1, 98);
-	
+
 	GFAddButton( gump, 180, 73, 2103, 2104, 0, 5);
-	
+
 	GFPage(gump, 2);
-	
+
 	GFTextLine(gump, 40, 150, 1153, "Nome: " + lower(item.desc));
 	GFTextLine(gump, 40, 165, 1153, "Cor: " + item.color);
 	GFTextLine(gump, 40, 180, 1153, "Qualidade: " + item.quality);
@@ -131,7 +131,7 @@ function iteminfogump(who, item)
 	GFTextLine(gump, 40, 225, 1153, "MaxHp: "  + item.maxhp );
 	GFTextLine(gump, 40, 240, 1153, "Newbie: " + item.newbie);
 	GFTextLine(gump, 40, 255, 1153, "Dmg_mod: " + item.dmg_mod);
-	
+
 	GFAddButton( gump, 20, 153, 2103, 2104, 1, 10);
 	GFAddButton( gump, 20, 168, 2103, 2104, 1, 11);
 	GFAddButton( gump, 20, 183, 2103, 2104, 1, 12);
@@ -139,9 +139,9 @@ function iteminfogump(who, item)
 	GFAddButton( gump, 20, 213, 2103, 2104, 1, 14);
 	GFAddButton( gump, 20, 243, 2103, 2104, 1, 15);
 	GFAddButton( gump, 20, 258, 2103, 2104, 1, 16);
-	
+
 	GFPage(gump, 5);
-	
+
 	var df := OpenDataFile( ":tn:recipes" );
 	if (!df)
 		df := CreateDataFile(":tn:recipes");
@@ -153,8 +153,8 @@ function iteminfogump(who, item)
 		GFTextLine(gump, 40, 150, 1153, "Loots: " + loots);
 		GFAddButton( gump, 20, 153, 2103, 2104, 1, 50);
 	endif
-	
-	
+
+
 	GFPage(gump, 3);
 	var uses := GetObjProperty(item, "uses");
 	if (uses == error)
@@ -172,16 +172,16 @@ function iteminfogump(who, item)
 	GFTextLine(gump, 40, 165, 1153, "ArmorScripts: " );
 	GFTextLine(gump, 40, 180, 1153, "HitScript: " + hitscripts);
 	GFTextLine(gump, 40, 195, 1153, "EquipScript "  + equip);
-	
+
 	GFAddButton( gump, 20, 153, 2103, 2104, 1, 20);
 	GFAddButton( gump, 20, 168, 2103, 2104, 1, 21);
 	GFAddButton( gump, 20, 183, 2103, 2104, 1, 22);
 	GFAddButton( gump, 20, 198, 2103, 2104, 1, 23);
-	
+
 	GFPage(gump, 4);
 	var skillnames := GetRecipeCraftSkills( item.desc);
 	var materiais := GetRecipeMaterials( item.desc);
-	
+
 	if (!skillnames)
 		skillnames:= dictionary;
 		GFTextLine(gump, 40, 150, 1153, "Skills: " );
@@ -192,9 +192,9 @@ function iteminfogump(who, item)
 			skval.append( skillnames[key] );
 		endforeach
 		GFTextLine(gump, 40, 150, 1153, "Skills: " + skillnames.keys() );
-		GFTextLine(gump, 40, 165, 1153, "Valores: " +  skval);		
+		GFTextLine(gump, 40, 165, 1153, "Valores: " +  skval);
 	endif
-	
+
 	if (!materiais)
 		materiais := dictionary;
 		GFTextLine(gump, 40, 180, 1153, "Materiais: " );
@@ -205,7 +205,7 @@ function iteminfogump(who, item)
 			matamt.append( materiais[key] );
 		endforeach
 		GFTextLine(gump, 40, 180, 1153, "Materiais: " + materiais.keys());
-		GFTextLine(gump, 40, 195, 1153, "Amount "  + matamt);		
+		GFTextLine(gump, 40, 195, 1153, "Amount "  + matamt);
 	endif
 
 	GFAddButton( gump, 20, 153, 2103, 2104, 1, 30);
@@ -277,7 +277,7 @@ function iteminfogump(who, item)
 
 				comb.+tocreate := array;
 				cont := 1;
-			
+
 				while(cont)
 
 					var tocreate := struct;
@@ -327,7 +327,7 @@ function iteminfogump(who, item)
 				endwhile
 				SetObjProperty(item, "timers", timers);
 			endif
-		endforeach 
+		endforeach
 		var target2 := YesNo(who, "Este item vai pedir target ( nao para itens target self)?");
 		if (target2)
 			SetObjProperty(item, "target", 1);
@@ -489,5 +489,5 @@ function iteminfogump(who, item)
 		endif
 		iteminfogump(who, item);
 	endif
-	
+
 endfunction

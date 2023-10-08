@@ -5,16 +5,16 @@
 
 use uo;
 
-include ":gumps:yesno";
+include ":gumps:yesNo";
 
 program textcmd_DestroyMulti(who, serial)
 	serial := CInt(serial);
 	var multi;
-	
+
 	if ( !serial )
 		SendSysMessage(who, "Target an item in the multi.");
 		var targ := target(who);
-	
+
 		if ( targ.multi )
 			multi := targ.multi;
 		else
@@ -24,7 +24,7 @@ program textcmd_DestroyMulti(who, serial)
 	else
 		multi := SystemFindObjectBySerial(serial);
 	endif
-	
+
 	if (multi.has_offline_mobiles)
 		if ( YesNo(who, "Existem jogadores deslogados no barco, deseja move-los para outro lugar?"))
 			var lugar := TargetCoordinates(who);
@@ -32,10 +32,10 @@ program textcmd_DestroyMulti(who, serial)
 		endif
 	endif
 	var destroyed := DestroyMulti(multi);
-	
+
 	if ( destroyed.errortext )
 		SendSysMessage(who, "Error: "+destroyed.errortext);
 	endif
-	
+
 	return destroyed;
 endprogram

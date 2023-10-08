@@ -13,7 +13,7 @@ include ":attributes:skillCheck";
 include ":blood:blood";
 include ":survival:skinning";
 include ":brainAi:npcUtil";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":charactercreation:habilidades";
 
 

@@ -4,7 +4,7 @@ use os;
 include "include/client";
 include "include/say";
 include ":survival:fishingFunctions";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":attributes:attributes";
 include ":fls_core:packets";
 

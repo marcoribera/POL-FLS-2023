@@ -1,8 +1,8 @@
 
 use uo;
 include ":gumps:gumps";
-include ":gumps:yesno";
-include ":gumps:requestgump";
+include ":gumps:yesNo";
+include ":gumps:requestGump";
 include ":tn:tngumps";
 include ":spells:tnmagery";
 include ":unicos:item_template";
@@ -23,7 +23,7 @@ include ":combat:hitscripts";
 		numitems
 		items //itemdescriptor array
 		numSpawns
-		npcspawns //array de struct 
+		npcspawns //array de struct
 			amount
 			x
 			y
@@ -72,13 +72,13 @@ ok - questmenu pode receber varias quests: fazer menu paginado
 - poder usar html na description da quest
 - quest terminar automaticamente  <- foda de fazer
 ok - menu de quest no paperdoll
-- fazer novos tipos de quests: 
-	escolta 
-	levar item para alguem 
+- fazer novos tipos de quests:
+	escolta
+	levar item para alguem
 	deixar item em algum lugar
 	matar x mobs
 	matar mob especifico
-		
+
 */
 
 program createquest(who)
@@ -116,5 +116,5 @@ program createquest(who)
 		var ret := elem.SetProp("questinfo", questinfo);
 		SendSysMessage(who, "Quest salvada com sucesso.");
 	endif*/
-	
+
 endprogram

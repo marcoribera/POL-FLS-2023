@@ -4,9 +4,9 @@ use os;
 
 include ":containers:storageAreas";
 include ":containers:containers";
-include ":gumps:include/requestgump";
+include ":gumps:requestGump";
 include ":gumps:gumps";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include "include/say";
 include ":keys:key";
 include ":tn:tngumps";

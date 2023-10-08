@@ -3,9 +3,9 @@ use os;
 
 include ":unicos:unicos";
 include	":merchants:crafthelp";
-include ":gumps:include/requestgump";
+include ":gumps:requestGump";
 include ":gumps:gumps";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 
 const ADD_ITEM_BTN		:= 0x1;
 const SHOW_ITEMS_BTN		:= 0x2;
@@ -35,10 +35,10 @@ program UniqueItemsMenu(player)
 	var gump := MENU_INTRO;
 	var input := MENU_INTRO;
 	var item;
-	
+
 	MAIN_LOOP: while ( 1 )
 		gump := MainLayout(player);
-		
+
 		case ( cur_menu )
 			MENU_INTRO:
 				IntroGump(gump);
@@ -50,14 +50,14 @@ program UniqueItemsMenu(player)
 					item := SystemFindObjectBySerial(input, 3);
 					if( !item )
 						GetItemsDataFile().DeleteElement(Hex(input));
-						SendSysMessage(player, "Este item nao existe mais e foi removido da lista.");	
+						SendSysMessage(player, "Este item nao existe mais e foi removido da lista.");
 					else
 						ShowItemInfo(gump, player, item);
 					endif
 				endif
 		endcase
-		
-		
+
+
 		input := GFSendGump(player, gump);
 		if ( player in EnumerateOnlineCharacters() )
 			input := input[0];
@@ -65,9 +65,9 @@ program UniqueItemsMenu(player)
 			break MAIN_LOOP;
 		endif
 
-		
+
 		case ( input )
-			0:	
+			0:
 				break MAIN_LOOP;
 			ADD_ITEM_BTN:
 				AddItem(player);
@@ -104,7 +104,7 @@ program UniqueItemsMenu(player)
 			REMOVEPDONO_BTN:
 				EraseObjProperty(item, "primeiro_dono");
 				SendSysMessage(player, "Voce removeu o primeiro dono da prop do item.");
-				return 1;			
+				return 1;
 		endcase
 	endwhile
 
@@ -161,7 +161,7 @@ function ShowItemInfo(byref gump, player, item)
 	else
 		GFTextLine(gump, 400, 130, 0, primeiro_dono);
 	endif
-	
+
 	GFTextLine(gump, 370, 60, GF_STDCOLOR, "GM Criador");
 	GFTextLine(gump, 400, 80, color, elem.GetProp("Creator"));
 
@@ -186,7 +186,7 @@ function ShowItemInfo(byref gump, player, item)
 		cont := cont.container;
 		sleepms(2);
 	endwhile
-	
+
 	GFResizePic(gump, 500, 125, 2620, 120, 100);
 	if( cont.isa(POLCLASS_ITEM) )
 		if (cont.desc["[Root Container]"])
@@ -236,7 +236,7 @@ function ShowItemInfo(byref gump, player, item)
 
 	GFAddButton(gump, 455, 430, 2151, 2154, 1, REMOVE_BTN);
 	GFTextLine(gump, 490, 433, GF_STDCOLOR, "Remover da lista");
-	
+
 	GFAddButton(gump, 275, 396, 2151, 2154, 1, REMOVEPDONO_BTN);
 	GFTextLine(gump, 310, 399, GF_STDCOLOR, "Apagar Primeiro Dono");
 
@@ -256,7 +256,7 @@ function AddItem(player)
 			return;
 		endif
 	endif
-	
+
 	var owner;
 	if( YesNo(player, "Deseja conectar o item a um player ou somente torna-lo único?", "Player", "único") )
 		SendSysMessage(player, "Selecione um player para ser o dono deste item unico.");
@@ -300,7 +300,7 @@ function ShowItems(byref gump, player)
 		var name := info.GetProp("ItemDesc");
 		var owner := info.GetProp("OwnerName");
 		var acctname := info.GetProp("OwnerAcc");
-		
+
 		if( y_pos > END_Y )
 			GFAddButton(gump, 580, 30, 2224, 2224, GF_PAGE_BTN, gump.cur_page+1);
 			y_pos := 45;
@@ -329,7 +329,7 @@ function ShowItems(byref gump, player)
 
 		y_pos := y_pos+20;
 		sleepms(2);
-		
+
 	endforeach
 endfunction
 

@@ -7,7 +7,7 @@ include "include/sounds";
 include "include/say";
 include "include/tileEffects";
 include ":timedScripts:timedScripts";
-include ":gumps:htmlgump";
+include ":gumps:htmlGump";
 
 program SpellScript(params)
 	var who := params[1];
@@ -51,4 +51,4 @@ program SpellScript(params)
 	var e := SendHTMLGump(who, "Aura de "+targ.name, texto);
 //	SendSysMEssage(who, " " + e );
 	return 1;
-endprogram 
+endprogram

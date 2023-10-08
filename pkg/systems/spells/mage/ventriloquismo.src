@@ -10,7 +10,7 @@ include "include/sounds";
 include "include/damage";
 include "include/tileEffects";
 include "include/say";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 
 program SpellScript(params)
 

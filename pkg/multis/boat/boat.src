@@ -1,5 +1,5 @@
 ////////////////
-//	boat.src 
+//	boat.src
 //
 //	control script for boats
 //
@@ -23,7 +23,7 @@ include "include/math";
 */
 include "plankUtil";
 include "include/sysEvent";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":keys:key";
 
 const STATE_STATIONARY := 0;
@@ -53,14 +53,14 @@ program autostart_boat(param)
     syslog( "[ERROR] [boat.src] Boat script running, but boat not found!" );
     return;
   endif
-  
+
   tillerman := boat.tillerman;
   if(!tillerman)
     syslog( "[ERROR] [boat.src] No tillerman for boat at: " +(boat.x-1) +","+ boat.y +","+ boat.z + "; destroying the boat..." );
     DestroyMulti(boat);
     return;
   endif
-  
+
   EnableEvents(SYSEVENT_SPEECH, 15);
   RegisterForSpeechEvents(tillerman, 15);
   var nextencounter := ReadGameClock()+(RandomInt(120) + 120);
@@ -68,15 +68,15 @@ program autostart_boat(param)
   var driftcounter := 1;
   //set_critical(1);
   var x,y;
-  
+
   while(boat)
     if(GetObjProperty(boat.hold, "#speed"))
       state := STATE_MOVING;
-      ms_delay_between_moves := GetObjProperty(boat.hold, "#speed"); 
+      ms_delay_between_moves := GetObjProperty(boat.hold, "#speed");
       relative_direction := GetObjProperty(boat.hold, "#relativedir");
       eraseobjproperty(boat.hold, "#speed");
-      eraseobjproperty(boat.hold, "#relativedir");    
-    endif     
+      eraseobjproperty(boat.hold, "#relativedir");
+    endif
 
     case(state)
       STATE_MOVING:   if(ReadGameClock() > nextsound)
@@ -86,7 +86,7 @@ program autostart_boat(param)
                       x := boat.x;
                       y := boat.y;
                       MoveBoatRelative(boat, relative_direction);
-                      if(boat.x == 6 or boat.x == 5097 or boat.y == 6 or boat.y == 4089)   
+                      if(boat.x == 6 or boat.x == 5097 or boat.y == 6 or boat.y == 4089)
                         WorldWrap();
                       endif
                       if((x == boat.x) &&(y == boat.y))
@@ -126,7 +126,7 @@ program autostart_boat(param)
         		x := boat.x;
         		y := boat.y;
         		BoatFollowCourse(boat);
-        				
+
         		sleepms(ms_delay_between_moves);
                         while(events_waiting())
                           process_event(wait_for_event(0));
@@ -222,15 +222,15 @@ function handle_speech(event)
     endif
 /*NEW MAP COURSE COMMANDS*/
     elseif(text["viagem"])
-      	PrintTextAbove(tillerman, "Me entregue o bilhete.");   	
+      	PrintTextAbove(tillerman, "Me entregue o bilhete.");
       	var map := Target(event.source);
       	//if(!map.isa(POLCLASS_MAP))
 	if (GetObjProperty(map, "plots") == error)
-      		PrintTextAbove(tillerman, "Eu preciso do seu bilhete!"); 
+      		PrintTextAbove(tillerman, "Eu preciso do seu bilhete!");
       	else
       		SetObjProperty(tillerman, "course", GetObjProperty(map, "plots"));
       		SetObjProperty(tillerman, "nextwaypoint", 1);
-      		PrintTextAbove(tillerman, "Arr, rota programada."); 
+      		PrintTextAbove(tillerman, "Arr, rota programada.");
       	endif
     //elseif(text["clear course"])
     //	PrintTextAbove(tillerman, "Arr, course cleared Cap'n.");
@@ -246,7 +246,7 @@ function handle_speech(event)
     elseif(text["partir"])
     	if( (GetObjProperty(tillerman,"course")==error) || (GetObjProperty(tillerman,"nextwaypoint")==error))
     		//PrintTextAbove(tillerman,"Arr, set course first Cap'n.");
-    	else    		
+    	else
      		state := STATE_FOLLOWING_COURSE;
      		SetObjProperty(tillerman, "nextwaypoint", 1);
     		//PrintTextAbove(tillerman,"Aye, sailing to first waypoint.");
@@ -283,7 +283,7 @@ endfunction
 function process_event(event)
   if(event.type == SYSEVENT_SPEECH)
     var text := lower(event.text);
-    if(CanCommandMe(event.source) || text["partir"]) 
+    if(CanCommandMe(event.source) || text["partir"])
       if(text["drydock"])
         PrintTextAbove(tillerman, "Aye Aye, Captain! Docking.");
         drydock(event);
@@ -292,12 +292,12 @@ function process_event(event)
         foreach person in (boat.mobiles)
           if (event.source == person)
              handle_speech(event);
-          endif  
+          endif
         endforeach
       endif
     endif
   endif
-  
+
 endfunction
 
 function CanCommandMe(who)
@@ -424,7 +424,7 @@ function drydock(event)
     PrintTextAbovePrivate(boat.tillerman, "Arrh, Captain!  You can't drydock the boat while people are on the deck!", me);
     EraseObjProperty(me, "#DryDocking");
     return;
-  endif  
+  endif
   if(CanDockMe(boat, me))
     if(!YesNo(me,"Drydock the ship?"))
       EraseObjProperty(me, "#DryDocking");
@@ -522,7 +522,7 @@ function WorldWrap()
   endcase
   if(shipfacing == "Error!")
     syslog( "[ERROR] [boat.src] Couldn't tell which way the ship was facing for the worldwrap!");
-  endif    
+  endif
   created := CreateMultiAtLocation( newx, newy, -5, shiptype, shipfacing);
   if(!created)
     syslog( "[ERROR] [boat.src] New ship couldn't be created for worldwrap!");
@@ -565,7 +565,7 @@ function WorldWrap()
   if(boat.starboardplank.locked == 1)
     created.starboardplank.locked := 1;
   endif
-  if(boat.portplank.locked == 1)  
+  if(boat.portplank.locked == 1)
     created.portplank.locked := 1;
   endif
   if(boat.hold.locked == 1)
@@ -606,22 +606,22 @@ function BoatFollowCourse(boat)
 	var startx, starty, destx, desty;
 	var course, nextwaypoint;
 	var newpoint, newfacing, prevfacing;
-	
+
 	course := GetObjProperty(boat.tillerman,"course");
 	nextwaypoint := GetObjProperty(boat.tillerman,"nextwaypoint");
-	startx := boat.x; 
+	startx := boat.x;
 	starty := boat.y;
 	prevfacing := boat.facing;
-	
+
 	if( (course==error) || (nextwaypoint==error))
 		return;
 	endif
-	
+
 	destx := cint(course[nextwaypoint].x);
 	desty := cint(course[nextwaypoint].y);
-	
-	//printtextabove(boat, " destx " + destx + " desty " + desty); 
-	
+
+	//printtextabove(boat, " destx " + destx + " desty " + desty);
+
 	newpoint := lineBresenham(startx,starty,destx,desty);
 	newfacing := GetNewFacing(startx,starty,newpoint[1],newpoint[2]);
 
@@ -636,7 +636,7 @@ function BoatFollowCourse(boat)
 		else
 			SetObjProperty(boat.tillerman,"nextwaypoint",nextwaypoint);
 		endif
-		
+
 	else
 
 		if(first_move_toward_waypoint == 1)
@@ -646,13 +646,13 @@ function BoatFollowCourse(boat)
 			first_move_toward_waypoint := 0;
 		endif
 		MoveBoat(boat,newfacing);
-		
+
 		if((startx == boat.x) &&(starty == boat.y)) //we didn't move. must be blocked
     		state := STATE_DRIFTING;
     		PrintTextAbove(tillerman, "Aaargh!  We've stopped!");
   		endif
   	endif
-	
+
 endfunction
 
 //convert facing 0-7 to turn code 0-3
@@ -661,13 +661,13 @@ function DetermineTurnCode( boat, desired )
     var current := CInt(boat.facing / 2);
     desired := CInt(desired / 2);
 
-	
-    if ( desired < current ) 
-    	desired := desired + 4; 
+
+    if ( desired < current )
+    	desired := desired + 4;
     endif
     return (desired - current);
 endfunction
-	
+
 //returns the direction (x1,y1) lies from (x0,y0) in the range 0-7.
 // returns error if the 2 points are equal.
 function GetNewFacing(x0,y0,x1,y1)
@@ -675,9 +675,9 @@ function GetNewFacing(x0,y0,x1,y1)
 	var facing;
 	dx := x1 - x0;
 	dy := y1 - y0;
-	
+
 	case(dx)
-		NEGONE: 
+		NEGONE:
 			case(dy)
 				 NEGONE: facing := 7;
 				 ZERO: facing := 6;
@@ -700,7 +700,7 @@ function GetNewFacing(x0,y0,x1,y1)
 		 	endcase
 		 default: facing := error;
 	endcase
-	
+
 	return facing;
 endfunction
 
@@ -713,21 +713,21 @@ function lineBresenham(x0, y0, x1, y1)
     var stepx, stepy;
 
     if (dy < 0)
-      	dy := -dy;  
+      	dy := -dy;
        	stepy := -1;
     else
       	stepy := 1;
     endif
-        
-    if (dx < 0) 
+
+    if (dx < 0)
        	dx := -dx;
        	stepx := -1;
-    else 
+    else
       	stepx := 1;
     endif
-        
-    dy := 2*dy;   
-    dx := 2*dx;    
+
+    dy := 2*dy;
+    dx := 2*dx;
 
     if (dx > dy)
         var fraction;

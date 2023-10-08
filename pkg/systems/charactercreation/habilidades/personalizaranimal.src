@@ -3,8 +3,8 @@
 include ":attributes:attributes";
 include "include/say";
 include ":tn:tngumps";
-include ":gumps:yesno";
-include ":gumps:requestgump";
+include ":gumps:yesNo";
+include ":gumps:requestGump";
 // Falta achar como identificar o domado dele
 program personalizaranimal(who)
 	SendSysMessageEx(who, "Escolha um animal para pesonalizar", SSM_REQUEST);

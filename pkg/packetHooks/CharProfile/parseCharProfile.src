@@ -9,8 +9,8 @@ use datafile;
 
 include ":datafile:datafile";
 include ":gumps:gumps";
-include ":gumps:include/gumps_ex";
-include ":gumps:include/htmlgump";
+include ":gumps:gumps_ex";
+include ":gumps:htmlGump";
 
 CONST PROFILE_MSGTYPE := 0xB8;
 CONST PROFILE_TITLE := "Profile for ";
@@ -87,10 +87,10 @@ program runScript_CharProfileRequest( params )
 			var incognito_descricao := "A fisionomia desse indvíduo é difícil de discernir.";
 			SendHTMLGump(who, "Desconhecido", "<center><img src=\"" + incognito_url + "\" width:200 height:200 align=center></center>" + "<div align=\"left\">" + incognito_descricao + "</div>" );
 		else
-			//who - personagem clicando 
+			//who - personagem clicando
 			//chr - personagem clicado
 			SendHTMLGump(who, chr.name, "<center><img src=\"" + GetObjProperty(chr, "url") + "\" width:200 height:200 align=center></center>" + "<div align=\"left\">" + GetObjProperty(chr, "descricao") + "</div>" );
-			
+
 			if(who.hidden || who.concealed)//Determina se está hidden e mostra a mensagem de estar sendo observado
 				return;
 			else

@@ -1,7 +1,7 @@
 use uo;
 use os;
 use util;
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 
 program textcmd_Create(who, params)
 	var objtype, zheight, range;
