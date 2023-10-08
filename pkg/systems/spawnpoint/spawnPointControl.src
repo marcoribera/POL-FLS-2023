@@ -1,6 +1,7 @@
 use uo;
 use os;
 use util;
+use basicio;
 include ":attributes:attributes";
 include ":tn:boss";
 include ":combat:hitscripts";
@@ -9,21 +10,21 @@ program spawnpointcontrol(spawnpoint)
 
 	var npctemplate := GetObjProperty(spawnpoint, "Spawn");
 	var amount := GetObjProperty(spawnpoint, "Amount");
-	var i, x;
+	var i, x, resetme;
 	var spawnqueue := array{};
 	var childrenSerial := array{};
 	npctemplate := GetObjProperty(spawnpoint, "Spawn");
-	while(npctemplate == "NONE")
-		sleep(60);
+	while(!npctemplate || (npctemplate == "NONE"))
+		sleep(10);
 		npctemplate := GetObjProperty(spawnpoint, "Spawn");
 	endwhile
-	//KillChildren(spawnpoint);
+	KillChildren(spawnpoint);
 	ResetSpawnQueue(spawnpoint);
 	i := RandomInt(20);
 	sleep(i);
 	while(spawnpoint)
 		//verifica se vai ser resetado
-		var resetme := GetObjProperty(spawnpoint, "ResetMe");
+		resetme := GetObjProperty(spawnpoint, "ResetMe");
 		if(resetme)
 			amount := GetObjProperty(spawnpoint, "Amount");
 			KillChildren(spawnpoint);
@@ -33,16 +34,16 @@ program spawnpointcontrol(spawnpoint)
 
 		//tenta pegar o template
 		npctemplate := GetObjProperty(spawnpoint, "Spawn");
-		while(npctemplate == "NONE")
-			sleep(60);
+		while(!npctemplate || (npctemplate == "NONE"))
+			sleep(10);
 			npctemplate := GetObjProperty(spawnpoint, "Spawn");
 		endwhile
 
 		//pega os serials dos npcs e ve se eles tao vivos, se nao tiver marca como "Empty"
 		childrenSerial := GetObjProperty(spawnpoint, "Children");
 		spawnqueue := GetObjProperty(spawnpoint, "SpawnQueue");
-		for( i := 1; i <= amount; i := i + 1 );
-			if( /*(children[i] != error) &&*/ (childrenSerial[i] != "Empty") )
+		for(i:=1; i<=amount; i:=i+1);
+			if((childrenSerial[i] != error) && (childrenSerial[i] != "Empty"))
 				x := SystemFindObjectBySerial(childrenSerial[i]);
 				if((!x) || (x.dead == 1) || (x.master))
 					spawnqueue[i] := "Empty";
@@ -53,7 +54,6 @@ program spawnpointcontrol(spawnpoint)
 		SetObjProperty(spawnpoint, "Children", childrenSerial);
 		SetObjProperty(spawnpoint, "SpawnQueue", spawnqueue);
 		ResetSpawnQueue(spawnpoint);
-
 		//spawna os npcs quando o tempo ta 0
 		spawnqueue := GetObjProperty(spawnpoint, "SpawnQueue");
 		for(i:=1; i<=amount; i:=i+1)
@@ -61,14 +61,9 @@ program spawnpointcontrol(spawnpoint)
 			if((x != "Empty") && (x != "Active"))
 				if(x == 0)
 					//enquanto tiver player perto sleepa, se nao cria o npc
-					while ( 1 )
-						var playernear := hasplayernear(spawnpoint.x, spawnpoint.y, spawnpoint.realm);
+					while (hasplayernear(spawnpoint.x, spawnpoint.y, spawnpoint.realm))
 						//printtextabove(spawnpoint, "teste " + playernear);
-						if (!playernear)
-							break;
-						else
-							sleep(60);
-						endif
+						sleep(60);
 					endwhile
 					childrenSerial[i] := CreateSpawn(spawnpoint);
 					if (GetObjProperty(spawnpoint, "unique") == 1)
@@ -81,7 +76,6 @@ program spawnpointcontrol(spawnpoint)
 				endif
 			endif
 		endfor
-
 		SetObjProperty(spawnpoint, "SpawnQueue", spawnqueue);
 		SetObjProperty(spawnpoint, "Children", childrenSerial);
 		sleep(60);
@@ -89,13 +83,9 @@ program spawnpointcontrol(spawnpoint)
 endprogram
 
 function HasPlayerNear(x, y, realm)
-	var mobs := ListMobilesNearLocation( x, y, LIST_IGNORE_Z, 8, realm );
-	foreach mob in mobs
-		if (mob.acctname ) //se for player e priv de player
-			return 1;
-		endif
-	endforeach
-	return 0;
+	var num_player := ListMobilesNearLocation( x, y, 19, LISTEX_FLAG_PLAYERS_ONLY && LISTEX_FLAG_NORMAL, realm).size();
+  //print("players perto: "+ num_player);
+  return num_player > 0;
 endfunction
 
 
@@ -108,12 +98,12 @@ function KillChildren(spawnpoint)
       if(x != "Empty")
         x := CInt(x);
         i := SystemFindObjectBySerial(x);
-	if (!i.master)
-		SetObjProperty(i, "summoned", 1);
-		SetObjProperty(i, "spawnkill", 1);
-		RevokePrivilege(i, "invul" );
-		ApplyRawDamage(i, GetVital(i, HITS)+3);
-	endif
+      	if (!i.master)
+      		SetObjProperty(i, "summoned", 1);
+      		SetObjProperty(i, "spawnkill", 1);
+      		RevokePrivilege(i, "invul" );
+      		ApplyRawDamage(i, GetVital(i, HITS)+3);
+      	endif
       endif
     endforeach
   endif
@@ -159,11 +149,12 @@ function CreateSpawn(spawnpoint)
  // if((spawn == "orchorde") || (spawn == "undead") || (spawn == "lesserundead") || (spawn == "trolls") || (spawn == "vermin") || (spawn == "dracos") || (spawn == "orcs") || (spawn == "lizardmen") || (spawn == "ratmen"))
     spawn := GetCritter(spawn);
  // else
-    spawn := GetCritter(spawn);
+ // spawn := GetCritter(spawn);
  // endif
   var range := GetObjProperty(spawnpoint, "Range");
   var x, y, z, success := 0;
   var i := 1;
+  var npc;
   while(success == 0)
     if(range == 0)
       x := spawnpoint.x;
@@ -172,47 +163,33 @@ function CreateSpawn(spawnpoint)
     elseif(spawnpoint.z >= 0)
       x := spawnpoint.x + RandomInt(2 * range) - range;
       y := spawnpoint.y + RandomInt(2 * range) - range;
-      z := GetWorldHeight(x, y);
+      z := GetWorldHeight(x, y, spawnpoint.realm);
     elseif(spawnpoint.z < 0)
       x := spawnpoint.x + RandomInt(2 * range) - range;
       y := spawnpoint.y + RandomInt(2 * range) - range;
       z := spawnpoint.z;
     endif
 
-
     if(!loscheck)
-      while(!CheckLosBetween( x, y, z, spawnpoint.x, spawnpoint.y, spawnpoint.z, spawnpoint.realm))
-        if(z < spawnpoint.z)
-          z := z+1;
-        elseif(z < spawnpoint.z+10)
-          z := z+1;
-        else
-          x := spawnpoint.x;
-          y := spawnpoint.y;
-          z := spawnpoint.z;
-          break;
-          sleepms(20);
-        endif
-      endwhile
-      var i := CreateNpcFromTemplate(spawn, x, y, z, 0, spawnpoint.realm);
-      SetObjProperty(i, "spawnpoint", spawnpoint.serial);
+      if(CheckLosBetween( spawnpoint.x, spawnpoint.y, spawnpoint.z, x, y, z, spawnpoint.realm ))
+        npc := CreateNpcFromTemplate(spawn, x, y, z, 0, spawnpoint.realm);
+        success := 1;
+        SetObjProperty(i, "spawnpoint", spawnpoint.serial);
+        return CInt(npc.serial);
+      endif
+    else //Usar em caso de lugares com muitos obstáculos ou probabilidade alta de spawnar travado
+      npc := CreateNpcFromTemplate(spawn, x, y, z, 0, spawnpoint.realm);
       success := 1;
-      return i.serial;
-    else
-      var i := CreateNpcFromTemplate(spawn, x, y, z, 0, spawnpoint.realm);
-      SetObjProperty(i, "spawnpoint", spawnpoint.serial);
-      success := 1;
-      return i.serial;
+      SetObjProperty(npc, "spawnpoint", spawnpoint.serial);
+      return CInt(npc.serial);
     endif
     i := i + 1;
     if(i > 10)
-      var i := CreateNpcFromTemplate(spawn, spawnpoint.x, spawnpoint.y, spawnpoint.z, 0, spawnpoint.realm);
-
+      npc := CreateNpcFromTemplate(spawn, spawnpoint.x, spawnpoint.y, spawnpoint.z, 0, spawnpoint.realm);
       success := 1;
-      SetObjProperty(i, "spawnpoint", spawnpoint.serial);
-      return i.serial;
+      SetObjProperty(npc, "spawnpoint", spawnpoint.serial);
+      return CInt(npc.serial);
     endif
-    sleepms(40);
   endwhile
 endfunction
 

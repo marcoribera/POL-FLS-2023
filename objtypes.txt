@@ -2198,7 +2198,7 @@
 0x6005 level3map cartography
 0x6006 level4map cartography
 0x6007 level5map cartography
-0x6008 permmoongate moongates
+# 0x6008 unused
 0x6009 SystemMoonGate moongates
 # 0x600a - 0x6018 unused
 0x6019 smallstoneandplasterhousedeed house
@@ -3091,7 +3091,9 @@
 0x12000 PedraAventureiro charactercreation
 # 0x12001 - 0x13fff unused
 0x14000 bankersorder currency
-# 0x14001 - 0x18886 unused
+# 0x14001 - 0x16007 unused
+0x16008 permmoongate moongates
+# 0x16009 - 0x18886 unused
 0x18887 vendorpack playervendor
 # 0x18888 - 0x1f00f unused
 0x1f010 Tillerman boat

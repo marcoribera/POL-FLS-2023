@@ -10,10 +10,10 @@ use cfgfile;
 
 include ":datafile:datafile";
 
-// Constats for the moongate gump.
-const MG_CANCEL_BTN	:= 0x0;
-const MG_OKAY_BTN	:= 0x10;
-const MG_LOCATION_START := 0xA00;
+// constants for the moongate gump.
+CONST MG_CANCEL_BTN	:= 0x0;
+CONST MG_OKAY_BTN	:= 0x10;
+CONST MG_LOCATION_START := 0xA00;
 
 
 /*
@@ -71,7 +71,7 @@ function MG_FindDestination(button_id)
 	// Not too happy with how I designed this part. - Austin
 	// Should probably save a list in a datafile and directly access it by the 'select' variable.
 	
-	var config := ReadConfigFile(":moongates:config/moongate");
+	var config := ReadConfigFile(":moongates:moongate");
 	var btn_id := 1;
 	foreach realm in ( Realms() )
 		realm := realm; // To avoid a compiler warning.
@@ -87,9 +87,9 @@ function MG_FindDestination(button_id)
 				return location;
 			endif
 			btn_id := btn_id+1;
-			sleepms(2);
+			SleepMS(2);
 		endforeach
-		sleepms(2);
+		SleepMS(2);
 	endforeach
 	
 endfunction
