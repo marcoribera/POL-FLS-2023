@@ -13,7 +13,7 @@ use os;
 include ":gumps:include/requestgump";
 include "include/string";
 include ":gumps:gumps";
-include ":gumps:include/gumpprompt";
+include ":gumps:gumpPrompt";
 include ":merchants:merchant";
 include ":merchants:item_template";
 include	":merchants:crafthelp";
