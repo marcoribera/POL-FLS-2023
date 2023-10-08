@@ -3,7 +3,7 @@ use os;
 
 include ":unicos:unicos";
 include	":merchants:crafthelp";
-include ":gumps:include/requestgump";
+include "gumps:requestGump";
 include ":gumps:gumps";
 include ":gumps:yesNo";
 

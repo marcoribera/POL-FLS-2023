@@ -4,7 +4,7 @@ use uo;
 include ":attributes:attributes";
 include "include/say";
 include ":charactercreation:habilidades";
-include ":gumps:include/requestgump";
+include "gumps:requestGump";
 include ":gumps:yesNo";
 include ":charactercreation:habilidades";
 

@@ -8,7 +8,7 @@ include ":gumps:gumps";
 include "include/say";
 include ":tn:tngumps";
 include ":gumps:yesNo";
-include ":gumps:include/requestgump";
+include "gumps:requestGump";
 include ":attributes:attributes";
 include ":attributes:stats";
 include ":timedScripts:timedScripts";
