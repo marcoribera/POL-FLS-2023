@@ -1,0 +1,164 @@
+
+use uo;
+
+include "include/say";
+include "include/client";
+include ":timedScripts:timedScripts";
+include "include/sounds";
+include "include/damage";
+include "include/facings";
+
+program fireweapon(who, item)
+
+	var weapon := GetEquipmentByLayer(who, LAYER_HAND2);
+	if (weapon.serial != item.serial)
+		SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
+		return;
+	endif
+
+	var firecd := TS_GetCooldown(who, "fireweapon");
+	if (firecd )
+		SendSysMessageEx(who, "Voce so podera disparar novamente depois de alguns segundos.");
+		return;
+	endif
+
+	var balas := cint(GetObjProperty(item, "balas"));
+	if (balas <= 0)
+		SendSysMessageEx(who, "A arma esta descarregada, escolha uma municao para carrega-la.", SSM_FAIL);
+		var ammo := Target(who);
+		if (!ammo)
+			SendSysMessageEx(who, "Cancelado.");
+			return;
+		endif
+		var valid := 0;
+		if (ammo.objtype == 0x9090)
+            valid := 1;
+       endif
+
+		if (ammo.movable && Accessible(who, ammo) && valid)
+            //var locinfo := GetMapInfo( who.x, who.y, who.realm );
+            //print("locinfo " + locinfo);
+            //var loc := TargetCoordinates(who);
+            //print("loc " + loc);
+            //var same_position := CoordinateDistance(who.x, who.y, loc.x, loc.y);
+            //print("same_position " + same_position);
+            var current_x := who.x;
+            var current_y := who.y;
+            while (who.x == current_x && who.y == current_y)
+                if (subtractamount(ammo, 1))
+                    SendSysMessageEx(who, "Escolha a polvora.");
+                    var select_powder := Target(who);
+                    if (select_powder != 0xF8C)
+                        SendSysMessageEx(who, "Voce precisa selecionar polvora.");
+                    else 
+                        printtext(who, "*Coloca polvora na arma*");
+                        subtractamount(0xF8C, 1);
+                    endif   
+                    printtext(who, "*Socando a polvora*");
+                    var i := 0;
+                    while (i < 4)
+                        PlaySoundEffect(who, SFX_HIT_19);
+                        sleep(1);
+                        i++;
+                    endwhile
+                    printtext(who, "*Municiando o equipamento*");
+                    for (i := 0; i < 2; i++)
+                        PlaySoundEffect(who, SFX_FARMING);
+                        sleep(2);
+                    endfor
+                    PlaySoundEffect(who, SFX_HIT_11);
+                    SetObjProperty(item, "balas", 1);
+                    printtext(who, "*Arma recarregada*");
+                    return;
+                endif
+            endwhile
+            if (!GetObjProperty(item, "balas") && (who.x != current_x || who.y != current_y))
+                SendSysMessage(who, "Voce so consegue recarregar essa arma parado.");
+                return;
+            endif
+		else
+			SendSysMessageEx(who, "Item invalido.", SSM_FAIL);
+			return;
+		endif		
+	endif
+
+	SendSysMessageEx(who, "Escolha o alvo.", SSM_REQUEST);
+	var targ := Target(who, TGTOPT_CHECK_LOS + TGTOPT_HARMFUL);
+	if (!targ)
+		SendSysMessageEx(who, "Cancelado.", SSM_FAIL);
+		return;
+	endif
+	if (targ.isa(POLCLASS_ITEM))
+		SendSysMessageEx(who, "Alvo invalido.", SSM_FAIL);
+		return;
+	endif
+
+	var cd := 3;
+
+	TurnObjectToward(who, targ.x, targ.y);
+	PrintText(who, "*mirando em *" + targ.name);
+	who.frozen := 1;
+	sleep(cd);
+	who.frozen := 0;
+
+	//testa 2x
+	weapon := GetEquipmentByLayer(who, LAYER_HAND2);
+	if (weapon.serial != item.serial)
+		SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
+		return;
+	endif
+
+	if ( !CheckLosBetween(who.x, who.y, who.z, targ.x, targ.y, targ.z, who.realm))
+		SendSysMessageEx(who, "O alvo saiu do seu campo de visao.", SSM_FAIL);
+		return;
+	endif 
+	
+	balas := balas - 1;
+	SetObjProperty(item, "balas", balas);
+
+	var dmg := 40;
+	var bonus := 0;
+	var dist := distance(who, targ);
+	if (dist < 2)
+		bonus := dmg*0.5;
+	elseif (dist > 5)
+		if (dist > 12)
+			bonus := 0-dmg*0.6;
+		elseif (dist > 8 )
+			bonus := 0-dmg*0.3;
+		endif
+	endif
+
+	//pocao fraca reduz o bonus do dano em 20% a forte aumenta o dano em 30%
+	var ammotype := GetObjProperty(item, "tipo");
+	if (ammotype == 1)
+		bonus := bonus - dmg * 0.2;
+	elseif (ammotype == 3)
+		bonus := bonus + dmg * 0.3;
+	endif
+
+	var finaldmg := bonus + dmg;
+	if (finaldmg < 10)
+		finaldmg := 10;
+	endif
+
+	TS_StartCooldown(who, "fireweapon", 15);
+    PlayObjectCenteredEffect(who, GFX_FIZZLE, 5, 50);
+	PlaySoundEffect(who, SFX_EXPLOSION_8); // pistol
+	DamageFLS(targ, finaldmg,  DMG_FORCED, who);
+
+    /**
+    	SFX_EXPLOSION_1			:= 0x11C,
+        SFX_EXPLOSION_2			:= 0x11D,
+        SFX_EXPLOSION_3			:= 0x11E, // rifle
+        SFX_EXPLOSION_4			:= 0x11F,
+        SFX_EXPLOSION_5			:= 0x306,
+        SFX_EXPLOSION_6			:= 0x307,
+        SFX_EXPLOSION_7			:= 0x308, // Mosquete
+        SFX_EXPLOSION_8			:= 0x309, // pistol?
+        SFX_EXPLOSION_9			:= 0x30A,
+        SFX_EXPLOSION_10		:= 0x4D0, // falhar disparo por causa da chuva
+    */
+
+
+endprogram

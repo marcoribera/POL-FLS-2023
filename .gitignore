@@ -35,7 +35,7 @@ scripts/runecl
 
 # UOConvert Files
 config/multis.cfg
-#config/tiles.cfg
+config/tiles.cfg
 config/landtiles.cfg
 
 # Muls
