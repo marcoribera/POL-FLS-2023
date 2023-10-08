@@ -10,7 +10,7 @@
 use uo;
 use os;
 
-include "gumps:requestGump";
+include ":gumps:include/requestgump";
 include "include/string";
 include ":gumps:gumps";
 include ":gumps:gumpPrompt";

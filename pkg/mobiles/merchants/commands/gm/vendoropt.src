@@ -2,23 +2,23 @@ use uo;
 
 include ":tn:tngumps";
 include "include/say";
-include "gumps:requestGump";
+include ":gumps:include/requestgump";
 
 program vendoropt(who)
 
 	SendSysMessageEx(who, "Escolha o npc vendor", SSM_REQUEST);
 	var targ := Target(who);
-
+	
 	if (!targ)
 		SendSysMessageEx(who, "Cancelado.", SSM_FAIL);
 		return;
 	endif
-
+	
 	if (!targ.npctemplate)
 		SendSysMessageEx(who, "Cancelado.", SSM_FAIL);
 		return;
 	endif
-
+	
 	var opt := array;
 	if ( GetObjProperty(targ, "secret"))
 		opt.append(1);
@@ -116,5 +116,5 @@ program vendoropt(who)
 			endif
 
 	endforeach
-
+	
 endprogram
