@@ -3,9 +3,9 @@ use datafile;
 
 include ":gumps:gumps";
 include ":gumps:gumps_ex";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":ghaia:ghaia";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 
 program gumpspawn(who)
 
@@ -19,9 +19,9 @@ function createChestSpawngump(who, type)
 	if (!df)
 		df := CreateDataFile( ":tn:chestspawns", DF_KEYTYPE_INTEGER );
 	endif
-	
+
 	var spawns := array;
-	
+
 	if (type == 1)
 		foreach spawn in (df.keys())
 			var spawnpoint := SystemFindObjectBySerial(spawn);
@@ -50,38 +50,38 @@ function createChestSpawngump(who, type)
 					spawns.append(spawnpoint);
 				endif
 			endforeach
-		endif		
+		endif
 	endif
 
 	var gump := GFCreateGump();
 
         GFDisposable(gump, 0);
-	GFResizePic(gump, 0, 25, 3600, 380, 470);	
+	GFResizePic(gump, 0, 25, 3600, 380, 470);
 	GFResizePic(gump, 15, 40, 0x13BE, 350, 440);
 	GFTextMid(gump, 20, 50, 250, 1153, "Spawns");
-	
+
 	GFPage(gump, 0);
 	GFTextLine(gump, 40, 70, 1153, "Lista de todos");
 	GFTextLine(gump, 40, 85, 1153, "Listar por nivel");
 	GFTextLine(gump, 40, 100, 1153, "Listar por regiao");
-	
+
 	GFTextLine(gump, 200, 85, 1153, "Editar Selecionados");
 	GFTextLine(gump, 200, 100, 1153, "Deletar Selecionados");
-	
+
 	GFTextLine(gump, 40, 145, 1153, "Lvl");
 	GFTextLine(gump, 70, 145, 1153, "Ran");
 	GFTextLine(gump, 100, 145, 1153, "Amt");
 	GFTextLine(gump, 130, 145, 1153, "Time");
 	GFTextLine(gump, 160, 145, 1153, "Loot");
 	GFTextLine(gump, 240, 145, 1153, "X Y Z");
-	
+
 	GFAddButton( gump, 20, 73, 2103, 2104, 1, 1);
 	GFAddButton( gump, 20, 88, 2103, 2104, 1, 2);
 	GFAddButton( gump, 20, 103, 2103, 2104, 1, 3);
-	
+
 	GFAddButton( gump, 180, 88, 2103, 2104, 1, 7);
 	GFAddButton( gump, 180, 103, 2103, 2104, 1, 8);
-	
+
 	var x := 40;
 	var y := 160;
 	var i := 1;
@@ -110,7 +110,7 @@ function createChestSpawngump(who, type)
 			GFAddButton(gump, 350, 160, 2436, 2436, GF_PAGE_BTN, page-1);
 		endif
 	endforeach
-	
+
 	var result := GFSendGump(who, gump);
 	if (result[0])
 		if (result[0] == 7)
@@ -133,7 +133,7 @@ function createChestSpawngump(who, type)
 				SetObjProperty(x, "level",    lvl);
 				SetObjProperty(x, "duration", time);
 				SetObjProperty(x, "race", "Humano");
-				SetObjProperty(x, "class", loot);	
+				SetObjProperty(x, "class", loot);
 			endforeach
 		elseif (result[0] == 8 )
 			var modificar := array;

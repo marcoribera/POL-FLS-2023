@@ -7,8 +7,8 @@ include ":ghaia:ghaia";
 include "include/sysEvent";
 include ":tn:quests";
 include ":gumps:gumps";
-include ":gumps:yesno";
-include ":gumps:requestgump";
+include ":gumps:yesNo";
+include ":gumps:requestGump";
 include ":tn:tngumps";
 include ":spells:tnmagery";
 include ":timedScripts:timedScripts";
@@ -24,12 +24,12 @@ program ghaghaia()
 
   EnableEvents( SYSEVENT_SPEECH, 5);
   //EnableEvents( SYSEVENT_ENTEREDAREA + SYSEVENT_LEFTAREA, 2 );
-  
+
   SetWarMode( 0 );
   //set_priority(10);
   var ev;
   var next_wander := ReadGameClock() + 10;
-  
+
   while (me)
     ev := os::wait_for_event( 5 );
     	//printtextabove(me, "event " + ev);
@@ -121,7 +121,7 @@ function SetupNewQuest(me)
 		if (script == error)
 			PrintTextAbove(me, "Erro " + script);
 		endif
-		
+
 		//printtextabove(me, "iniciou " + selected);
 		EraseObjProperty(self(), "nextQuest");
 	endif

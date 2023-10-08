@@ -2,21 +2,21 @@ use uo;
 use os;
 
 include ":attributes:attributes";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":fls_magery:basicMagery";
 
 program cureScript(params)
 	var mobile := params[1];
-	
-	var points := CInt(GetObjProperty(mobile, "#AgilityMod"));	
+
+	var points := CInt(GetObjProperty(mobile, "#AgilityMod"));
 	points := points * (-1);
 	AP_ModifyStatMod(mobile, DEXTERITY, points);
 	EraseObjProperty(mobile, "#AgilityMod");
 
-	points := CInt(GetObjProperty(mobile, "#StrengthMod"));	
+	points := CInt(GetObjProperty(mobile, "#StrengthMod"));
 	points := points * (-1);
 	AP_ModifyStatMod(mobile, STRENGTH, points);
-	EraseObjProperty(mobile, "#StrengthMod");	
+	EraseObjProperty(mobile, "#StrengthMod");
 
 	if ( !mobile.npctemplate) //se quem ta com o efeito da magia nao eh um npc
 		var serial := GetObjProperty(mobile, "mage");

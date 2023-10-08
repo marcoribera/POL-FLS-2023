@@ -3,7 +3,7 @@ use uo;
 
 include "include/say";
 include ":taming:taming";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":attributes:attributes";
 include ":timedScripts:timedScripts";
 include "include/facings";
@@ -16,10 +16,10 @@ program tirodesfocado(who)
 	if (who.warmode == 1)
 		who.warmode := 0;
 	endif
-	
+
 	var cfg:=ReadConfigFile(":combat:itemdesc");
 	var elem := FindConfigElem(cfg, who.weapon.objtype);
-	
+
 	if (!CheckLOSAt(who, targ.x, targ.y, targ.z))
 		SendSysMessageEx(who, "O Alvo nao esta visivel para voce.", SSM_FAIL);
 		return 1;
@@ -33,10 +33,10 @@ program tirodesfocado(who)
 		SendSysMessageEx(who, "Voce precisa estar usando um arco.", SSM_FAIL);
 		return 1;
 	endif
-	
+
 	var aljavas := array{0x791c, 0x2fb7};
 	var aljava := GetEquipmentByLayer(who, 0x14);
-	
+
 		if (aljava.objtype in aljavas)
 			aljava := GetEquipmentByLayer(who, 0x14);
 		else
@@ -47,35 +47,35 @@ program tirodesfocado(who)
 		SendSysMessage(who, "Voce nao definiu o tipo de flecha que vai usar. [clique 2x no arco e na flecha]");
 		return 1;
     endif
-    
+
     var in_aljava := 0;
     foreach arrow in (EnumerateItemsInContainer(aljava))
 		if (arrow.serial == ammo)
 			in_aljava := 1;
         endif
     endforeach
-    if (in_aljava == 0) 
+    if (in_aljava == 0)
         return 1;
     endif
-    
+
     if ( SubtractAmount( ammo, 1 ) == error)
 		SendSysMessage(who, "Voce nao definiu o tipo de flecha que vai usar. [clique 2x no arco e na flecha]");
 		return 1;
 	endif
-	
+
 	PlaySoundEffect(who, 0x235);
 	Performaction(who, elem.Anim);
 	PlayMovingEffectXYZ( who.x, who.y, who.z+3, targ.x, targ.y, targ.z, elem.ProjectileAnim, 10, 10, 0, who.realm);
 	sleepms(35);
 	PlayMovingEffectXYZ( who.x, who.y, who.z+3, targ.x, targ.y, targ.z, 0x377A, 6, 10, 0, who.realm);
-	
+
 	var distancia := GetCoordsInLine(who.x, who.y, targ.x, targ.y);
-	
+
 	//calculo damage
 	var dmgList := dictionary;
 	dmgList := getNewDamageList(who);
 	var basedamage := CalculateRawDamage(who, who.weapon);
-	
+
 	//lista inimigos e aplica dano
 	var alreadydamaged := array{};
 	foreach pontos in distancia
@@ -94,4 +94,4 @@ program tirodesfocado(who)
 
 	who.warmode := 1;
 	CreateItemAtLocation( targ.x, targ.y, targ.z, GetObjType( ammo ), 1, who.realm);
-endprogram 
+endprogram

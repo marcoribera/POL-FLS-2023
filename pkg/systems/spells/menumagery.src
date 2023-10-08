@@ -4,8 +4,8 @@ use uo;
 include ":brainai:npcUtil";
 include ":tn:tngumps";
 include "include/say";
-include ":gumps:yesno";
-include ":gumps:requestgump";
+include ":gumps:yesNo";
+include ":gumps:requestGump";
 include ":combat:weaponInfo";
 include ":charactercreation:habilidades";
 

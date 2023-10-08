@@ -3,7 +3,7 @@ use uo;
 
 include ":gumps:gumps";
 include ":gumps:gumps_ex";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include "include/say";
 
 
@@ -44,7 +44,7 @@ function SendPinInfoGump(who,  map)
 		y := y + 20;
 		id := id + 1;
 	endforeach
-	
+
 	var input := GFSendGump(who, gumpRP);
 
 	if (input[0] > 200 )
@@ -62,7 +62,7 @@ function SendPinInfoGump(who,  map)
 			endif
 		endforeach
 		SetObjProperty(map, "pininfo", newpininfo);
-		
+
 	elseif (input[0] > 100)
 		var nome := RequestGump(who, "Digite o nome dessa marca.");
 		pininfo[input[0]-100].name := nome;

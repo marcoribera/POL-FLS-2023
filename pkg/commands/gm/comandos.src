@@ -14,7 +14,7 @@ include ":attributes:vitals";
 include ":combat:hitscripts";
 include "include/say";
 include "include/damage";
-include ":gumps:htmlgump";
+include ":gumps:htmlGump";
 
 include ":gumps:gumps";
 include ":gumps:gumps_ex";
@@ -32,7 +32,7 @@ endprogram
 
 function BuildIndexGump(who,comandos)
 	Set_Priority(100);
-	var desc:=dictionary;		
+	var desc:=dictionary;
 	var gump := GFCreateGump();
 	GFClosable(gump, 1);
 	var i:=2;
@@ -43,17 +43,17 @@ function BuildIndexGump(who,comandos)
 	var counter := 1;
 	var page_num := 1;
 	GFTextMid(gump, 10, 20, 280, 2100, "Comandos");
-	
+
 	GFPage(gump, page_num);
 	foreach comando in (comandos.keys())
-	
+
 
 		GFAddButton(gump, 20, y_pos+3, 2117, 2118, GF_CLOSE_BTN, CStr(comandos[comando]));
 		GFTextLine(gump, 40, y_pos, 2100, comando);
 
 		y_pos := y_pos+20;
 		counter := counter+1;
-		
+
 		if ( counter > 20 )
 			counter := 1;
 			y_pos := 40;
@@ -72,5 +72,5 @@ function BuildIndexGump(who,comandos)
 		SendHTMLGump(who, "Comandos",desc[input[0]]);
 		BuildIndexGump(who,comandos);
 	endif
-	
+
 endfunction

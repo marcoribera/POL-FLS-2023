@@ -5,7 +5,7 @@ include ":attributes:attributes";
 include "include/say";
 include ":charactercreation:habilidades";
 include ":gumps:include/requestgump";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":charactercreation:habilidades";
 
 program useBook(who,book)

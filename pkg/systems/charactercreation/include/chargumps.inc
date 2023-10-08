@@ -7,14 +7,14 @@ include ":gumps:gumps";
 include "include/arrays";
 include ":fls_core:fls_chargumps_ex";
 include ":attributes:attributes";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":tn:characters";
 include "include/say";
 
-  var skilllist := array{"Anatomy", "Alchemy", "MagicLore", "Meditation",   "AnimalLore", "ItemLore", "Survival", "AnimalTaming", "Cartography", "DetectingHidden", "Healing", "ResistingSpells", "Cooking", "Musicianship", 
+  var skilllist := array{"Anatomy", "Alchemy", "MagicLore", "Meditation",   "AnimalLore", "ItemLore", "Survival", "AnimalTaming", "Cartography", "DetectingHidden", "Healing", "ResistingSpells", "Cooking", "Musicianship",
 "Hiding", "Stealth", "Lockpicking", "RemoveTrap", "Poisoning", "Stealing",  "Carpentry", "Blacksmithy", "Tailoring", "Tinkering", "Skinning",
-"Fencing", "Archery", 
-"Swordsmanship", "MaceFighting", "Wrestling", "Parry", "Axe", "PoleArms", "Staff", "Tactics", "Lumberjacking", "Mining", 
+"Fencing", "Archery",
+"Swordsmanship", "MaceFighting", "Wrestling", "Parry", "Axe", "PoleArms", "Staff", "Tactics", "Lumberjacking", "Mining",
                       "Masonry" };
 
 function SelectSkills(who, nivel, value)
@@ -25,7 +25,7 @@ function SelectSkills(who, nivel, value)
 
 	GFClosable(chargump, 0);
 	GFDisposable(chargump, 0);
-	GFResizePic(chargump, 0, 25, 3600, 400, 430);	
+	GFResizePic(chargump, 0, 25, 3600, 400, 430);
 	GFResizePic(chargump, 15, 40, 0x13BE, 370, 400);
 
 
@@ -37,7 +37,7 @@ function SelectSkills(who, nivel, value)
   var y := 100;
   var i;
   GFSetRadioGroup(chargump, 1);
-  
+
   for (  i :=  1; i <= skilllist.size(); i := i + 1)
       var skillAux := skilllist[i];
       if (skillAux == "ItemLore")
@@ -55,17 +55,17 @@ function SelectSkills(who, nivel, value)
       var nstat := stat[1]+stat[2]+stat[3];
       GFTextLine(chargump, x, y, 1153, skilllist[i] + " [" + lower(nstat)+"]");
       GFRadioButton(chargump, x-20, y+3, 2360, 2361, 0, i);
-  
+
       y := y + 15;
-  
+
       if ( i == 21 )
         x := x + 140;
         y := 100;
       endif
-  
+
       sleepms(2);
-  endfor  
-  
+  endfor
+
 	GFAddButton(chargump, 310, 400, 4502, 4502, 1, 100 );
 	GFTextLine(chargump, 270, 410, 1153, "Próximo");
 
@@ -78,10 +78,10 @@ function SelectSkills(who, nivel, value)
       endif
      endforeach
   endif
-  
+
   var selectedskill := skilllist[selected];
   SendSysMessageEx(who, "Voce escolheu para " + nivel + " a skill: " + selectedskill + " ", SSM_INFO );
-  
+
     if (selectedskill == "Survival")
       selectedskill := "Camping";
     elseif (selectedskill == "ItemLore")
@@ -91,8 +91,8 @@ function SelectSkills(who, nivel, value)
     elseif ( selectedskill == "MagicLore")
       selectedskill := "Inscription";
     endif
-    AP_SetTrueSkill(who, selectedskill, value);  
-  
+    AP_SetTrueSkill(who, selectedskill, value);
+
     skilllist.erase(selected);
 
 endfunction
@@ -119,7 +119,7 @@ function TN_AttributesGump(who, byref chardata)
 		endif
 		repeatGump := GumpAttr(who, chardata, stats, str, int, vit, dex);
     sleepms(2);
-	endwhile	
+	endwhile
 
     SetObjProperty(who, "chardata", chardata);
 
@@ -254,7 +254,7 @@ function KitGump(who)
 	GFResizePic(gump, 0, 25, 3600, 600, 480);
 	GFResizePic(gump, 15, 40, 0x13BE, 570, 450);
 	GFTextMid(gump, 20, 50, 250, 1153, "Escolha seu kit");
-  
+
   GFTextLine(gump, 50, 80, 1153, "Veterano" );
   GFTextLine(gump, 50, 100, 1153, "Criado por Lobos" );
   GFTextLine(gump, 50, 120, 1153, "Covarde" );
@@ -268,7 +268,7 @@ function KitGump(who)
   GFTextLine(gump, 50, 280, 1153, "Herança" );
   GFTextLine(gump, 50, 300, 1153, "Criado por Monges" );
   GFTextLine(gump, 50, 320, 1153, "Encantador de Cobras" );
-  
+
   GFTextLine(gump, 300, 80, 1153, "Crescido nas Arenas" );
   GFTextLine(gump, 300, 100, 1153, "Viajante de Circo" );
   GFTextLine(gump, 300, 120, 1153, "Doentio" );

@@ -2,7 +2,7 @@ use uo;
 use cfgfile;
 
 include "include/say";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":charactercreation:habilidades";
 include ":spells:swordmage";
 include ":attributes:attributes";

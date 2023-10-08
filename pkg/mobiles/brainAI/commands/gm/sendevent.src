@@ -6,13 +6,13 @@
 use uo;
 use os;
 
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 
 program textcmd_sendEvent(who, event)
 	if ( !event )
 		event := CInt(RequestGump(who, "Enter event value", "Place a + or - at the begining if it is a number."));
 	endif
-	
+
 	if ( event[1] in {"+", "-"})
 		event := CInt(event);
 	endif
@@ -20,7 +20,7 @@ program textcmd_sendEvent(who, event)
 	var ev := struct;
 	ev.+source := who;
 	ev.+type := event;
-	
+
 	var targ := target(who);
 	if ( targ )
 		SendEvent(targ, ev);
@@ -28,6 +28,6 @@ program textcmd_sendEvent(who, event)
 	else
 		SendSysMessage(who, "Cancelled");
 	endif
-	
+
 	return 1;
 endprogram

@@ -1,9 +1,9 @@
- 
+
 use uo;
 use vitals;
 include ":gumps:gumps";
-include ":gumps:yesno";
-include ":gumps:requestgump";
+include ":gumps:yesNo";
+include ":gumps:requestGump";
 include ":tn:tngumps";
 include ":tn:equipment";
 include "include/client";
@@ -25,7 +25,7 @@ program formaselvagem(who)
 
 	var gump := GFCreateGump();
         GFDisposable(gump, 0);
-	GFResizePic(gump, 0, 25, 3600, 220, 350);	
+	GFResizePic(gump, 0, 25, 3600, 220, 350);
 	GFResizePic(gump, 15, 40, 0x13BE, 190, 320);
 	GFTextLine(gump, 60, 50, 1153, "Forma Selvagem");
 
@@ -83,7 +83,7 @@ function Destransforma(who)
 		var hitsmod := GetObjProperty(who, "hitsmod");
 		SetObjProperty(who, "hitsmod", hitsmod - 10);
 		recalcvitals(who);
-		who.resist_physical_mod := who.resist_physical_mod - 10;		
+		who.resist_physical_mod := who.resist_physical_mod - 10;
 	endif
 
 	var metamorfose := GetObjProperty(who, "metamorfose");
@@ -132,7 +132,7 @@ function Transforma(who, animal)
 		SetObjProperty(who, "hitsmod", hitsmod + 20);
 		recalcvitals(who);
 		healdamage(who,  20);
-		who.resist_physical_mod := who.resist_physical_mod + 20;		
+		who.resist_physical_mod := who.resist_physical_mod + 20;
 	elseif (animal == "aguia")
 		template := ":brainai:eagle";
 		snd := 144;

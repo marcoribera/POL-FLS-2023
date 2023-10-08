@@ -13,9 +13,9 @@ use os;
 include ":attributes:attributes";
 include ":brainAI:npcUtil";
 include ":gumps:gumps";
-include ":gumps:gumpprompt";
-include ":gumps:requestgump";
-include ":gumps:yesno";
+include ":gumps:gumpPrompt";
+include ":gumps:requestGump";
+include ":gumps:yesNo";
 include ":containers:storageAreas";
 //include ":weapons:weaponInfo";
 include "include/arrays";
@@ -608,7 +608,7 @@ function PrivEdit(who, targ, input_info)
 	if ( who.cmdlevel < 4 )
 		SendSysMessage(who, "Privileges can only be edited by administrators and above.");
 	endif
-	
+
 	var priv_name := input_info.name;
 
 	if ( targ.Enabled(priv_name) )

@@ -1,8 +1,8 @@
 use uo;
 use cfgfile;
 
-include ":gumps:yesno";     
-include ":gumps:requestgump";
+include ":gumps:yesNo";
+include ":gumps:requestGump";
 
 program totem(who, wand)
 
@@ -15,7 +15,7 @@ program totem(who, wand)
 
 	var gump := GFCreateGump();
         GFDisposable(gump, 0);
-	GFResizePic(gump, 0, 25, 3600, 270, 400);	
+	GFResizePic(gump, 0, 25, 3600, 270, 400);
 	GFResizePic(gump, 15, 40, 0x13BE, 240, 370);
 	GFTextLine(gump, 95, 50, 1153, "Totemistas");
 
@@ -34,7 +34,7 @@ program totem(who, wand)
 	endforeach
 
 	var input := GFSendGump(who, gump);
-	
+
 	if (input[0] >= 1)
 		var spellid := struct;
 		spellid.+id := spells[input[0]];

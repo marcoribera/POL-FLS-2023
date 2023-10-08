@@ -4,9 +4,9 @@
 use uo;
 
 include "include/client";
-include ":gumps:requestgump";
-include ":gumps:gumpprompt";
-include ":gumps:yesno";
+include ":gumps:requestGump";
+include ":gumps:gumpPrompt";
+include ":gumps:yesNo";
 
 program command_bcast(who, text)
 

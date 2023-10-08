@@ -7,14 +7,14 @@ include "include/client";
 include "include/say";
 include ":gumps:gumps";
 include ":gumps:gumps_ex";
-include ":gumps:htmlgump";
-include ":gumps:yesno";
+include ":gumps:htmlGump";
+include ":gumps:yesNo";
 include ":datafile:datafile";
 
 function LogAccount(accname, msg)
 
 	var acc := FindAccount(accname);
-	
+
 	if (acc)
 		var logs := acc.getprop("rplog");
 		if (logs == error)
@@ -47,7 +47,7 @@ function incGrade(who)
 	endif
 
 	setGrade(who, nota);
-	
+
 endfunction
 
 program fichaRP(who, text)
@@ -75,7 +75,7 @@ program fichaRP(who, text)
 					anotacoes := ficharp_elem.GetProp("Anotacoes"); //guarda as anotações
 				endif
 				ficharp_data_file.DeleteElement(Hex(who.serial));
-				
+
 				//EraseObjProperty(who, "nota");
 				EraseObjProperty(who, "fichaRP");
 				RecalcVitals(who);
@@ -106,9 +106,9 @@ program fichaRP(who, text)
 		GFTextMid(gumpRP, 0, 330, 300, 600, "nao escreva alem dele!");
 		GFAddButton(gumpRP, 95, 360, 2128, 2129, GF_CLOSE_BTN, 100);
 		GFAddButton(gumpRP, 155, 360, 2119, 2120, GF_CLOSE_BTN, 200);
-	
+
 		input := GFSendGump(who, gumpRP);
-		
+
 		if (input[0] == 200)
 			SendSysMessage(who, "Cancelado.");
 			return 0;
@@ -142,9 +142,9 @@ program fichaRP(who, text)
 		GFTextMid(gumpRP, 0, 330, 300, 600, "nao escreva alem dele!");
 		GFAddButton(gumpRP, 95, 360, 2128, 2129, GF_CLOSE_BTN, 100);
 		GFAddButton(gumpRP, 155, 360, 2119, 2120, GF_CLOSE_BTN, 200);
-	
+
 		input := GFSendGump(who, gumpRP);
-		
+
 		if (input[0] == 200)
 			SendSysMessage(who, "Cancelado.");
 			return 0;
@@ -189,7 +189,7 @@ program fichaRP(who, text)
 			SendSysMessage(who, player.name+" nao tem ficha de RP.");
 			return 0;
 		endif
-		var anotacoes := ficharp_elem.GetProp("Anotacoes"); 
+		var anotacoes := ficharp_elem.GetProp("Anotacoes");
 		var comportamento := ficharp_elem.GetProp("Comportamento");
 		var objetivos := ficharp_elem.GetProp("Objetivos");
 
@@ -243,9 +243,9 @@ program fichaRP(who, text)
 		GFTextMid(gumpRP, 0, 330, 300, 600, "e necessário recriar a ficha!");
 		GFAddButton(gumpRP, 95, 360, 2128, 2129, GF_CLOSE_BTN, 100);
 		GFAddButton(gumpRP, 155, 360, 2119, 2120, GF_CLOSE_BTN, 200);
-	
+
 		input := GFSendGump(who, gumpRP);
-		
+
 		if (input[0] == 200)
 			SendSysMessage(who, "Cancelado.");
 			return 0;
@@ -287,7 +287,7 @@ program fichaRP(who, text)
 		if (!anotacoes)
 			anotacoes := Array;
 		endif
-		
+
 		//if (nota == error)
 		//	nota := "";
 		//endif
@@ -308,9 +308,9 @@ program fichaRP(who, text)
 		GFTextMid(gumpRP, 0, 330, 300, 600, "ficha de RP!");
 		GFAddButton(gumpRP, 95, 360, 2128, 2129, GF_CLOSE_BTN, 100);
 		GFAddButton(gumpRP, 155, 360, 2119, 2120, GF_CLOSE_BTN, 200);
-	
+
 		input := GFSendGump(who, gumpRP);
-		
+
 		if (input[0] == 200)
 			SendSysMessage(who, "Cancelado.");
 			return 0;
@@ -331,14 +331,14 @@ program fichaRP(who, text)
 			PrintTextAbovePrivate(player, "*Voce Recebeu Novas Avaliacoes*", player);
 			SendSysMessageEx(player, "Voce Recebeu Novas Avaliacoes", SSM_INFO);
 /*			if ( anotacoes.size() > 0 )
-				str := 
+				str :=
 				if (
 				anotacoes[anotacoes.size()+1] := GFExtractData(input, txt1);
 			else
 				anotacoes[1] := GFExtractData(input, txt1);
 			endif*/
 		endif
-	
+
 		var i := 0;
 		for( i := 0; i < anotacoes.size(); i := i +1)
 			if (anotacoes[i] == error)
@@ -377,7 +377,7 @@ program fichaRP(who, text)
 			SendSysMessage(who, "Voce nao tem acesso a esse comando!");
 			return 0;
 		endif
-		
+
 	elseif (SplitWords(text)[1] == "excluir")
 
 

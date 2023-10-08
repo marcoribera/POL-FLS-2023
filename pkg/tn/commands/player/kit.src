@@ -5,18 +5,18 @@ use math;
 
 include ":timedScripts:timedScripts";
 include ":gumps:gumps";
-include ":gumps:yesno";
-include ":gumps:requestgump";
+include ":gumps:yesNo";
+include ":gumps:requestGump";
 include ":tn:tngumps";
 include ":spells:tnmagery";
 
 program kit(who)
-	
-	if ( GetObjProperty(who, "kit") == "movidopelahonra") 
+
+	if ( GetObjProperty(who, "kit") == "movidopelahonra")
 		SetObjProperty(who, "kit", "movidopelagloria");
 	endif
 
-	if ( GetObjProperty(who, "kit") == "movidopelacompaixao") 
+	if ( GetObjProperty(who, "kit") == "movidopelacompaixao")
 		var lastuse := Cint(GetObjProperty(who, "curamao"));
 		if ( lastuse != 0)
 			if ( readGameClock() >= lastuse + 1800 )
@@ -30,7 +30,7 @@ program kit(who)
 			SetObjProperty(who, "lastuse", readgameclock());
 			healhand(who);
 		endif
-	elseif ( GetObjProperty(who, "kit") == "movidopelagloria") 
+	elseif ( GetObjProperty(who, "kit") == "movidopelagloria")
 		var lastuse := Cint(GetObjProperty(who, "curamao"));
 		if ( lastuse != 0)
 			if ( readGameClock() >= lastuse + 3600)
@@ -43,12 +43,12 @@ program kit(who)
 		else
 			TS_StartTimer(who, "gloria", 10);
 			SetObjProperty(who, "lastuse", readgameclock());
-		endif	
+		endif
 	endif
 
 endprogram
-		
-		
+
+
 function healhand(who)
 	var alvo := Target(who);
 	SendSysMessage(who, "Quem voce deseja curar?");
@@ -65,5 +65,5 @@ function healhand(who)
 		return;
 	endif
 	HealDamage(alvo, 50);
-	SetObjProperty(who, "curamao", ReadGameClock());		
+	SetObjProperty(who, "curamao", ReadGameClock());
 endfunction

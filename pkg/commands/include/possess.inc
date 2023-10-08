@@ -7,7 +7,7 @@ include ":attributes:skills";
 include ":datafile:datafile";
 include ":attributes:attributes";
 include ":attributes:stats";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 
 function possess (me, npc)
 	if (GetObjProperty (me, "lastpossessedserial"))
@@ -16,21 +16,21 @@ function possess (me, npc)
 			unpossess (me);
 		endif
 	endif
-	
+
 	var oldbody := CreateNpcFromTemplate(":brainai:humanmale", npc.x, npc.y, npc.z, 0, npc.realm);
 	MoveObjectToLocation (oldbody, 5385, 923, 0, me.realm, MOVEOBJECT_FORCELOCATION);
 	SetObjProperty(me, "oldmeserial", oldbody.serial);
 	SetObjProperty(me, "lastpossessedserial", npc.serial);
-	
+
 	clonar(oldbody, me);
 	var itemsinbag := EnumerateItemsInContainer( me.backpack );
 	foreach iteminbag in itemsinbag
      	var copyitem := CreateItemCopyAtLocation(5384, 923, 0, iteminbag);
 		MoveItemToContainer( copyitem, oldbody.backpack);
-		destroyitem ( iteminbag ); 
+		destroyitem ( iteminbag );
 		sleepms(10);
-	endforeach 
-	
+	endforeach
+
 	clonar(me, npc);
 	DestroyItem(me.backpack);
 	var bolsa := CreateItemAtLocation(5384, 923, 0, 0x9B2);
@@ -41,8 +41,8 @@ function possess (me, npc)
 		MoveItemToContainer( copyitem, me.backpack );
 		destroyitem ( iteminbag );
 		sleepms(10);
-	endforeach 
-	
+	endforeach
+
 	npc.concealed := 1;
 	me.concealed := 0;
 	me.facing := npc.facing;
@@ -52,12 +52,12 @@ function possess (me, npc)
 	oldbody.frozen := 1;
 	me.Disable("invul");
 	me.Disable("losany");
-	
+
 	if ((GetObjProperty(npc,"npchero"))!=error)
 		SetObjProperty(me,"npchero",1);
 	endif
-		
-	return 1;	
+
+	return 1;
 endfunction
 
 function unpossess(me, freeze :=1)
@@ -66,7 +66,7 @@ function unpossess(me, freeze :=1)
 	oldnpc.frozen := 0;
 	var oldbodyserial := getObjProperty(me, "oldmeserial");
 	var oldbody := SystemFindObjectBySerial(oldbodyserial);
-	
+
 	var container := CreateItemAtLocation(5384, 923, 0, "backpack", 1, oldnpc.realm);
 	container.invi := 1;
 	foreach item in ( EnumeratePhysicalItems(oldnpc) )
@@ -74,9 +74,9 @@ function unpossess(me, freeze :=1)
 		SleepMS(2);
 	endforeach
 	DestroyItem(container);
-	
+
 	clonar(oldnpc, me);
-	
+
 	DestroyItem(oldnpc.backpack);
 	var bolsa := CreateItemAtLocation(5383, 923, 0, 0x9B2);
 	EquipItem(oldnpc, bolsa);
@@ -84,8 +84,8 @@ function unpossess(me, freeze :=1)
 	foreach iteminbag in itemsinbag
      	var copyitem := CreateItemCopyAtLocation(5383, 923, 0, iteminbag);
 		MoveItemToContainer( copyitem, oldnpc.backpack);
-		destroyitem ( iteminbag ); 
-	endforeach 
+		destroyitem ( iteminbag );
+	endforeach
 	oldnpc.facing := me.facing;
 	MoveObjectToLocation (oldnpc, me.x, me.y, me.z, me.realm, MOVEOBJECT_FORCELOCATION);
 	oldnpc.frozen := 1;
@@ -99,7 +99,7 @@ function unpossess(me, freeze :=1)
 		SleepMS(2);
 	endforeach
 	DestroyItem(container);
-	
+
 	clonar(me, oldbody);
 	DestroyItem(me.backpack);
 	bolsa := CreateItemAtLocation(5383, 923, 0, 0x9B2);
@@ -110,21 +110,21 @@ function unpossess(me, freeze :=1)
 		MoveItemToContainer( copyitem, me.backpack );
 		destroyitem ( iteminbag );
 		sleepms(10);
-	endforeach 
-	
+	endforeach
+
 	SetObjProperty(oldbody, "GuardKill", 1);
 	ApplyRawDamage(oldbody, 6000);
 	destroyitem(oldbody);
-	
+
 	me.enable("invul");
 	me.enable("losany");
-	
+
 	if (freeze)
 		oldnpc.frozen := 0;
 	else
 		oldnpc.frozen := 0;
 	endif
-	
+
 	AP_RefreshVitals(me);
 	EraseObjProperty(me, "npchero");
 	EraseObjProperty(me, "oldmeserial");
@@ -144,10 +144,10 @@ function clonar(newlook, oldlook)
 	else
 		MoveObjectToLocation(mypack, 5383, 923, 0, newlook.realm, MOVEOBJECT_FORCELOCATION);
 	endif
-	
+
 	var itemlist := ListEquippedItems(newlook);
 	var y;
-	
+
 	foreach attrib_name in AP_ListAttributesByType()
 		valor:= GetAttribute( oldlook, attrib_name );
 		mod := AP_GetStatMod( oldlook, attrib_name ) * -1;
@@ -180,10 +180,10 @@ function clonar(newlook, oldlook)
 		y.desc := x.desc;
 		EquipItem(newlook, y);
 	endforeach
-	
+
 	var desc_oldlook:=GetObjProperty(oldlook,"description");
 
-	if (desc_oldlook!=error) 
+	if (desc_oldlook!=error)
 		SetObjProperty(newlook,"description",desc_oldlook);
 	else
 		EraseObjProperty(newlook,"description");
@@ -216,15 +216,15 @@ function clonar(newlook, oldlook)
 	var cp_data_file_newlook  := DFOpenDataFile(":charprofile:CPFile", DF_CREATE);
 	var cp_elem_newlook       := DFFindElement(cp_data_file_newlook, newlook.serial, DF_CREATE);
 	var cp_profile_newlook    := DFGetProp(cp_elem_newlook, "Profile", DF_CREATE);
-	
+
 	cp_elem_newlook.SetProp("Profile", cp_profile_oldlook);
-	
+
 	var newpack := GetEquipmentByLayer(newlook, 0x15);
 	if (newpack)
 		DestroyItem(newpack);
 	endif
 	EquipItem(newlook, mypack);
-	
+
 	if ((GetObjProperty(oldlook,"classe"))!=error)
 		SetObjProperty(newlook,"classe",GetObjProperty(oldlook,"classe"));
 	endif
@@ -232,15 +232,15 @@ function clonar(newlook, oldlook)
 	if ((GetObjProperty(oldlook,"kit"))!=error)
 		SetObjProperty(newlook,"kit",GetObjProperty(oldlook,"kit"));
 	endif
-	
+
 	if ((GetObjProperty(oldlook,"myhabs"))!=error)
 		SetObjProperty(newlook,"myhabs",GetObjProperty(oldlook,"myhabs"));
 	endif
-	
+
 	if ((GetObjProperty(oldlook,"buyhab"))!=error)
 		SetObjProperty(newlook,"buyhab",GetObjProperty(oldlook,"buyhab"));
-	endif	
-	
+	endif
+
 	return 1;
 endfunction
 

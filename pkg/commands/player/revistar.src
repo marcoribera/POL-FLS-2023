@@ -4,7 +4,7 @@
 
 use uo;
 use os;
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include "include/say";
 include ":charactercreation:habilidades";
 

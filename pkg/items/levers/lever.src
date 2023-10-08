@@ -6,7 +6,7 @@ use vitals;
 
 include "include/client";
 include ":attributes:attributes";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":gumps:gumps";
 include ":tn:tngumps";
 include "include/damage";
@@ -40,7 +40,7 @@ function ConstructGump(item)
       GFTextLine(gump, 45, y, _ifElse(opts.teleport_to, 520, 500), "Teleportar usuário");
       GFAddButton(gump, 25, y+2, 2117, 2118, GF_CLOSE_BTN, 5);
    endif
-   
+
    y += 20;
    GFTextLine(gump, 45, y, _ifElse(opts.graphicarrays, 520, 500), "Mudar gráfico da alavanca");
    GFAddButton(gump, 25, y+2, 2117, 2118, GF_PAGE_BTN, 2);
@@ -84,16 +84,16 @@ function ConstructGump(item)
    GFAddButton(gump, 345, 270, 210, 211, GF_CLOSE_BTN, 23);
 
    GFAddButton(gump, 45, 350, 2453, 2454, GF_PAGE_BTN, 1);
-   
+
    GFPage(gump, 3);
    GFPage(gump, 4);
    GFTextLine(gump, 145, 50, 900, "Escolha a armadilha da alavanca");
-   
+
    GFTilePic(gump, 105, 120, 4347);
    GFTilePic(gump, 355, 120, 4414);
    GFTilePic(gump, 105, 270, 4401);
    GFTilePic(gump, 355, 270, 8128);
-   
+
    GFAddButton(gump, 85, 130, 210, 211, GF_CLOSE_BTN, 15);
    GFAddButton(gump, 345, 130, 210, 211, GF_CLOSE_BTN, 16);
    GFAddButton(gump, 85, 270, 210, 211, GF_CLOSE_BTN, 17);
@@ -126,20 +126,20 @@ program lever(who, item)
          7: togglewalkon(who, item);
          8: reset(item, 1);
          9: setPowerEvent(who, item);
-         
-         15: 
+
+         15:
             SetObjProperty(item, "HaveTrap", "Explosion");
             AddTrap(item, "Explosion", trapstrength);
-         16: 
+         16:
             SetObjProperty(item, "HaveTrap", "PoisonGas");
             AddTrap(item, "PoisonGas", trapstrength);
-         17: 
+         17:
             SetObjProperty(item, "HaveTrap", "Needle");
             AddTrap(item, "Needle", trapstrength);
-         18: 
+         18:
             SetObjProperty(item, "HaveTrap", "Magic");
             AddTrap(item, "Magic", trapstrength);
-         
+
          20: item.graphic := 0x108e;           // graphic 1
             item.name    := "alavanca";
          21: item.graphic := 0x1095;           // graphic 2
@@ -202,8 +202,8 @@ endfunction
 
 function setHiding(who, item)
 	var dif := Cint(RadioGump(who, 0, 0, "Qual o level do interruptor?", array{"1", "2", "3", "4", "5", "Remover"}, 0, 1));
-   if (!dif) 
-      EraseObjProperty(item, "level"); 
+   if (!dif)
+      EraseObjProperty(item, "level");
       item.invisible := 0;
       return;
    endif
@@ -298,7 +298,7 @@ endfunction
 
 function setOnofftext(who, item)
    var opts := item.GetLeverOpts();
-   
+
    if (!opts.ontext) opts.ontext := ""; endif
 
    var input_list := array{};
@@ -320,7 +320,7 @@ endfunction
 
 function linkteleport(who, item)
    var opts := item.GetLeverOpts();
-   
+
    item.setLeverOpts(opts);
    SendSysMessageEx(who,"O teleporte foi adicionado a alavanca");
 endfunction

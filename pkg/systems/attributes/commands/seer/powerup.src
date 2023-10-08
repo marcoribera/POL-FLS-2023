@@ -7,7 +7,7 @@ use os;
 use uo;
 
 include ":attributes:attributes";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 
 program textcmd_PowerUp(who, level)
 
@@ -18,14 +18,14 @@ program textcmd_PowerUp(who, level)
 	else
 		level := CDbl(level);
 	endif
-		
+
 	foreach attrib_name in AP_ListAttributesByType()
 		AP_SetTrueSkill(who, attrib_name, level);
 		sleepms(10);
 	endforeach
-	
+
 	AP_RefreshVitals(who);
-	
+
 	SendSysMessage(who, "Done.");
 	return 1;
 endprogram

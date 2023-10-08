@@ -5,7 +5,7 @@ use util;
 use storage;
 
 
-/* 
+/*
  * POR FAZER
  * comandos:
  * - procure ajuda
@@ -26,7 +26,7 @@ include ":attributes:attributes";
 include "include/sysEvent";
 include ":mounts:mounts";
 include "include/client";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include "include/npcUtil";
 include "include/commonFunctions";
 include "include/npcSettings";
@@ -40,7 +40,7 @@ set_script_option(SCRIPTOPT_CAN_ACCESS_OFFLINE_MOBILES, 1);
 
 CONST UOBJ_BANKBOX      := 0x0e40;
 
-var pack_animals := array(291, 292); 
+var pack_animals := array(291, 292);
 var mount := 0;
 
 var me := self();
@@ -185,7 +185,7 @@ program TamedAI()
 				if(ev.targ != 0)
 					running_from := ev.targ;
 				endif
-				RunForrestRun();							
+				RunForrestRun();
 		endcase
 		if ( CInt(GetObjProperty(me, "happiness")) < 10 )
 			SetObjProperty(me, "happiness", 100);
@@ -238,20 +238,20 @@ function ProcessSpeech(ev)
 
 	var text := lower(ev.text);
 	var name := lower(me.name);
-	if	( ( (ev.source).serial != (me.master).serial ) && 
+	if	( ( (ev.source).serial != (me.master).serial ) &&
 		( ev.source.serial != GetObjProperty(me, "AntigoTreinadorID") ) &&
 		( ev.source.serail != GetObjProperty(me, "friend") ) &&
 		( !ev.source.cmdlevel ) );
 		//Say("Querido "+ev.source.name+", fique calado. Eu so ouco o meu dono.");
 		return;
 	endif
-	
+
 	if( !text[name] && !text[GetObjProperty(me, "Group")] && !text[GetObjProperty(me, "All")] )
 		return;
 	endif
 
 	var cmd := IsItACommand(text);
-	
+
 
 	var group := GetObjProperty(me, "Group");
 	var all := GetObjProperty(me, "All");
@@ -288,12 +288,12 @@ function ProcessSpeech(ev)
 				if ( !targ.IsA(POLCLASS_MOBILE) )
 					return;
 				endif
-				
-				if ( text[all] )				
+
+				if ( text[all] )
 					AllCommand(GUARD_CMD, targ);
 				elseif ( text[group] )
 					GroupCommand(GUARD_CMD, targ);
-				endif				
+				endif
 			endif
 		elseif( text["-me"] )
 			guarding := ev.source;
@@ -307,7 +307,7 @@ function ProcessSpeech(ev)
 		endif
 	elseif ( cmd == "stop" )
 		Stop();
-		
+
 	elseif ( cmd == "follow" )
 		if ( !text[name] )
 			if ( text["-me"] )
@@ -317,15 +317,15 @@ function ProcessSpeech(ev)
 				if ( !targ.IsA(POLCLASS_MOBILE) )
 					return;
 				endif
-				
-				if ( text[all] )				
+
+				if ( text[all] )
 					AllCommand(FOLLOW_CMD, targ);
 				elseif ( text[group] )
 					GroupCommand(FOLLOW_CMD, targ);
 				endif
 			endif
 		elseif ( text["-me"] )
-			following := ev.source;			
+			following := ev.source;
 		else
 			following := target(me.master);
 		endif
@@ -350,7 +350,7 @@ function ProcessSpeech(ev)
 		go("run", text[group], text[all]);
 	elseif( cmd == "walkto" )
 		go("walk", text[group], text[all]);
-		
+
 	elseif( cmd == "deliver" )
 		Deliver(ev.source);
 	elseif( cmd == "drag" )
@@ -400,7 +400,7 @@ function ProcessDoubleClick(ev)
 		elseif (targ.mobile)
 			var gump := GFCreateGump(220, 70);
 			//GFGumpPic(gump, 0, 0, 0x254E);
-			GFResizePic(gump, 0, 0, 0x254E, 100, 100);	
+			GFResizePic(gump, 0, 0, 0x254E, 100, 100);
 			GFTextLine(gump, 30, 15, 2100, "Guarda ");
 			GFTextLine(gump, 30, 35, 2100, "Segue ");
 			if (targ.mobile.serial != owner.serial)
@@ -422,7 +422,7 @@ function ProcessDoubleClick(ev)
 			elseif (input == 30)
 				opponent := targ.mobile;
 			endif
-				
+
 		elseif (!Cint(targ.mobile))//se nao for nem item nem mobile anda ate la
 			if (!Cint(targ.item))
 				going_loc := struct;
@@ -533,7 +533,7 @@ function IsItACommand(speech)
 			return lower(thing);
 		endif
 	endforeach
-	
+
 	return 0;
 endfunction
 
@@ -575,7 +575,7 @@ endfunction
 function GetMyFleeLevel()
 	var settings := NPC_LoadTemplateSettings(me);
 	var fleelevel := NPC_GetFleeLevel(me, settings["FleeLevel"]);
-		
+
 	return fleelevel;
 endfunction
 
@@ -752,7 +752,7 @@ function HandleStuck(dist, byref going_where)
 		stuck += 1;
 	else
 		if(stuck > 0 )
-			stuck := 0; 
+			stuck := 0;
 		endif
 		lastdistance := dist;
 	endif
@@ -851,8 +851,8 @@ function Go(forma, grupo, todos)
 	data.+y := tloc.y;
 	data.+type := forma;
 
-	
-	
+
+
 	if( todos )
 		AllCommand(GO_LOC_CMD, data);
 	elseif( grupo )
@@ -877,7 +877,7 @@ endfunction
 
 
 function Deliver(source)
-	
+
 	var tobj;
 	var myitems := EnumerateItemsInContainer(mypack);
 	if ( len(myitems) > 0 )
@@ -973,11 +973,11 @@ function Drag2(tobj)
 	drag_loc.oldx := me.x;
 	drag_loc.oldy := me.y;
 	drag_loc.oldz := me.z;
-	
+
 	going_to := 0;
 	last_following := following;
 	following := 0;
-	
+
 
 endfunction
 
@@ -995,7 +995,7 @@ function RunForrestRun()
 	going_to := 0;
 	going_loc := 0;
 	dragging := 0;
-	
+
 endfunction
 
 function FindTheWay()
@@ -1004,7 +1004,7 @@ function FindTheWay()
 		SendSysMessage(owner, "Invalido!");
 		return;
 	endif
-	
+
 
 	theway := FindPath(me.x, me.y, me.z, targ.x, targ.y, targ.z, me.realm, FP_IGNORE_DOORS , 50);
 	if(theway.errortext)
@@ -1020,7 +1020,7 @@ function FindTheWay()
 	endfor
 	theway := 0;
 endfunction
-	
+
 
 function TakeItem(ev)
 	var cfg := ReadConfigFile(":*:itemdesc");
@@ -1053,7 +1053,7 @@ function TakeItem(ev)
 		endif
 	else
 		SendSysMessage(ev.source, "Nao pode dar esse item!");
-	endif	
+	endif
 endfunction
 
 
@@ -1062,9 +1062,9 @@ function UnTame()
 	TS_LowerDuration(me, "summon", 10000, 1);
 
 	PrintTextAbovePrivate(me, "*"+me.name+" pode viver livre denovo.*", me.master);
-	
+
 	me.SetMaster(0);
-	
+
 	var orig_script := GetObjProperty(me, "script");
 	if ( !orig_script )
 		PrintTextAbove(me, "*doesnt have an original script to use now that taming is done?!*");
@@ -1075,18 +1075,18 @@ function UnTame()
 		SysLog(me.name+" my original script was tamed.src ?!");
 		orig_script := ":brainAI:brain";
 	endif
-	
+
 	me.script := orig_script;
-	
-	
+
+
 	SetName(me, GetObjProperty(me, "name"));
-	
+
 	EraseObjProperty(me, "owner");
 	EraseObjProperty(me, "name");
 	EraseObjproperty(me, "script");
 
 	EraseObjProperty(me, "happiness");
-	
+
 	RestartScript(me);
 endfunction
 

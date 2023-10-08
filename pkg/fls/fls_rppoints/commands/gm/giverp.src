@@ -1,7 +1,7 @@
 use uo;
 use file;
 use util;
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include "include/say";
 include ":tn:tngumps";
 
@@ -9,7 +9,7 @@ function LogRPpoints(who, player, nota)
 	var today := StrFormatTime("%d - %m - %Y", POLCore().systime);
 	today := "Logs/" + today + ".log";
 	var msg := "- "+ who.acctname + " concedeu "+nota+" Pontos de RP a "+player+".";
-	
+
 	return LogToFile( today, msg );
 endfunction
 
@@ -57,7 +57,7 @@ function incGrade(who, incnota)
 	endif
 
 	setGrade(who, nota);
-	
+
 endfunction
 
 program giverp(who, params)
@@ -104,9 +104,9 @@ function PointsRPMotive(who);
 	if (!reasons[1])
 		reasons := array;
 	endif
-	
-	
-	
+
+
+
 
 
 endfunction

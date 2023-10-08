@@ -6,7 +6,7 @@ use vitals;
 
 include "include/client";
 include ":attributes:attributes";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":levers:lever";
 include ":traps:traps";
 include "include/damage";
@@ -25,5 +25,5 @@ program loko(who, item)
   endif
 
   normalusage(who, item);
-  
+
 endprogram

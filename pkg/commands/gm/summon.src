@@ -3,9 +3,9 @@ use datafile;
 
 include ":gumps:gumps";
 include ":gumps:gumps_ex";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":ghaia:ghaia";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 
 program gumpspawn(who, text)
 
@@ -22,9 +22,9 @@ function createSpawngump(who, type,  oldspawns := 0, start := 0, end := 0)
 	if (!df)
 		df := CreateDataFile( ":tn:summonsall", DF_KEYTYPE_STRING);
 	endif
-	
+
 	var spawns := array;
-	
+
 	if (type == 1) //listar todos
 		foreach spawn in (df.keys())
 			var spawnpoint := Cint(spawn);
@@ -38,7 +38,7 @@ function createSpawngump(who, type,  oldspawns := 0, start := 0, end := 0)
 			endif
 			sleepms(2);
 		endforeach
-		
+
 	elseif ( type == 2)//listar pelo povo
 		var npctemplatename := Requestgump(who, "Digite o povo dos npcs (zharkiano, aquilrano, numajene, vanirio, asanita, thuriao, outros, etc)");
 		foreach spawn in (df.keys())
@@ -106,48 +106,48 @@ function createSpawngump(who, type,  oldspawns := 0, start := 0, end := 0)
 	var gump := GFCreateGump();
 
         GFDisposable(gump, 0);
-	GFResizePic(gump, 0, 25, 3600, 380, 470);	
+	GFResizePic(gump, 0, 25, 3600, 380, 470);
 	GFResizePic(gump, 15, 40, 0x13BE, 350, 440);
 	GFTextMid(gump, 15, 50, 620, 1153, "SUMMONS <basefont color=#34eb7a> (.summon serial para summon imediato)");
-	
+
 	GFPage(gump, 0);
 	GFTextLine(gump, 40, 70, 1153, "Listar todos");
 	GFTextLine(gump, 40, 85, 1153, "Listar por povo");
 	GFTextLine(gump, 40, 100, 1153, "Listar por regiao");
 	GFTextLine(gump, 40, 115, 1153, "Registrar um Npc");
 	//GFTextLine(gump, 40, 130, 1153, "Listar por tipo de npc");
-	
+
 	//GFTextLine(gump, 200, 70, 1153, "Carregar todos summons");
 	GFTextLine(gump, 200, 85, 1153, "Summonar selecionado(s)");
 	GFTextLine(gump, 200, 100, 1153, "Deletar/MATAR o(s) Npc(s)");
 	if (oldspawns)
 		GFTextLine(gump, 200, 115, 1153, "Exibindo: " + start +" ate " + end +" de "+ oldspawns.size() );
 	endif
-	
+
 	if (oldspawns)
 		GFTextLine(gump, 200, 130, 1153, "Next 100 " );
 		GFTextLine(gump, 300, 130, 1153, "Prev 100 " );
 		GFAddButton( gump, 180, 133, 2103, 2104, 1, 9);
 		GFAddButton( gump, 280, 133, 2103, 2104, 1, 10);
 	endif
-	
+
 	GFTextLine(gump, 40, 145, 1153, "Spawn");
 	GFTextLine(gump, 140, 145, 1153, "Povo");
 //	GFTextLine(gump, 170, 145, 1153, "Min");
 	GFTextLine(gump, 200, 145, 1153, "Serial");
 //	GFTextLine(gump, 230, 145, 1153, "Amt");
 	GFTextLine(gump, 260, 145, 1153, "X Y Z");
-	
+
 	GFAddButton( gump, 20, 73, 2103, 2104, 1, 1);//Listar todos
 	GFAddButton( gump, 20, 88, 2103, 2104, 1, 2); //listar por povo
 	GFAddButton( gump, 20, 103, 2103, 2104, 1, 3); //listar por region
 	GFAddButton( gump, 20, 118, 2103, 2104, 1, 4); //Registrar npc
 	//GFAddButton( gump, 20, 133, 2103, 2104, 1, 5);
-	
+
 	//GFAddButton( gump, 180, 73, 2103, 2104, 1, 6); //carregar todos os npcs
 	GFAddButton( gump, 180, 88, 2103, 2104, 1, 7); // Spawnar
 	GFAddButton( gump, 180, 103, 2103, 2104, 1, 8); //Deletar npcs selecionados
-	
+
 	var x := 40;
 	var y := 160;
 	var i := 1;
@@ -156,7 +156,7 @@ function createSpawngump(who, type,  oldspawns := 0, start := 0, end := 0)
 	GFSetRadioGroup(gump, 1);
 	GFPage(gump, 1);
 	foreach spawn in spawns
-	 
+
 
 	var cp_elem:= DFFindElement(df, spawn);
     var elem := dfgetprop(cp_elem, "Povo");
@@ -183,13 +183,13 @@ function createSpawngump(who, type,  oldspawns := 0, start := 0, end := 0)
 			GFAddButton(gump, 350, 160, 2436, 2436, GF_PAGE_BTN, page-1);
 		endif
 		if (i == 100)
-			
+
 		endif
 		sleepms(2);
 	endforeach
-	
+
 	SendSysMessage(who, "Total de npcs registrados: " + spawns.size());
-	
+
 	var result := GFSendGump(who, gump);
 	if (result[0])
 		if (result[0] == 6)
@@ -218,7 +218,7 @@ function createSpawngump(who, type,  oldspawns := 0, start := 0, end := 0)
 					endif
 				endif
 			endforeach
-		
+
 			var result := CheckBoxGump(who, 150, 200, "Opcoes de Summon", {"Invisivel","Freeze"});
 				var opt1;
 				var opt2;
@@ -229,7 +229,7 @@ function createSpawngump(who, type,  oldspawns := 0, start := 0, end := 0)
 						opt2 := 1;
 					endif
 				endforeach
-		
+
 			foreach serial_npc in modificar
 				GetNpcBySerial(who, serial_npc, opt1, opt2, 0);
 			endforeach
@@ -245,7 +245,7 @@ function createSpawngump(who, type,  oldspawns := 0, start := 0, end := 0)
 				foreach x in modificar
 	var kill := SystemFindObjectBySerial(x);
 	kill.Disable("invul");
-	SetObjProperty(kill, "GuardKill", 1);	
+	SetObjProperty(kill, "GuardKill", 1);
 	ApplyRawDamage(kill, CInt(AP_GetVitalMaximumValue(kill, "Hits")));
 	SendSysMessageEx(who, "Npc(s) deletado/morto(s) com sucesso!", SSM_INFO);
 				endforeach

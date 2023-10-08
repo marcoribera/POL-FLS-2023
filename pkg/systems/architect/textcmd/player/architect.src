@@ -16,7 +16,7 @@ use util;
 
 //include "include/findCity";
 //include "include/www";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":architect:include/architect";
 include ":architect:include/systemclock";
 

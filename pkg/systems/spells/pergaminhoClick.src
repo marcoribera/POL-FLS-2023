@@ -1,7 +1,7 @@
 use uo;
 use os;
 
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":spells:tnmagery";
 include "include/say";
 include ":spells:spellbooks";
@@ -16,7 +16,7 @@ program usaPergaminho(who, scroll)
 	GFClosable(gump, 1);
 	GFResizePic(gump, 0, 0, 0x9D8, 240, 200);
 
-	//sendsysmessage(who, " " + spellinfo.description + "<br>" + spellinfo.flavortext);	
+	//sendsysmessage(who, " " + spellinfo.description + "<br>" + spellinfo.flavortext);
 
 	 GFTextLine(gump, 50, 10, 0, spellinfo.name);
 	GFHTMLArea( gump, 30, 40, 180, 120, cstr(spellinfo.description + "<br>" + spellinfo.flavortext) , 0, 1);
@@ -31,7 +31,7 @@ program usaPergaminho(who, scroll)
 		if ( script.errortext )
 			SendSysMessage(who, "Error - Could not start spell starter ->"+script.errortext);
 			return 0;
-		endif	
+		endif
 	endif
 
 

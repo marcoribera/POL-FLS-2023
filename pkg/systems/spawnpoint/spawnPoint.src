@@ -1,8 +1,8 @@
 use uo;
 use os;
 include ":attributes:attributes";
-include ":gumps:requestgump";
-include ":gumps:yesno";
+include ":gumps:requestGump";
+include ":gumps:yesNo";
 include ":tn:boss";
 include ":combat:hitscripts";
 
@@ -11,7 +11,7 @@ array{
     "page 0",
     "gumppic    30   0  101",
     "button    118  90 2130 2129  1   0 100",
-    "text       80 120   33    0", 
+    "text       80 120   33    0",
     "text       85 135    0    1",
     "text       85 150    0    2",
     "text       85 165   33    3",
@@ -70,7 +70,7 @@ program use_spawnpoint(who, spawnpoint)
 		spawneditdata[11] := CStr(maxdelay);
 		spawneditdata[12] := CStr(spawn);
 
-	
+
 	endif
 
 	var unique := GetObjProperty(spawnpoint, "uniquestat");
@@ -82,7 +82,7 @@ program use_spawnpoint(who, spawnpoint)
 		spawneditlayout.append("group       2");
  		spawneditlayout.append("radio     180 210 210 211 0 98");
 	endif
-	
+
 	var res := SendDialogGump(who, spawneditlayout, spawneditdata);
 	if(res[0] != 100)
 		SendSysMessage(who, "Aborted.");
@@ -159,7 +159,7 @@ program use_spawnpoint(who, spawnpoint)
 		SetObjProperty(thecritter, "summoned", 1);
 		ApplyRawDamage(thecritter, GetVital(thecritter, HITS)+3);
 	endif
-	
+
 	SetObjProperty(spawnpoint, "Amount",   amount);
 	SetObjProperty(spawnpoint, "Range",    range);
 	SetObjProperty(spawnpoint, "MinDelay", mindelay);

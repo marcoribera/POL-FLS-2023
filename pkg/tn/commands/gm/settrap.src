@@ -2,7 +2,7 @@
 use uo;
 
 include ":gumps:gumps";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":tn:tngumps";
 include "include/say";
 include ":traps:traps";
@@ -33,4 +33,4 @@ program settrap(who)
 		endif
 	endif
 
-endprogram 
+endprogram

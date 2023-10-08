@@ -11,8 +11,8 @@ include "include/damage";
 include ":PacketConfig:settings";
 include "include/say";
 include ":tn:recipes";
-include ":gumps:yesno";
-include ":gumps:requestgump";
+include ":gumps:yesNo";
+include ":gumps:requestGump";
 
 include ":charactercreation:habilidades";
 include ":attributes:attributes";

@@ -4,7 +4,7 @@ use polsys;
 use datafile;
 
 include ":commands:possess";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 
 program textcmd_possess( me )
 
@@ -18,7 +18,7 @@ program textcmd_possess( me )
 	if (YesNo(me, "Voce deseja ativar o unattack (mobs nao te atacam)?", "Sim.", "Nao."))
 		SetObjProperty(me, "unattack", "sim");
 	endif
-	
+
 	possess(me, npc);
 
 endprogram

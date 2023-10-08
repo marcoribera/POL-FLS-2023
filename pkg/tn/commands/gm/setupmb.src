@@ -2,8 +2,8 @@
 use uo;
 
 include ":gumps:gumps";
-include ":gumps:yesno";
-include ":gumps:requestgump";
+include ":gumps:yesNo";
+include ":gumps:requestGump";
 include ":tn:tngumps";
 include ":unicos:item_template";
 include ":tn:boss";
@@ -18,7 +18,7 @@ program motherbrain(who)
 	var society := struct;
 
 	society.+nome := RequestGump(who, "Escreva o nome da sociedade/tribo (o nome nao pode ser o mesmo que as existentes):", "", "", 1);
-	
+
 	var base := YesNo(who, "Voce deve escolher a base principal da sociedade, é la onde serao spawnados os npcs. Um target vai aparecer caso queira adicionar um base.");
 	if (!base)
 		SendSysMessage(who, "Cancelado");
@@ -33,16 +33,16 @@ program motherbrain(who)
 	society.+base := loc;
 	society.base.+spawn := Cint(RequestGump(who, "Digite a quantidade inicial que vai spawnar na base", "", "", 1));
 	society.+type := RadioGump(who, 400, 380, "Escolha o tipo de npcs.", array{"Undeads", "Ratmans", "Orcs", "Lizardmans", "Ratmans", "Humanos"});
-	
+
 	var objdata := OpenDataFile( ":tn:objetivos" );
 	if (!objdata)
 		SendSysMessage(who, "Arquivo de objetivos nao encontrado.");
 		return;
 	endif
-	
+
 	society.+objetivos := CheckBoxGump(who, 400, 480, "Escolha os objetivos.", objdata.keys());
 	society.+npcs := array{};
-	
+
 	var salvar := YesNo(who, "Configuração concluida. Deseja adicionar essa sociedade na motherbrain?");
 	if (salvar)
 		var elem := motherdata.CreateElement(society.nome);
@@ -55,7 +55,7 @@ program motherbrain(who)
 	else
 		SendSysMessage(who, "Cancelado.");
 	endif
-	
+
 	return 0;
-	
+
 endprogram

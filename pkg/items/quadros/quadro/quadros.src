@@ -8,7 +8,7 @@ use attributes;
 
 include ":keys:key";
 include ":itemutils:objtype";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include "include/say";
 include ":itemutils:canAccess";
 include ":attributes:attributeConstants";

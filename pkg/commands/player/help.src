@@ -6,7 +6,7 @@
  */
 use uo;
 
-include ":gumps:htmlgump";
+include ":gumps:htmlGump";
 
 program command_help(who, command)
 	var help;

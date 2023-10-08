@@ -1,9 +1,9 @@
- 
+
 use uo;
 
 include ":charactercreation:createchar";
 include "include/say";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":charactercreation:chargumps";
 include ":tn:characters";
 include ":tn:tngumps";
@@ -24,7 +24,7 @@ program criachar(who)
 		var chardata := struct;
 		TN_AttributesGump(who, chardata);
 		skillsgump(who,  chardata);
-		
+
 		chardata := GetObjProperty(who, "chardata");
 		var myskills := chardata.Skills.keys();
 		foreach attrib in AP_ListAttributesByType()

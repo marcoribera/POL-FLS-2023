@@ -4,8 +4,8 @@ use uo;
 
 include ":timedScripts:timedScripts";
 include ":gumps:gumps";
-include ":gumps:yesno";
-include ":gumps:requestgump";
+include ":gumps:yesNo";
+include ":gumps:requestGump";
 include ":tn:tngumps";
 include ":spells:tnmagery";
 include ":spells:spellbooks";

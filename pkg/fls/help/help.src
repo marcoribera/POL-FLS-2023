@@ -5,9 +5,9 @@ use cfgfile;
 
 include ":tn:tngumps";
 include ":gumps:gumps";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":gumps:gumps_ex";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":help:help";
 
 const BUTTON_HELP_CANCEL := 1;
@@ -23,7 +23,7 @@ program help_menu(who)
 	last_name := "";
 
 	GFDisposable(chargump, 0);
-	GFResizePic(chargump, 0, 25, 3600, 350, 480);	
+	GFResizePic(chargump, 0, 25, 3600, 350, 480);
 	GFResizePic(chargump, 15, 40, 0xA3C, 320, 450);
 
 	GFTextMid(chargump, 20, 50, 300, 1153, "Menu de Ajuda");
@@ -86,7 +86,7 @@ function SendPageDialog(who)
 		msg_array.Append(GFTextEntry(gump, 20, y_pos, 396, 20, 1153, ""));
 		y_pos := y_pos+19;
 	endfor
-	
+
 	var input := GFSendGump(who, gump);
 
 	if (input[0] == 20)
@@ -102,7 +102,7 @@ function SendPageDialog(who)
 			endif
       //sendsysmessage(who, "linha final " + line);
 		endfor
-	
+
 		//Clear off empty lines.
 		for ( i := msg_array.Size(); i>=1; i:=i-1 )
 			if ( Len(msg_array[i]) <= 0 )
@@ -110,7 +110,7 @@ function SendPageDialog(who)
 			endif
 			SleepMS(2);
 		endfor
-		
+
 		var text := "";
 		for ( i:=1; i<=msg_array.Size(); i:=i+1 )
 			text := text + msg_array[i];

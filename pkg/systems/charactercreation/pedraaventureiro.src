@@ -1,8 +1,8 @@
 include ":tn:tngumps";
 include ":charactercreation:habilidades";
 include "include/say";
-include ":gumps:yesno";
-include ":gumps:requestgump";
+include ":gumps:yesNo";
+include ":gumps:requestGump";
 
 program pergrad(who, item)
 	if (who.cmdlevel >= 1)

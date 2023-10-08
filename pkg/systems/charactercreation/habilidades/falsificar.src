@@ -2,7 +2,7 @@ use uo;
 use basic;
 
 include "include/say";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":charactercreation:habilidades";
 
 program forgery(who)
@@ -28,4 +28,4 @@ program forgery(who)
 
 	return 1;
 
-endprogram 
+endprogram

@@ -3,7 +3,7 @@ use os;
 use util;
 
 include ":charactercreation:habilidades";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include "include/say";
 
 const ANIM_ATTACK_1HAND_DOWN := 0x000b;

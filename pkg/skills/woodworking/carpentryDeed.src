@@ -7,7 +7,7 @@ use cfgfile;
 
 include ":keys:key";
 include ":itemutils:objtype";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include "include/say";
 
 const UOBJECT_DOORS_START   := 0x0675;
@@ -31,16 +31,16 @@ program place_deed(who, deed)
   endif
 
   var cfg := ReadConfigFile(":woodworking:itemdesc");
-  
+
   var element := FindConfigElem(cfg, deed.objtype);
-  
+
   if(!element)
     SendSysMessageEX(who, "Voce nao pode fazer nada com isto.", SSM_FAIL);
     return;
   endif
 
   var items := SplitWords(element.ObjList);
- 
+
   if(!len(items))
     SendSysMessageEx(who, "Voce nao pode fazer nada com isto.", SSM_FAIL);
     return;

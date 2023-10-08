@@ -1,7 +1,7 @@
 use uo;
 use util;
 
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":fls_core:fls_crafting";
 
 program usar_etiqueta(who, the_item)

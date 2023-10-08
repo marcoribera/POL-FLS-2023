@@ -6,11 +6,11 @@ include ":containers:storageAreas";
 include ":containers:containers";
 include ":gumps:include/requestgump";
 include ":gumps:gumps";
-include ":gumps:yesno";
-include "include/say";   
+include ":gumps:yesNo";
+include "include/say";
 include ":keys:key";
 include ":tn:tngumps";
-include ":gumps:htmlgump";
+include ":gumps:htmlGump";
 
 //Gump Constants
 const BKGND_STONESLAB		:= 9200;  // Gray stone slab background
@@ -36,7 +36,7 @@ program MerchantMenu(params)
 
 	var gump := GFCreateGump(0, 0);
 	GFResizePic(gump, 15, 50, 2620, 310, 380);
-	
+
 	GFResizePic(gump, 0, 0, GFCfgConst("Defaults", "BackGround"), 360, 480);
 
 	GFResizePic(gump, 15, 12, GFCfgConst("Defaults", "ForeGround"), 330, 30);
@@ -44,9 +44,9 @@ program MerchantMenu(params)
 
 	GFResizePic(gump, 15, 45, GFCfgConst("Backgrounds", "GOLDTRIM"), 330, 390);
 	//GFHTMLArea(gump, 22, 53, 322, 375, text, 0, 1);
-	
+
 	GFResizePic(gump, 15, 438, GFCfgConst("Defaults", "ForeGround"), 330, 30);
-	
+
 	if (player.cmdlevel >= 3)
 		GFAddButton(gump, 285, 440, 4011, 4030, GF_CLOSE_BTN, 20);
 		GFTextLine(gump, 170, 440, 2100, "Adicionar Rumor");
@@ -68,7 +68,7 @@ program MerchantMenu(params)
 		GFAddButton(gump, 25, y_pos+2, 2117, 2118, GF_CLOSE_BTN, 200+i);
 		y_pos := y_pos+19;
 	endfor
-	
+
 	var input := GFSendGump(player, gump);
 
 	if (input[0] == 20)

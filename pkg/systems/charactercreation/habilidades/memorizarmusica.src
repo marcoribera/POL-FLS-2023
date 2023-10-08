@@ -2,8 +2,8 @@ use uo;
 
 include ":gumps:gumps";
 include ":gumps:gumps_ex";
-include ":gumps:requestgump";
-include ":gumps:yesno";
+include ":gumps:requestGump";
+include ":gumps:yesNo";
 include "include/say";
 
 program memorizarmusica(who)
@@ -16,7 +16,7 @@ program memorizarmusica(who)
 	var musicas := GetObjProperty(who, "musicas");
 	if (!musicas)
 		musicas := dictionary;
-	endif	
+	endif
 
 	var i := 1;
 	while ( i < 6)
@@ -28,7 +28,7 @@ program memorizarmusica(who)
 			GFTextLine(bardgump, 86, 93 + ((i-1)*20), 600, "Memorizar" );
 			GFAddButton(bardgump, 71, 98 + ((i-1)*20), 2103, 2104, 1, 100+i);
 		endif
-	
+
 		i := i + 1;
 	endwhile
 
@@ -51,14 +51,14 @@ program memorizarmusica(who)
 
 		var partitura := struct;
 		partitura.+nome := targ.name;
-		partitura.+compositor := getobjproperty(targ, "compositor");	
+		partitura.+compositor := getobjproperty(targ, "compositor");
 		partitura.+notas := getobjproperty(targ, "notas");
 		partitura.+tempo := getobjproperty(targ, "tempo");
 		partitura.+letra := getobjproperty(targ, "letra");
 		partitura.+magica := getobjproperty(targ, "magica");
 
 		musicas[slot] := partitura;
-	
+
 		setObjProperty(who, "musicas", musicas);
 		SendSysMessageEx(who, "Voce memorizou a partitura " + targ.name + ".", SSM_INFO);
 
@@ -79,4 +79,4 @@ program memorizarmusica(who)
 		return 1;
 	endif
 
-endprogram 
+endprogram

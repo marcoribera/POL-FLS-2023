@@ -15,7 +15,7 @@ include ":itemutils:canAccess";
 include ":fls_core:fls_crafting";
 include "include/say";
 include ":keys:key";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 
 CONST CARP_WOOD_SOUND := 0x23e;
 
@@ -103,7 +103,7 @@ function CarpentryItems(who, tool, what, amt)
 				SendSysMessage(who, "Voce nao tem pregos!");
 				return 0;
 			endif
-		endif		
+		endif
 
 		if( GetAmount(item1) >= material )
 			if( item2 != 0 && GetAmount(item2) < material2 )

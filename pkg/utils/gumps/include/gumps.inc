@@ -39,14 +39,14 @@ use os;
 use basic;
 
 include ":gumps:autoClose";
-include ":gumps:gumpprompt";
+include ":gumps:gumpPrompt";
 include ":gumps:gumps_ex";
-include ":gumps:htmlgump";
-include ":gumps:playerselectiongump";
-include ":gumps:requestgump";
-include ":gumps:selectiongump";
+include ":gumps:htmlGump";
+include ":gumps:playerSelectionGump";
+include ":gumps:requestGump";
+include ":gumps:selectionGump";
 include ":gumps:textConsts";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 
 
 CONST DEFAULT_BACKGROUND := 0x13BE;
