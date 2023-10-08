@@ -5,6 +5,7 @@ include ":attributes:attributes";
 include ":timedScripts:timedScripts";
 include "include/say";
 include "include/sysEvent";
+include "include/eventID";
 
 program manobra(who)
 	var nearby := ListHostiles(who, 10);

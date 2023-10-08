@@ -1,10 +1,27 @@
-/* $Id: facings.inc 1310 2006-05-11 21:53:20Z austin $
+/* $Id: facings.inc 554 2006-07-04 10:48:14Z austinheilman $
  *
  */
 use uo;
 use os;
 use math;
 
+const FACE_POS_BEHIND := 1;
+const FACE_POS_INFRONT := 2;
+
+
+/*
+	+----------------------------> x
+	|	NW		  N			NE
+	|		+---+---+---+
+	|		| 7 | 0 | 1 |
+	|		+---+---+---+
+	|	W	| 6 | C | 2 |	E
+	|		+---+---+---+
+	|		| 5 | 4 | 3 |
+	|		+---+---+---+
+	|	SW		  S			SE
+	y
+*/
 
 /*
  * TurnObjectToward(object, x_pos, y_pos)
@@ -46,11 +63,90 @@ endfunction
  * Returns 0 if not.
  *
  */
-
-function IsFacing(mobile, x, y)
+ function IsFacing(mobile, x, y)
 	return ( mobile.facing == GetFacing(mobile.x, mobile.y, x, y) );
 endfunction
 
+
+/*
+ * IsRelativeFacing( mobile, x, y, vision_dist )
+ * Determines if a location (x and y location) is relatively speaking
+ * in front of the mobile.
+ *
+ * Notes:
+ * 0 is directly in front of the mobile.
+ *
+ * 1 equates to what would essentially be a 90
+ * degree view in front of the mobile
+ *
+ * 2 equates to what would essentially be a 180
+ * degree view in front of the character.
+ *
+ * vision_dist = 0 ->*
+ *
+ *					 *
+ * vision_dist = 1 ->*
+ *					 *
+ *
+ *					**
+ * vision_dist = 2 ->*
+ *					**
+ *
+ * Parameters
+ * mobile:	Mobile to check the coordinates with.
+ * x_pos:	X position to check.
+ * y_pos:	Y position to check.
+ *
+ * Return value
+ * Returns 1 if the coordinates are behind the mobile.
+ * Returns 0 if not.
+ *
+ */
+function IsRelativeFacing( mobile, x, y, vision_dist:=2 )
+
+	var obj_facing := GetFacing( mobile.x, mobile.y, x, y );
+	var d := (mobile.facing-obj_facing)%8;
+
+	if( d>3 )
+		d := d - 8;
+	elseif( d < -3 )
+		d := d + 8;
+ 	endif
+
+	return ( Abs( d ) <= vision_dist );
+endfunction
+
+/*
+ * InPosition(mobile, x_pos, y_pos, flag)
+ * Determines if a set of coordinates are behind a character.
+ * Example ( @ - character * - valid )
+ *         @
+ *        ***
+ *       *****
+ *      *******
+ *
+ * Parameters
+ * mobile:	Mobile to check the coordinates with.
+ * x_pos:	X position to check.
+ * y_pos:	Y position to check.
+ *
+ * Return value
+ * Returns 1 if the coordinates are behind the mobile.
+ * Returns 0 if not.
+ *
+ */
+function InPosition(tgt_mob, locx, locy, flag)
+	var frot := Abs(((tgt_mob.facing+4)%8)-GetFacing(tgt_mob.x,tgt_mob.y,locx,locy));
+	if ( frot > 4 )
+		frot := 8-frot;
+	endif
+
+	if ( flag == FACE_POS_BEHIND )
+		return (frot < 2);
+	elseif ( flag == FACE_POS_INFRONT )
+		return (frot > 2);
+	endif
+endfunction
 
 /*
  * IsBehind(mobile, x_pos, y_pos)
@@ -92,6 +188,7 @@ function IsBehind(tgt_mob, locx, locy)
 	*/
 endfunction
 
+
 /*
  * GetPointsByfacing(x_pos, y_pos, facing, dist)
  *
@@ -108,32 +205,67 @@ endfunction
  * Returns an array of structs containing .x .y members for coordinates.
  *
  */
-function GetPointsByFacing(x_pos, y_pos, facing, dist)
-	var coord := struct{"x", "y"};
-	var coord_list := array{};
+function GetPointsByFacing( x_pos, y_pos, facing, dist )
 
 	var xmod := 0, ymod := 0;
-	case ( facing ) // Should find a more sleek mathish way to do this!
-		0: xmod := 0;  ymod := -1; break;
-		1: xmod := +1; ymod := -1; break;
-		2: xmod := +1; ymod := 0;  break;
-		3: xmod := +1; ymod := +1; break;
-		4: xmod := 0;  ymod := +1; break;
-		5: xmod := -1; ymod := +1; break;
-		6: xmod := -1; ymod := 0;  break;
-		7: xmod := -1; ymod := -1; break;
+	case( facing )
+		0: xmod := 0;  ymod := -dist; break;
+		1: xmod := +dist; ymod := -dist; break;
+		2: xmod := +dist; ymod := 0;  break;
+		3: xmod := +dist; ymod := +dist; break;
+		4: xmod := 0;  ymod := +dist; break;
+		5: xmod := -dist; ymod := +dist; break;
+		6: xmod := -dist; ymod := 0;  break;
+		7: xmod := -dist; ymod := -dist; break;
 		default:
 			return error{"errortext":="Invalid facing."};
 			break;
 	endcase
 
-	var i;
-	for( i:=1; i<=dist; i:=i+1 )
-		coord.x := x_pos+(i*xmod);
-		coord.y := y_pos+(i*ymod);
-		coord_list.Append(coord);
-		sleepms(2);
-	endfor
-
-	return coord_list;
+	return GetCoordsInLine( x_pos, y_pos, x_pos+xmod, y_pos+ymod );
 endfunction
+
+/*
+ *
+ * ConvertDirectionToLocX( facing )
+ *
+ * Parameters:
+ * facing - facing value between 0-7
+ *
+ * Purpose:
+ * Returns the x modifier for the given facing.
+ *
+ * Return Values:
+ * int between -1 and 1
+ *
+ * Contributor:
+ * Turley
+ *
+ */
+function ConvertDirectionToLocX( byref facing )
+
+	return CInt( Sin( facing * 0.78 ) * 1.5 );
+endfunction
+
+/*
+ *
+ * ConvertDirectionToLocY( facing )
+ *
+ * Parameters:
+ * facing - facing value between 0-7
+ *
+ * Purpose:
+ * Returns the y modifier for the given facing.
+ *
+ * Return Values:
+ * int between -1 and 1
+ *
+ * Contributor:
+ * Turley
+ *
+ */
+function ConvertDirectionToLocY( byref facing )
+
+	return CInt( Cos( facing * 0.78 ) * -1.5 );
+endfunction
+

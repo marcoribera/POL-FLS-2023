@@ -14,6 +14,7 @@ include "include/damage";
 include "include/tileEffects";
 include ":fls_core:fls_objtypes";
 include "include/sysEvent";
+include "include/eventID";
 
 program destroyitems(parms)
 

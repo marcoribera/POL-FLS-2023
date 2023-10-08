@@ -1,31 +1,35 @@
-/*
-        Created by *Edwards
-        For FantasiaShard.com
-        
-        Edwards@FantasiaShard.com
-        
-        2010-12-18
-*/
 use uo;
 use os;
 use util;
 
 include ":gumps:gumps";
-include ":gumps:gumps_ex";
-//include ":onlineCount:settings";
 
+/*
+ * SelectCharacter( mobile, cmdlevel:=0 )
+ *
+ * Purpose
+ * Sends a list of players to the character from which he may select one.
+ *
+ * Parameters
+ * mobile:     Reference to the character which should receive the gump
+ * cmdlevel:   Determines the command level of players to include in the list.
+ *
+ * Return value
+ * A character reference, or error if the user closes the gump without selecting a character.
+ *
+ */
 function SelectCharacter( mobile, cmdlevel:=0 )
 
-        var gump := GFCreateGump();
+	var gump := GFCreateGump();
 
-	GFResizePic( gump, 0, 0, GFCfgConst( "Defaults", "BackGround" ), 310, 380 );
+	GFResizePic( gump, 0, 0, GFGetCfgConst( "Defaults", "BackGround" ), 310, 380 );
 
-	GFResizePic( gump, 15, 15, GFCfgConst( "Defaults", "ForeGround" ), 280, 25 );
-	GFResizePic( gump, 15, 45, GFCfgConst( "Defaults", "ForeGround" ), 280, 320 );
- 
-        GFAddAlphaRegion( gump, 0, 0, 310, 380 );
+	GFResizePic( gump, 15, 15, GFGetCfgConst( "Defaults", "ForeGround" ), 280, 25 );
+	GFResizePic( gump, 15, 45, GFGetCfgConst( "Defaults", "ForeGround" ), 280, 320 );
 
-	GFTextLine( gump, 30, 15, 1720, "Selecionar Jogador" );
+	GFAddAlphaRegion( gump, 0, 0, 310, 380 );
+
+	GFTextLine( gump, 30, 15, 1720, "Select Player" );
 
 	var names_list := GetCharactersList( cmdlevel ),
 	    num_players := names_list.Size(),
@@ -36,7 +40,7 @@ function SelectCharacter( mobile, cmdlevel:=0 )
 	GFPage( gump, 1 );
 	foreach name in ( list_keys )
 
-                GFTextLine( gump, 25, y_pos, 2100, name );
+		GFTextLine( gump, 25, y_pos, 2100, name );
 		GFAddButton( gump, 261, y_pos+3, 2117, 2118, GF_CLOSE_BTN, _name_iter );
 
 		y_pos += 20;
@@ -70,30 +74,22 @@ endfunction
 
 function GetCharactersList( cmdlevel );
 
-	var the_list := dictionary; // Used to store names in ABC order
+	var the_list := dictionary; // Used to store names in alphabetical order
  	foreach acct_name in ( ListAccounts() )
 		var account := FindAccount( acct_name );
 		var i := 1;
-      while( i <= 5 )
+		while( i <= 5 )
  	 	 	var character := account.GetCharacter(i);
  	 	 	if( character )
  	 	 	 	if( character.cmdlevel <= cmdlevel )
-					var name := character.getName();
- 	 	 	 	 	the_list.Insert( name, character.serial );
+ 	 	 	 	 	the_list.Insert( character.name, character.serial );
  	 	 	 	endif
  	 	 	endif
  	 	 	i += 1;
  	 	 	SleepMS(5);
-      endwhile
+		endwhile
 		SleepMS(5);
 	endforeach
-
-        //Make sure bots are include in the email listing...
-        /*var name_list := OC_GetnameList();
-        foreach name in name_list
-                the_list.Insert( name, RandomInt(500)+1000 );
-		SleepMS(5);
-        endforeach*/
 
 	return the_list;
 endfunction

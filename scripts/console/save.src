@@ -1,13 +1,17 @@
-/* $Id: save.src 1389 2006-05-13 10:12:13Z austin $
- *
- */
+
 use uo;
 use os;
 
-include ":worldsaver:saver";
+program cmd_shutdown()
 
-program console_Save()
-	SVR_SendCommand(EVENT_SAVE_NOW);
-	
-	return 1;
+   print("Saving World State");
+   Broadcast("Saving World State");
+   var res := SaveWorldState();
+   if (res)
+      print("Done saving: " + res );
+      Broadcast("Done saving");
+   else
+      print("Save error: " + res);
+   endif
+
 endprogram

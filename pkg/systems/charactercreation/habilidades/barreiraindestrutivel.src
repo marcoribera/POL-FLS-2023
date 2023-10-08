@@ -8,7 +8,7 @@ include "include/damage";
 include "include/say";
 include ":tn:cooldown";
 include "include/sysEvent";
-
+include "include/eventID";
 
 program doubleattack(who)
 
@@ -19,6 +19,6 @@ program doubleattack(who)
         endforeach
 	SendSysMessageEx(who, "Voce virou uma muralha.", SSM_INFO);
 	SetCooldown(who, "barreiraindestrutivel", 20);
-	
+
 endprogram
 

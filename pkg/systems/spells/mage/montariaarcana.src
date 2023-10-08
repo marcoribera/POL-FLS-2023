@@ -7,6 +7,7 @@ include "include/sounds";
 include "include/say";
 include ":timedscripts:timedScripts";
 include "include/sysEvent";
+include "include/eventID";
 
 program SpellScript(params)
 	var who := params[1];
@@ -17,7 +18,7 @@ program SpellScript(params)
 
 	var globo := 0;
 	var tentativas := 0;
-	
+
 	var r := RandomInt(4) + 1;
 	var template;
 	if (r == 1)
@@ -51,16 +52,16 @@ program SpellScript(params)
 		elseif( dir == 6 )
 			finalx := finalx - 13;
 			finaly := finaly + 13;
-		endif			
+		endif
 
 		var height := GetWorldHeight(finalx, finaly, who.realm);
-		if (CheckLosAt( who, finalx, finaly, height ))	
+		if (CheckLosAt( who, finalx, finaly, height ))
 			globo := CreateNpcFromTemplate(template, finalx, finaly, height, 0, who.realm);
 		endif
 		if (tentativas == 10)
 			SendSysMessageEx(who, "Nao existe nenhuma montaria por perto.", SSM_FAIL);
 			return 1;
-		endif		
+		endif
 	endwhile
 
 	if (RandomInt(2) == 1)
@@ -68,14 +69,14 @@ program SpellScript(params)
 	else
 		PlaySoundEffect(who, 170);
 	endif
-	
+
 	globo.SetMaster(who);
-				
+
 	SetObjProperty(globo, "owner", who.serial);
 	SetObjProperty(globo, "name", globo.name);
 	SetObjproperty(globo, "script", globo.script);
 	SetObjProperty(globo, "AntigoTreinadorID", who.serial);
-	SetObjProperty(globo, "summoned", 1);				
+	SetObjProperty(globo, "summoned", 1);
 	globo.script := ":ghaia:tamed";
 	RestartScript(globo);
 	TS_StartTimer(globo, "summon", GetSpellDuration(who)+180);
@@ -87,6 +88,6 @@ program SpellScript(params)
 
 	sleep(3);
 	PerformAction(globo, ANIM_ATTACK_2HAND_WIDE);
-	
+
 	return 1;
-endprogram   
+endprogram

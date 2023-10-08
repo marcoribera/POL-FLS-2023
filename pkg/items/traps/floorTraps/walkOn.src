@@ -17,6 +17,7 @@ include ":blood:blood";
 include ":charactercreation:habilidades";
 include ":charactercreation:resists";
 include "include/sysEvent";
+include "include/eventID";
 include ":timedscripts:timedScripts";
 
 program TrapWalkOn(mobile, trap)

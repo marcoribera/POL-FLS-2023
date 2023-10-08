@@ -1,34 +1,29 @@
-/* $Id: gumps_ex.inc 375 2006-06-17 19:26:32Z austinheilman $
- *
+/*
  * Purpose
  * TODO
  *
  * Function List
- * GFExtractData(input, data_id)
- * GFOptimizeGump(byref gump)
+ * GFCloseGump()
+ * GFCloseGumpTimed()
+ * GFExtractData()
+ * GFOptimizeGump()
  * GFTextCoords()
  * GFTextMid()
  * GFTextRight()
  * GFTextWidth()
- * GFWordWrap(text, pixels)
- * GFCloseGumpTimed(mobile, pid, timer, ret_val:=0)
- * GFHtmlShadowed(byref gump, x, y, width, height, color, text);
+ * GFWordWrap()
+ *
  */
 use uo;
 use os;
-use basic;
-use cfgfile;
 use polsys;
+use cfgfile;
 
 include ":gumps:gumps";
 
 // CONSTants for GFTextCoords()
 CONST ALIGN_CENTER	:= 0x1;
 CONST ALIGN_RIGHT	:= 0x2;
-
-function GFCloseGumpTimed(mobile, pid, timer, ret_val:=0)
-	return;
-endfunction
 
 function GFHtmlShadowed(byref gump, x, y, width, height, color, text, size := 5);
 	GFHTMLArea(gump, x-1, y-1, width, height, "<BASEFONT SIZE={} COLOR=#111111>{}".format(size, text));
@@ -77,6 +72,43 @@ endfunction
 
 
 /*
+ * GFGetCfgConst(elem_name, prop_name)
+ *
+ * Purpose
+ * Rather than have a lot of CONSTants at the top for
+ * different gump images, they are placed in GumpInfo.cfg
+ * and retrieved with this function.
+ * The idea is that it is easier to update GumpInfo.cfg than
+ * to recompile all scripts that use these includes.
+ *
+ * Parameters
+ * elem_name:	The elem of the config to look at.
+ * prop_name:	The name of the CONSTant to retrieve.
+ *
+ * Return value
+ * An integer for the gump graphical number
+ *
+ */
+function GFGetCfgConst(elem_name, prop_name)
+	var cfg := ReadConfigFile(":gumps:GumpInfo");
+	if ( cfg.errortext )
+		return XGFError("GFGetCfgConst():: Unable to open GumpInfo.cfg -> "+cfg.errortext);
+	endif
+
+	var elem := cfg[elem_name];
+	if ( elem.errortext )
+		return XGFError("GFGetCfgConst():: Unable to find GumpInfo.cfg["+elem_name+"] ->"+elem.errortext);
+	endif
+
+	var value := GetConfigInt(elem, prop_name);
+	if ( !value )
+		return XGFError("GFGetCfgConst():: Unable to find property ["+prop_name+"] in elem ["+elem_name+"]");
+	endif
+
+	return value;
+endfunction
+
+/*
  * GFExtractData(input, data_id)
  *
  * Purpose
@@ -98,7 +130,6 @@ function GFExtractData(input, data_id)
 
 	return ret_val;
 endfunction
-
 
 /*
  * GFOptimizeGump(gump)
@@ -153,7 +184,6 @@ function GFOptimizeGump(byref gump)
 	return 1;
 endfunction
 
-
 /*
  * GFTextCoords(type, gump_text, x_pos, width)
  *
@@ -183,7 +213,6 @@ function GFTextCoords(type:=ALIGN_CENTER, gump_text, x_pos, width:=0)
 	endif
 endfunction
 
-
 /*
  * GFTextMid(gump, x, y, width, color, text)
  *
@@ -207,7 +236,6 @@ function GFTextMid(byref gump, x, y, width, color, text)
 	return GFTextLine(gump, x_pos, y, color, CStr(text));
 endfunction
 
-
 /*
  * GFTextRight(gump, x, y, color, text)
  *
@@ -229,7 +257,6 @@ function GFTextRight(byref gump, x, y, color, text)
 	var x_pos := GFTextCoords(ALIGN_RIGHT, CStr(text), x);
 	return GFTextLine(gump, x_pos, y, color, CStr(text));
 endfunction
-
 
 /*
  * GFGetTextWidth(char)
@@ -253,9 +280,9 @@ function GFTextWidth(gump_text)
 	"`',.;:::::::::"+	//  3
 	"!!!!!!!!!!!!!!"+	//  4
 	"il1[]]]]]]]]]\""+	//  5
-	"bcejot?(){}==="+	//  6
-	"adfpqrszI?~~~~"+	//  7
-	"ghnuvy?<>-----"+	//  8
+	"bcejot”(){}==="+	//  6
+	"adfpqrszI„~~~~"+	//  7
+	"ghnuvy <>-----"+	//  8
 	"xJ578$?++++++ "+	//  9
 	"kCE2369^/*****"+	// 10
 	"mwABDFOPŽ™40%%"+	// 11
@@ -280,13 +307,12 @@ function GFTextWidth(gump_text)
 		if ( i>=0 )
 			points += gft_length.width[CInt(i/14)+1];
 		else
-			//print("XGFTextWidth: Unknown Character = '"+gump_text[j]+"'");
+			print("XGFTextWidth: Unknown Character = '"+gump_text[j]+"'");
 		endif
 	endfor
 
 	return (points);
 endfunction
-
 
 /*
  * GFWordWrap(text, pixels)
@@ -307,25 +333,28 @@ function GFWordWrap(text, pixels)
 	var wrap_lines := array{};
 	var word_list := SplitWords(text);
 	//var num_words := word_list.Size();
-	
+
 	var space_size := GFTextWidth(" ");
-	
+
 	var cur_line := "";
 	var cur_length := 0;
 	var start_new := 0;
-	
-	foreach word in word_list
+
+	foreach word in ( word_list )
 		var word_width := GFTextWidth(word);
-				
-		if ( word == "[P]" || word == "<br>" )
+
+		if ( word == "[P]" )
 			// [P] will force a line break
 			word := "";
 			word_width := 0;
 			start_new := 1;
 		elseif ( (word_width+cur_length) > pixels )
 			start_new := 1;
+			if ( cur_line[Len(cur_line)] == " " )
+				cur_line[Len(cur_line)] := "";
+			endif
 		endif
-		
+
 		if ( start_new )
 			start_new := 0;
 			wrap_lines.Append(cur_line);
@@ -333,17 +362,20 @@ function GFWordWrap(text, pixels)
 			cur_length := 0;
 		endif
 		if ( word )
-			cur_line := cur_line + word+" ";
-			cur_length := cur_length+word_width+space_size;
+			cur_line += word+" ";
+			cur_length += word_width+space_size;
 		endif
-						
+
 		SleepMS(2);
 	endforeach
-	
+
 	//Make sure nothing got left behind.
 	if ( wrap_lines[wrap_lines.Size()] != cur_line )
+		if ( cur_line[Len(cur_line)] == " " )
+			cur_line[Len(cur_line)] := "";
+		endif
 		wrap_lines.Append(cur_line);
 	endif
-	
-	return wrap_lines;	
+
+	return wrap_lines;
 endfunction

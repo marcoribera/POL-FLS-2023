@@ -3,6 +3,7 @@ use util;
 use vitals;
 
 include "include/sysEvent";
+include "include/eventID";
 include ":attributes:attributes";
 include ":tn:boss";
 include ":combat:armorZones";
@@ -22,12 +23,12 @@ function doSpecial(me)
 
   //checa as condicoes
   var conds :=  GetConfigStringArray( npccfgfile[mytemplate], "SpecialCondition" );
-  
+
   foreach cond in  conds
     if (cond == "enemies")
-    
+
     endif
-    
+
     if (cond == "closedist")
       if  (distance(me, me.opponent)  >= 2)
         return;
@@ -36,13 +37,13 @@ function doSpecial(me)
   endforeach
 
   SetCooldown(me, npccfgfile[mytemplate].Special, npccfgfile[mytemplate].SpecialCooldown);
-  
+
   var says := GetConfigStringArray( npccfgfile[mytemplate], "SpecialSpeak" );
   var text := says[RandomInt(says.size())+1];
   if (says != error)
     Say(text);
   endif
-  
+
   if (npccfgfile[mytemplate].SpecialAnimation)
     var e := PerformAction(me, cint(npccfgfile[mytemplate].SpecialAnimation));
   endif
@@ -77,29 +78,29 @@ endfunction
 
 
 function CloseIn(me, lx, ly, mode := 0 )
-  var d := coordinatedistance(me.x, me.y, lx, ly); 
+  var d := coordinatedistance(me.x, me.y, lx, ly);
   case (d)
     0:       return 1;
-    default: 
+    default:
 	     if (mode == 0)
 	      	WalkTowardLocation(lx, ly);
 	     else
 		RunTowardLocation(lx, ly);
-	     endif	
+	     endif
              return 0;
   endcase
-endfunction  
-    
+endfunction
+
 function Fight(opponent, alerted := 0)
-    
-    
+
+
  // mystate := FIGHTING;
   if(opponent.serial == me.serial)
     SetWarMode(0);
     opponent := 0;
     return;
   endif
-    
+
   var oldprio := set_priority(50);
   SetOpponent(opponent);
   DisableMainEvents();
@@ -108,12 +109,12 @@ function Fight(opponent, alerted := 0)
   var loops := 0;
   var ev;
   var waittime := 0;
-  
+
 //	printtextabove(me, " " + alert_allies);
   if (!alerted) //se ele ja nao foi alertado por outro aliado
 	if (alert_allies) //se esse npc eh do tipo que alerta
 	//	printtextabove(me, "vou alertar");
-		AlertAllies(me, opponent); 
+		AlertAllies(me, opponent);
 	endif
  // else
 //	printtextabove(me, "fui alertado, nao vou alertar");
@@ -132,12 +133,12 @@ function Fight(opponent, alerted := 0)
 
     if (me.dead)
        break;
-    endif  
+    endif
 
     if (!opponent)
       break;
     endif
-  
+
     if (opponent.dead)
 	var temnego := 0;
 	foreach npc in ListMobilesInLineOfSight(me, areasize + 2)
@@ -185,7 +186,7 @@ function Fight(opponent, alerted := 0)
   endif
 */
 
-  
+
   //se eh boss e tem eventos
   if ( GetBossStruct(me) != error )
 	var unique := GetBossStruct(me);
@@ -217,7 +218,7 @@ var armor :=  CS_GetEquipmentInArmorZone(opponent, CS_GetRandomArmorZone());
     if ( (dist > throwinfo.range) && (throwinfo.canthrow == 1) )
       throwItem(me, opponent, dist);
     endif
-  
+
     if ( (dist > 6) && ( CInt(npccfgfile[mytemplate].teleport) ) )
       teleport(me, opponent);
     endif
@@ -229,7 +230,7 @@ var armor :=  CS_GetEquipmentInArmorZone(opponent, CS_GetRandomArmorZone());
     if ( (npccfgfile[mytemplate].WebRange) && (dist > npccfgfile[mytemplate].WebRange) )
       SpitWeb(me, opponent,dist);
     endif
-  
+
     if(!CloseDistance(opponent))
       loops := loops + 1;
       waittime := 0;
@@ -237,14 +238,14 @@ var armor :=  CS_GetEquipmentInArmorZone(opponent, CS_GetRandomArmorZone());
       loops := 0;
       waittime := 1;
     endif
-	
+
     checkFlee(opponent);
-	
+
     ev := wait_for_event(waittime);
 //    printtextabove(self(), "event " + ev);
 	if(ev.type != SYSEVENT_SPEECH)
 		case (ev.type)
-			SYSEVENT_DAMAGED: 
+			SYSEVENT_DAMAGED:
 
 			//se ele receber dano de alguem mais proximo que o oponente ou se receber dano de alguem e o oponente nao estiver acessivel
 			if( /*(CoordinateDistance(me.x, me.y, ev.source.x, ev.source.y) < CoordinateDistance(me.x, me.y, opponent.x, opponent.y)) ||*/ (!CheckLineOfSight(me, opponent)) || (!opponent))
@@ -263,7 +264,7 @@ var armor :=  CS_GetEquipmentInArmorZone(opponent, CS_GetRandomArmorZone());
 				endif
 			endif
 
-			SYSEVENT_ENGAGED: 
+			SYSEVENT_ENGAGED:
 				if(ev.source)
 					if(RandomInt(6) == 1)
 						opponent := ev.source;
@@ -276,7 +277,7 @@ var armor :=  CS_GetEquipmentInArmorZone(opponent, CS_GetRandomArmorZone());
 				if(ev.source)
 					opponent := ev.source;
 					SetOpponent(opponent);
-				        TurnToward(opponent);		
+				        TurnToward(opponent);
 				endif
 			EVID_FLEE:
 				if (ev.source)
@@ -298,7 +299,7 @@ var armor :=  CS_GetEquipmentInArmorZone(opponent, CS_GetRandomArmorZone());
 		endcase
 	endif
   endwhile
-  
+
   DisableCombatEvents();
   EnableMainEvents();
   SetWarMode(0);
@@ -362,14 +363,14 @@ function Flee(opponent)
     endwhile
   endif
 endfunction
-    
+
 
 
 
 //no sleep mode ele o waitfor event fica 30 secs e ele nao fica mais fazendo lookarounds o tempo todo
 function sleepmode()
 
-	  
+
 //  foreach critter in ListMobilesNearLocation( me.x,me.y,me.z, Cint(npccfgfile[mytemplate].AreaSize);
 //	look_around(); //da um lookaround pra ver se nao tem um inimigo antes do sleep
  //     return;
@@ -403,7 +404,7 @@ function sleepmode()
         procura_em_volta(me);
     endif
 
-if ((GetObjProperty(me, "Mobnoturno") == 1) && (GetGlobalProperty( "dia") != "noite")) 
+if ((GetObjProperty(me, "Mobnoturno") == 1) && (GetGlobalProperty( "dia") != "noite"))
            ApplyRawDamage(me, CInt(AP_GetVitalMaximumValue(me, "Hits")));
       endif
 

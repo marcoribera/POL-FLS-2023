@@ -70,6 +70,13 @@ program herd(who)
 	var female_template := (location.mobile.npctemplate); //para checar o template do alvo-destino
 	var male_template := (npc.npctemplate);
 	var compatibles := (female_template == male_template);
+	var cows := array(":brainai:cow", ":brainai:cow2");
+	print("eh "+male_template);
+	if ( (female_template == ":brainai:cabra") && (male_template == ":brainai:goat") )
+	compatibles := 1;
+	elseif ( (female_template in cows) && (male_template == ":brainai:bull") )
+	compatibles := 1;
+	endif
 	var partos := (Getobjproperty(location.mobile, "Gravida")); // para ver quantas vezes engravidou
 	var distancia := (Distance(npc, location.mobile) < 5);	//para checar a distancia entre o macho e a femea
 	var gemer := CInt(cfg[npc.npctemplate].damagedsound); // para identificar o som de sequiçu do 1target (macho)	
@@ -152,6 +159,7 @@ cfg := cfg[npctemplate];
 var skill_check := (SkillCheck(who, HANDLEANIMAL, CInt(cfg.TameDifficulty)) > 0) ;
 var skill_check2 := (SkillCheck(who, HANDLEANIMAL, CInt(cfg.TameDifficulty+10)) > 0) ;
 var gemer := CInt(cfg.damagedsound); // para identificar o som de sequiçu do 1target (macho)
+var cows := array(":brainai:cow", ":brainai:cow2");
 	if (!partos) 
 		if(skill_check)
 			Setobjproperty(location_mobile, "Gravida", CInt(Getobjproperty(location_mobile, "Gravida"))+1); //Adiciona o valor +1 pra qtas x engravidou
@@ -161,7 +169,13 @@ var gemer := CInt(cfg.damagedsound); // para identificar o som de sequiçu do 1t
 			PlaySoundEffect(npc, gemer); //tocar som na hora do acasalamento
 			detach();
 			sleep(5);
-			CreateNpcFromTemplate(female_template, location_mobile.x, location_mobile.y, location_mobile.z, struct{"name" := "Filhote de "+location_mobile.name}, location_mobile.realm); //"pari" o npc com nome de filhote de +acordo com name da mãe
+			if (female_template in cows)
+				CreateNpcFromTemplate(female_template, location_mobile.x, location_mobile.y, location_mobile.z, struct{"name" := "Bezerro"}, location_mobile.realm); //"pari" o npc com nome de filhote de +acordo com name da mãe
+			elseif (female_template == ":brainai:cabra")
+				CreateNpcFromTemplate(female_template, location_mobile.x, location_mobile.y, location_mobile.z, struct{"name" := "Cabrito"}, location_mobile.realm); //"pari" o npc com nome de filhote de +acordo com name da mãe
+			else
+				CreateNpcFromTemplate(female_template, location_mobile.x, location_mobile.y, location_mobile.z, struct{"name" := "Filhote de "+location_mobile.name}, location_mobile.realm); //"pari" o npc com nome de filhote de +acordo com name da mãe
+			endif
 			Eraseobjproperty(location_mobile, "alvo"); // apagar o prop de alvo (acasalar)
 			return;
 		else
