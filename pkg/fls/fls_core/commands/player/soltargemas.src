@@ -17,8 +17,6 @@ program soltarGemas(who)
         return 1;
     endif
 
-
-
     SendSysMessage(who, "Escolha a arma");
     var armaAntiga := cint(GetObjProperty(who, "swordmage"));
     var targ := Target(who);
