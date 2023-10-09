@@ -1168,19 +1168,15 @@
 0x1385 Bestapesadasemcorda woodworking
 # 0x1386 - 0x1387 unused
 0x1388 Capuz domesticwork
-# 0x1389 - 0x138d unused
-0x138e CapaSimples domesticwork
-# 0x138f unused
+# 0x1389 - 0x138f unused
 0x1390 SaiaImprovisada domesticwork
 0x1391 SaiaLonga domesticwork
 0x1392 SaiaLongaNobre domesticwork
 # 0x1393 unused
 0x1394 VestidoSimples domesticwork
 0x1395 VestidoEnfeitado domesticwork
-0x1396 VestidoModerno domesticwork
-# 0x1397 - 0x1398 unused
-0x1399 TunicaNobre domesticwork
-# 0x139a - 0x13ae unused
+0x1396 VestidoNobre domesticwork
+# 0x1397 - 0x13ae unused
 0x13af WarAxe combat
 # 0x13b0 - 0x13b1 unused
 0x13b2 ShortBow combat
@@ -1220,8 +1216,8 @@
 0x13e6 meiacapa combat
 0x13e7 botasnumajenes combat
 0x13e8 botasacolchoadas combat
-0x13e9 mantodoviajante combat
-0x13ea mantodadescobertavaniria combat
+0x13e9 mantodoviajante domesticwork
+# 0x13ea unused
 0x13eb mantodosmagos combat
 0x13ec RingmailTunic combat
 0x13ed RingmailTunic2 combat
@@ -1346,9 +1342,9 @@
 # 0x1542 unused
 0x1543 Skullcap domesticwork
 # 0x1544 unused
-0x1545 BearMask domesticwork
-# 0x1546 unused
-0x1547 DeerMask domesticwork
+0x1545 bearmask domesticwork
+0x1546 PolarBearMask domesticwork
+0x1547 deermask domesticwork
 # 0x1548 unused
 0x1549 TribalMask domesticwork
 # 0x154a - 0x15ae unused
@@ -1367,7 +1363,9 @@
 # 0x1668 - 0x166c unused
 0x166d postedetortura woodworking
 0x166e whip torture
-# 0x166f - 0x170a unused
+# 0x166f - 0x16b0 unused
+0x16b1 mantodadescobertavaniria combat
+# 0x16b2 - 0x170a unused
 0x170b Boots combat
 # 0x170c unused
 0x170d Sandals domesticwork
@@ -1394,7 +1392,7 @@
 0x1722 bananabunch2 food
 0x1723 leakingcoconut1 food
 0x1724 leakingcoconut2 food
-# 0x1725 unused
+0x1725 Sino tn
 0x1726 wholecoconut food
 0x1727 dates food
 0x1728 lemons food
@@ -1506,7 +1504,8 @@
 0x19aa brazier2 lighting
 # 0x19ab - 0x19ba unused
 0x19bb brazier3 lighting
-# 0x19bc - 0x1a06 unused
+0x19bc mantoumeraque domesticwork
+# 0x19bd - 0x1a06 unused
 0x1a07 chain fls_core
 # 0x1a08 - 0x1a88 unused
 0x1a89 roloalgodao domesticwork
@@ -1921,11 +1920,26 @@
 0x27af dualknives combat
 # 0x27b0 - 0x27c6 unused
 0x27c7 bustoCazarplacas combat
-# 0x27c8 - 0x27d0 unused
+# 0x27c8 - 0x27cd unused
+0x27ce mantoLady domesticwork
+# 0x27cf - 0x27d0 unused
 0x27d1 pernasCazar combat
 0x27d2 pernasCazarplacas combat
 0x27d3 pernascouroCazarreforcado combat
-# 0x27d4 - 0x27ee unused
+# 0x27d4 - 0x27de unused
+0x27df Jaqueta domesticwork
+# 0x27e0 unused
+0x27e1 sandalhaCamponesa domesticwork
+0x27e2 sandalhaNobre domesticwork
+0x27e3 chapeuPalha domesticwork
+0x27e4 mantoSabios domesticwork
+0x27e5 saioteRodado domesticwork
+0x27e6 calcasLargas domesticwork
+0x27e7 mantoNobreCurto domesticwork
+# 0x27e8 - 0x27ea unused
+0x27eb espartilho domesticwork
+0x27ec coleteAberto domesticwork
+# 0x27ed - 0x27ee unused
 0x27ef espadacurta combat
 # 0x27f0 - 0x2803 unused
 0x2804 dardo tn
@@ -1970,20 +1984,25 @@
 0x2be1 biscuit food
 # 0x2be2 - 0x2cd3 unused
 0x2cd4 escudowazif combat
-# 0x2cd5 - 0x2cde unused
+# 0x2cd5 unused
+0x2cd6 CapaPeles domesticwork
+# 0x2cd7 - 0x2cdc unused
+0x2cdd bandanarosto domesticwork
+# 0x2cde unused
 0x2cdf capaceteclerigo combat
 0x2ce0 bustoclerigo combat
 0x2ce1 pernasclerigo combat
 0x2ce2 bracosclerigo combat
 0x2ce3 luvasclerigo combat
-# 0x2ce4 unused
+0x2ce4 CapaSimples domesticwork
 0x2ce5 pescococlerigo combat
 0x2ce6 bracadeirasbariya combat
 0x2ce7 bustobariya combat
 0x2ce8 luvasbariya combat
 0x2ce9 pescoceirabariya combat
 0x2cea pernasbariya combat
-# 0x2ceb - 0x2d29 unused
+0x2ceb botasbariya combat
+# 0x2cec - 0x2d29 unused
 0x2d2a ArcoLongoNumaja combat
 0x2d2b ArcoCurtoNumaja combat
 # 0x2d2c unused
@@ -2003,13 +2022,25 @@
 # 0x2dae unused
 0x2daf luvasferun combat
 0x2db0 pescocoferun combat
-# 0x2db1 - 0x2de2 unused
+# 0x2db1 - 0x2db5 unused
+0x2db6 CapaNobre domesticwork
+# 0x2db7 - 0x2dbb unused
+0x2dbc TunicaModerna domesticwork
+# 0x2dbd - 0x2de2 unused
 0x2de3 OrnateElvenChair woodworking
 # 0x2de4 - 0x2dea unused
 0x2deb BigElvenChair woodworking
 # 0x2dec - 0x2df4 unused
 0x2df5 ElvenReadingDesk woodworking
-# 0x2df6 - 0x2fb6 unused
+# 0x2df6 - 0x2f61 unused
+0x2f62 mantoaventureiro domesticwork
+# 0x2f63 - 0x2f66 unused
+0x2f67 tunicaalcateia domesticwork
+0x2f68 tunicalegiao domesticwork
+# 0x2f69 unused
+0x2f6a tunicalirio domesticwork
+0x2f6b tunicamilicia domesticwork
+# 0x2f6c - 0x2fb6 unused
 0x2fb7 aljavapequena woodworking
 0x2fb8 oculos domesticwork
 # 0x2fb9 - 0x2fca unused
@@ -2034,10 +2065,14 @@
 0x3162 calcasdequitina combat
 0x3163 bracadeirasdequitina combat
 0x3164 peitoraldequitina combat
-# 0x3165 - 0x3176 unused
+# 0x3165 - 0x3172 unused
+0x3173 mantoAdornado domesticwork
+0x3174 mantoAdornadoFeminino domesticwork
+# 0x3175 - 0x3176 unused
 0x3177 CamisaNobre domesticwork
 0x3178 CamisaFina domesticwork
-# 0x3179 - 0x317a unused
+0x3179 calcasFinas domesticwork
+# 0x317a unused
 0x317b numajatunic combat
 0x317c NumajaGloves combat
 0x317d NumajaGorget combat
@@ -2092,20 +2127,19 @@
 # 0x3997 - 0x3bbc unused
 0x3bbd CamisaModerna domesticwork
 0x3bbe TunicaSimples domesticwork
-# 0x3bbf - 0x3bc0 unused
-0x3bc1 TunicaModerna domesticwork
-# 0x3bc2 - 0x3bd0 unused
+# 0x3bbf - 0x3bc2 unused
+0x3bc3 cinto domesticwork
+# 0x3bc4 - 0x3bd0 unused
 0x3bd1 TunicaGala domesticwork
 0x3bd2 VestidodeFesta domesticwork
-0x3bd3 pistola fireweapons
-# 0x3bd4 - 0x3bd6 unused
+# 0x3bd3 - 0x3bd6 unused
 0x3bd7 bainhaealjava woodworking
 0x3bd8 ChapeuPirata domesticwork
 0x3bd9 cintoutilidades woodworking
-# 0x3bda - 0x3be5 unused
+0x3bda Vestidocomum domesticwork
+# 0x3bdb - 0x3be5 unused
 0x3be6 cachimbo tn
-0x3be7 WolfMask domesticwork
-# 0x3be8 - 0x3bea unused
+# 0x3be7 - 0x3bea unused
 0x3beb RangerSkirt combat
 # 0x3bec - 0x3c00 unused
 0x3c01 CrystalLight lighting
@@ -2200,7 +2234,13 @@
 0x6007 level5map cartography
 # 0x6008 unused
 0x6009 SystemMoonGate moongates
-# 0x600a - 0x6018 unused
+0x600a tapeteazul domesticwork
+0x600b tapeteazulfino domesticwork
+0x600c tapetevermelho domesticwork
+0x600d tapeteamarelo domesticwork
+0x600e tapetevermelhofino domesticwork
+0x600f tapetecontornofino domesticwork
+# 0x6010 - 0x6018 unused
 0x6019 smallstoneandplasterhousedeed house
 0x601a smallstonehousedeed house
 0x601b smallwoodenhousedeed house
@@ -2519,30 +2559,47 @@
 0x7038 GarlicSeed farming
 0x7039 NightshadeSeed farming
 0x703a CantelopeSeed farming
-# 0x703b - 0x70af unused
+0x703b faixalegionario1 domesticwork
+0x703c faixalegionario2 domesticwork
+0x703d tabardotessarario1 domesticwork
+0x703e tabardotessarario2 domesticwork
+0x703f tabardocapitao domesticwork
+# 0x7040 - 0x70af unused
 0x70b0 checkerboard games
 0x70b1 chessboard games
 0x70b2 backgammon games
 0x70b3 dontcreateme_gamepiece games
-0x70b4 jogodados woodworking
+0x70b4 faixavarangio domesticwork
 # 0x70b5 - 0x7104 unused
 0x7105 HairDye hair
-# 0x7106 - 0x76aa unused
+0x7106 jogodados woodworking
+# 0x7107 - 0x76aa unused
 0x76ab EagleRing tn
 0x76ac Fruta1 tn
 0x76ad Fruta2 tn
 0x76ae Fruta3 tn
 0x76af Fruta4 tn
-# 0x76b0 - 0x7817 unused
+# 0x76b0 - 0x7815 unused
+0x7816 mantoCerimonial domesticwork
+# 0x7817 unused
 0x7818 escudodavirtude combat
-# 0x7819 - 0x790a unused
+0x7819 sapatosBalmutes domesticwork
+# 0x781a unused
+0x781b kiltGuerreiro domesticwork
+0x781c kiltEnfeitado domesticwork
+0x781d kiltNobre domesticwork
+0x781e mantoEnfeitado domesticwork
+# 0x781f - 0x7820 unused
+0x7821 vestidoReal domesticwork
+# 0x7822 - 0x7827 unused
+0x7828 panthermask domesticwork
+0x7829 gargantilha domesticwork
+# 0x782a - 0x790a unused
 0x790b furiaprimordialcast spells
 0x790c luzdivina spells
 # 0x790d - 0x791b unused
 0x791c aljava woodworking
-# 0x791d unused
-0x791e PolarBearMask domesticwork
-# 0x791f - 0x884f unused
+# 0x791d - 0x884f unused
 0x8850 marmore stonework
 0x8851 blocomarmore stonework
 0x8852 arenito stonework
@@ -2583,8 +2640,7 @@
 0x9934 cascokuatoa survival
 # 0x9935 - 0x9944 unused
 0x9945 Robe domesticwork
-0x9946 trajereligioso domesticwork
-# 0x9947 unused
+# 0x9946 - 0x9947 unused
 0x9948 mantoshimoriano domesticwork
 # 0x9949 - 0x9955 unused
 0x9956 basenarguile tn
@@ -2644,7 +2700,9 @@
 0x99bd QuadroAdornado11 quadros
 # 0x99be unused
 0x99bf QuadroAdornado12 quadros
-# 0x99c0 - 0x9d52 unused
+# 0x99c0 - 0x9c72 unused
+0x9c73 pantherhead survival
+# 0x9c74 - 0x9d52 unused
 0x9d53 Ilustracao0 quadros
 # 0x9d54 unused
 0x9d55 Ilustracao1 quadros
@@ -2667,9 +2725,9 @@
 # 0x9e34 - 0x9e3f unused
 0x9e40 soschest containers
 # 0x9e41 - 0x9eee unused
-0x9eef vestidonoiva domesticwork
+0x9eef vestidoMagnanimo domesticwork
 # 0x9ef0 - 0x9ef6 unused
-0x9ef7 calcaterno domesticwork
+0x9ef7 calcasNobres domesticwork
 # 0x9ef8 unused
 0x9ef9 cartola domesticwork
 # 0x9efa unused
@@ -2718,11 +2776,12 @@
 0xa2f2 Quadro13 quadros
 # 0xa2f3 unused
 0xa2f4 Paisagem8 quadros
-# 0xa2f5 - 0xa35c unused
-0xa35d CapaPeles domesticwork
+# 0xa2f5 - 0xa30b unused
+0xa30c sosbottle sosbottles
+# 0xa30d - 0xa35d unused
 0xa35e mantodeaquil domesticwork
 0xa35f botasalto domesticwork
-0xa360 sosbottle sosbottles
+0xa360 trajereligioso domesticwork
 0xa361 uniformemilitar domesticwork
 # 0xa362 unused
 0xa363 sosmessage sosbottles
@@ -2731,15 +2790,14 @@
 0xa366 tunicaturiap domesticwork
 0xa367 uniformeoficial domesticwork
 # 0xa368 unused
-0xa369 masclobo domesticwork
+0xa369 wolfmask domesticwork
 0xa36a espartilhosimples domesticwork
 # 0xa36b - 0xa36f unused
 0xa370 acid acid
 0xa371 cintofivela domesticwork
 0xa372 tunicaturian domesticwork
 0xa373 tunicanobre domesticwork
-0xa374 deerhead survival
-0xa375 wolfhead survival
+# 0xa374 - 0xa375 unused
 0xa376 espartilhonobre domesticwork
 0xa377 coroadeus domesticwork
 0xa378 aljavacint woodworking
@@ -2748,13 +2806,26 @@
 0xa380 sobretudovanm domesticwork
 0xa381 sobretudovanf domesticwork
 0xa382 camisasimples domesticwork
-0xa383 mantonumaja domesticwork
-# 0xa384 - 0xa400 unused
+# 0xa383 - 0xa400 unused
 0xa401 SpawnPoint spawnpoint
-# 0xa402 - 0xa4c2 unused
+# 0xa402 - 0xa40b unused
+0xa40c bainhaMaca domesticwork
+0xa40d bainhaEspada domesticwork
+0xa40e bainhaAdaga domesticwork
+0xa40f golaNobre domesticwork
+0xa410 capuzNobre domesticwork
+0xa411 capuzSabio domesticwork
+0xa412 tabardoNobre domesticwork
+0xa413 capaCurta domesticwork
+# 0xa414 - 0xa42a unused
+0xa42b chapeuPele domesticwork
+# 0xa42c - 0xa4c2 unused
 0xa4c3 serrabancada woodworking
 0xa4c4 serrabancada1 woodworking
-# 0xa4c5 - 0xafef unused
+# 0xa4c5 - 0xacd4 unused
+0xacd5 deerhead survival
+0xacd6 wolfhead survival
+# 0xacd7 - 0xafef unused
 0xaff0 TintaVerdeClaro alchemy
 0xaff1 TintaVerdeClaro1 alchemy
 0xaff2 TintaVerdeClaro2 alchemy
@@ -3071,7 +3142,9 @@
 0xff9a beartrap traps
 # 0xff9b - 0xffe0 unused
 0xffe1 mushrooms2 food
-# 0xffe2 - 0xffe4 unused
+0xffe2 couracadewazif combat
+0xffe3 bracadeiradewazif combat
+0xffe4 saiadewazif combat
 0xffe5 armaduracouropicta combat
 0xffe6 malhaferune combat
 0xffe7 aljavacintura woodworking
