@@ -21,7 +21,7 @@ program terremoto(params)
 
     detach();
     while (1)
-        sleep(200);
+        sleep(60);
 
         if (GetObjProperty(who,"areaInstavel") == error || who.cmdlevel > 0)
             return;

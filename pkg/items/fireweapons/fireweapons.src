@@ -13,6 +13,14 @@ include "include/facings";
         - Menor o range, maior chance de acerto, menor o dano.
     Chuva impedir a arma de ser disparada e descarregar armas recarregadas
 
+    Clica na pólvora -> time de 5s socando pólvora ( precisa ter um soquete)
+
+    Fukia (532) anim para rifle e carabina
+    Assassin Spike (953) para pistola
+    bacamarte, pistola, mosquete, carabina
+
+    0xC5FD // 50685
+
 */
 program fireweapon(who, item)
 
