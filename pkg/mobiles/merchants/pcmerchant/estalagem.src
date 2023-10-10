@@ -342,7 +342,7 @@ program MerchantMenu(params)
 				bank_region := CP_DEFAULT_AREA;
 			endif
 			if ( !debitoEmConta(bank_region, player, quartos[input[0]].custo) )
-				SendSysMessageEx(player, "Voce nao tem moedas suficiente para pagar o aluguel.", SSM_FAIL);
+				SendSysMessageEx(player, "Voce nao tem moedas suficientes para pagar o aluguel.", SSM_FAIL);
 			else //cria a chave
 				quartos[input[0]].inquilino := player.serial;
 				quartos[input[0]].data := polcore().systime;
