@@ -2438,7 +2438,7 @@
 0x6218 telepadmasc walkon
 # 0x6219 - 0x62ff unused
 0x6300 IronOre gathering
-0x6301 LithtanOre gathering
+0x6301 LitanIngot gathering
 0x6302 HelceOre gathering
 0x6303 SinqueOre gathering
 0x6304 FiginOre gathering
@@ -2447,7 +2447,7 @@
 0x6307 GalvornOre gathering
 0x6308 MithrilOre gathering
 0x6309 IronIngot gathering
-0x630a LithtanIngot gathering
+0x630a LitanIngot gathering
 0x630b HelceIngot gathering
 0x630c SinqueIngot gathering
 0x630d FiginIngot gathering

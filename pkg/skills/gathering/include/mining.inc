@@ -9,42 +9,38 @@ include ":chestspawn:treasurechest";
 const MAX_RESOURCE_AMOUNT := 10;
 
 function Garimpeiro(who)
-
-	if (randomint(600) <= 1)	
-
+	var rand := randomint(200);
+	if(rand < 2)
 		var cfg := ReadConfigFile(":gems:itemdesc");
 		var keys := GetConfigStringKeys( cfg );
-
 		SendSysMessageEx(who, "Voce achou uma pedra preciosa!", SSM_INFO);
 		CreateItemInBackPack(who, keys[RandomInt(keys.size()+1)], 1);
-
-	PrinttextAbove(who, "*encontra algo reluzente*");
+		PrinttextAbove(who, "*encontra algo reluzente*");
+		SkillCheck(who, GATHERING, -1);
 	elseif(TemHabilidade(who, "Minerador Talentoso") && rand < 10)
 		var cfg := ReadConfigFile(":gems:itemdesc");
 		var keys := GetConfigStringKeys( cfg );
 		SendSysMessageEx(who, "So alguem talentoso acharia essa pedra preciosa!", SSM_INFO);
 		CreateItemInBackPack(who, keys[RandomInt(keys.size()+1)], 1);
 		PrinttextAbove(who, "*encontra algo reluzente*");
-		
+		SkillCheck(who, GATHERING, -1);
 	endif
 	return 1;
-
 endfunction
 
 function GetMapsInBackpack(who)
 	var items := EnumerateItemsInContainer(who.backpack);
 	var maps := array;
     	foreach item in items
-			//sendsysmessage(who, " " + isTreasureMap(item) + " " + item.objtype);
-			if ( isTreasureMap(item) )
-				if ( !isSolved(item) )
-					maps.append(item);
-				endif
+		//sendsysmessage(who, " " + isTreasureMap(item) + " " + item.objtype);
+		if ( isTreasureMap(item) )
+			if ( !isSolved(item) )
+				maps.append(item);
 			endif
-			
-		endforeach
-
+		endif
+	endforeach
 	return maps;
+
 
 endfunction
 
@@ -105,11 +101,9 @@ function DigForMap(who, targ, map)
 		return;
 
 	elseif((distn < range) && (len(mobiles) > 0))
-		SendSysMessageEx(who,"voce parou de cavar porque algo esta sobre o tesouro.");
+		SendSysMessageEx(who,"voce patou de cavar porque algo esta sobre o tesouro.");
 		return;
 	else
-		who.frozen := 1;
-		PrintTextAbove(who, "*Comeca a cavar o tesouro*");
 
 		var i := 1;
 		var mex := who.x;
@@ -297,70 +291,72 @@ endfunction
 
 function SetOreAmount(realm, x_pos, y_pos, amount)
 	var pos_string := CStr(realm+" "+x_pos+"x"+y_pos);
-	
+
 	var data_elem := GetDataElem(pos_string);
-	
+
 	data_elem.SetProp("Amount", CInt(amount));
 endfunction
 
 function GetOreAmount(realm, x_pos, y_pos)
 
 	var pos_string := CStr(realm+" "+x_pos+"x"+y_pos);
-	
+
 	var data_elem := GetDataElem(pos_string);
-	
+
 	var amount := data_elem.GetProp("Amount");
 	if ( amount == error )
 		SetOreAmount(realm, x_pos, y_pos, MAX_RESOURCE_AMOUNT);
 		amount := MAX_RESOURCE_AMOUNT;
 	endif
-	
+
 	return CInt(amount);
 endfunction
 
 function GetResourceId(oreToSearch)
 
 	case (oreToSearch)
-	
+
 		"areia": return 0x6075;
 
 		"cobre": return 0x6450;
 
-		"estanho": return 0x6990; //TN USED
-		
+		"argila": return 0x6074;
+
 		"ferro": return 0x6300; //TN USED
-		
+
 		"litan": return 0x6301;
-		
+
 		"helce": return 0x6302;
-		
+
 		"sinque": return 0x6303;
-		
+
 		"figin": return 0x6304;
-		
+
 		"ouro": return 0x6305;
 
-		"prata": return 0x6992; //TN USED
-		
+		//"durang": return 0x6306;
+
 		"galvorn": return 0x6307; //TN USED
-		
+
 		"mithril": return 0x6308; //TN USED
 
 		"argonil": return 0x6451; //TN USED
-		
-		"pedra": return 0xBD11;
+
+		//"gromril": return 0x6452; //TN USED
+
+
+
+		"prata": return 0x6992; //TN USED
+
+		"estanho": return 0x6990; //TN USED
+
+		//"ario": return 0x6312;
+
+		"pedras": return 0x6666;
 
 		"marmore": return 0x8850;
 
-		"arenito": return 0x8852;				
-					
-		//"durang": return 0x6306;
- 
-		//"gromril": return 0x6452; //TN USED
-
-		//"ario": return 0x6312;
-		
-		//"argila": return 0x6077;
+		"arenito": return 0x8852;
 
 	endcase
 
@@ -383,13 +379,13 @@ function DetermineOreType(who, where)
 	var chance := RandomInt(1000);
 	var oreToSearch;
 	var skill := AP_GetSkill(who, GATHERING);
-	
+
 	if (GetObjProperty(who, "searchore") == error)
-		oreToSearch := "pedra";
+		oreToSearch := "pedras";
 	else
 		oreToSearch := GetObjProperty(who, "searchore");
 	endif
-	
+
 	var achou := 0;
 	foreach ore in ores
 		if (ore == oreToSearch)
@@ -399,18 +395,18 @@ function DetermineOreType(who, where)
 			i := i + 1;
 		endif
 	endforeach
-	
+
 	if (!achou)
 		SendSysMessage(who, "Nao tem o minerio que voce procura aqui.");
 		return 0;
 	endif
-	
+
 	if ( chance <= Cint(percent[i]))
 		var oreid := GetResourceId(oreToSearch);
 		//var oreid := GetResourceId("ario");
-	/*	if (oreid == 0x6666)
+		if (oreid == 0x6666)
 			return 0x5001;
-		endif */
+		endif
 		return oreid;
 	else
 		SendSysMessage(who, "Voce nao conseguiu achar o minerio que procura.");
@@ -424,18 +420,13 @@ endfunction
 function DetermineMiningDifficulty(oretype)
 
 	case (oretype)
-	
-		0xBD11: return 0;  //pedra pequena
-	/*	0xBD11: return 0;  //pedra media
-		0xBD11: return 0;  //pedra grande
-		0xee99: return 0;  //calcario
-	*/
-		0x6075: return 5;	//areia
-		0x6990: return 10;	//estanho 
-		0x6450: return 20;	//cobre
-		0x6300: return 30;	//iron ore
-		0x6992: return 40;	//prata 
 
+		0xBD11: return 0;  //pedra pequena
+		//0xBD12: return 0;  //pedra media
+		//0xBD13: return 0;  //pedra grande
+		0xee99: return 0;  //calcario
+
+		0x6300: return 0;  //iron ore
 		0x6301: return 70; //litan
 		0x6302: return 80; //helce
 		0x6303: return 80; //sinque
@@ -443,15 +434,21 @@ function DetermineMiningDifficulty(oretype)
 		0x6451: return 80; //argonil
 		0x6307: return 90; //galvorn
 		0x6308: return 90; //mithril
-		
-	/*	0x6666: return 0; //id falso de pedra
+		0x6450: return 20; //cobre
+
+		0x6992: return 50; //prata
+ 		0x6990: return 30; //estanho
+
+		0x6075:  return 5; //areia
+
+		0x6666: return 0; //id falso de pedra
 		0x8850: return 40; //marmore
-		0x8852: return 30; //arenito 
-		0x5001: return 5; //id de stone */
-	
+		0x8852: return 30; //arenito
+		0x5001: return 5; //id de stone
+
 		0x6305: return 40; //golden <- nao faz nada
-		
-		default: return 0;
+
+		default: return 100;
 	endcase
 
 endfunction
@@ -468,7 +465,7 @@ function GetOreRarityDesc(rarity)
 		return "comum";
 	else
 		return "muito comum";
-	endif 
+	endif
 
 endfunction
 
@@ -483,28 +480,15 @@ endfunction
 
 function GetMiningRegion(x, y)
 
-	var cfg := ReadConfigFile(":gathering:config/miningspots");
-	var elems := GetconfigStringKeys(cfg);
-  
-	foreach elem in elems
-	
-		var region := FindConfigElem(cfg, elem);
-		var rect := GetConfigString(region, "Rect");
-		if ( InRect (x, y, SplitWords(rect)))
-			return elem;
-		endif 
-		
-	endforeach
-
   var df := opendatafile(":gathering:miningspots");
   foreach elem in (df.Keys())
-  
+
     var region := df.FindElement(elem);
     var rect := region.getProp("Rect");
     if (inrect(x, y, SplitWords(rect)))
       return elem;
     endif
-  
+
   endforeach
 
 	return "Whole_World";
@@ -523,13 +507,13 @@ function CanMine(targ, type)
 	elseif ( land_scape in GetConfigStringArray(config, "landscape") )
 		return 1;
 	endif
-	
-	return 0;	
+
+	return 0;
 endfunction
 
 function ResourceAmount(resource_type, byref elem)
 	var amount := DFGetProp(elem, resource_type, DF_CREATE, CStr(MAX_RESOURCE_AMOUNT));
-	
+
 	return CInt(amount);
 endfunction
 
@@ -554,6 +538,6 @@ function CheckLoop(who, tool, my_x, my_y, my_facing)
 	elseif (!tool)
 		return 0;
 	else
-		return 1;	
+		return 1;
 	endif
 endfunction
