@@ -25,6 +25,8 @@ program drink_blue (who, potion)
      what.color := potion.color;
      DestroyItem(potion);
      CreateItemInBackpack(who, UOBJ_EMPTY_BOTTLE, 1);
+     SetObjProperty(what, "fullness", 10);
+		 what.name := "Um balde de tinta cheio";
   else
      SendSysMessage(who, "Voce precisa usar no balde de tintas");
   endif

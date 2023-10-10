@@ -366,8 +366,8 @@ function DetermineMiningDifficulty(oretype)
 	case (oretype)
 
 		0xBD11: return 0;  //pedra pequena
-		0xBD12: return 0;  //pedra media
-		0xBD13: return 0;  //pedra grande
+		//0xBD12: return 0;  //pedra media
+		//0xBD13: return 0;  //pedra grande
 		0xee99: return 0;  //calcario
 
 		0x6300: return 0;  //iron ore

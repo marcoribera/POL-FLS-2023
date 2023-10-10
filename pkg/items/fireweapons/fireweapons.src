@@ -7,7 +7,21 @@ include ":timedScripts:timedScripts";
 include "include/sounds";
 include "include/damage";
 include "include/facings";
+/*
+    TODO: Setar cooldown de reload para pistola, carabinas e rifles
+    Setar bônus e penalidade para as armas baseado na distância. 
+        - Menor o range, maior chance de acerto, menor o dano.
+    Chuva impedir a arma de ser disparada e descarregar armas recarregadas
 
+    Clica na pólvora -> time de 5s socando pólvora ( precisa ter um soquete)
+
+    Fukia (532) anim para rifle e carabina
+    Assassin Spike (953) para pistola
+    bacamarte, pistola, mosquete, carabina
+
+    0xC5FD // 50685
+
+*/
 program fireweapon(who, item)
 
 	var weapon := GetEquipmentByLayer(who, LAYER_HAND2);
@@ -36,12 +50,6 @@ program fireweapon(who, item)
        endif
 
 		if (ammo.movable && Accessible(who, ammo) && valid)
-            //var locinfo := GetMapInfo( who.x, who.y, who.realm );
-            //print("locinfo " + locinfo);
-            //var loc := TargetCoordinates(who);
-            //print("loc " + loc);
-            //var same_position := CoordinateDistance(who.x, who.y, loc.x, loc.y);
-            //print("same_position " + same_position);
             var current_x := who.x;
             var current_y := who.y;
             while (who.x == current_x && who.y == current_y)
@@ -98,7 +106,11 @@ program fireweapon(who, item)
 	TurnObjectToward(who, targ.x, targ.y);
 	PrintText(who, "*mirando em *" + targ.name);
 	who.frozen := 1;
-	sleep(cd);
+    var i := 0;
+    for (i := 0; i < cd; i++)
+        PerformAction(who, 0x13);
+        sleep(1);
+    endfor
 	who.frozen := 0;
 
 	//testa 2x
@@ -144,6 +156,7 @@ program fireweapon(who, item)
 
 	TS_StartCooldown(who, "fireweapon", 15);
     PlayObjectCenteredEffect(who, GFX_FIZZLE, 5, 50);
+    PlayMovingEffect(who, targ, FX_EXPLODE_1, 5, 1, 1);
 	PlaySoundEffect(who, SFX_EXPLOSION_8); // pistol
 	DamageFLS(targ, finaldmg,  DMG_FORCED, who);
 

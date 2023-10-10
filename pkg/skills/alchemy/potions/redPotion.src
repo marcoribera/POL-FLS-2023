@@ -24,7 +24,7 @@ program drink_blue (who, potion)
 
 
 	if ( TS_GetCooldown(who, "staminapot") != error)
-		SendSysMessageEx(who, "Voce nao pode usar essa pocao agora.", SSM_FAIL);
+		SendSysMEssageEx(who, "Voce nao pode usar essa pocao agora.", SSM_FAIL);
 		return 1;
 	endif
 
@@ -36,7 +36,7 @@ program drink_blue (who, potion)
 		healed := cint(healed*0.3);
 	endif
 	empty_bottle(who, potion);
-	TS_StartCooldown(who, "staminapot", cint(healed*0.5)+1);
+	TS_StartCooldown(who, "staminapot", cint(healed*0.5)*3);
 
 	Detach();
 	var i := 0;
