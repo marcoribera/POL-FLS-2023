@@ -2798,7 +2798,7 @@
 # 0xa374 - 0xa375 unused
 0xa376 espartilhonobre domesticwork
 0xa377 coroadeus domesticwork
-0xa378 aljavacint woodworking
+0xa378 aljavacintura woodworking
 0xa379 saiapeles domesticwork
 # 0xa37a - 0xa37f unused
 0xa380 sobretudovanm domesticwork
@@ -3105,7 +3105,8 @@
 0xef62 FogoGregoForte alchemy
 # 0xef63 - 0xefc3 unused
 0xefc4 retornoespiritual spells
-# 0xefc5 - 0xefef unused
+# 0xefc5 - 0xefee unused
+0xefef TintaPrata alchemy
 0xeff0 TintaAzul1 alchemy
 0xeff1 TintaAzul2 alchemy
 0xeff2 TintaBege1 alchemy
@@ -3144,8 +3145,7 @@
 0xffe4 saiadewazif combat
 0xffe5 armaduracouropicta combat
 0xffe6 malhaferune combat
-0xffe7 aljavacintura woodworking
-# 0xffe8 - 0x10fff unused
+# 0xffe7 - 0x10fff unused
 0x11000 SmallBoat boat
 # 0x11001 - 0x11003 unused
 0x11004 SmallDragonBoat boat
