@@ -21,7 +21,7 @@ program drink_blue (who, potion)
 	endif
 
 	if ( TS_GetCooldown(who, "manapot") != error)
-		SendSysMessageEx(who, "Voce nao pode usar essa pocao agora.", SSM_FAIL);
+		SendSysMEssageEx(who, "Voce nao pode usar essa pocao agora.", SSM_FAIL);
 		return 1;
 	endif
 	if (cint(GetObjProperty(who, "#manapotion")))
@@ -45,7 +45,7 @@ program drink_blue (who, potion)
 	endcase
 
   	empty_bottle(who, potion, 1);
-	TS_StartCooldown(who, "manapot", cint(healed)+1);
+	TS_StartCooldown(who, "manapot", cint(healed)*3);
 	SetObjProperty(who, "#manapotion", 1);
 	Detach();
 	var i := 0;

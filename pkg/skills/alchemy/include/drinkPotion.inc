@@ -45,40 +45,35 @@ function checkifcandrink(character, type)
 endfunction
 
 function empty_bottle(character, potion, potiontype := 0)
-
-  if(GetObjProperty(potion, "acabou") == 1)
-  var pot2 := SubtractAmount( potion, 1 );
-  var stacknow := GetAmount(0x0F0E);
-    if (stacknow > 0)
-      Addamount(0x0F0E, 1);
-    else
-      var pot := CreateItemInBackpack(character, 0x0F0E, 1);
-    endif
-  return 1;
-  endif
-
   PlaySoundEffect(character, DRINK_SOUND);
-  PrintText(character, "*usa uma pocao*");
   var goles;
-
   if (!GetObjProperty(potion, "goles"))
     goles := 3;
     SetObjProperty(potion, "goles", goles);
   else
     goles := cint(GetObjProperty(potion, "goles"));
   endif
-
-  if(potiontype == 1)  //eh uma poção de 1 so gole
-    goles := 0;
+  
+  if(potiontype == 1)  //eh uma po�ao de 1 so gole
+   goles := -1;
   endif
-
-  if (goles > 1)
-    goles := goles - 1;
-    SetObjProperty(potion, "goles", goles);
+  
+  if (goles > 0)
+    goles := goles-1;
+    SetObjProperty(potion, "goles", goles-1);
   else
-    SetObjProperty(potion, "acabou", 1);
-    SetObjProperty(potion, "goles", 0);
+
+    var stacknow := FindObjtypeInContainer( who.backpack, 3854 );
+    if (stacknow)
+	Addamount(stacknow, 1);
+    else
+       var pot := CreateItemInBackpack(character, UOBJ_EMPTY_BOTTLE, 1);
+	pot.name := "Frasco de Vidro";
+    endif
+
+    SubtractAmount(potion, 1);
   endif
+  
 endfunction
 
 function is_poison(potion)
@@ -91,7 +86,7 @@ function do_poison(who, potion)
   var bonus := cint(getObjproperty(potion, "alchemybonus"));
   var amt;
   case (potion.objtype)
-    0xbf00:
+    0xbf00: 
             if (canmod(who, "venenoerva"))
               if(!checksave(who, 11, "for"))
                 amt := RandomDiceRoll("1d2");

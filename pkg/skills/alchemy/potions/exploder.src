@@ -21,8 +21,8 @@ program exploder(parms)
 		sleepms(250);
 	endif
 	var thecenter := potion;
-	while(thecenter.container)
-		thecenter := thecenter.container;
+	while(thecenter.item)
+		thecenter := thecenter.item;
 	endwhile
 	SetScriptController(who);
 
@@ -30,7 +30,7 @@ program exploder(parms)
 	var dmg := skill;
 	if (cint(GetObjProperty(potion, "nodmg")) != 1)
 		case (potion.objtype)
-			56328: dmg :=  dmg + 20; ExplosionEffect(who, potion, dmg);
+			//56328: dmg :=  dmg + 20; ExplosionEffect(who, potion, dmg);
 			61280: dmg:=  dmg + 30; ExplosionEffect(who, potion, dmg);
 			61281: dmg:=  dmg + 40; ExplosionEffect(who, potion, dmg);
 			61282: dmg:=  dmg + 50; ExplosionEffect(who, potion, dmg);
@@ -42,6 +42,9 @@ program exploder(parms)
 			48916: FlameEffect(who, potion, 2);
 			48917:FlameEffect(who, potion, 3);
 			48918:HalluEffect(who, potion, 3);
+			0x6073:Acideffetct(who, potion);
+			0xBD13:Sleepeffect(who, potion);
+			56328:Minaterrestre(who, potion);
 		endcase
 	endif
 
@@ -76,11 +79,20 @@ function FlameEffect(who, potion, lvl)
 			PlaySoundEffect( critter, 0x208);
 			//ApplyDamageEX(critter, lvl*15, DMG_FIRE);
 			DamageFLS(critter, lvl*15, DMG_FIRE);
+
+			if (lvl == 1)	
+				TS_StartTimer(critter, "chamasperpetuas", 4);
+			elseif (lvl == 2)
+				TS_StartTimer(critter, "chamasperpetuas", 8);
+			elseif (lvl == 3)
+				TS_StartTimer(critter, "chamasperpetuas", 12);
+			endif
 		endif
 	endforeach
 
 	efeitocascata(potion, who);
-
+	destroycraft(potion, who);
+        
 
 endfunction
 
@@ -131,6 +143,39 @@ function GlueEffect(who, potion)
 		endif
 	endforeach
 
+endfunction
+
+function Acideffetct(who, potion)
+
+	var coords := GetCoordsInSquare(potion.x, potion.y, 4);
+	foreach coord in coords;
+		if ( RandomInt(2) != 1 ) // Don't place a fire field
+			continue;
+		endif
+
+		/*var field2 := CreateItemAtLocation(coord.x, coord.y, potion.z, 0x3915, 1);
+		if (CheckLineOfSight(field2, potion))
+			field2.SetDuration(20);
+		endif*/
+		var field := CreateItemAtLocation(coord.x, coord.y, potion.z, 0xA370, 1);
+		if (CheckLineOfSight(field, potion))
+			field.SetDuration(20);
+		else
+			DestroyItem(field);
+		//	DestroyItem(field2);
+		endif
+		sleepms(5);
+	endforeach
+
+	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 4, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+		if (CheckLineOfSight(potion, critter))
+			if ( critter.hidden && critter.acct )
+				critter.hidden := 0;
+				SendSysMessage(critter, "Voce foi revelado pelo acido");
+			endif
+		endif
+	endforeach
+
 
 endfunction
 
@@ -140,34 +185,58 @@ function ExplosionEffect(who, potion, dmg)
 	potion.graphic := 1;
 	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 6, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
 		if (checkLineOfSight(potion, critter))
+
 			if ( critter.hidden)
 				critter.hidden := 0;
 				SendSysMessage(critter, "Voce foi revelado na explosao!");
 			endif
+
 			PlayObjectCenteredEffect( critter, 0x36b0, 7, 0x10 );
 			PlaySoundEffect( critter, 0x208);
 			//ApplyDamageEX(critter, dmg, DMG_FIRE);
 			DamageFLS(critter, dmg, DMG_FIRE);
+
 			if (TemHabilidade(who, "Bomba de Fragmentacao"))
 				TS_StartTimer(critter, "bleed", 15);
 			endif
+
 		endif
 	endforeach
 
 	efeitocascata(potion, who);
+	destroycraft(potion, who);
 
+endfunction
 
+function Sleepeffect(who, potion)
+
+	PlaySoundEffect(potion, 0x03F);
+	potion.graphic := 1;
+	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 6, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+		if (checkLineOfSight(potion, critter))
+
+			if ( critter.hidden)
+				critter.hidden := 0;
+				SendSysMessage(critter, "Voce cai em sono profundo e foi revelado");
+			endif
+
+			TS_StartTimer(critter, "sleep", 12);
+			PlayObjectCenteredEffect( critter, 0x11A6, 7, 0x10 );
+			PlaySoundEffect( critter, 0x232);
+
+		endif
+	endforeach
 endfunction
 
 function EfeitoCascata(potion, who)
 
 
-	var potions := {56328, 61280, 61281, 61282, 48915, 48916, 48917 };
+	var potions := {61280, 61281, 61282, 48915, 48916, 48917 };
 	var counter := 1;
 	foreach item in (ListItemsNearLocation(potion.x, potion.y, potion.z, 8, potion.realm))
 		if (checklineofsight(potion, item))
 			if((item.objtype in potions) && (item != potion))
-				if (counter > 5)
+				if (counter > 10)
 					SetObjProperty(item, "nodmg", 1);
 				endif
 				SetObjProperty(item,"pause", 1);
@@ -180,7 +249,65 @@ function EfeitoCascata(potion, who)
 			 endif
 		 endif
 	 endforeach
+endfunction
+
+function Minaterrestre(who, potion)
+
+	var df := OpenDataFile( ":tn:traps" );
+	if (!df)
+		df := CreateDataFile( ":tn:traps", DF_KEYTYPE_INTEGER );
+	endif
+	
+	var elem := df.FindElement(potion.serial);
+	if (!elem)
+		elem := df.CreateElement( potion.serial ) ;
+	endif
+
+	var dano := (AP_GetSkill(who, ALCHEMY));
+	var lvl := (AP_GetSkill(who, ALCHEMY)/10);
+
+	lvl:=lvl/2;
+
+	SetObjProperty(potion, "damage", dano);
+	SetObjProperty(potion, "level", lvl);
+	SetObjProperty(potion, "walktrap", 1);
+
+	MoveObjectToLocation(potion, who.x, who.y, who.z, who.realm, MOVEOBJECT_FORCELOCATION);
+	potion.invisible:=1;
+	potion.movable := 0;
+
+	while (1)
+
+		sleep(3600);
+		
+		if (!potion.invisible)
+			potion.invisible := 1;
+		endif
+
+		if (GetObjProperty(potion, "trap_inativa"))
+			EraseObjProperty(potion, "trap_inativa");
+			DestroyITem(potion);
+		endif
+	
+	endwhile
+
+endfunction
+
+function destroycraft(potion, who)
 
 
-
+	var potions := {61282, 48915, 48916, 48917 };
+	var counter := 1;
+	foreach item in (ListItemsNearLocation(potion.x, potion.y, potion.z, 8, potion.realm))
+		if (GetObjProperty(item, "crafteracc"))
+			var roll := RandomInt(100)+1;
+			if (roll > 75)
+				if (!GetObjProperty(item, "LockId"))
+					createitematlocation(item.x, item.y, item.z, 3119, 1, item.realm);
+					sleepms(10);
+					DestroyItem(item);
+				endif
+			endif
+		endif
+	endforeach
 endfunction

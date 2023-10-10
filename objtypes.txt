@@ -1505,9 +1505,7 @@
 # 0x19ab - 0x19ba unused
 0x19bb brazier3 lighting
 0x19bc mantoumeraque domesticwork
-# 0x19bd - 0x1a06 unused
-0x1a07 chain fls_core
-# 0x1a08 - 0x1a88 unused
+# 0x19bd - 0x1a88 unused
 0x1a89 roloalgodao domesticwork
 0x1a8a rolorajal domesticwork
 0x1a8b roloflamel domesticwork
@@ -2294,8 +2292,8 @@
 # 0x606a - 0x606f unused
 0x6070 resinadegelo alchemy
 0x6071 resinadefogo alchemy
-0x6072 CobaltGlass gathering
-0x6073 LithiumGlass gathering
+0x6072 pocaovenenofortedeervas alchemy
+0x6073 FrascoAcido alchemy
 0x6074 Clay gathering
 0x6075 Sand gathering
 0x6076 StoneBlock gathering
@@ -2861,10 +2859,9 @@
 0xba65 moedaouro currency
 # 0xba66 - 0xbd10 unused
 0xbd11 pedrapequena gathering
-0xbd12 pedramedia gathering
-0xbd13 pedragrande gathering
-0xbd14 resinaeletica alchemy
-# 0xbd15 - 0xbeff unused
+0xbd12 resinaeletica alchemy
+0xbd13 gasdosono alchemy
+# 0xbd14 - 0xbeff unused
 0xbf00 pocaovenenoerva alchemy
 0xbf01 pocaovenenoputrido alchemy
 0xbf02 pocaovenenocobra alchemy
@@ -2953,9 +2950,9 @@
 0xdc01 pocaocuraleve alchemy
 0xdc02 pocaocuramedia alchemy
 0xdc03 pocaocuragrave alchemy
-0xdc04 VenenoErvaForte alchemy
+0xdc04 VenenoErva alchemy
 # 0xdc05 - 0xdc07 unused
-0xdc08 FogoGrego alchemy
+0xdc08 MinaTerrestre alchemy
 # 0xdc09 - 0xdc0b unused
 0xdc0c pocaoagilidadefelina alchemy
 0xdc0d pocaoagilidadefelinaforte alchemy
@@ -3191,7 +3188,7 @@
 0xff990 recipe1 recipes
 0xff991 recipe2 tn
 0xff992 recipe3 tn
-0xff993 olhonegro tn
+0xff993 Bafodedragao alchemy
 0xff994 pergaminhodrider tn
 0xff995 combatrecipe tn
 # 0xff996 - 0x1002ff unused
