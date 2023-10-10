@@ -76,7 +76,7 @@ program summontotem(params)
 		SetObjProperty(espirito, "#VontadeMod", 25);
 	endif
 
-	var duracao := 25 + (60*CInt(AP_GetSkill(who, MAGICLORE))/100); //skill 0 -> 25s // Skill 20 -> 37s // Skill 40 -> 49s // Skill 100 -> 85s
+	var duracao := 120 + 180 * AP_GetSkill(who, MAGICLORE)/ 100;
 
 	if (temHabilidade(who, "Invocacao Duradoura"))
 		duracao := duracao*2; //skill 0 -> 50s // Skill 20 -> 72s // Skill 40 -> 98s // Skill 100 -> 170s

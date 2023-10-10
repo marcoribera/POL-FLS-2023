@@ -84,9 +84,7 @@ program summontotem(params)
 	recalcvitals(who);
 	HealDamage(who, hitsmod);
 
-
-    var metamorfosetime := 25 + (60*CInt(AP_GetSkill(who, MAGICLORE))/100); //skill 0 -> 25s // Skill 20 -> 37s // Skill 40 -> 49s // Skill 100 -> 85s
-	//var metamorfosetime := 1 + AP_GetSkill(who, MAGICLORE) *10;
+	var metamorfosetime := 60 + 540 * AP_GetSkill(who, MAGICLORE) / 100;
 
 	if(temHabilidade(who,"Fera Natural"))
 		metamorfosetime := metamorfosetime * 2;
