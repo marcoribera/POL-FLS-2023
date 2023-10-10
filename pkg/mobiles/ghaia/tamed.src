@@ -164,8 +164,8 @@ program TamedAI()
 
 
 		endcase
-
-		if ( CInt(GetObjProperty(me, "happiness")) < 10 && !GetCooldown(me,"aviso") )
+var summoned := GetObjProperty(me, "summoned");
+		if ( CInt(GetObjProperty(me, "happiness")) < 10 && !GetCooldown(me,"aviso") && !summoned )
 
 			//var skill := AP_GetSkill(owner,ANIMAL_TAMING);
 
@@ -374,6 +374,11 @@ function TakeItem(ev)
 	var cfg := ReadConfigFile("food");
 	var npccfg := ReadConfigFile(":brainai:npcdesc");
 
+if (GetObjProperty(me, "summoned"))
+	SendSysMessageEX(ev.source, "Caso nao saiba, espiritos nao se alimentam!", SSM_FAIL);
+	return;
+endif
+
 // relacionado as comidas do pet
 	var npctemplate := me.npctemplate;
 	npctemplate := npctemplate[10, len(npctemplate)-9];
@@ -417,7 +422,7 @@ function TakeItem(ev)
 				endif
 			endforeach
 		if ((happy >= 20) && (ev.source == owner)) //checa a felicidade e se o dono que está dando comida
-			if (startbond) //checa o bond para fidelizar
+			if (Cint(startbond)) //checa o bond para fidelizar
 
 				if ( (adestramento >= 1) && (tempo_fiel <= timebond) ) // Pelo menos 1 de skill e o tempo que demoraria para fidelizar tem q ser menor que o tempo de agora
 					SetObjProperty(me, "bond", "fiel");
@@ -841,6 +846,11 @@ function obediencecheck()
   if(me.objtype in arry)
     return 1;
   endif
+
+if(GetObjProperty(me, "summoned") == 1)
+	return;
+	print("caiu no returno vai FUNDO");
+endif
 
 var npccfgfile := ReadConfigFile(":brainAI:npcdesc");
 var orneriness := npccfgfile[me.npctemplate].PetSlot;

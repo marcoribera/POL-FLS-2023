@@ -10,11 +10,11 @@ include ":gathering:mining";
 program smelt_that_ore (who, item)
   EraseObjProperty(who, "IsMeditating");
   EraseObjProperty(who, "HealTimer");
-  
+
   if(!Accessible(who, item))
     return;
   endif
-  
+
   SendSysMessage(who, "O que voce deseja fazer com isto?");
   var use_on := Target(who, TGTOPT_CHECK_LOS);
   if(!use_on)
@@ -33,7 +33,7 @@ program smelt_that_ore (who, item)
      SendSysMessage(who, "Voce precisa estar perto da forja para usar este item.");
      return;
   endif
-  
+
   if ( (use_on.graphic == 0x19B9) || (use_on.graphic == 0x1bf2) || (use_on.graphic == 0x1bf5) || (use_on.objtype == 0x6075) )
      SmeltOre(who, item, use_on);
   //elseif ((use_on.isa(POLCLASS_WEAPON)) || (use_on.isa(POLCLASS_ARMOR) || (use_on.objtype == 0x5101)))
@@ -41,7 +41,7 @@ program smelt_that_ore (who, item)
   else
      SendSysMessage(who,"Voce nao pode derreter isto.");
   endif
-  
+
 endprogram
 
 /*function SmeltItem(who, item, ore)
@@ -67,7 +67,7 @@ endprogram
       SendSysMessage(who,"Voce nao alcanca isto.");
       return;
     endif
-    
+
     if (!GetObjProperty(ore, "ingType"))
       SendSysMessage(who,"Voce nao pode derreter isto.");
       return;
@@ -127,7 +127,7 @@ endprogram
          endif
          return;
        endif
-      
+
     endif
 
 
@@ -149,7 +149,7 @@ function SmeltOre(who, item, ore)
     0x6075:  dif := 5; ingot := 0x1be3; //vidro
     0x6450:  ingot := 0x6465; //copper
     0x6990:  ingot := 0x6991; //estanho
-    0x6300:  ingot := 0x6309; //ferro 
+    0x6300:  ingot := 0x6309; //ferro
     0x6992:  ingot := 0x6993; //prata
     0x6305:  ingot := 0x630e; //ouro
 
@@ -162,14 +162,14 @@ function SmeltOre(who, item, ore)
     0x6302:  ingot := 0x630b; //helce
 
     //esses ultimos nao estao sendo usados.
-    0x6312:  ingot := 0x6313; //ario     
+    0x6312:  ingot := 0x6313; //ario
     0x6452:  ingot := 0x6460; //gomril
     0x6306:  ingot := 0x630f; //durang
 
     default: SendSysMessage(who,"Voce nao pode derreter isto.", FONT_NORMAL, 40); return 1;
   endcase
 
-  
+
   if (GetObjProperty(item, "numMetal"))
      var num := CINT(GetObjProperty(item, "amt1"));
      var nummetal := Cint(GetObjProperty(item, "numMetal"));
@@ -191,10 +191,10 @@ function SmeltOre(who, item, ore)
             perdamt := ore.amount;
           endif
           SubtractAmount(ore, perdamt);
-	  SendSysMessage(who, "Voce perdeu parte dos minerios.", FONT_NORMAL, 40);
+	        SendSysMessage(who, "Voce perdeu parte dos minerios.", FONT_NORMAL, 40);
           return;
     endif
-  else 
+  else
      if(SkillCheck(who, GATHERING, dif, ((dif / 2) + 10)) > 0)
         SendSysMessage(who, "Voce derreteu o minerio e retirou as impurezas.", FONT_NORMAL, 90);
         PlaySoundEffect(who, 0x22);
@@ -210,10 +210,10 @@ function SmeltOre(who, item, ore)
             perdamt := ore.amount;
           endif
           SubtractAmount(ore, perdamt);
-	  SendSysMessage(who, "Voce perdeu parte dos minerios.", FONT_NORMAL, 40);
+	        SendSysMessage(who, "Voce perdeu parte dos minerios.", FONT_NORMAL, 40);
           return;
     endif
-     
+
   endif
 
 

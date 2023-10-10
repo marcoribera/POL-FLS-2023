@@ -782,7 +782,7 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 	var weapon_scripts := array;
 	var pet_instinto :=	GetObjProperty(attacker, "Group_savage");
 	var pet_critic := GetObjProperty(attacker, "Critic");
-	var pet_txt := GetConfigStringArray( taming_cfg[pet_critic], "Text" );
+	var pet_txt := Cstr(GetConfigStringArray( taming_cfg[pet_critic], "Text" ));
 	var pet_selvagem := GetObjProperty(attacker, "Selvagem"); //verifica se é animal selvagem - nunca tamado, para dar dano critico
 	//if ( weapon.objtype == 0xF020 ) // Intrinsic fist
 	//	weapon_scripts := GetObjProperty(attacker, "CriticalHitScripts");
