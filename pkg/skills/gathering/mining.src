@@ -1,4 +1,3 @@
-
 use uo;
 use cfgfile;
 include ":gathering:mining";
@@ -10,16 +9,15 @@ include ":charactercreation:habilidades";
 program mining(who)
 
 	var where := GetMiningRegion(who.x, who.y);
-
-	var df := opendatafile(":gathering:miningspots");
-    if (df == error)
-        df :=  createdatafile(":gathering:miningspots");
-    endif
-
-    var elem := df.FindElement(where);
-    var ores := elem.GetProp("Ores");
-    var raridades := SplitWords(elem.GetProp("Rarity"));
-
+	var cfg := ReadconfigFile(":gathering:config/miningspots");
+	var ores := cfg[where].Ores;
+		var raridades := SplitWords(cfg[where].Rarity);
+	if (ores == error)
+		var df := opendatafile(":gathering:miningspots");
+		var elem := df.FindElement(where);
+		ores := elem.GetProp("Ores");
+		raridades := SplitWords(elem.GetProp("Rarity"));
+	endif
 	var possiveis := {};
 	var raridade := {};
 	ores := SplitWords(ores);

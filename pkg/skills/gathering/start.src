@@ -8,3 +8,4 @@ if ( script.errortext )
 else
 	Print("Starting mining resource regeneration script... ok.");
 endif
+

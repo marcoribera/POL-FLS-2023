@@ -81,6 +81,8 @@ function MiningLoop(who, scoop, my_x, my_y, my_facing, location_name)
 		return 0;
 	endif
 
+	SetResource(resource_type, location_elem, resource_amount-1);
+
 	var difficulty := 20;//CInt(100 - (resource_amount * 100 / MAX_RESOURCE_AMOUNT));
 
 	var skill := Cint(AP_GetSkill(who, GATHERING));
@@ -103,7 +105,8 @@ function MiningLoop(who, scoop, my_x, my_y, my_facing, location_name)
 			SendSysMessageEx(who, "Voce pegou uma porcao de areia.", SSM_INFO);
 		endif
 		SetResource(resource_type, location_elem, resource_amount); //diminui a quantidade de areia disponivel no local
-		CreateItemInBackPack(who, SCOOP_OF_SAND, amt); //Coloca na mochila a quantidade de areia extraida
+CreateItemInBackPack(who, SCOOP_OF_SAND, amt);
+SendSysMessageEx(who, "Voce pegou um pouco de areia.", SSM_INFO);
 		return 1;
 	else
 		SendSysMessageEx(who, "Voce e incapaz de pegar areia aqui.", SSM_FAIL);

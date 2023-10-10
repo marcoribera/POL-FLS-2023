@@ -89,11 +89,11 @@ program OreMining(who, tool)
 	while(MiningLoop(who, tool, my_x, my_y, targ.x, targ.y, my_facing))
 		CheckToolWear(who, tool, GATHERING);
 		if(TemHabilidade(who, "Vigor do Extrator"))
-			if (!CheckLoop(who, tool, my_x, my_y, my_facing))
+	if (!CheckLoop(who, tool, my_x, my_y, my_facing))
 			break;
-			elseif (AP_GetVital(who, "Stamina") < 3)
-				SendSysMessage(who, "Voce esta muito cansado para minerar.");
-				break;
+		elseif (AP_GetVital(who, "Stamina") < 3)
+			SendSysMessage(who, "Voce esta muito cansado para minerar.");
+			break;
 			endif
 			AP_ConsumeVital(who, "Stamina", 3);
 		else
@@ -209,8 +209,8 @@ function mineraRaroAleatorio(who)
 		SendSysMessage(who, "Achou um pouco de Argonil em meio ao minerios.");
 		return CreateItemInBackPack(who, 0x6451, 1); // return 80; //argonil
 	elseif(rand<1.2)
-		SendSysMessage(who, "Achou um pouco de Lithtan em meio ao minerios.");
-		return CreateItemInBackPack(who, 0x6301, 1); // return 70; //lithtan
+		SendSysMessage(who, "Achou um pouco de Litan em meio ao minerios.");
+		return CreateItemInBackPack(who, 0x6301, 1); // return 70; //litan
 	elseif(rand<1.4)
 		SendSysMessage(who, "Achou um pouco de Ouro em meio ao minerios.");
 		return CreateItemInBackPack(who, 0x6305, 1); // return 40; //golden

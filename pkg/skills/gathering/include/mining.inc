@@ -9,36 +9,42 @@ include ":chestspawn:treasurechest";
 const MAX_RESOURCE_AMOUNT := 10;
 
 function Garimpeiro(who)
-	var rand := randomint(200);
-	if(rand < 2)
+
+	if (randomint(600) <= 1)	
+
 		var cfg := ReadConfigFile(":gems:itemdesc");
 		var keys := GetConfigStringKeys( cfg );
+
 		SendSysMessageEx(who, "Voce achou uma pedra preciosa!", SSM_INFO);
 		CreateItemInBackPack(who, keys[RandomInt(keys.size()+1)], 1);
-		PrinttextAbove(who, "*encontra algo reluzente*");
+
+	PrinttextAbove(who, "*encontra algo reluzente*");
 	elseif(TemHabilidade(who, "Minerador Talentoso") && rand < 10)
 		var cfg := ReadConfigFile(":gems:itemdesc");
 		var keys := GetConfigStringKeys( cfg );
 		SendSysMessageEx(who, "So alguem talentoso acharia essa pedra preciosa!", SSM_INFO);
 		CreateItemInBackPack(who, keys[RandomInt(keys.size()+1)], 1);
 		PrinttextAbove(who, "*encontra algo reluzente*");
+		
 	endif
 	return 1;
+
 endfunction
 
 function GetMapsInBackpack(who)
 	var items := EnumerateItemsInContainer(who.backpack);
 	var maps := array;
     	foreach item in items
-		//sendsysmessage(who, " " + isTreasureMap(item) + " " + item.objtype);
-		if ( isTreasureMap(item) )
-			if ( !isSolved(item) )
-				maps.append(item);
+			//sendsysmessage(who, " " + isTreasureMap(item) + " " + item.objtype);
+			if ( isTreasureMap(item) )
+				if ( !isSolved(item) )
+					maps.append(item);
+				endif
 			endif
-		endif
-	endforeach
-	return maps;
+			
+		endforeach
 
+	return maps;
 
 endfunction
 
@@ -99,9 +105,11 @@ function DigForMap(who, targ, map)
 		return;
 
 	elseif((distn < range) && (len(mobiles) > 0))
-		SendSysMessageEx(who,"voce patou de cavar porque algo esta sobre o tesouro.");
+		SendSysMessageEx(who,"voce parou de cavar porque algo esta sobre o tesouro.");
 		return;
 	else
+		who.frozen := 1;
+		PrintTextAbove(who, "*Comeca a cavar o tesouro*");
 
 		var i := 1;
 		var mex := who.x;
@@ -111,14 +119,15 @@ function DigForMap(who, targ, map)
 		var loot := "treasuremap" + maplevel;
 
 		var chest;
-		chestz := chestz - 8;
-		sendsysmessage(who, " " + chestz);
-		var chests := CreateTreasureChests(maplevel, 1, 0, chestx, chesty, chestz, who.realm, loot);
+		chestz := chestz -8;
+		sendsysmessage(who, " " + chestz-8);
+		var chests := CreateTreasureChests(maplevel, 1, 0, chestx, chesty, chestz-8, who.realm, loot);
 		chest := chests[1];
-		if (GetObjProperty(map, "tesouroescondido") == 1)
+/*		if (GetObjProperty(map, "tesouroescondido") == 1)
 			Loot_Generate(chest, loot);
-		endif
-		var ret := MoveObjectToLocation(chest, chest.x, chest.y, chestz, who.realm,  MOVEOBJECT_FORCELOCATION);
+		endif  	*/
+
+		var ret := MoveObjectToLocation(chest, chest.x, chest.y, chestz-8, who.realm,  MOVEOBJECT_FORCELOCATION);
 //		sendsysmessage(who, " " + ret);
 
 		chest.movable := 0;
@@ -131,6 +140,7 @@ function DigForMap(who, targ, map)
 				break;
 			endif
 
+			PrintTextAbove(who, "*Cavando*");
 			PerformAction(who, 0x0b);
 			PlaySoundEffect(who, 0x126);
 			sleep(1);
@@ -186,12 +196,64 @@ function DigForMap(who, targ, map)
 
 		endwhile
 
+		who.frozen := 0;
+		PrintTextAbove(who, "*Termina de cavar*");
+		sleep(5);
+
+		// Para implementar basta compilar o mining.src depois colocar mais mobs para maplevels diferentes há um bug no z, o chest sai voando mas da pra pegar
+
+		if (maplevel == 1)
+            PrintTextAbove(who, "*Gritos nos arredores* Atacar rapazes! A pior parte já fizeram!");
+			sleep(2);
+            createnpcfromtemplate(":brainai:bandoleiro", who.x, who.y, who.z +5, 0 , who.realm);
+            createnpcfromtemplate(":brainai:roguearcher", who.x, who.y, who.z +5, 0 , who.realm);
+			createnpcfromtemplate(":brainai:trapaceiro", who.x, who.y, who.z +5, 0 , who.realm);
+            createnpcfromtemplate(":brainai:saqueadortumulo", who.x, who.y, who.z +5, 0 , who.realm);
+            createnpcfromtemplate(":brainai:saqueadortumulo", who.x, who.y, who.z +5, 0 , who.realm);
+			sleep(15);
+			PrintTextAbove(who, "*O ataque continua e o lider se aproxima*");
+			createnpcfromtemplate(":brainai:mercenario", who.x, who.y, who.z +5, 0 , who.realm);
+      	elseif (maplevel == 2)
+		 	PrintTextAbove(who, "*Gritos nos arredores* Atacar rapazes! A pior parte já fizeram!");
+			sleep(2);
+            createnpcfromtemplate(":brainai:mercenario", who.x, who.y, who.z +5, 0 , who.realm);
+            createnpcfromtemplate(":brainai:roguearcher", who.x, who.y, who.z +5, 0 , who.realm);
+			createnpcfromtemplate(":brainai:trapaceiro", who.x, who.y, who.z +5, 0 , who.realm);
+            createnpcfromtemplate(":brainai:roguearcher", who.x, who.y, who.z +5, 0 , who.realm);
+            createnpcfromtemplate(":brainai:mercenario", who.x, who.y, who.z +5, 0 , who.realm);
+			createnpcfromtemplate(":brainai:mercenario", who.x, who.y, who.z +5, 0 , who.realm);
+        elseif (maplevel == 3)
+			PrintTextAbove(who, "*Gritos e lamurias de almas atormendas* Juntem-se a nos...");
+			sleep(5);
+			CreateNpcFromTemplate(":brainai:Ghost", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:Ghost", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:Ghost", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:Spectre", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:Spectre", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:Spectre", who.x, who.y, who.z, 0, who.realm);
+			sleep(15);
+			PrintTextAbove(who, "*Vozes Fantasmagoricas* Deliciosa ganancia...");
+			CreateNpcFromTemplate(":brainai:espectroanciao", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:espectroanciao", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:espectroanciao", who.x, who.y, who.z, 0, who.realm);
+		elseif (maplevel == 4)
+			PrintTextAbove(who, "*Criaturas gigantescas guardam o local*");
+			sleep(5);
+			CreateNpcFromTemplate(":brainai:Wyvern", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:Wyvern", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:Wyvern", who.x, who.y, who.z, 0, who.realm);
+			sleep(15);
+			CreateNpcFromTemplate(":brainai:RedDragon", who.x, who.y, who.z, 0, who.realm);
+		elseif (maplevel == 5)
+			CreateNpcFromTemplate(":brainai:Dracolich", who.x, who.y, who.z, 0, who.realm);
+        endif
+
 		chest.movable := 1;
       		EraseObjProperty(map, "level");
       		EraseObjProperty(map, "chestx");
       		EraseObjProperty(map, "chesty");
       		SetObjProperty(map, "Solved", 1);
-      		map.name := "mapa de tesouro [completado por " + who.name + "]";
+      		map.name := "Mapa de tesouro [Completado por " + who.name + "]";
 
     endif
 
@@ -235,72 +297,70 @@ endfunction
 
 function SetOreAmount(realm, x_pos, y_pos, amount)
 	var pos_string := CStr(realm+" "+x_pos+"x"+y_pos);
-
+	
 	var data_elem := GetDataElem(pos_string);
-
+	
 	data_elem.SetProp("Amount", CInt(amount));
 endfunction
 
 function GetOreAmount(realm, x_pos, y_pos)
 
 	var pos_string := CStr(realm+" "+x_pos+"x"+y_pos);
-
+	
 	var data_elem := GetDataElem(pos_string);
-
+	
 	var amount := data_elem.GetProp("Amount");
 	if ( amount == error )
 		SetOreAmount(realm, x_pos, y_pos, MAX_RESOURCE_AMOUNT);
 		amount := MAX_RESOURCE_AMOUNT;
 	endif
-
+	
 	return CInt(amount);
 endfunction
 
 function GetResourceId(oreToSearch)
 
 	case (oreToSearch)
-
+	
 		"areia": return 0x6075;
-		
+
 		"cobre": return 0x6450;
+
+		"estanho": return 0x6990; //TN USED
 		
-		"argila": return 0x6074;
-
 		"ferro": return 0x6300; //TN USED
-
-		"lithtan": return 0x6301;
-
+		
+		"litan": return 0x6301;
+		
 		"helce": return 0x6302;
-
+		
 		"sinque": return 0x6303;
-
+		
 		"figin": return 0x6304;
-
+		
 		"ouro": return 0x6305;
 
-		//"durang": return 0x6306;
-
+		"prata": return 0x6992; //TN USED
+		
 		"galvorn": return 0x6307; //TN USED
-
+		
 		"mithril": return 0x6308; //TN USED
 
 		"argonil": return 0x6451; //TN USED
-
-		//"gromril": return 0x6452; //TN USED
-
-	
-
-		"prata": return 0x6992; //TN USED
-
-		"estanho": return 0x6990; //TN USED
-
-		//"ario": return 0x6312;
-
-		"pedras": return 0x6666;
+		
+		"pedra": return 0xBD11;
 
 		"marmore": return 0x8850;
 
-		"arenito": return 0x8852;
+		"arenito": return 0x8852;				
+					
+		//"durang": return 0x6306;
+ 
+		//"gromril": return 0x6452; //TN USED
+
+		//"ario": return 0x6312;
+		
+		//"argila": return 0x6077;
 
 	endcase
 
@@ -323,13 +383,13 @@ function DetermineOreType(who, where)
 	var chance := RandomInt(1000);
 	var oreToSearch;
 	var skill := AP_GetSkill(who, GATHERING);
-
+	
 	if (GetObjProperty(who, "searchore") == error)
-		oreToSearch := "pedras";
+		oreToSearch := "pedra";
 	else
 		oreToSearch := GetObjProperty(who, "searchore");
 	endif
-
+	
 	var achou := 0;
 	foreach ore in ores
 		if (ore == oreToSearch)
@@ -339,18 +399,18 @@ function DetermineOreType(who, where)
 			i := i + 1;
 		endif
 	endforeach
-
+	
 	if (!achou)
 		SendSysMessage(who, "Nao tem o minerio que voce procura aqui.");
 		return 0;
 	endif
-
+	
 	if ( chance <= Cint(percent[i]))
 		var oreid := GetResourceId(oreToSearch);
 		//var oreid := GetResourceId("ario");
-		if (oreid == 0x6666)
+	/*	if (oreid == 0x6666)
 			return 0x5001;
-		endif
+		endif */
 		return oreid;
 	else
 		SendSysMessage(who, "Voce nao conseguiu achar o minerio que procura.");
@@ -364,35 +424,34 @@ endfunction
 function DetermineMiningDifficulty(oretype)
 
 	case (oretype)
-
+	
 		0xBD11: return 0;  //pedra pequena
-		//0xBD12: return 0;  //pedra media
-		//0xBD13: return 0;  //pedra grande
+	/*	0xBD11: return 0;  //pedra media
+		0xBD11: return 0;  //pedra grande
 		0xee99: return 0;  //calcario
+	*/
+		0x6075: return 5;	//areia
+		0x6990: return 10;	//estanho 
+		0x6450: return 20;	//cobre
+		0x6300: return 30;	//iron ore
+		0x6992: return 40;	//prata 
 
-		0x6300: return 0;  //iron ore
-		0x6301: return 70; //lithtan
+		0x6301: return 70; //litan
 		0x6302: return 80; //helce
 		0x6303: return 80; //sinque
 		0x6304: return 80; //figin
 		0x6451: return 80; //argonil
 		0x6307: return 90; //galvorn
 		0x6308: return 90; //mithril
-		0x6450: return 20; //cobre
-
-		0x6992: return 50; //prata
- 		0x6990: return 30; //estanho
-
-		0x6075:  return 5; //areia
-
-		0x6666: return 0; //id falso de pedra
+		
+	/*	0x6666: return 0; //id falso de pedra
 		0x8850: return 40; //marmore
-		0x8852: return 30; //arenito
-		0x5001: return 5; //id de stone
-
+		0x8852: return 30; //arenito 
+		0x5001: return 5; //id de stone */
+	
 		0x6305: return 40; //golden <- nao faz nada
-
-		default: return 100;
+		
+		default: return 0;
 	endcase
 
 endfunction
@@ -409,7 +468,7 @@ function GetOreRarityDesc(rarity)
 		return "comum";
 	else
 		return "muito comum";
-	endif
+	endif 
 
 endfunction
 
@@ -424,15 +483,28 @@ endfunction
 
 function GetMiningRegion(x, y)
 
+	var cfg := ReadConfigFile(":gathering:config/miningspots");
+	var elems := GetconfigStringKeys(cfg);
+  
+	foreach elem in elems
+	
+		var region := FindConfigElem(cfg, elem);
+		var rect := GetConfigString(region, "Rect");
+		if ( InRect (x, y, SplitWords(rect)))
+			return elem;
+		endif 
+		
+	endforeach
+
   var df := opendatafile(":gathering:miningspots");
   foreach elem in (df.Keys())
-
+  
     var region := df.FindElement(elem);
     var rect := region.getProp("Rect");
     if (inrect(x, y, SplitWords(rect)))
       return elem;
     endif
-
+  
   endforeach
 
 	return "Whole_World";
@@ -451,13 +523,13 @@ function CanMine(targ, type)
 	elseif ( land_scape in GetConfigStringArray(config, "landscape") )
 		return 1;
 	endif
-
-	return 0;
+	
+	return 0;	
 endfunction
 
 function ResourceAmount(resource_type, byref elem)
 	var amount := DFGetProp(elem, resource_type, DF_CREATE, CStr(MAX_RESOURCE_AMOUNT));
-
+	
 	return CInt(amount);
 endfunction
 
@@ -482,6 +554,6 @@ function CheckLoop(who, tool, my_x, my_y, my_facing)
 	elseif (!tool)
 		return 0;
 	else
-		return 1;
+		return 1;	
 	endif
 endfunction
