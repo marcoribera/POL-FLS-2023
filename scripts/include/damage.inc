@@ -302,7 +302,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 	//Calcula modificador total do atributo
 	var str := CDbl(AP_GetStat(who, stat)+strBonus)/150.0;
 	*/
-	var str := CDbl(AP_GetStat(who, stat)-40.0)/60.0;
+	var str := CDbl(AP_GetStat(who, stat)-50.0)/100.0;
 	//Quando equipado arco curto, longo, besta, besta pesada e besta de repeticao a força não implica em modificador de dano
 	if ( (who.weapon.objtype == 0x13B2) || (who.weapon.objtype == 0x26CC) || (who.weapon.objtype == 0x0f4f) || (who.weapon.objtype == 0x13fd) || (who.weapon.objtype == 0x26CD) )
 		str := 0;
