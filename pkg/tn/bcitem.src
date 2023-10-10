@@ -5,8 +5,9 @@ program bcitem(who,item)
 	
 	var texto;
 	var cor;
-
+if (who.cmdlevel > 0)
 SendSysMessage (who, "Configure o <texto> e <cor> com o .propedit no sino");
+endif
 
 	texto:=GetObjProperty(item,"texto");
 	
