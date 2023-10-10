@@ -169,7 +169,9 @@ function MiningLoop(who, tool, my_x, my_y, targx, targy, my_facing)
 				minerio.movable := 1;
 				SendSysMessage(who, "Voce pegou alguns minerios. " );
 				//Verifica se encontra joia
-				Garimpeiro(who);
+				if(AP_GetSkill(who, GATHERING) > 40.0)
+					Garimpeiro(who);
+				endif
 				if(TemHabilidade(who, "Minerar Raridades"))
 					if (mineraRaroAleatorio(who))
 						PrinttextAbove(who, "*encontra algo chamativo*");
@@ -190,30 +192,42 @@ endfunction
 
 function mineraRaroAleatorio(who)
 	var rand := RandomFloat(100.0);
+	var achou := 0;
 	if(rand<0.1)
 		SendSysMessage(who, "Achou um pouco de Galvorn em meio ao minerios.");
-		return CreateItemInBackPack(who, 0x6307, 1); // return 90; //galvorn
+		achou := 1;
+		CreateItemInBackPack(who, 0x6307, 1); // return 90; //galvorn
 	elseif(rand<0.2)
 		SendSysMessage(who, "Achou um pouco de Mithril em meio ao minerios.");
-		return CreateItemInBackPack(who, 0x6308, 1); // return 90; //mithril
+		CreateItemInBackPack(who, 0x6308, 1); // return 90; //mithril
+		achou := 1;
 	elseif(rand<0.4)
 		SendSysMessage(who, "Achou um pouco de Helce em meio ao minerios.");
-		return CreateItemInBackPack(who, 0x6302, 1); // return 80; //helce
+		CreateItemInBackPack(who, 0x6302, 1); // return 80; //helce
+		achou := 1;
 	elseif(rand<0.6)
 		SendSysMessage(who, "Achou um pouco de Sinque em meio ao minerios.");
-		return CreateItemInBackPack(who, 0x6303, 1); // return 80; //sinque
+		CreateItemInBackPack(who, 0x6303, 1); // return 80; //sinque
+		achou := 1;
 	elseif(rand<0.8)
 		SendSysMessage(who, "Achou um pouco de Figin em meio ao minerios.");
-		return CreateItemInBackPack(who, 0x6304, 1); // return 80; //figin
+		CreateItemInBackPack(who, 0x6304, 1); // return 80; //figin
+		achou := 1;
 	elseif(rand<1.0)
 		SendSysMessage(who, "Achou um pouco de Argonil em meio ao minerios.");
-		return CreateItemInBackPack(who, 0x6451, 1); // return 80; //argonil
+		CreateItemInBackPack(who, 0x6451, 1); // return 80; //argonil
+		achou := 1;
 	elseif(rand<1.2)
 		SendSysMessage(who, "Achou um pouco de Lithtan em meio ao minerios.");
-		return CreateItemInBackPack(who, 0x6301, 1); // return 70; //lithtan
+		CreateItemInBackPack(who, 0x6301, 1); // return 70; //lithtan
+		achou := 1;
 	elseif(rand<1.4)
 		SendSysMessage(who, "Achou um pouco de Ouro em meio ao minerios.");
-		return CreateItemInBackPack(who, 0x6305, 1); // return 40; //golden
+		CreateItemInBackPack(who, 0x6305, 1); // return 40; //golden
+		achou := 1;
 	endif
-	return 0;
+	if(achou)
+		SkillCheck(who, GATHERING, -1);
+	endif
+	return achou;
 endfunction

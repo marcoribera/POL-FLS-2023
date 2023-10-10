@@ -56,7 +56,7 @@ function EsfriarLiga(user, item)
         var ingot := GetObjProperty(item, "oreObj1");
 	if (ingot == "carvao")
 	   SendSysMessage(user, "Voce apenas estragou carvao!", FONT_NORMAL, 40);
-	else   
+	else
            SendSysMessage(user, "Voce esfriou o metal derretido e fez as barras.", FONT_NORMAL, 90);
 	   CreateItemInBackpack(user, ingot, amt);
 	endif
@@ -80,7 +80,7 @@ function EsfriarLiga(user, item)
         var amt := CINT(GetObjProperty(item, "amt1"));
         var ingot := DeterminaLiga(metals, user);
 
-	
+
         if (ingot == "noIngot")
           deleteProp(item);
           item.color := 951;
@@ -188,33 +188,45 @@ endfunction
 
 
 function smeltaImpurezasRaras(who, amt)
+  var achou := 0;
   if(amt >= 20)
     var rand := RandomFloat(100.0);
     if(rand<0.1)
       SendSysMessage(who, "Achou um pouco de Galvorn em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x6310, CInt(amt/20)); // return 90; //galvorn
+      CreateItemInBackPack(who, 0x6310, CInt(amt/20)); // return 90; //galvorn
+      achou := 1;
     elseif(rand<0.2)
       SendSysMessage(who, "Achou um pouco de Mithril em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x6311, CInt(amt/20)); // return 90; //mithril
+      CreateItemInBackPack(who, 0x6311, CInt(amt/20)); // return 90; //mithril
+      achou := 1;
     elseif(rand<0.4)
       SendSysMessage(who, "Achou um pouco de Helce em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x630b, CInt(amt/20)); // return 80; //helce
+      CreateItemInBackPack(who, 0x630b, CInt(amt/20)); // return 80; //helce
+      achou := 1;
     elseif(rand<0.6)
       SendSysMessage(who, "Achou um pouco de Sinque em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x630c, CInt(amt/20)); // return 80; //sinque
+      CreateItemInBackPack(who, 0x630c, CInt(amt/20)); // return 80; //sinque
+      achou := 1;
     elseif(rand<0.8)
       SendSysMessage(who, "Achou um pouco de Figin em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x630d, CInt(amt/20)); // return 80; //figin
+      CreateItemInBackPack(who, 0x630d, CInt(amt/20)); // return 80; //figin
+      achou := 1;
     elseif(rand<1.0)
       SendSysMessage(who, "Achou um pouco de Argonil em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x6460, CInt(amt/20)); // return 80; //argonil
+      CreateItemInBackPack(who, 0x6460, CInt(amt/20)); // return 80; //argonil
+      achou := 1;
     elseif(rand<1.2)
       SendSysMessage(who, "Achou um pouco de Lithtan em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x630a, CInt(amt/20)); // return 70; //lithtan
+      CreateItemInBackPack(who, 0x630a, CInt(amt/20)); // return 70; //lithtan
+      achou := 1;
     elseif(rand<1.4)
       SendSysMessage(who, "Achou um pouco de Ouro em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x630e, CInt(amt/20)); // return 40; //golden
+      CreateItemInBackPack(who, 0x630e, CInt(amt/20)); // return 40; //golden
+      achou := 1;
     endif
   endif
-  return 0;
+  if(achou)
+    SkillCheck(who, GATHERING, -1);
+  endif
+  return achou;
 endfunction

@@ -16,12 +16,14 @@ function Garimpeiro(who)
 		SendSysMessageEx(who, "Voce achou uma pedra preciosa!", SSM_INFO);
 		CreateItemInBackPack(who, keys[RandomInt(keys.size()+1)], 1);
 		PrinttextAbove(who, "*encontra algo reluzente*");
+		SkillCheck(who, GATHERING, -1);
 	elseif(TemHabilidade(who, "Minerador Talentoso") && rand < 10)
 		var cfg := ReadConfigFile(":gems:itemdesc");
 		var keys := GetConfigStringKeys( cfg );
 		SendSysMessageEx(who, "So alguem talentoso acharia essa pedra preciosa!", SSM_INFO);
 		CreateItemInBackPack(who, keys[RandomInt(keys.size()+1)], 1);
 		PrinttextAbove(who, "*encontra algo reluzente*");
+		SkillCheck(who, GATHERING, -1);
 	endif
 	return 1;
 endfunction
@@ -261,9 +263,9 @@ function GetResourceId(oreToSearch)
 	case (oreToSearch)
 
 		"areia": return 0x6075;
-		
+
 		"cobre": return 0x6450;
-		
+
 		"argila": return 0x6074;
 
 		"ferro": return 0x6300; //TN USED
@@ -288,7 +290,7 @@ function GetResourceId(oreToSearch)
 
 		//"gromril": return 0x6452; //TN USED
 
-	
+
 
 		"prata": return 0x6992; //TN USED
 
