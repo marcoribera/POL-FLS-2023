@@ -41,3 +41,4 @@ config/landtiles.cfg
 # Muls
 muls/
 realm/
+objtypes.txt
