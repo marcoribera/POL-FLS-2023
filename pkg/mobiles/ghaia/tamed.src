@@ -39,6 +39,7 @@ const GO_LOC_CMD	:= 0xA008;
 
 
 
+
 program TamedAI()
 
 	EnableMainEvents();
@@ -125,6 +126,11 @@ program TamedAI()
 
 				Transfer(ev.targ);
 
+			GO_LOC_CMD:
+				going_loc := struct;
+				going_loc.+x := ev.targ.x;
+				going_loc.+y := ev.targ.y;
+				going_loc.+type := ev.targ.type;
 
 			SYSEVENT_DOUBLECLICKED:
 
@@ -226,7 +232,7 @@ function ProcessSpeech(ev)
 	var text := lower(ev.text);
 	var name := lower(me.name);
 	//printtextabove(me, "meu nome " + name );
-
+	var todos;
 	if ( (ev.source).serial != (me.master).serial )
 
 		//Say("Dear "+ev.source.name+", shut up. I only listen to my owner.");
@@ -313,6 +319,30 @@ function ProcessSpeech(ev)
 
 		endif
 
+	elseif ( text["corra"] )
+		if(obediencecheck()== 0)
+			return;
+		endif
+		go("run", 0);
+	
+elseif ( text["todos corram"])
+		if(obediencecheck()== 0)
+			return;
+		endif
+		go("run", todos);
+		
+	elseif ( text["ande"] )
+		if(obediencecheck()== 0)
+			return;
+		endif
+		go("walk", 0);
+	
+elseif ( text["todos andem"])
+		if(obediencecheck()== 0)
+			return;
+		endif
+		go("walk", todos);
+		
 	elseif ( text[name+" novo dono"] || text["todos novo dono"] )
         if(obediencecheck()== 0)
           return;
@@ -417,9 +447,13 @@ endif
 		var pets := GetObjProperty(owner, "TamedPets");
 			foreach serial in pets
 				var pet := SystemFindObjectBySerial(serial);
-				if (GetObjProperty(pet, "bond") == "fiel")
+			if (GetObjProperty(pet, "bond") == "fiel")
+				if (!TemHabilidade (owner,"Lider do Bando") )
 					check_bond := 1;
+				else
+					check_bond := 2;
 				endif
+			endif
 			endforeach
 		if ((happy >= 20) && (ev.source == owner)) //checa a felicidade e se o dono que está dando comida
 			if (Cint(startbond)) //checa o bond para fidelizar
@@ -429,7 +463,7 @@ endif
 					SetobjProperty(me, "NeverRelease", 1);
 					PrintTextAbovePrivate(me, "*O animal se esfrega em voce*", owner);
 					PlaySoundEffect(me, npccfg[me.npctemplate].idlesound);
-					SendSysMessage(owner, +me.name+ " criou um vinculo de fidelidade com voce!", 0, 1410);
+					SendSysMessage(owner, +me.name+ " criou um vinculo de fidelidade com voce!", 0, 61);
 				endif
 			elseif ((startbond == "fiel") || (check_bond == 1) || (fidelizar == "nao") ) //se já é fiel/se já tem animal fidelizado/marcado como nao fidelizar só vai comer
 			else //para iniciar o bond
@@ -849,7 +883,6 @@ function obediencecheck()
 
 if(GetObjProperty(me, "summoned") == 1)
 	return;
-	print("caiu no returno vai FUNDO");
 endif
 
 var npccfgfile := ReadConfigFile(":brainAI:npcdesc");
@@ -947,4 +980,27 @@ function GetHappy(percentage)
   else
     return "parece confuso e irritadiço.";
   endif
+endfunction
+
+function Go(forma, todos)
+
+	SendSysMessage(owner, "Escolha para onde ir.");
+	var tloc := TargetCoordinates(owner);
+	if (!tloc)
+		return;
+	endif
+
+	var data := struct;
+	data.+x := tloc.x;
+	data.+y := tloc.y;
+	data.+type := forma;
+
+	
+	
+	if( todos == 1 )
+		AllCommand(GO_LOC_CMD, data);
+	else
+		going_loc := data;
+	endif
+
 endfunction

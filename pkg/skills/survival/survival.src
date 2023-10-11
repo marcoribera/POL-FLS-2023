@@ -428,7 +428,7 @@ endif
 					sleepms(300);
 				endif
 				SetObjProperty(mobontrack, "marcadacaca", 1); // Marca da caça, definida no scritp de damage.inc
-				SendSysMessageEx(who, "Voce rastreou as fragilidades do alvo e causara dano triplo ao mesmo!", SSM_INFO);
+				SendSysMessageEx(who, "Voce rastreou as fragilidades do alvo, tornando seus golpes mais mortais!", SSM_INFO);
 				setCooldown(who, "marcadacaca", 600);
 				var mob_marcado := mobontrack.serial;
 				SetObjProperty(who, "marcou_mob", mob_marcado);
