@@ -27,9 +27,9 @@ endfunction
 
 program angry_bees (bees)
 	//the amount of time between bee attacks (in seconds), how much damage they do, and how long before they settle down
-	var time_between_attacks := 5;
-	var attack_damage := 2;
-	var attack_length := 30;
+	var time_between_attacks := 1;
+	var attack_damage := 1;
+	var attack_length := 15;
 
 	//setup for how long the bees last
 	var end_time := ReadGameClock() + attack_length;
@@ -42,7 +42,7 @@ program angry_bees (bees)
 			sleepms (100);
 			counter := counter + 1;
 			creator_serial := getobjproperty (bees, "creator");
-		until (creator_serial || counter > 10);
+		until (creator_serial or counter > 10);
 	endif
 
 	var creator := SystemFindObjectBySerial(creator_serial);
@@ -64,10 +64,10 @@ program angry_bees (bees)
 				ApplyRawDamage(mobile, attack_damage );
 			endforeach
 			lastattack := ReadGameClock() + time_between_attacks;
-			PlaySoundEffect (bees, 0xff);
+			PlaySoundEffect (bees, 0x5CD);
 		endif
 		sleepms(250);
-		if (!mainvictim || mainvictim.dead)
+		if (!mainvictim or mainvictim.dead)
 			moving := 0;
 		endif
 
@@ -86,7 +86,7 @@ program angry_bees (bees)
 		endif
 
 		if (moving)
-			if (bees.x != mainvictim.x || bees.y != mainvictim.y)
+			if (bees.x != mainvictim.x or bees.y != mainvictim.y)
 				set_critical (1);
 				bees.movable := 1;
 				MoveObjectToLocation (bees, mainvictim.x, mainvictim.y, mainvictim.z+1, bees.realm, MOVEOBJECT_FORCELOCATION);
@@ -97,12 +97,3 @@ program angry_bees (bees)
 	until (ReadGameClock() > end_time);
 	DestroyItem (bees);
 endprogram
-
-
-
-
-
-
-
-
-

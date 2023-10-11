@@ -77,7 +77,7 @@ function PloughDelay(who)
 endfunction
 
 function PloughDirt(who, targ)
-	if ( SkillCheck(who, DomesticWork, 30) > 0 )
+		if ( SkillCheck(who, DomesticWork, 30) > 0 )
 		SendSysMessage(who, "Voce conseguiu arar a terra com sucesso.");
 		CreateItemAtLocation(targ.x, targ.y, GetWorldHeight(targ.x,targ.y), "dirt", 1);
 	else
@@ -96,6 +96,7 @@ function CanPlough(targ)
 	else	
 		var config := ReadConfigFile(":farming:config/plough");
 		config := config["Valid"];
+		print(" " + config);
 		var land_scape := CStr(GetMapInfo(targ.x, targ.y).landtile);
 		if ( targ.objtype )
 			if ( CStr(targ.objtype) in GetConfigStringArray(config, "static") )
