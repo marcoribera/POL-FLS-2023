@@ -89,7 +89,7 @@ function CreateBasicRecipes()
 	var spellinfo3 := struct;
 	spellinfo3.+name := "Veneno fraco de ervas";
         spellinfo3.+id := 0xbf00;
-	spellinfo3.+description := "Veneno feito com a erva solenaceae, apenas duas plantas j� podem matar pequenas criaturas. Dificuldade facil.";
+	spellinfo3.+description := "Veneno feito com a erva solenaceae, apenas duas plantas já podem matar pequenas criaturas. Dificuldade facil.";
 	x.append(spellinfo3);
 
 	var spellinfo4 := struct;

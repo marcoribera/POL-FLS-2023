@@ -1,3 +1,5 @@
+
+
 use uo;
 
 include ":timedScripts:timedScripts";
@@ -11,14 +13,14 @@ include ":containers:containers";
 
 program book(who, book)
 
-	var donoGrimorio := GetObjProperty(book, "serialid");
+	var donoGrimorio := GetObjProperty(book, "serialDono");
 	if (donoGrimorio)
 		if (donoGrimorio != who.serial)
 			SendSysMessageEx(who, "Voce nao entende esse livro.", SSM_FAIL);
 			return 0;
 		endif
 	else
-		SetObjProperty(book, "serialid", who.serial);
+		SetObjProperty(book, "serialDono", who.serial);
 	endif
 
 	var book_gump := CreateRunebookGump(book, who);
@@ -85,16 +87,8 @@ function MakePotion ( pot, who)
 
 	foreach reag in (reagent_costs.keys())
 		amount := CInt( reagent_costs[reag] );
-		if (temHabilidade(who, "Economia de Reagentes"))
-			if (randomInt(100) < 50)
-				amount := amount -2;
-	/*		elseif (randomInt(100) < 60)
-				amount := amount -3;
-			elseif (randomInt(100) < 70)
-				amount := amount -4;
-			elseif (randomInt(100) < 90)
-				amount := amount -6;	*/
-			endif
+		if (temHabilidade(who, "Economia de Reagentes") && (amount >1))
+			amount := CInt(amount/2);
 		endif
 		if (!amount)
 			amount := 1;
@@ -119,12 +113,7 @@ function MakePotion ( pot, who)
 		set_critical(1);
 		foreach item in EnumerateItemsInContainer(who.backpack)
 			if((item.objtype == UOBJECT_EMPTY_BOTTLE) && (item.container.objtype != 0x1940))
-				if ((GetObjProperty(who, "extratoinstantaneo")) && (temHabilidade(who, "Extrato Instantaneo Duplicado")))
-					if(SubtractAmount(item, 2))
-						hasbottle := 1;
-						break;
-					endif
-				elseif (SubtractAmount(item, 1))
+				if(SubtractAmount(item, 1))
 					hasbottle := 1;
 					break;
 				endif
@@ -143,22 +132,12 @@ function MakePotion ( pot, who)
 					SetObjProperty(thing, "strength", strength);
 				endif
 				if (GetObjProperty(who, "extratoinstantaneo"))
-					if (temHabilidade(who, "Extrato Instantaneo Duplicado"))
-						SendSysMessageEx(who, "Voce fez dois extratos instantaneamente.", SSM_INFO);
-						var amt := 2;
-						var pocao := GetObjProperty(thing, "extrato");
-       						var pot := CreateItemInBackpack(who, pocao, amt);
-						SetObjProperty(pot, "strength", cint(GetObjProperty(thing, "strength")));
-						DestroyItem(thing);
-						EraseObjProperty(who, "extratoinstantaneo");
-					else
-						SendSysMessageEx(who, "Voce fez um extrato instantaneo.", SSM_INFO);
-						var pocao := GetObjProperty(thing, "extrato");
+					SendSysMessageEx(who, "Voce fez um extrato instantaneo.", SSM_INFO);
+					var pocao := GetObjProperty(thing, "extrato");
        					var pot := CreateItemInBackpack(who, pocao, 1);
-						SetObjProperty(pot, "strength", cint(GetObjProperty(thing, "strength")));
-						DestroyItem(thing);
-						EraseObjProperty(who, "extratoinstantaneo");
-					endif
+					SetObjProperty(pot, "strength", cint(GetObjProperty(thing, "strength")));
+					DestroyItem(thing);
+					EraseObjProperty(who, "extratoinstantaneo");
 				endif
 			endif
 			SetObjProperty(thing, "crafterskill", AP_GetSkill(who, ALCHEMY) );
@@ -169,24 +148,6 @@ function MakePotion ( pot, who)
 		else
 			SendSysMessageEx(who, "Voce nao tem frascos.", SSM_FAIL);
 			return;
-		endif
-
-	elseif (Cint(AP_GetSkill(who, "Alchemy")) <= 39)
-		var falha1 := RandomInt(100)+1;
-		if 	(falha1 <= 15)
-			FalhaCritica(who);
-		endif
-
-	elseif (Cint(AP_GetSkill(who, "Alchemy")) <= 59)
-		var falha2 := RandomInt(100)+1;
-		if 	(falha2 <= 10)
-			FalhaCritica(who);
-		endif
-
-	elseif (Cint(AP_GetSkill(who, "Alchemy")) <= 70)
-		var falha3 := RandomInt(100)+1;
-		if 	(falha3 <= 5)
-		FalhaCritica(who);
 		endif
 
 	else
@@ -388,50 +349,4 @@ function GenerateEmptySide(byref book_gump, side, pOX, pOY, page_num)
 		GFTextCrop(book_gump, 305, 60, 115, 17, 10, "");
 	endif
 
-endfunction
-
-function FalhaCritica(who)
-	if (TemHabilidade(who, "Alquimista Precavido"))
-		return 1;
-	endif
-
-	var falha := RandomInt(100)+1;
-	var loop := 0;
-	if (falha < 65 )
-		PlaySoundEffect(who, SOUND_EFFECT_POUR);
-		SendSysMessageEx(who, "Voce nao conseguiu fazer nada com isso.", SSM_FAIL);
-		return;
-	//elseif ( falha < 68 )
-	//	SendSysMEssageEx(who,"AHH!  Seu cabelo caiu!!!", SSM_FAIL);
-	//	DestroyItem(GetEquipmentByLayer (who, LAYER_HAIR));
-	//	DestroyItem(GetEquipmentByLayer (who, LAYER_BEARD));
-	//	return;
-	elseif ( falha < 78 )
-		SendSysMessageEx(who,"Ugh... Voce nao esta se sentindo muito bem...", SSM_FAIL);
-		TS_StartTimer(who, "strPoison", 120, 2);
-	elseif ( falha < 82 )
-		SendSysMessageEx(who,"Ahh!", SSM_FAIL);
-		who.color := 18;
-		Detach();
-		sleep(180);
-		who.color := who.truecolor;
-	elseif ( falha < 86 )
-		SendSysMEssageEx(who,"O que foi isso?!", SSM_FAIL);
-		if (who.graphic == 401)
-			who.graphic := 400;
-		else
-			who.graphic := 401;
-		endif
-		sleep(600);
-		Detach();
-		who.graphic := who.objtype;
-	elseif ( falha < 95 )
-		SendSysMEssageEx(who,"VAI EXPLO...", SSM_FAIL);
-		PlayStationaryEffect( who.x, who.y, who.z, 0x36b0, 7, 10, 1);
-		PlaySoundEffect(who, 0x208);
-		ApplyRawDamage(who, cint(30+ randomInt(100) ) );
-	else
-		SendSysMessageEX(who,"Voce esta envenenado!!", SSM_FAIL);
-		TS_StartTimer(who, "defaultPoison", 120, 5);
-	endif
 endfunction
