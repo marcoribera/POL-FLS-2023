@@ -254,6 +254,9 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 
 		//Caso saia do lugar durante o trabalho, para;
 		if(!playCraftWork(who, craft_sound, craft_loops, craft_delay, craft_action))
+			if (item)
+				DestroyItem(item);
+			endif
 			return 1;
 		endif
 
