@@ -780,7 +780,7 @@ endfunction
 function CheckAnvil(who)
 	var anvil_near;
 	foreach item in ListItemsNearLocation(who.x, who.y, who.z, 3)
-		if((item.objtype == 0x0faf) || (item.objtype == 0x0fb0))
+		if((item.objtype == 0xe1e) || (item.objtype == 0x0fb0))
 			anvil_near := 1;
 			break;
 		endif

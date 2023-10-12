@@ -19,7 +19,7 @@ program drink_blue (who, potion)
 	endif
 
 	if ( TS_GetCooldown(who, "healingpot") != error)
-		SendSysMessageEx(who, "Voce nao pode usar essa pocao agora.", SSM_FAIL);
+		SendSysMEssageEx(who, "Voce nao pode usar essa pocao agora.", SSM_FAIL);
 		return 1;
 	endif
 

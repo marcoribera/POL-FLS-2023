@@ -31,16 +31,16 @@ endprogram
 function UpOreAmounts()
 
 	var data_file := DFOpenDataFile(":gathering:OreSettings", DF_CREATE);
-	var elems := DFGetElemNames(data_file);
-
-	//SysLog("Running ore regeneration cycle. ("+elems.size()+" veins)");
+	var elems := DFGetElemNames(data_file);		
+	
+	SysLog("Running ore regeneration cycle. ("+elems.size()+" veins)");
 
 	foreach vein_serial in (elems)
 		var vein := DFFindElement(data_file, vein_serial);
 
 		var remaining_ore := CInt(vein.GetProp("RemainingOre"));
 		var amount := CInt(vein.GetProp("Amount"));
-
+	
 		if ( remaining_ore < MAX_RESOURCE_AMOUNT )
 			remaining_ore := remaining_ore + 1;
 			vein.SetProp("RemainingOre", CInt(remaining_ore));
@@ -53,25 +53,26 @@ function UpOreAmounts()
 		if (amount == MAX_RESOURCE_AMOUNT)
 			data_file.DeleteElement(vein_serial);
 		endif
-
+	
 		sleep(1);
 	endforeach
-
+	
 	//SysLog("Finished ore regeneration cycle.");
 endfunction
 
 function RegenWood(settings)
+	Print("Running wood regeneration cycle...");
 	var data_file := LJ_GetDataFile();
-
+	
 	foreach elem_name in DFGetElemNames(data_file)
 		var data_elem := LJ_GetDataElem(elem_name);
-
+		
 		var amount := CInt(data_elem.GetProp("Amount"));
 		if ( amount < CInt(settings.MaxWood) )
 			amount := amount+1;
 			data_elem.SetProp("Amount", amount);
 		endif
-
+		
 		sleep(1);
 	endforeach
 endfunction
@@ -79,6 +80,8 @@ endfunction
 function UpMiscAmounts()
 	var data_file := DFOpenDataFile("MiscResources", DF_CREATE);
 	var elems := DFGetElemNames(data_file);
+
+	SysLog("Running mining-resource regeneration cycle. ("+elems.size()+") coordinates.");
 
 	foreach coordinate in elems
 		var coordinate_info := DFFindElement(data_file, coordinate);

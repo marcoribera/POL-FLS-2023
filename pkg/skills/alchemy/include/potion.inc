@@ -83,7 +83,7 @@ function GetReagName(item)
   elseif (item.objtype == 0xF78 )
    return "asa de morcego";
   elseif (item.objtype == 0xF8F )
-   return "poeira de cripta";
+   return "po de tumulo";
    
   elseif (item.objtype == 0xee27 )
    return "cascas vermelhas";
@@ -146,7 +146,7 @@ function GetReagObj(item)
    return 0xF81;
   elseif (item == "asa de morcego")
    return 0xF78;
-  elseif (item == "poeira de cripta" )
+  elseif (item == "po de tumulo" )
    return 0xF8F;
    
   elseif (item.objtype == "cascas vermelhas" )

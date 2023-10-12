@@ -158,7 +158,7 @@ function GetReagName(objtype)
   elseif (objtype == 0xF90 )
    return "madeira morta";
   elseif (objtype == 0xf91 )
-   return "coracao do vorme";
+   return "coracao do verme";
     
   elseif ( objtype == 0xef1a)
    return "glandula de wyvern";
@@ -168,11 +168,8 @@ function GetReagName(objtype)
    return "glandula de aranha";
   elseif (objtype == 0xef1d)
    return "glandula de cobra";
-  elseif (objtype == 0xef1e)
-   return "po de liche";
-
-  elseif (objtype == 0xF8F )
-   return "poeira de cripta";
+  elseif (objtype == 0xF8F)
+   return "po de tumulo";
   elseif (objtype == 0xee27 )
    return "cascas vermelhas";
   elseif (objtype == 0xee28 )

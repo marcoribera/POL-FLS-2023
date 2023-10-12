@@ -6,18 +6,17 @@ use datafile;
 program create(item)
 
 	var possiveis:={};
-	var cfg := ReadConfigFile(":recipes:recipes");	
+	var cfg := ReadConfigFile(":recipes:recipes1");	
 	
 	foreach key in (GetconfigStringKeys(cfg))
 		var elem:= GetconfigStringKeys(cfg);
 		var level := GetConfigInt(elem, "level");
 		var name:= GetConfigString(elem,"name");
 		var text:= GetConfigString(elem,"text");
-		if (item.objtype == 0xFF990) 
 			possiveis.append(key);
-		endif
-	endforeach	
-	var sorteado := possiveis[randomint(possiveis.size())+1];
-	SetObjProperty(item, "recipe",sorteado);
+	endforeach
+	var rand := RandomInt(possiveis.size()) + 1;
+	var sorteado := possiveis[rand];
+	SetObjProperty(item, "recipe", sorteado);
 	
 endprogram

@@ -22,9 +22,6 @@ program summontotem(params)
 	var spellid := params[3];
 	params := 0; // No longer needed
 
-
-
-
 	//Efeito da magia
 	PlaySoundEffect(targ, SFX_SPELL_HEAL);
 
@@ -42,44 +39,50 @@ program summontotem(params)
 		petcost := Cint(cfg2.petslot);
 	endif
 
-		//sendsysmessage(who, " " + GetNumPets(who) );
+	//sendsysmessage(who, " " + GetNumPets(who) );
 	if (GetMaxSummons(who) < GetNumSummons(who) + petcost )
 		SendSysMessageEx(who, "Voce tem " + GetNumSummons(who) + " invocacoes sob seu comando e o maximo sao : " + GetMaxSummons(who)  + "  . "  , SSM_FAIL);
 		return;
 	endif
 
-
 	if (template == error)
-			SendSysMessage(who, "erro ao ler o template" + template);
-			return;
+		SendSysMessage(who, "erro ao ler o template" + template);
+		return;
 	endif
 
-	var undead :=   summon(template, targ, who);
+	var espirito := summon(template, targ, who);
+
+	if (espirito)
+		SendSysMessageEx(who, "Voce teve sucesso em invocar a criatura.", SSM_INFO);
+		AddPet(who, espirito.serial);
+	else
+		SendSysMessageEx(who, "Voce falhou em invocar a criatura.", SSM_FAIL);
+		return;
+	endif
+
+	var fator := (AP_GetSkill(who, MAGICLORE)-20.0)/4; //skill 0 -> -5 // Skill 20 -> 0 // Skill 40 -> +5 // Skill 100 -> +20
+
+	AP_SetTrueSkill(espirito, WRESTLING, AP_GetTrueSkill(espirito, WRESTLING) + fator);
+	AP_SetTrueSkill(espirito, TACTICS, AP_GetTrueSkill(espirito, WRESTLING) + fator);
 
 	if (temHabilidade(who, "Espirito Protetor"))
-		undead.resist_physical_mod  := 25;
-		undead.resist_cold_mod  := 25;
-		undead.resist_poison_mod  := 25;
-		undead.resist_energy_mod  := 25;
-		undead.resist_fire_mod  := 25;
-		SetObjProperty(undead, "#ReflexosMod", 50);
-		SetObjProperty(undead, "#ReflexosMod", 50);
-		SetObjProperty(undead, "#VontadeMod", 50);
+		espirito.resist_physical_mod  := 25;
+		espirito.resist_cold_mod  := 25;
+		espirito.resist_poison_mod  := 25;
+		espirito.resist_energy_mod  := 25;
+		espirito.resist_fire_mod  := 25;
+		SetObjProperty(espirito, "#ReflexosMod", 25);
+		SetObjProperty(espirito, "#ReflexosMod", 25);
+		SetObjProperty(espirito, "#VontadeMod", 25);
 	endif
 
-	if (undead)
-		SendSysMessageEx(who, "Voce teve sucesso em invocar  a criatura.", SSM_INFO);
-		AddPet(who, undead.serial);
-	endif
-
-
-	var duracao := CInt(AP_GetSkill(who, MAGICLORE))*3 + 180;
+	var duracao := 120 + 180 * AP_GetSkill(who, MAGICLORE)/ 100;
 
 	if (temHabilidade(who, "Invocacao Duradoura"))
-		duracao := duracao*2;
+		duracao := duracao*2; //skill 0 -> 50s // Skill 20 -> 72s // Skill 40 -> 98s // Skill 100 -> 170s
 	endif
 
-	TS_StartTimer(undead, "summon", duracao );
+	TS_StartTimer(espirito, "summon", duracao );
 
 	return 1;
 

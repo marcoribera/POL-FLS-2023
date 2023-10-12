@@ -56,7 +56,7 @@ function EsfriarLiga(user, item)
         var ingot := GetObjProperty(item, "oreObj1");
 	if (ingot == "carvao")
 	   SendSysMessage(user, "Voce apenas estragou carvao!", FONT_NORMAL, 40);
-	else   
+	else
            SendSysMessage(user, "Voce esfriou o metal derretido e fez as barras.", FONT_NORMAL, 90);
 	   CreateItemInBackpack(user, ingot, amt);
 	endif
@@ -80,7 +80,7 @@ function EsfriarLiga(user, item)
         var amt := CINT(GetObjProperty(item, "amt1"));
         var ingot := DeterminaLiga(metals, user);
 
-	
+
         if (ingot == "noIngot")
           deleteProp(item);
           item.color := 951;
@@ -139,7 +139,7 @@ function DeterminaLiga(metals, who)
         0x630c: metais.append("sinque");
         0x630d: metais.append("figin");
         0x6993: metais.append("prata");
-        0x630a: metais.append("lithtan");
+        0x630a: metais.append("litan");
         0x630e: metais.append("golden");
      endcase
   endforeach
@@ -150,7 +150,7 @@ function DeterminaLiga(metals, who)
       return 0x6603; //cristalith
     elseif (("cobre"  in metais ) && ("estanho" in metais))
       return 0x6994; //bronze
-    elseif (("lithtan" in metais) && ("estanho" in metais))
+    elseif (("litan" in metais) && ("estanho" in metais))
       return 0x6601; //stalith
     elseif (("galvorn" in metais) && ("helce" in metais))
       return 0x6998; //teslium
@@ -164,15 +164,15 @@ function DeterminaLiga(metals, who)
       return 0x6609; //lunium
     endif
   elseif (metais.size() == 3)
-    if (("lithtan" in metais) && ("estanho" in metais)  && ("figin" in metais))
+    if (("litan" in metais) && ("estanho" in metais)  && ("figin" in metais))
       return 0x6605; //ignarilith
-    elseif (("lithtan" in metais) && ("estanho" in metais)  && ("argonil" in metais))
+    elseif (("litan" in metais) && ("estanho" in metais)  && ("argonil" in metais))
       return 0x6606; //glacialith
-    elseif (("lithtan" in metais) && ("estanho" in metais)  && ("sinque" in metais))
+    elseif (("litan" in metais) && ("estanho" in metais)  && ("sinque" in metais))
       return 0x6607; //venerilith
-    elseif (("lithtan" in metais) && ("estanho" in metais)  && ("helce" in metais))
+    elseif (("litan" in metais) && ("estanho" in metais)  && ("helce" in metais))
       return 0x6608; //enerlith
-    elseif (("lithtan" in metais) && ("estanho" in metais)  && ("ferro" in metais))
+    elseif (("litan" in metais) && ("estanho" in metais)  && ("ferro" in metais))
       return 0x6602; //acielith
     elseif (("cobre" in metais) && ("prata" in metais)  && ("golden" in metais))
       return 0x6604; //platinum
@@ -188,33 +188,44 @@ endfunction
 
 
 function smeltaImpurezasRaras(who, amt)
+  var achou := 0;
   if(amt >= 20)
     var rand := RandomFloat(100.0);
     if(rand<0.1)
       SendSysMessage(who, "Achou um pouco de Galvorn em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x6310, CInt(amt/20)); // return 90; //galvorn
+      CreateItemInBackPack(who, 0x6310, CInt(amt/20)); // return 90; //galvorn
+      achou := 1;
     elseif(rand<0.2)
       SendSysMessage(who, "Achou um pouco de Mithril em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x6311, CInt(amt/20)); // return 90; //mithril
+      CreateItemInBackPack(who, 0x6311, CInt(amt/20)); // return 90; //mithril
+      achou := 1;
     elseif(rand<0.4)
       SendSysMessage(who, "Achou um pouco de Helce em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x630b, CInt(amt/20)); // return 80; //helce
+      CreateItemInBackPack(who, 0x630b, CInt(amt/20)); // return 80; //helce
+      achou := 1;
     elseif(rand<0.6)
       SendSysMessage(who, "Achou um pouco de Sinque em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x630c, CInt(amt/20)); // return 80; //sinque
+      CreateItemInBackPack(who, 0x630c, CInt(amt/20)); // return 80; //sinque
+      achou := 1;
     elseif(rand<0.8)
       SendSysMessage(who, "Achou um pouco de Figin em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x630d, CInt(amt/20)); // return 80; //figin
+      CreateItemInBackPack(who, 0x630d, CInt(amt/20)); // return 80; //figin
+      achou := 1;
     elseif(rand<1.0)
       SendSysMessage(who, "Achou um pouco de Argonil em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x6460, CInt(amt/20)); // return 80; //argonil
+      CreateItemInBackPack(who, 0x6460, CInt(amt/20)); // return 80; //argonil
+      achou := 1;
     elseif(rand<1.2)
-      SendSysMessage(who, "Achou um pouco de Lithtan em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x630a, CInt(amt/20)); // return 70; //lithtan
+      SendSysMessage(who, "Achou um pouco de litan em meio ao minerios.");
+      return CreateItemInBackPack(who, 0x630a, CInt(amt/20)); // return 70; //litan
     elseif(rand<1.4)
       SendSysMessage(who, "Achou um pouco de Ouro em meio ao minerios.");
-      return CreateItemInBackPack(who, 0x630e, CInt(amt/20)); // return 40; //golden
+      CreateItemInBackPack(who, 0x630e, CInt(amt/20)); // return 40; //golden
+      achou := 1;
     endif
   endif
-  return 0;
+  if(achou)
+    SkillCheck(who, GATHERING, -1);
+  endif
+  return achou;
 endfunction
