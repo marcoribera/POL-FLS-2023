@@ -153,8 +153,11 @@ function RemoveEquipmentMods(who, item)
   	AP_ModifySkillMod(who, AWARENESS, (-1)*penalty);
 
 	//magery
+
   	penalty := CInt(itemdesc[item.objtype].MageryPenalty);
-  	AP_ModifySkillMod(who, MAGERY, (-1)*penalty);
+	if (!(TemHabilidade(who, "Aura de Corrupcao") || TemHabilidade(who, "Devocao")))
+	  	AP_ModifySkillMod(who, MAGERY, (-1)*penalty);
+	endif
 
 	var mods := GetObjProperty(item, "equip");
 	if (mods.keys().size() >= 1)
