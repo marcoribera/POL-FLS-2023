@@ -217,7 +217,7 @@ program fireweapons(who, item)
     elseif(is_carabine)
         dmg := 80;
     elseif(is_handcannon)
-        dmg := 120;
+        dmg := 140;
     endif
     
     // Cálculo de dano baseado na distância
