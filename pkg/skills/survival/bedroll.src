@@ -5,10 +5,11 @@
 use uo;
 use os;
 
+include "include/say";
 include ":itemutils:canAccess";
 
-CONST LOGOUT_WAIT 	:= 30;
-CONST UOBJECT_CAMPFIRE  := 0xde3;
+CONST LOGOUT_WAIT 	:= 15;
+CONST UOBJECT_CAMPFIRE  := 3555;
 
 program use_Bedroll( who, bedroll )
 
@@ -26,7 +27,7 @@ program use_Bedroll( who, bedroll )
 		SendSysMessage( who, "Voce precisa de um acampamento proximo para usar isto." );
 		return 0;
 	else
-		SendSysMessage( who, "Voce deve permanecer aqui para preparar o acampamento." );
+		SendSysMessage( who, "Voce deve permanecer aqui e em paz para preparar o acampamento." );
 	endif
 
 	var x := who.x;
@@ -40,11 +41,28 @@ program use_Bedroll( who, bedroll )
 			SendSysMessage( who, "Voce abandonou suas preparacoes para o acampamento.");
 			return 0;
 		endif
+		var nearbypeople := ListMobilesNearLocation( x ,y, z, 6);
+		foreach char in (nearbypeople)
+			if (char.warmode)
+				PrintTextabove(who, "Algo atrapalha o seu descanso.");
+				return;
+			endif
+		endforeach
 		SendSysMessage( who, "Voce deve esperar " + ttl + " segundos para deslogar." );
 		ttl := ttl - 5;
 		sleep(5);
 	endwhile
+	
+	var bedhp := bedroll.hp;
+	var bedhp2 := bedhp -1;
+	bedroll.hp := Cint(bedhp2);
+	if (bedroll.hp == 0)
+	Destroyitem(bedroll);
+	SendSysMessageEx(who, "O colchonete ficou imprestavel apos tanto uso!", SSM_FAIL);
+	sleepms(50);
+	endif
 
+	print("bedhp eh "+bedhp+"bedhp2 eh"+bedhp2+"bedhp ficou "+bedroll.hp);
 	SetObjProperty(who,"#camped",1);
 	DisconnectClient( who );
 

@@ -98,9 +98,9 @@ function SetMagicTemplateBonus(item, parsed)
 			var selected := bonusKeys[ RandomInt(bonusKeys.size())+1];
 
 			var mods := dictionary;
-			if (chosen == "skill")
-				mods[selected]	:= GetBonusAmount(parsed.level, chosen);
-			elseif (chosen == "vital")
+			//if (chosen == "skill")
+				//mods[selected]	:= GetBonusAmount(parsed.level, chosen);
+			if (chosen == "vital")
 				mods[selected] := GetBonusAmount(parsed.level, chosen);
 			elseif (chosen == "status")
 				mods[selected] := GetBonusAmount(parsed.level, chosen);
@@ -122,9 +122,9 @@ endfunction
 
 function GetBonusAmount(level, type)
 
-	if (type == "skill")
-		return (level*3)+2;
-	elseif (type == "vital")
+//	if (type == "skill")
+	//	return (level*3)+2;
+	if (type == "vital")
 		return level*4;
 	elseif( type == "status")
 		return level*3;
@@ -208,7 +208,7 @@ function SetMagicBonus(item, parsed)
 			else
 				mods["intmod"] := amt;
 			endif
-		elseif (nroll == 2)
+		else //(nroll == 2)
 			stat := RandomDiceRoll("1d3");
 			amt := (RandomInt(parsed.level)) + (parsed.level)*2;  //de 3 a 15
 			if (stat == 1)
@@ -218,9 +218,9 @@ function SetMagicBonus(item, parsed)
 			else
 				mods["stammod"] :=  amt;
 			endif
-		else
-			amt := (RandomInt(parsed.level)) + parsed.level*2;  //de 3 a 15
-			SetEquipMod(item, skilllist[RandomInt(skilllist.size())+1 ], amt);
+		//else
+			//amt := (RandomInt(parsed.level)) + parsed.level*2;  //de 3 a 15
+			//SetEquipMod(item, skilllist[RandomInt(skilllist.size())+1 ], amt);
 		endif
 
 	endif
