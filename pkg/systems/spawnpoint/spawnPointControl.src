@@ -172,23 +172,23 @@ function CreateSpawn(spawnpoint)
 
     if(!loscheck)
       if(CheckLosBetween( spawnpoint.x, spawnpoint.y, spawnpoint.z, x, y, z, spawnpoint.realm ))
-        npc := CreateNpcFromTemplate(spawn, x, y, z, 0, spawnpoint.realm);
+        var i := CreateNpcFromTemplate(spawn, x, y, z, 0, spawnpoint.realm);
         success := 1;
         SetObjProperty(i, "spawnpoint", spawnpoint.serial);
-        return CInt(npc.serial);
+        return i.serial;
       endif
     else //Usar em caso de lugares com muitos obstáculos ou probabilidade alta de spawnar travado
-      npc := CreateNpcFromTemplate(spawn, x, y, z, 0, spawnpoint.realm);
+      var i := CreateNpcFromTemplate(spawn, x, y, z, 0, spawnpoint.realm);
       success := 1;
       SetObjProperty(npc, "spawnpoint", spawnpoint.serial);
-      return CInt(npc.serial);
+      return i.serial;
     endif
     i := i + 1;
     if(i > 10)
-      npc := CreateNpcFromTemplate(spawn, spawnpoint.x, spawnpoint.y, spawnpoint.z, 0, spawnpoint.realm);
+      var i := CreateNpcFromTemplate(spawn, spawnpoint.x, spawnpoint.y, spawnpoint.z, 0, spawnpoint.realm);
       success := 1;
       SetObjProperty(npc, "spawnpoint", spawnpoint.serial);
-      return CInt(npc.serial);
+      return i.serial;
     endif
   endwhile
 endfunction

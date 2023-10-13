@@ -237,7 +237,7 @@ function GFCraftNewPage(who, byref gump, skill_config, MenuName, skill_name)
         				GFHTMLArea(gump, 405, 263, 100, 18, "<basefont color=#ffffff>Proxima Pagina");
         				PageNum := PageNum+1;
         				GFPage(gump, PageNum);
-        				GFAddButton(gump, 220, 260, 4005, 4006, GF_PAGE_BTN, (PageNum-1));
+        				GFAddButton(gump, 220, 260, 4014, 4015, GF_PAGE_BTN, (PageNum-1));
         				GFHTMLArea(gump, 255, 263, 100, 20, "<basefont color=#ffffff>Pagina Anterior");
       				endif
       				GFHTMLArea(gump, ItemX, ItemY, 220, 18, ("<basefont color=#ffffff>"+itemdesc));

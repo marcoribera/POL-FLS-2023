@@ -20,7 +20,6 @@ endfunction
 
 
 function doSpecial(me)
-
   //checa as condicoes
   var conds :=  GetConfigStringArray( npccfgfile[mytemplate], "SpecialCondition" );
 
@@ -181,11 +180,6 @@ function Fight(opponent, alerted := 0)
       break;
     endif
 
-/*  if (hasSpecial(me))
-    DoSpecial(me); // ANTIGO SISTEMA
-  endif
-*/
-
 
   //se eh boss e tem eventos
   if ( GetBossStruct(me) != error )
@@ -202,6 +196,9 @@ if(isBoss(me)) //Faz os SpecialCombats (p/ boss) e o SpecialAttacks (p/ mobs)
 	if (hasCombat(me))
 		DoCombatSpecial(me); ////////////// SPECIALL para boss
 	endif
+  if (hasSpecial(me))
+    DoSpecial(me); // ANTIGO SISTEMA
+  endif
 else
 	if (hasAttack(me))
 		var chance := CInt(npccfgfile[mytemplate].SpecialAttackChance); //para mobs do npcdesc
@@ -211,6 +208,9 @@ else
 		if ((RandomInt(500) <= chance) && (!TS_GetCooldown(me, "npc_special")) )// Acertou!
 			DoCombatSpecialNotBoss (me, opponent);
 		endif
+	endif
+	 if (hasSpecial(me))
+		DoSpecial(me); // ANTIGO SISTEMA
 	endif
 endif
 
