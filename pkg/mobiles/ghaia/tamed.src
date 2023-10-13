@@ -994,7 +994,7 @@ function Go(forma, todos)
 	data.+x := tloc.x;
 	data.+y := tloc.y;
 	data.+type := forma;
-
+	following := 0;
 	
 	
 	if( todos == 1 )
