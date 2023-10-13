@@ -5,6 +5,7 @@ use cfgfile;
 include ":tn:equipment";
 include ":tn:cooldown";
 include "include/say";
+include "include/client";
 
 program equipweapon(who, item)
 
@@ -29,7 +30,17 @@ var descmod:={};
 		SetName(who, ori_name);
 	endif
 
-
+    var dual_weapons := Array{0x27a9, 0x27ab, 0x8fd, 0x27af};
+    var left_hand := GetEquipmentByLayer(who, LAYER_HAND2);
+    var right_hand := GetEquipmentByLayer(who, LAYER_HAND1);
+    if (item.isA(POLCLASS_WEAPON) && (left_hand || right_hand))
+        SendSysMessageEx(who, "Malandrinho :p", SSM_FAIL);
+        return 0;
+    //elseif (item.isA(POLCLASS_WEAPON) && (left_hand.objtype in dual_weapons || right_hand.objtype in dual_weapons))
+    //       SendSysMessageEx(who, "Malandrinho :p", SSM_FAIL);
+    //       return 0;
+    endif
+    
 	if (who.npctemplate)
 		return 1;
 	endif

@@ -254,6 +254,9 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 
 		//Caso saia do lugar durante o trabalho, para;
 		if(!playCraftWork(who, craft_sound, craft_loops, craft_delay, craft_action))
+			if (item)
+				DestroyItem(item);
+			endif
 			return 1;
 		endif
 
@@ -780,7 +783,7 @@ endfunction
 function CheckAnvil(who)
 	var anvil_near;
 	foreach item in ListItemsNearLocation(who.x, who.y, who.z, 3)
-		if((item.objtype == 0x0faf) || (item.objtype == 0x0fb0))
+		if((item.objtype == 0xe1e) || (item.objtype == 0x0fb0))
 			anvil_near := 1;
 			break;
 		endif

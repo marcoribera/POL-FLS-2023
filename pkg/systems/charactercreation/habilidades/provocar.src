@@ -19,10 +19,17 @@ program taunt(who)
 	endif
 	PerformAction(who, ANIM_HIT);
         var nearby := ListMobilesNearLocation( who.x ,who.y, who.z, 8);
-        foreach char in nearby
-			var event := struct{"type":=EVID_TAUNT, "source":=who};
-			SendEvent(char, event);
-        endforeach
+        var provoke_times := cint(AP_GetSkill(who, PARRY)/20);
+        var i := 0;
+        while(i < provoke_times)
+            foreach char in nearby
+                var event := struct{"type":=EVID_TAUNT, "source":=who};
+                SendEvent(char, event);
+            endforeach
+
+            sleep(2);
+            i++;
+        endwhile
 	//TS_StartTimer(who, "provocar", 10); //bonus de parry e de reduzir hit_chance
 	SetCooldown(who, "resistenciaheroica", 60);
 

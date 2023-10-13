@@ -5,11 +5,16 @@
 use uo;
 use vitals;
 use os;
+use cfgfile;
 use util;
 
 include ":gumps:include/gumps";
 include ":gumps:include/gumps_ex";
 include ":datafile:datafile";
+include "include/client";
+include "include/say";
+include ":gumps:htmlGump";
+include ":gumps:yesNo";
 
 program command_Message(who, text)
 		PlayersGump(who);
@@ -27,6 +32,7 @@ function PlayersGump(who)
 	GFTextLine(gump, 345, 20, 2100, "Summon");
 	GFTextLine(gump, 405, 20, 2100, "Freeze");
 	GFTextLine(gump, 465, 20, 2100, "Info");
+	GFTextLine(gump, 510, 20, 2100, "Ficharp");
 	
 	var acc_list := GetAccList(who);
 	var num_players := acc_list.size();
@@ -41,17 +47,19 @@ function PlayersGump(who)
 			name_color := 168;
 		endif
 		var char := SystemFindObjectBySerial(acc_list[acc]);
-		var charname := char.name;
-		if (charname == "Desconhecido")
-			charname := GetObjProperty(char, "realname");
-		endif
-		GFTextLine(gump, 25, y_pos, name_color, acc + " - "+char.title_race+" ["+charname + "]"  );
+		//var charname := char.name;
+		var name_real := GetObjProperty(char, "nome_inicial");
+		//GFTextLine(gump, 25, y_pos, 2100, name_real);
+//		if (charname == "Desconhecido")
+	//		charname := GetObjProperty(char, "realname");
+		//endif
+		GFTextLine(gump, 25, y_pos, name_color, acc + " - "+char.title_race+" ["+name_real + "]"  );
 		GFAddButton(gump, 260, y_pos+3, 2117, 2118, GF_CLOSE_BTN, _acc_iter);
 		GFAddButton(gump, 308, y_pos+3, 2117, 2118, GF_CLOSE_BTN, _acc_iter+200);
 		GFAddButton(gump, 360, y_pos+3, 2117, 2118, GF_CLOSE_BTN, _acc_iter+400);
 		GFAddButton(gump, 410, y_pos+3, 2117, 2118, GF_CLOSE_BTN, _acc_iter+800);
 		GFAddButton(gump, 470, y_pos+3, 2117, 2118, GF_CLOSE_BTN, _acc_iter+600);
-
+		GFAddButton(gump, 520, y_pos+3, 2117, 2118, GF_CLOSE_BTN, _acc_iter+1000);
 		y_pos := y_pos+20;
 		counter := counter+1;
 
@@ -86,11 +94,10 @@ function PlayersGump(who)
 		var nome := acc_list[input-400];
 		var plytarget := GetPersonByName(nome);
 		MoveObjectToLocation( plytarget, who.x, who.y, who.z, who.realm, MOVEOBJECT_FORCELOCATION);
-	elseif ( (input > 600) && (input < 800) )//kill
+	elseif ( (input > 600) && (input < 800) )//info
 		acc_list := acc_list.keys();
 		var nome := acc_list[input-600];
 		var plytarget := GetPersonByName(nome);
-		//ApplyDamage( plytarget, 1000);
 		Start_Script(":commands:gm/info", array{ who, plytarget.serial });
 	elseif ( (input > 800) && (input < 1000) )//freeze
 		acc_list := acc_list.keys();
@@ -104,8 +111,9 @@ function PlayersGump(who)
 	elseif ( (input > 1000) )//ress
 		acc_list := acc_list.keys();
 		var nome := acc_list[input-1000];
-		var plytarget := GetPersonByName(nome);
-		Resurrect(plytarget, RESURRECT_FORCELOCATION );
+		var player := GetPersonByName(nome);
+		//var find_plyr := SystemFindObjectBySerial(player.serial);
+		fichaRP(who, player);
 	endif
 	
 endfunction
@@ -125,8 +133,12 @@ endfunction
 
 function GetAccList(who)
 	var the_list := dictionary;
+
 	foreach person in EnumerateOnlineCharacters()
+	var fraj := (person.acctname == "frajolas");
+			if(!fraj)
 			the_list.Insert(person.acctname, person.serial);
+			endif
 		SleepMS(2);
 	endforeach
 	
@@ -161,4 +173,40 @@ function SendMessage(who, name_text, is_reply:=0)
 		
 		SleepMS(2);
 	endforeach		
+endfunction
+
+function fichaRP(who, player)
+	var i;
+
+	var gump, input, txt1, txt2, txt3, txt4, txt5, txt6;
+
+		var ficharp_data_file := DFOpenDataFile("ficharp", DF_CREATE);
+		var ficharp_elem := DFFindElement(ficharp_data_file, Hex(player.serial), DF_NO_CREATE);
+		if ( !ficharp_elem )
+			SendSysMessage(who, player.name+" nao tem ficha de RP.");
+			return 0;
+		endif
+		var anotacoes := ficharp_elem.GetProp("Anotacoes");
+		var comportamento := ficharp_elem.GetProp("Comportamento");
+		var objetivos := ficharp_elem.GetProp("Objetivos");
+
+		if (!anotacoes)
+			anotacoes := "Não foram feitas anotações nessa ficha de RP";
+		endif
+
+
+		var texto := "Comportamento<br>";
+		for (i := 1 ; i <= 6 ; i := i + 1)
+			texto := texto+comportamento[i]+"<br>";
+		endfor
+		texto := texto+"<br><br>Objetivos<br>";
+		for (i := 1 ; i <= 3 ; i := i + 1)
+			texto := texto+objetivos[i]+"<br>";
+		endfor
+		texto := texto+"<br><br>Anotacoes<br>";
+		for (i := 1 ; i <= anotacoes.size() ; i := i + 1)
+			texto := texto+anotacoes[i]+"<br>";
+		endfor
+		var name_real := GetObjProperty(player, "nome_inicial");
+		SendHTMLGump(who, "Ficha RP de "+name_real, texto);
 endfunction

@@ -79,6 +79,7 @@ program controleclima(who)
 
 		SetWeatherForPlayer(who, type, 50 );
 		foreach mob in enemies
+            SetObjProperty(mob, "molhado", 1);
 			SetWeatherForPlayer(mob, type, 50 );
 			if ( !(mob in who.party.members))
 				if (distance(mob, who) < 20)
@@ -116,6 +117,7 @@ program controleclima(who)
 	endwhile
 	
 	foreach mob in enemies
+        EraseObjProperty(mob, "molhado");
 		SetWeatherForPlayer(mob, 0xFF, 1 );
 		moveobjecttolocation(mob, mob.x, mob.y, mob.z, mob.realm);
 		SetWeatherForPlayer(mob, 0xFF, 1 );

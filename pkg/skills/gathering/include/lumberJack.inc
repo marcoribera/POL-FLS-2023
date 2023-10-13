@@ -135,6 +135,11 @@ function LJ_GetWoodType(tree)
                 return 0xee3a;
          0xd01:
                 return 0xee3a;
+		 0x222E:
+	 	 0x222F:
+	 	 0x2230:
+       	 0x2231:
+				return 0xee3c; // cogumelo
          default: 
                 return 0x1bdd;
     endcase

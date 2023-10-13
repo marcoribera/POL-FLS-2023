@@ -10,17 +10,11 @@ program happyCounter(parms)
   var happiness;
   while((AP_GetVital(me, HITS) > 0) && (me.script == ":ghaia:tamed"))
     if(GetObjProperty(me,"countercheck") != timer)
-	  if(GetObjProperty(me,"debug") == 1)
-			printtextabove(me, "Caiu no primeiro while "+timer);
-		  endif
 	      break;
     endif
     if(GetObjProperty(me,"stabled"))
       while(GetObjProperty(me,"stabled"))
         if(GetObjProperty(me,"countercheck") != timer)
-		  if(GetObjProperty(me,"debug") == 1)
-			printtextabove(me, "Caiu no segundo while " +timer);
-		  endif
           break;
         endif
         sleep(600);
@@ -28,10 +22,6 @@ program happyCounter(parms)
     elseif(GetObjProperty(me,"onhold"))
       while(GetObjProperty(me,"onhold"))
         if(GetObjProperty(me,"countercheck") != timer)
-
-		  if(GetObjProperty(me,"debug") == 1)
-			printtextabove(me, "Caiu no terceiro while " +timer);
-		  endif
 		           break;
         endif
         sleep(120);
@@ -39,14 +29,14 @@ program happyCounter(parms)
     else
       while((!GetObjProperty(me, "stabled")) && (!GetObjProperty(me, "onhold")))
        if(GetObjProperty(me,"countercheck") != timer)
-         		  if(GetObjProperty(me,"debug") == 1)
-			printtextabove(me, "Caiu no else while " +timer);
-		  endif
 		 break;
        endif
         happiness := GetObjProperty(me,"happiness");
 		if(!GetObjProperty(me, "previous_location"))
         happiness := happiness - 1;
+		if (happiness < 0)
+			happiness := 0;
+		endif
         SetObjProperty(me,"happiness", happiness);
 		endif
         sleep(60);

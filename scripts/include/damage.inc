@@ -294,13 +294,15 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 		stat := INTELLIGENCE;
 	endif
 	var strBonus := 0.0;
+	/*
 	if (AP_GetStat(who, stat) >= 100 ) //Calcula um bonus se tiver mais de 100 do atributo que afeta o dano
 		strBonus := 10.0;
 	endif
 
 	//Calcula modificador total do atributo
-	var str := CDbl(AP_GetStat(who, stat)+strBonus)/300.0;
-
+	var str := CDbl(AP_GetStat(who, stat)+strBonus)/150.0;
+	*/
+	var str := CDbl(AP_GetStat(who, stat)-50.0)/100.0;
 	//Quando equipado arco curto, longo, besta, besta pesada e besta de repeticao a força não implica em modificador de dano
 	if ( (who.weapon.objtype == 0x13B2) || (who.weapon.objtype == 0x26CC) || (who.weapon.objtype == 0x0f4f) || (who.weapon.objtype == 0x13fd) || (who.weapon.objtype == 0x26CD) )
 		str := 0;
@@ -366,10 +368,6 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 //	if (GetCooldown(who, "marcadacaca"))
 //			other := other + 0.75; //75% - balanceamento depois da mudanca de calculo do dano
 //	endif
-var inimigo_caca := (GetObjProperty (defender, "marcadacaca") == 1);
-	if (TemHabilidade(who, "Marca da Caca") && inimigo_caca )
-		other := other + 2.0;
-	endif
 
 	if (TemHabilidade(who, "Precisao Cirurgica"))
 		other := other + 0.50; //50% - balanceamento depois da mudanca de calculo do dano

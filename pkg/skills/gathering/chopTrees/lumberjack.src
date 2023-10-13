@@ -14,6 +14,7 @@ include ":crafting:toolWear";
 include "include/facings";
 include "include/say";
 include ":charactercreation:habilidades";
+include ":fls_core:fls_objtypes";
 
 program skill_LumberJack(who,tool)
 
@@ -32,8 +33,8 @@ program skill_LumberJack(who,tool)
 		return 0;
 	endif
 
-	if ((targ.item.objtype == 0xec24) || (targ.item.objtype == 0xec25) || (targ.item.objtype == 0xec26) || (targ.item.objtype == 0xFF04)||(targ.item.objtype == 0xec27) || (targ.item.objtype == 0xec28))
-		if ((!CheckLineOfSight(who, targ.item)) || (Distance(who, targ.item) > 1))
+		if ((targ.item.objtype == 0xec24) || (targ.item.objtype == 0xec25) || (targ.item.objtype == 0xec26) || (targ.item.objtype == 0xFF04)||(targ.item.objtype == 0xec27) || (targ.item.objtype == 0xec28))
+		if ((!CheckLineOfSight(who, targ.item)) or (Distance(who, targ.item) > 1))
 			SendSysMessage(who, "O alvo esta distante.");
 			return;
 		else
@@ -69,7 +70,9 @@ program skill_LumberJack(who,tool)
 			ChopTree(who, tool, targ, orig_x, orig_y);
 			AP_ConsumeVital(who, "Stamina", 3);
 		endif
-		CheckToolWear(who, tool, GATHERING);
+		ChopTree(who, tool, targ, orig_x, orig_y);
+		AP_ConsumeVital(who, "Stamina", 5);
+		CheckToolWear(who, tool, GATHERING );
 		sleep(1);
 		if (LJ_GetWoodAmount(who.realm, targ.x, targ.y)== 0 )
 			PrinttextAbove(who, "*derruba a arvore*");
@@ -87,7 +90,7 @@ function ChopTree(who, tool, targ, orig_x, orig_y)
 			return 0;
 		endif
 
-		PerformAction(who, ANIM_ATTACK_2HAND_DOWN);
+			PerformAction(who, ANIM_ATTACK_2HAND_WIDE);
 		PlaySoundEffect(who, FLS_SFX_SKILL_LUMBERJACK);
 		sleepms(1200);
 	endfor
@@ -96,15 +99,16 @@ function ChopTree(who, tool, targ, orig_x, orig_y)
 	var wood_amount := LJ_GetWoodAmount(who.realm, targ.x, targ.y);
 
 	var max_wood := CInt(LJ_GetSettingsCfgElem("Settings").MaxWood);
+	var difficulty := DetermineLumberDifficulty(wood_type); // feita
 	// The less wood there is, the more difficult it becomes.
-
-//	var difficulty := CInt(105 - (100 * wood_amount / max_wood));
-	var difficulty := CInt(0 + (max_wood - wood_amount)*3);
+/*
+	//var difficulty := CInt(105 - (100 * wood_amount / max_wood));
+	//var difficulty := CInt(0 + (max_wood - wood_amount)*3);
 
 	if (difficulty > 30)
 		difficulty := 30;
 	endif
-
+*/
 	if (tool.objtype == 0x0f43)
 		difficulty := difficulty - 10;
 			if (difficulty < 0)
@@ -154,8 +158,7 @@ endfunction
 
 function CanChop(who, axe, targ, orig_x, orig_y)
 	if ( who.hidden )
-		SendSysMessage(who, "Voce parou de cortar a arvore para ficar escondido.");
-		return 0;
+	SendSysMessage(who, "Voce parou de cortar a arvore para se esconder!");			return 0;
 	elseif ( who.x != orig_x || who.y != orig_y )
 		SendSysMessage(who, "Voce parou de cortar a arvore.");
 		return 0;
@@ -176,4 +179,31 @@ function CanChop(who, axe, targ, orig_x, orig_y)
 		return 0;
 	endif
 	return 1;
+endfunction
+
+//dificuldade de PEGAR o minerio
+function DetermineLumberDifficulty(logtype)
+
+	case (logtype)
+
+        0xee36:
+        	return 20; //pinheiro
+        0xee37:
+        	return 30; //carvalho
+        0xee38:
+        	return 75; //nogueira
+        0xee39:
+        	return 40; //salgueiro
+        0xee3a:
+        	return 50; //sipreste
+        0xee3b:
+        	return 60; //angelim
+        0xee3c:
+        	return 70; //ebano
+        0x1bdd:
+        	return 10; //madeira;
+        default:
+        	return 0;
+    endcase
+
 endfunction

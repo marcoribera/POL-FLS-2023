@@ -115,20 +115,50 @@ function escolherCabelo(who, byref disfarce, raca := 0)
 	var sizey1 := 670;
 	var sizey2 := 640;
 	var sizey3 := 600;
-	if (raca == "Cazar")
-		hair := config["head"];
+	var sizeh := 270;
+	var grande;
+	if (raca == "Aquilrano")
+		hair := config["Aquilrano"];
+		sizey1 := 350;
+		sizey2 := 320;
+		sizey3 := 200;
+	elseif (raca =="Vanirio")
+		hair := config["Vanirio"];
+		sizey1 := 670;
+		sizey2 := 640;
+		sizey3 := 600;
+		sizeh := 600;
+		grande := 1;
+	elseif (raca == "Numajene")
+		hair := config["Numajene"];
+		sizey1 := 670;
+		sizey2 := 640;
+		sizey3 := 600;
+		sizeh := 600;
+		grande := 1;
+	elseif (raca == "Qualquer")
+		hair := config["todos"];
+		sizey1 := 670;
+		sizey2 := 640;
+		sizey3 := 600;
+		sizeh := 600;
+		grande := 1;
 	else
 		hair := config["head"];
+		sizeh := 600;
+		grande := 1;
 	endif
 	var hairgumps := config["hairgump"];
 
 	var gump := GfCreateGump();
-	GFResizePic(gump, 0, 0, 3600, 600, sizey1);
-	GFResizePic(gump, 15, 15, 0x13be, 575, sizey2);
+	GFResizePic(gump, 0, 0, 3600, 300, sizey1);
+	GFResizePic(gump, 15, 15, 0x13be, sizeh, sizey2);
 	GFTextMid(gump, 15, 25, 270, 1153, "Escolha o cabelo");
-	GFResizePic(gump, 240, 55, 2620, 50, sizey3);
-	GFResizePic(gump, 520, 55, 2620, 50, sizey3-100);
+	GFResizePic(gump, 220, 55, 2620, 50, sizey3);
 
+	if (grande == 1)
+		GFResizePic(gump, 520, 55, 2620, 50, sizey3-50);
+	endif
 
 	GFSetRadioGroup(gump, 1);
 	var y_pos := 65;
@@ -143,7 +173,7 @@ function escolherCabelo(who, byref disfarce, raca := 0)
 		endwhile
 		numColumn ++;
 		if (numColumn > 19)
-			x_pos := 300;
+			x_pos := 320;
 			if(numColumn == 20)
 				y_pos := 65;
 			endif
@@ -156,7 +186,7 @@ function escolherCabelo(who, byref disfarce, raca := 0)
 		hairnames.append(hairname);
 		GFTextline(gump, x_pos + 55, y_pos+5, 1153, hairname);
 		var gumppic := GetConfigString(hairgumps, style[1]);
-		GFGumpPic(gump, x_pos+155, y_pos-45, gumppic);
+		GFGumpPic(gump, x_pos+135, y_pos-45, gumppic);
 		y_pos := y_pos + 30;
 
 	endforeach
@@ -231,6 +261,8 @@ function BuildHairDyeGump(cur_color := 0, povo := 0)
 	var color_cfg := ReadConfigFile(":hair:config/hairColors");
 	var index_elem;
 	if (povo == "Zharkiano" || povo == "Asanita")
+	  index_elem := color_cfg["Index"]; // Controls order colors appear.
+	elseif (povo == "Qualquer")
 	  index_elem := color_cfg["Index"]; // Controls order colors appear.
 	else
 	  index_elem := color_cfg[povo]; //vanirios, numajene,  aquilrano e thurioes

@@ -35,7 +35,7 @@ program advalchemy(who, item)
 	Detach();
 
 	var advgump := GFCreateGump();
-
+	
 	GFResizePic(advgump, 0, 0, DEFAULT_BACKGROUND, 240, 340);
 	GFResizePic(advgump, 10, 10, DEFAULT_FOREGROUND, 220, 320);
 
@@ -56,16 +56,16 @@ program advalchemy(who, item)
 			i := i + 1;
 		endforeach
 	endif
-
+       
 	GFTextLine(advgump, 48, 237, 600, "Remover Ingredientes");
 	GFTextLine( advgump, 48, 257, 600, "Adicionar Ingredientes");
 	GFTextLine(advgump, 48, 277, 600, "Preparar Extrato");
 	GFAddButton(advgump, 37, 261, 2103, 2104, 1, 11);//adicionar
 	GFAddButton(advgump, 37, 281, 2103, 2104, 1, 12);//misturar
 	GFAddButton(advgump, 37, 241, 2103, 2104, 1, 13);//remover
-
+	
 	var retv := GFSendGump( who, advgump );
-
+    
 	if ( retv[10] )
 		return;
 	elseif ( retv[11])
@@ -74,10 +74,16 @@ program advalchemy(who, item)
 		if (!alvo)
 			return;
 		endif
+
 		if ( !(alvo.isReagent() || isOtherReagent(alvo)) )
 			SendSysMessageEx(who, "Isso nao parece ser um ingrediente valido!", SSM_FAIL);
 			return;
-        	endif
+        endif
+
+		if ( alvo.amount > 8 )
+			DestroyItem(alvo);
+			SendSysMessageEx(who, "voce tentou colocar mais reagentes do que o necessario por engano e acabou estragando as propriedades de todos deles", SSM_FAIL);
+		endif
 
 		if (reags[alvo.objtype]  >= 10 )
 			SendSysMessageEx(who, "Muitos componentes materiais desse tipo.", SSM_FAIL);
@@ -103,12 +109,12 @@ program advalchemy(who, item)
 			endif
 		endforeach
 
-		EraseObjProperty(item, "reagentes");
-
+		EraseObjProperty(item, "reagentes"); 
+	
 	elseif ( retv[12])
 		FazPotion(who, item);
 	endif
-
+    
 endprogram
 
 function FazPotion(who, item)
@@ -128,7 +134,7 @@ function FazPotion(who, item)
 		var rN_keys := regsNeeded.keys();
 		if( len(r_keys) == len(rN_keys) )
 			foreach reg in rN_keys
-				if( CInt(regsNeeded[reg]) != regs[CInt(reg)] )
+				if( CInt(regsNeeded[reg]) != regs[CInt(reg)] ) 
 					objtype := 0;
 					break;
 				endif
@@ -152,10 +158,8 @@ function FazPotion(who, item)
 	if(objtype)
 		MakePotion( objtype, item, who, recipes[objtype].magic, cint(recipes[objtype].strength) );
 	else
-		var r:= RandomInt(100);
-		if (temHabilidade(who, "Formacao Academica") && r < 2)
-			FalhaCritica(who, item);
-		elseif (r < 25)
+
+		if (RandomInt(100) <= 25)
 			FalhaCritica(who, item);
 		else
 			var loop := 0;
@@ -170,7 +174,7 @@ function FazPotion(who, item)
 			EraseObjProperty(item, "reagentes");
 		endif
 	endif
-
+   
 endfunction
 
 function FindInBook(who, objtype)
@@ -199,9 +203,9 @@ function MakePotion ( pot, item, who, magic, strength := 0)
 		sleep(1);
 		loop := loop + 1;
 	endwhile
-
-
-	if(SkillCheck(who, ALCHEMY, difficulty) > 0)
+      
+    
+	if(SkillCheck(who, ALCHEMY, difficulty) > 0) 
 		//if (GetObjProperty(who, "classe") == "sabio")
 		//	SkillCheck(who, BEGGING, -1);
 		//endif
@@ -209,10 +213,10 @@ function MakePotion ( pot, item, who, magic, strength := 0)
 		set_critical(1);
 		foreach item in EnumerateItemsInContainer(who.backpack)
 			if((item.objtype == UOBJECT_EMPTY_BOTTLE) && (item.container.objtype != 0x1940))
-				if (temHabilidade(who, "Extrato Eficiente"))
+				if (temHabilidade(who, "Extrato Instantaneo Duplicado"))
 					if(SubtractAmount(item, 2))
 						hasbottle := 1;
-						break;
+						break;				
 					endif
 				elseif (SubtractAmount(item, 1))
 					hasbottle := 1;
@@ -225,11 +229,7 @@ function MakePotion ( pot, item, who, magic, strength := 0)
 		if(hasbottle)
 			var thing;
 			if (!magic)//se nao tiver o flag magic como as tintas, cria o item
-				if (temHabilidade(who, "Extrato Eficiente"))
-					thing := CreateItemInBackpack(who, pot, 2);
-				else
-					thing := CreateItemInBackpack(who, pot, 1);
-				endif
+				thing := CreateItemInBackpack(who, pot, 1);
 			else //se nao cria so o extrato
 				thing := CreateItemInBackpack(who, 0xcfff, 1);
 				SetObjProperty(thing, "extrato", pot);
@@ -238,7 +238,7 @@ function MakePotion ( pot, item, who, magic, strength := 0)
 				endif
 			endif
 			if (GetObjProperty(who, "extratoinstantaneo"))
-				if (temHabilidade(who, "Extrato Eficiente"))
+				if (temHabilidade(who, "Extrato Instantaneo Duplicado"))
 					SendSysMessageEx(who, "Voce fez dois extratos instantaneamente.", SSM_INFO);
 					var amt := 2;
 					var pocao := GetObjProperty(thing, "extrato");
@@ -253,17 +253,35 @@ function MakePotion ( pot, item, who, magic, strength := 0)
 					SetObjProperty(pot, "strength", cint(GetObjProperty(thing, "strength")));
 					DestroyItem(thing);
 					EraseObjProperty(who, "extratoinstantaneo");
-				endif
+					endif
 			endif
 			SetObjProperty(thing, "crafterskill", AP_GetSkill(who, ALCHEMY) );
 			PlaySoundEffect(who, SOUND_EFFECT_POUR);
 			SendSysMessageEx(who, "Voce fez a pocao e a guardou na sua mochila.", SSM_INFO);
 			EraseObjProperty(item, "reagentes");
 			return;
-
+        
 		else
 			SendSysMessageEx(who, "Voce nao tem frascos.", SSM_FAIL);
 			return;
+		endif
+      
+	elseif (Cint(AP_GetSkill(who, "Alchemy")) <= 39)
+		var falha1 := RandomInt(100)+1;
+		if 	(falha1 <= 15)
+			FalhaCritica(who, item);
+		endif
+	
+	elseif (Cint(AP_GetSkill(who, "Alchemy")) <= 59)
+		var falha2 := RandomInt(100)+1;
+		if 	(falha2 <= 10)
+			FalhaCritica(who, item);
+		endif
+
+	elseif (Cint(AP_GetSkill(who, "Alchemy")) <= 70)
+		var falha3 := RandomInt(100)+1;
+		if 	(falha3 <= 5)
+		FalhaCritica(who, item);
 		endif
 
 	else
@@ -278,7 +296,7 @@ function FalhaCritica(who, item)
 	EraseObjProperty(item, "reagentes");
 	EraseObjProperty(item, "reagamt");
 
-	if (TemHabilidade(who, "Formacao Academica"))
+	if (TemHabilidade(who, "Alquimista Precavido"))
 		return 1;
 	endif
 
@@ -292,10 +310,10 @@ function FalhaCritica(who, item)
 			loop := loop + 1;
 		endwhile
 		PlaySoundEffect(who, SOUND_EFFECT_POUR);
-		SendSysMessageEx(who, "Voce nao consegui fazer nada com isso.", SSM_FAIL);
+		SendSysMessageEx(who, "Voce nao conseguiu fazer nada com isso.", SSM_FAIL);
 		return;
 	//elseif ( falha < 68 )
-	//	SendSysMessageEx(who,"AHH!  Seu cabelo caiu!!!", SSM_FAIL);
+	//	SendSysMEssageEx(who,"AHH!  Seu cabelo caiu!!!", SSM_FAIL);
 	//	DestroyItem(GetEquipmentByLayer (who, LAYER_HAIR));
 	//	DestroyItem(GetEquipmentByLayer (who, LAYER_BEARD));
 	//	return;
@@ -309,7 +327,7 @@ function FalhaCritica(who, item)
 		sleep(180);
 		who.color := who.truecolor;
 	elseif ( falha < 86 )
-		SendSysMessageEx(who,"O que foi isso?!", SSM_FAIL);
+		SendSysMEssageEx(who,"O que foi isso?!", SSM_FAIL);
 		if (who.graphic == 401)
 			who.graphic := 400;
 		else
@@ -319,7 +337,7 @@ function FalhaCritica(who, item)
 		Detach();
 		who.graphic := who.objtype;
 	elseif ( falha < 95 )
-		SendSysMessageEx(who,"VAI EXPLO...", SSM_FAIL);
+		SendSysMEssageEx(who,"VAI EXPLO...", SSM_FAIL);
 		PlayStationaryEffect( who.x, who.y, who.z, 0x36b0, 7, 10, 1);
 		PlaySoundEffect(who, 0x208);
 		ApplyRawDamage(who, cint(30+ randomInt(100) ) );
@@ -328,3 +346,8 @@ function FalhaCritica(who, item)
 		TS_StartTimer(who, "defaultPoison", 120, 5);
 	endif
 endfunction
+
+
+
+
+

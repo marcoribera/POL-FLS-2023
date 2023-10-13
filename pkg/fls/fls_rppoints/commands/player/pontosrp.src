@@ -91,6 +91,10 @@ function SendCheckRP(who, conta)
 		GFAddButton(gump, 20, x+4, 2103, 2104, GF_CLOSE_BTN, 4);
 
 		x := x +20;
+		GFTextLine(gump, 35, x, 1153, "[35] Mudar para qualquer Cabelo e Cores.");
+		GFAddButton(gump, 20, x+4, 2103, 2104, GF_CLOSE_BTN, 7);
+
+		x := x +20;
 		GFTextLine(gump, 35, x, 1153, "[200] Adicionar Nome e Descricao a um Objeto.");
 		GFAddButton(gump, 20, x+4, 2103, 2104, GF_CLOSE_BTN, 5);
 
@@ -269,10 +273,41 @@ function SendCheckRP(who, conta)
 				MakeLog(conta, diff, "Comprou Pergaminho ", "Nivel "+(diff/30));
 			endif
 		endif
-	elseif (input[0] == 7)
-		if (CheckPoints(100, conta, who))
+	//elseif (input[0] == 7)
+		//if (CheckPoints(100, conta, who))
 
+		//endif
+	elseif (input[0] == 7)
+		if (CheckPoints(35, conta, who))
+			Destroyitem(GetEquipmentByLayer(who, LAYER_HAIR));
+			DestroyItem(GetEquipmentByLayer(who, LAYER_BEARD));
+			var chardata := GetObjProperty(who, "chardata");
+			var disfarce := struct;
+			disfarce.+barba := "";
+			disfarce.+cabelo := "";
+			disfarce.+corcabelo := 1109;
+			disfarce.+corbarba := 1109;
+
+			escolherCabelo(who, disfarce, "Qualquer");
+			escolheCorCabelo(who, disfarce, 0, "Qualquer", 1);
+			if (chardata.raca != "Elfo")
+				escolherBarba(who, disfarce);
+			endif
+			var newbarba := CreateItemAtLocation(who.x, who.y, who.z, disfarce.barba, 1, who.realm);
+			newbarba.color := disfarce.corcabelo;
+
+			var newhair := CreateItemAtLocation(who.x, who.y, who.z, disfarce.cabelo, 1, who.realm);
+			newhair.color := disfarce.corcabelo;
+
+			EquipItem(who, newbarba);
+			EquipItem(who, newhair);
+
+			decGrade(who, 35);
+			MakeLog(conta, 35, "Trocar Cabelo/Cor sem restricao.", "");
+			SendSysMessageEx(who, "Voce trocou seu cabelo e cor.",SSM_INFO);
 		endif
+
+		
 	elseif (input[0] == 8)
 		if (CheckPoints(600, conta, who))
 

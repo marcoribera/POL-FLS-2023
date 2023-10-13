@@ -145,7 +145,7 @@ function BoardIndex(who, board)
 			OldGFButtonPage(135, 367, 0x15E3, 0x15E7, page_num);
 			OldGFTextLine(155, 365, GF_STDCOLOR, "Index");
 			
-			if (who.cmdlevel >= 1 || who.serial == serial)
+			if (who.cmdlevel >= 1 || who.serial == serial || who.serial == GetObjProperty(board, "fixer") )
 				OldGFTextLine(350, 364, GF_STDCOLOR, "Delete");
 				OldGFButtonID(395, 367, 2117, 2118, 1, (CInt(postnum)+DELETE_BTN));
 			endif

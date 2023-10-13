@@ -28,21 +28,21 @@ function SetEquipmentMods(who, item)
 		penalty := 0;
 	endif
 	AP_ModifyStatMod(who, DEXTERITY, (0-penalty));
-  
+
 	//sneak
 	penalty := CInt(itemdesc[item.objtype].SneakPenalty);
 	if (TemHabilidade(who, "Ignorar Armadura"))
 		penalty := cint(penalty*0.5);
 	endif
 	AP_ModifySkillMod(who, SNEAK, penalty);
-  
+
 	//mechanical apitude
 	penalty := CInt(itemdesc[item.objtype].MechanicalApitudePenalty);
 	if (TemHabilidade(who, "Ignorar Armadura"))
 		penalty := cint(penalty*0.5);
 	endif
 	AP_ModifySkillMod(who, MECHANICALAPITUDE, penalty);
-  
+
 	//awareness
 	penalty := CInt(itemdesc[item.objtype].AwarenessPenalty);
 	if (TemHabilidade(who, "Ignorar Armadura"))
@@ -59,7 +59,7 @@ function SetEquipmentMods(who, item)
 	//verifica se eh magico
 	var mods := GetObjProperty(item, "equip");
 //	SendSysMessage(who, " " + mods + " " + mods.keys().size());
-	if (mods.keys().size() >= 1) 
+	if (mods.keys().size() >= 1)
     		foreach mod in (mods.keys())
       			if ((mod == "strmod") &&(GetObjProperty(item,"magic")!=1))
         			AP_ModifyStatMod(who, STRENGTH, Cint( mods["strmod"] ) );
@@ -137,7 +137,7 @@ function RemoveEquipmentMods(who, item)
 		penalty := cint(penalty*0.5);
 	endif
   	AP_ModifySkillMod(who, SNEAK, (-1)*penalty);
-  
+
 	//mechanical  apitude
   	penalty := CInt(itemdesc[item.objtype].MechanicalApitudePenalty);
 	if (TemHabilidade(who, "Ignorar Armadura"))
@@ -152,12 +152,13 @@ function RemoveEquipmentMods(who, item)
 	endif
   	AP_ModifySkillMod(who, AWARENESS, (-1)*penalty);
 
-	//magery
-  	penalty := CInt(itemdesc[item.objtype].MageryPenalty);
-  	AP_ModifySkillMod(who, MAGERY, (-1)*penalty);
+	penalty := CInt(itemdesc[item.objtype].MageryPenalty);
+	if (!(TemHabilidade(who, "Aura de Corrupcao") || TemHabilidade(who, "Devocao")))
+	  	AP_ModifySkillMod(who, MAGERY, (-1)*penalty);
+	endif
 
 	var mods := GetObjProperty(item, "equip");
-	if (mods.keys().size() >= 1) 
+	if (mods.keys().size() >= 1)
     		foreach mod in (mods.keys())
       			if ((mod == "strmod" ) && (GetObjProperty(item,"magic") !=1))
         			AP_ModifyStatMod(who, STRENGTH, (-1)*Cint( mods["strmod"] ));
@@ -196,9 +197,9 @@ endfunction
 
 function coverFace(item)
 	case(item.graphic)
-		0x1408: 0x1409: 0x1412: 
-		0x1419: 0x1451: 0x1F0B: 
-		0x140C: 0x140D: 0x1456: 
+		0x1408: 0x1409: 0x1412:
+		0x1419: 0x1451: 0x1F0B:
+		0x140C: 0x140D: 0x1456:
 		0x1F0C: 0x1549: 0x154A:
 		0x154B: 0x154C:	0x278E:
 		0x278F: 0x1388:
@@ -234,4 +235,26 @@ function UnequipAll(who)
 		MoveItemToContainer(equip, who.backpack);
 	endforeach
 
+endfunction
+
+function UnequipArmor(who)
+	var equips := EnumeratePhysicalItems(who);
+
+	foreach equip in equips
+		if ((equip.isa(POLCLASS_ARMOR)) && equip.resist_physical > 0)
+			MoveItemToContainer(equip, who.backpack);
+		endif
+	endforeach
+
+endfunction
+
+function UnequipWeapons(who)
+
+	var equips := EnumeratePhysicalItems(who);
+
+	foreach equip in equips
+		if ((equip.isa(POLCLASS_WEAPON)))
+			MoveItemToContainer(equip, who.backpack);
+		endif
+	endforeach
 endfunction

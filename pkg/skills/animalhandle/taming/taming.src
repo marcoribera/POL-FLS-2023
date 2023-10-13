@@ -46,7 +46,11 @@ program TamingSkill(who)
 		foreach serial in petsi
 			var pety := SystemFindObjectBySerial(serial);
 			if (GetObjProperty(pety, "bond") == "fiel")
-				check_bond := 1;
+				if (!TemHabilidade (who,"Lider do Bando") )
+					check_bond := 1;
+				else
+					check_bond := 2;
+				endif
 			endif
 		endforeach
 
@@ -73,7 +77,7 @@ program TamingSkill(who)
 
 	GFTextLine(yn_gump, 20, 130, 1153, "Libertar Animal:");
 
-	if ( (check_bond == 0) && (AP_GetSkill(who, HANDLEANIMAL) >= 1) )
+	if ( (check_bond == 0 || check_bond == 2) && (AP_GetSkill(who, HANDLEANIMAL) >= 1) )
 		GFAddButton(yn_gump, 190, (243), 2117, 2118, GF_CLOSE_BTN, 4);
 		GFTextLine(yn_gump, 210, 240, 1153, "Fidelizar?");
 	endif
@@ -126,8 +130,11 @@ program TamingSkill(who)
 		var pets_all := GetObjProperty(who, "TamedPets");
 		foreach serial in pets_all
 			var pet_each := SystemFindObjectBySerial(serial);
+			if (TemHabilidade(who, "Lider do Bando") && GetObjProperty(pet_each, "bond") == "fiel")
+			else
 			SetObjProperty(pet_each, "Fidelizar?", "nao");
 			EraseObjProperty(pet_each, "bond");
+			endif
 		endforeach
 		SetObjProperty(targx, "Fidelizar?", "sim");
 		SendSysmessage(who, ""+targx.name+" pode ser fidelizado, todos os demais agora nao");
@@ -620,18 +627,18 @@ function TeachNow(who, tamed, ins)
 
 	if(!critic) //adiciona os criticos ou modificações nos stats
 		if(info_cfg[ins].Nome == "Ferocidade")
-			AP_SetTrueStat(tamed, STRENGTH, AP_GetStat(tamed, STRENGTH) + 5);
+			AP_SetTrueStat(tamed, STRENGTH, AP_GetStat(tamed, STRENGTH) + 6);
 		elseif(info_cfg[ins].Nome == "Flexibilidade")
-			AP_SetTrueStat(tamed, DEXTERITY, AP_GetStat(tamed, DEXTERITY) + 5);
+			AP_SetTrueStat(tamed, DEXTERITY, AP_GetStat(tamed, DEXTERITY) + 6);
 		elseif(info_cfg[ins].Nome == "Fortaleza")
 			var mudar := GetObjProperty(tamed, "%NPC_Vitals%").HITS;
 			var Variavel := GetObjProperty(tamed, "%NPC_Vitals%");
-			Variavel["HITS"] := mudar + 10;
+			Variavel["HITS"] := mudar + 35;
 			SetObjProperty(tamed, "%NPC_Vitals%", Variavel);
 			RecalcVitals(tamed);
 		elseif(info_cfg[ins].Nome == "Sentidos Aguçados")
 			var teste := GetAttribute(tamed, AWARENESS);
-			AP_SetTrueSkill(tamed, AWARENESS, 20);
+			AP_SetTrueSkill(tamed, AWARENESS, teste + 35);
 		//elseif(info_cfg[ins].Nome == "Animal de Carga") //DECICIDIR SE VAI TER OU NÃO, HJ O CARA SÓ BOTA A BACKPACK E JÁ CRIA ANIMAL DE CARGA
 			//if (tamed.objtype == 0xdc) //para lhamas
 				//tamed.graphic := 292;

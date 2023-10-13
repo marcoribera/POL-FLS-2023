@@ -16,12 +16,14 @@ function Garimpeiro(who)
 		SendSysMessageEx(who, "Voce achou uma pedra preciosa!", SSM_INFO);
 		CreateItemInBackPack(who, keys[RandomInt(keys.size()+1)], 1);
 		PrinttextAbove(who, "*encontra algo reluzente*");
+		SkillCheck(who, GATHERING, -1);
 	elseif(TemHabilidade(who, "Minerador Talentoso") && rand < 10)
 		var cfg := ReadConfigFile(":gems:itemdesc");
 		var keys := GetConfigStringKeys( cfg );
 		SendSysMessageEx(who, "So alguem talentoso acharia essa pedra preciosa!", SSM_INFO);
 		CreateItemInBackPack(who, keys[RandomInt(keys.size()+1)], 1);
 		PrinttextAbove(who, "*encontra algo reluzente*");
+		SkillCheck(who, GATHERING, -1);
 	endif
 	return 1;
 endfunction
@@ -111,14 +113,15 @@ function DigForMap(who, targ, map)
 		var loot := "treasuremap" + maplevel;
 
 		var chest;
-		chestz := chestz - 8;
-		sendsysmessage(who, " " + chestz);
-		var chests := CreateTreasureChests(maplevel, 1, 0, chestx, chesty, chestz, who.realm, loot);
+		chestz := chestz -8;
+		sendsysmessage(who, " " + chestz-8);
+		var chests := CreateTreasureChests(maplevel, 1, 0, chestx, chesty, chestz-8, who.realm, loot);
 		chest := chests[1];
-		if (GetObjProperty(map, "tesouroescondido") == 1)
+/*		if (GetObjProperty(map, "tesouroescondido") == 1)
 			Loot_Generate(chest, loot);
-		endif
-		var ret := MoveObjectToLocation(chest, chest.x, chest.y, chestz, who.realm,  MOVEOBJECT_FORCELOCATION);
+		endif  	*/
+
+		var ret := MoveObjectToLocation(chest, chest.x, chest.y, chestz-8, who.realm,  MOVEOBJECT_FORCELOCATION);
 //		sendsysmessage(who, " " + ret);
 
 		chest.movable := 0;
@@ -131,6 +134,7 @@ function DigForMap(who, targ, map)
 				break;
 			endif
 
+			PrintTextAbove(who, "*Cavando*");
 			PerformAction(who, 0x0b);
 			PlaySoundEffect(who, 0x126);
 			sleep(1);
@@ -186,12 +190,64 @@ function DigForMap(who, targ, map)
 
 		endwhile
 
+		who.frozen := 0;
+		PrintTextAbove(who, "*Termina de cavar*");
+		sleep(5);
+
+		// Para implementar basta compilar o mining.src depois colocar mais mobs para maplevels diferentes há um bug no z, o chest sai voando mas da pra pegar
+
+		if (maplevel == 1)
+            PrintTextAbove(who, "*Gritos nos arredores* Atacar rapazes! A pior parte já fizeram!");
+			sleep(2);
+            createnpcfromtemplate(":brainai:bandoleiro", who.x, who.y, who.z +5, 0 , who.realm);
+            createnpcfromtemplate(":brainai:roguearcher", who.x, who.y, who.z +5, 0 , who.realm);
+			createnpcfromtemplate(":brainai:trapaceiro", who.x, who.y, who.z +5, 0 , who.realm);
+            createnpcfromtemplate(":brainai:saqueadortumulo", who.x, who.y, who.z +5, 0 , who.realm);
+            createnpcfromtemplate(":brainai:saqueadortumulo", who.x, who.y, who.z +5, 0 , who.realm);
+			sleep(15);
+			PrintTextAbove(who, "*O ataque continua e o lider se aproxima*");
+			createnpcfromtemplate(":brainai:mercenario", who.x, who.y, who.z +5, 0 , who.realm);
+      	elseif (maplevel == 2)
+		 	PrintTextAbove(who, "*Gritos nos arredores* Atacar rapazes! A pior parte já fizeram!");
+			sleep(2);
+            createnpcfromtemplate(":brainai:mercenario", who.x, who.y, who.z +5, 0 , who.realm);
+            createnpcfromtemplate(":brainai:roguearcher", who.x, who.y, who.z +5, 0 , who.realm);
+			createnpcfromtemplate(":brainai:trapaceiro", who.x, who.y, who.z +5, 0 , who.realm);
+            createnpcfromtemplate(":brainai:roguearcher", who.x, who.y, who.z +5, 0 , who.realm);
+            createnpcfromtemplate(":brainai:mercenario", who.x, who.y, who.z +5, 0 , who.realm);
+			createnpcfromtemplate(":brainai:mercenario", who.x, who.y, who.z +5, 0 , who.realm);
+        elseif (maplevel == 3)
+			PrintTextAbove(who, "*Gritos e lamurias de almas atormendas* Juntem-se a nos...");
+			sleep(5);
+			CreateNpcFromTemplate(":brainai:Ghost", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:Ghost", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:Ghost", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:Spectre", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:Spectre", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:Spectre", who.x, who.y, who.z, 0, who.realm);
+			sleep(15);
+			PrintTextAbove(who, "*Vozes Fantasmagoricas* Deliciosa ganancia...");
+			CreateNpcFromTemplate(":brainai:espectroanciao", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:espectroanciao", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:espectroanciao", who.x, who.y, who.z, 0, who.realm);
+		elseif (maplevel == 4)
+			PrintTextAbove(who, "*Criaturas gigantescas guardam o local*");
+			sleep(5);
+			CreateNpcFromTemplate(":brainai:Wyvern", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:Wyvern", who.x, who.y, who.z, 0, who.realm);
+			CreateNpcFromTemplate(":brainai:Wyvern", who.x, who.y, who.z, 0, who.realm);
+			sleep(15);
+			CreateNpcFromTemplate(":brainai:RedDragon", who.x, who.y, who.z, 0, who.realm);
+		elseif (maplevel == 5)
+			CreateNpcFromTemplate(":brainai:Dracolich", who.x, who.y, who.z, 0, who.realm);
+        endif
+
 		chest.movable := 1;
       		EraseObjProperty(map, "level");
       		EraseObjProperty(map, "chestx");
       		EraseObjProperty(map, "chesty");
       		SetObjProperty(map, "Solved", 1);
-      		map.name := "mapa de tesouro [completado por " + who.name + "]";
+      		map.name := "Mapa de tesouro [Completado por " + who.name + "]";
 
     endif
 
@@ -261,14 +317,14 @@ function GetResourceId(oreToSearch)
 	case (oreToSearch)
 
 		"areia": return 0x6075;
-		
+
 		"cobre": return 0x6450;
-		
+
 		"argila": return 0x6074;
 
 		"ferro": return 0x6300; //TN USED
 
-		"lithtan": return 0x6301;
+		"litan": return 0x6301;
 
 		"helce": return 0x6302;
 
@@ -288,7 +344,7 @@ function GetResourceId(oreToSearch)
 
 		//"gromril": return 0x6452; //TN USED
 
-	
+
 
 		"prata": return 0x6992; //TN USED
 
@@ -366,12 +422,12 @@ function DetermineMiningDifficulty(oretype)
 	case (oretype)
 
 		0xBD11: return 0;  //pedra pequena
-		0xBD12: return 0;  //pedra media
-		0xBD13: return 0;  //pedra grande
+		//0xBD12: return 0;  //pedra media
+		//0xBD13: return 0;  //pedra grande
 		0xee99: return 0;  //calcario
 
 		0x6300: return 0;  //iron ore
-		0x6301: return 70; //lithtan
+		0x6301: return 70; //litan
 		0x6302: return 80; //helce
 		0x6303: return 80; //sinque
 		0x6304: return 80; //figin

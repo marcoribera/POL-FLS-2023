@@ -121,6 +121,9 @@ function weathereffects(type, duration, severity := 5)
 	 	var packet := "65"+weatherid+"7000";
 	 
 		foreach person in EnumerateOnlineCharacters()
+            if (!GetObjProperty(person, "molhado"))
+                SetObjProperty(person, "molhado", 1);
+            endif
 			if (person.x < 4174)
 				playweathersound(type, person);
 				SendPacket(person, packet);
@@ -129,7 +132,9 @@ function weathereffects(type, duration, severity := 5)
 		
 		sleep(5);
 	endfor
-	
+	foreach person in EnumerateOnlineCharacters()
+        EraseObjProperty(person, "molhado");
+    endforeach
 endfunction
 
 
