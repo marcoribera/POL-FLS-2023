@@ -61,8 +61,7 @@ program use_Bedroll( who, bedroll )
 	SendSysMessageEx(who, "O colchonete ficou imprestavel apos tanto uso!", SSM_FAIL);
 	sleepms(50);
 	endif
-
-	print("bedhp eh "+bedhp+"bedhp2 eh"+bedhp2+"bedhp ficou "+bedroll.hp);
+	
 	SetObjProperty(who,"#camped",1);
 	DisconnectClient( who );
 
