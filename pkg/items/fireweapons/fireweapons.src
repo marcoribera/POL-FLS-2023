@@ -10,16 +10,6 @@ include "include/facings";
 //include "include/fireweapon";
 
 /*
-    TODO: Setar cooldown de reload para pistola, carabinas e rifles
-    Setar bônus e penalidade para as armas baseado na distância. 
-        - Menor o range, maior chance de acerto, menor o dano.
-    Chuva impedir a arma de ser disparada e descarregar armas recarregadas -> FEITO
-    Pistolas -> range 0 até 6, depois disso perde 10 de dano pra cada distancia // small dmg, quick reload, usa 1 polvora
-    handcannon -> range 1 ate 6, depois disso zera o dano // massive dmg, slow reload, usa 3 polvoras
-    Carabina -> range 2 até 12, depois disso perde dano pra cada distancia, mid dmg, mid reload, 1 polvora
-    musket -> range 3 até 20, mid dmg, slow reload, 1 polvora
-
-
     Fukia (532) anim para rifle e carabina
     Assassin Spike (953) para pistola
     bacamarte, pistola, mosquete, carabina
@@ -92,8 +82,7 @@ program fireweapons(who, item)
                 if (subtractamount(ammo, 1))
                     SendSysMessageEx(who, "Escolha a polvora.");
                     var powder := Target(who);
-                    print("powder: " + powder);
-                    if (powder.objtype != 0xF8C)
+                    if (powder.objtype != 0x9092)
                         SendSysMessageEx(who, "Voce precisa selecionar polvora.");
                         return;
                     else 
@@ -104,7 +93,8 @@ program fireweapons(who, item)
                             return;
                         else
                         printtext(who, "*Coloca polvora na arma*");
-                        subtractamount(powder, powder_amt);
+                        if (!subtractamount(powder, powder_amt))
+                            SendSysMessageEx(who, "Voce nao tem polvora suficiente.", SSM_FAIL);
                         endif
                     endif   
                     printtext(who, "*Socando a polvora*");
