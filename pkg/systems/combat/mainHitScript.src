@@ -1015,8 +1015,14 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 		endif
 	endif
 
+	parryBonus := GetObjProperty(shield, "parry_mod_percentual");
+	if(parryBonus)
+		parryBonus := 1.0 + parryBonus;
+	else
+		parryBonus := 0;
+	endif
 	//Calcula o Bonus basico de parry do escudo, Bonus de parry específico da CProp do escudo, Bonus de parry especifico da CProp do personagem
-	parryBonus := CInt((item_cfg[shield.objtype]).parrybonus) + CInt(GetObjProperty(shield, "parrybonus")) + CInt(GetObjProperty(defender, "parrybonus"));
+	parryBonus := CInt(parryBonus * (CInt((item_cfg[shield.objtype]).parrybonus) + CInt(GetObjProperty(shield, "parrybonus")))) + CInt(GetObjProperty(defender, "parrybonus"));
 
 	//Calcula o Bonus temporário de parry, se houver
 	var tempParryBonus := CInt(getObjProperty(defender, "#tempparrybonus"));

@@ -200,7 +200,7 @@ function getParryBonus(elem, item)
 	elseif (parrybonusI < 0)
 		return CSTR(parrybonusE) + " (" + CSTR(parrybonusI) + ")";
 	else
-		return CSTR(parrybonusI);
+		return CSTR(parrybonusE);
 	endif
 endfunction
 
@@ -259,6 +259,7 @@ endprogram
 exported function MegaCliloc( who, byref packet )
 	var white := "<BASEFONT COLOR=#FFFFFF>";
 	var amareloclaro := "<BASEFONT COLOR=#f5d189>";
+	var laranja :=  "<BASEFONT COLOR=#FFA500>";
 	var roxo := "<BASEFONT COLOR=#d98cd9>";
 	var softgreen := "<BASEFONT COLOR=#a1eca7>";
 	var blueice := "<BASEFONT COLOR=#79b6c9 >";
@@ -428,7 +429,7 @@ exported function MegaCliloc( who, byref packet )
 				xDesc := xDesc + GetTipoStringDesc(elem, item) + "<br>";
 				var crits := GetCriticalInfo(elem);
 				if (crits != "")
-					xDesc := xDesc + amareloclaro + crits;
+					xDesc := xDesc + laranja + crits;
 				endif
 
 				var hits :=  GetHitsInfo(elem);
