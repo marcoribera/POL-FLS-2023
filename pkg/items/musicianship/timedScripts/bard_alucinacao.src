@@ -14,7 +14,7 @@ program TimedScript_bard_alucinacao(params)
 		PrintTextAbovePrivate(alvo, "*Alucinado*", caster, BARD_FONT, BARD_FONT_COLOR_BAD);
 		while (GetObjProperty(alvo, "#Alucinado"))
 			Hallucinate(alvo);
-    		Sleepms(6000);
+    		Sleep(10);
 	  	endwhile
 	endif
 	return 1;

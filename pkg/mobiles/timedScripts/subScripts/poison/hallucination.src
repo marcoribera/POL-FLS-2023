@@ -13,9 +13,9 @@ program TimedScript_bard_alucinacao(params)
 	if (alvo.client)
 		PrintTextAbovePrivate(alvo, "*Alucinado*", caster, BARD_FONT, BARD_FONT_COLOR_BAD);
 		var i;
-		for(i:=0; i< 20; i:=i+1)
+		for(i:=0; i< 4; i:=i+1)
 			Hallucinate(alvo);
-    		Sleepms(6000);
+    		Sleep(10);
 	  	endfor
 	  	//set_critical(1);
   		//var x := alvo.x;
