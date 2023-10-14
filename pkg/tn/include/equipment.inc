@@ -4,6 +4,7 @@ use cfgfile;
 include ":attributes:attributes";
 include ":charactercreation:chargumps";
 include ":charactercreation:habilidades";
+include "include/client";
 
 function SetEquipmentMods(who, item)
 
@@ -12,13 +13,24 @@ function SetEquipmentMods(who, item)
 	var itemdesc := ReadConfigFile("::itemdesc");
 
 	var restrict := Cint(itemdesc[item.objtype].GenderSpecific);
-	if((restrict == 1) and (who.graphic == 400))
+	if((restrict == 1) && (who.graphic == 400))
 		SendSysMessage(who, "Apenas mulheres podem vestir isto.");
 		return 0;
 	endif
 
-	if (item.isa(POLCLASS_ARMOR))
+	if (item.isa(POLCLASS_ARMOR) && (item.tile_layer == LAYER_HAND2))
 		EraseObjProperty(who, "twohanded");
+		var mod_percentual := 0.0;
+		var parryskill := AP_GetSkill(who, PARRY);
+
+		mod_percentual := (parryskill-80.0) /100.0; //Acima de 0 o cara consegue mais proteção que o item base oferece e abaixo, menos.
+
+		SetObjProperty(item, "parry_mod_percentual", mod_percentual);
+		item.resist_physical_mod := CInt(item.resist_physical * mod_percentual);
+		item.resist_fire_mod := CInt(item.resist_fire * mod_percentual);
+		item.resist_cold_mod := CInt(item.resist_cold * mod_percentual);
+		item.resist_poison_mod := CInt(item.resist_poison * mod_percentual);
+		item.resist_energy_mod := CInt(item.resist_energy * mod_percentual);
 	endif
 
 	var penalty  := CInt(itemdesc[item.objtype].DexPenalty);
@@ -125,9 +137,15 @@ function RemoveEquipmentMods(who, item)
 		penalty := 0;
 	endif
 
-	if (item.isa(POLCLASS_WEAPON))
-		EraseObjProperty(who, "twohanded");
+	if (item.isa(POLCLASS_ARMOR) && (item.tile_layer == LAYER_HAND2))
+		SetObjProperty(item, "parry_mod_percentual", 0.0);
+		item.resist_physical_mod := 0;
+		item.resist_fire_mod := 0;
+		item.resist_cold_mod := 0;
+		item.resist_poison_mod := 0;
+		item.resist_energy_mod := 0;
 	endif
+
 
 	AP_ModifyStatMod(who, DEXTERITY, (penalty));
 
