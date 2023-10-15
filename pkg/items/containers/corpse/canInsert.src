@@ -9,7 +9,7 @@ program canRemove(character, container, item, move_type)
 	elseif (character.frozen || character.paralyzed)
 		SendSysMessage(character, "Voce esta paralizado.");
 		return 0;
-	elseif (container.objtype == 0xEFFF)
+	elseif (container.objtype == 0xEFFF && GetObjProperty(container, "allow_temp_move") != 1)
 		SendSysMessage(character, "E impossivel adicionar itens a restos mortais.");
 		return 0;
 	else
