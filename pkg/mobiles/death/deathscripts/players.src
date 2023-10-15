@@ -142,9 +142,9 @@ if(killer.acctname)
 	var tipo := "pvp";
 	var coords := {corpse.x, corpse.y};
 	var nome := GetObjProperty(killer, "nome_inicial");
-	
+
 	Start_script(":DiscordWebhook:discord", {tipo, nome, killer.acctname, ghost.name, region, coords, ghost.acctname});
-endif				   
+endif
 	SendSysMessage(ghost, "Voce desmaiou.");
 
 	var pacto := PactoSepulturaCheck(ghost, corpse);
@@ -264,7 +264,7 @@ endfunction
 function KataWakeUp(ghost, corpse)
 	var serialC := ghost.serial;
 	//TS_StartTimer(ghost, "mortedelay", 10);
-	setcooldown(ghost, "deathtime", 15);
+	setcooldown(ghost, "deathtime", 25);
 	if ( !MoveObjectToLocation(ghost, corpse.x, corpse.y, corpse.z, corpse.realm, MOVEOBJECT_FORCELOCATION) )
 		SendSysMessage(ghost, "Ocorreu algum problema ao retornar seu personagem para o corpo. Solicite ajude da Staff");
 
