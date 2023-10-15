@@ -8,6 +8,9 @@ include ":timedscripts:timedScripts";
 function ConfigureEvent(who)
 	var evento := struct;
 	evento.+type := RadioGump(who, 400, 220, "Escolha o tipo de evento.", array{ "Criar Itens", "Abrir Porta", "Criar Npcs", "Abrir Passagem", "Ultimas Palavras"});
+	evento.+realm := Cstr(who.realm);
+	print("evento real eh"+evento.realm);
+	
 	if ( (evento.type == "Abrir Porta") || (evento.type == "Abrir Passagem") )
 		var items := array;
 	
@@ -90,10 +93,10 @@ function ExecuteEvent(evento)
 		endwhile
 	elseif (evento.type == "Criar Npcs")
             var amt := 0;
-           // print("criar npcs  2 " + evento.x + " " + evento.y + " " + evento.z +  " amt " + evento.amount ); 
+           print("criar npcs  2 " + evento.x + " " + evento.y + " " + evento.z +  " amt " + evento.amount + " realm " + evento.realm); 
             while (amt < evento.amount)
-                var npc := CreateNpcFromTemplate( cstr(evento.npctemplate), Cint(evento.x) + RandomInt(2 * evento.range) - evento.range, Cint(evento.y) + RandomInt(2 * evento.range) - evento.range, Cint(evento.z));
-		//print ( "NPC spawn " + npc);
+                var npc := CreateNpcFromTemplate( cstr(evento.npctemplate), Cint(evento.x) + RandomInt(2 * evento.range) - evento.range, Cint(evento.y) + RandomInt(2 * evento.range) - evento.range, Cint(evento.z), 0, Cstr(evento.realm) );
+		print ( "NPC spawn " + npc);
                 if (npc != error)
 					var duracaonpc := evento.duracao;
 					if (!duracaonpc)
@@ -111,7 +114,7 @@ function ExecuteEvent(evento)
 		var success := 0;
          	 //print("tem boss");
           	while ( !success)
-            		var boss := CreateBoss(evento.bossinfo, Cint(evento.x), Cint(evento.y), Cint(evento.z), REALM_BRITANNIA);
+            		var boss := CreateBoss(evento.bossinfo, Cint(evento.x), Cint(evento.y), Cint(evento.z), Cstr(evento.realm));
             		//print( "boss " + boss);
             		if (boss)
                 		SetObjProperty(boss, "anchor", array{boss.x, boss.y});
@@ -127,7 +130,7 @@ function ExecuteEvent(evento)
 	elseif (evento.type == "Criar Itens")
 		print("CRIAR ITEMS " + evento.items);
 		foreach iteminfo in (evento.items)
-			var item := CreateItemAtLocationFromTemplate( cint(iteminfo.x), cint(iteminfo.y), cint(iteminfo.z), _DEFAULT_REALM ,iteminfo.item );
+			var item := CreateItemAtLocationFromTemplate( cint(iteminfo.x), cint(iteminfo.y), cint(iteminfo.z), Cstr(evento.realm) ,iteminfo.item );
 			print("ITEM " + item);
 		endforeach
 	endif
