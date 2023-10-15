@@ -82,12 +82,20 @@ exported function MakeRemains(corpse)
 			return remains;
 		endif
 
+		//Adiciona propriedade para permitir mover os itens para um remains
+        SetObjProperty(remains, "allow_temp_move", 1);
+
 		foreach item in ( EnumerateItemsInContainer(corpse) )
 			if ( item.container != corpse )
 				continue;
 			endif
 
-			MoveItemToContainer(item, remains, item.x, item.y);
+            var errorMoveItemToContainer := MoveItemToContainer(item, remains, item.x, item.y);
+            if (!errorMoveItemToContainer)
+                Syslog("Erro ao mover o item para o remains: " + errorMoveItemToContainer.errortext);
+            endif
+
+			item.decayAt := 0;
 		endforeach
 
 		var realowner := IsPlayerCorpse(corpse);
@@ -105,7 +113,8 @@ exported function MakeRemains(corpse)
 			SetName(remains, "Restos de Corpo");
 		endif
 
-
+        //Não permite inserir mais itens nos remains, após mover os itens do body -> remains
+        EraseObjProperty(remains, "allow_temp_move");
 
 		DestroyItem(corpse);
 
