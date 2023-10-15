@@ -445,10 +445,11 @@ endif
 		//checkbond para ver se já tem animal fidelizado
 		var check_bond := 0;
 		var pets := GetObjProperty(owner, "TamedPets");
+		var habs := TemHabilidade(owner, "Lider do Bando") || TemHabilidade(owner, "Rei do Gado"); 
 			foreach serial in pets
 				var pet := SystemFindObjectBySerial(serial);
 			if (GetObjProperty(pet, "bond") == "fiel")
-				if (!TemHabilidade (owner,"Lider do Bando") )
+				if (!habs )
 					check_bond := 1;
 				else
 					check_bond := 2;
