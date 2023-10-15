@@ -37,6 +37,7 @@ function CheckToolWear (who, tool, craft_skill)
           endif
           SetObjProperty(tool,"swings", (swings - 1));
           tool.hp := tool.hp - 1;
+          UpdateItem(tool);
         elseif((tool.hp > tool.maxhp) || (tool.hp == 1))
           SendSysMessage(who,"Your tool broke.");
           DestroyItem(tool);
