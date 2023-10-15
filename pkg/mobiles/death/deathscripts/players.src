@@ -93,24 +93,26 @@ program death(params)
 			//endif
             var tempo := 180;
             if (AP_GetVital(ghost, "DP") <= 19)
-                SendSysMessage(ghost, "Voce esta bastante ferido, e melhor se cuidar");
-                TS_StartTimer(ghost, "fraturaexposta", 1);
+            	if (!CheckResist(ghost,  FORTITUDE, 90))
+                	SendSysMessage(ghost, "Voce esta bastante ferido, e melhor se cuidar");
+                	TS_StartTimer(ghost, "fraturaexposta", 1);
+            	endif
             elseif (AP_GetVital(ghost, "DP") < 30)
-                if (!CheckResist(ghost,  FORTITUDE, 100));
+                if (!CheckResist(ghost,  FORTITUDE, 60))
                     tempo := 300;
                     SendSysMessage(ghost, "Voce fraturou um osso!");
                     SetCoolDown(ghost, "hurt", tempo);
                     TS_StartTimer(ghost, "fraturaexposta", 1);
                 endif
             elseif (AP_GetVital(ghost, "DP") < 40)
-                if (!CheckResist(ghost,  FORTITUDE, 80));
+                if (!CheckResist(ghost,  FORTITUDE, 40))
                     tempo := 240;
                     SendSysMessage(ghost, "Voce fraturou um osso!");
                     SetCoolDown(ghost, "hurt", tempo);
                     TS_StartTimer(ghost, "fraturaexposta", 1);
                 endif
             elseif ((AP_GetVital(ghost, "DP") < 50))
-                if (!CheckResist(ghost,  FORTITUDE, 60));
+                if (!CheckResist(ghost,  FORTITUDE, 30))
                     tempo := 180;
                     SendSysMessage(ghost, "Voce fraturou um osso!");
                     SetCoolDown(ghost, "hurt", tempo);
