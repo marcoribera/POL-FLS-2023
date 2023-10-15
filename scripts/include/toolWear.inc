@@ -33,7 +33,10 @@ function CheckToolWear (who, tool, skillname)
         if(tool.hp > 1)
           SetObjProperty(tool,"swings", (swings - 1));
           tool.hp := tool.hp - 1;
-          UpdateItem(tool);
+          var nome := tool.name;
+          SetName(tool, nome + " -");
+          sleepms(30);
+          SetName(tool, nome);
         elseif((tool.hp > tool.maxhp) or (tool.hp == 1))
           SendSysMessage(who,"Your tool broke.", font := 2, color := 33);
           DestroyItem(tool);
