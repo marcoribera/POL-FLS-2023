@@ -22,11 +22,11 @@ function checkifcandrink(character, type)
   var equippedleft := GetEquipmentByLayer(character, 0x02);
   var cfg := ReadConfigFile(":*:itemdesc");
   var twohanded := Cint(cfg[equippedleft.objtype].TwoHanded);
-  if (equippedright and equippedleft || twohanded)
+  if (equippedright && equippedleft || twohanded)
     SendSysMessage(character, "Voce precisa de pelo menos uma mao livre!");
     return 0;
   endif
-  if((type != "red") and (type != "green_potion"))
+  if((type != "red") && (type != "green_potion"))
     if(GetObjProperty(character, type))
       if(GetObjProperty(character, type) > ReadGameClock())
         SendSysMessage(character, "Voce deve esperar um pouco antes de beber outra pocao!");
@@ -88,80 +88,35 @@ endfunction
 
 function do_poison(who, potion)
   empty_bottle(who, potion);
-  var bonus := cint(getObjproperty(potion, "alchemybonus"));
-  var amt;
-  case (potion.objtype)
-    0xbf00:
-            if (canmod(who, "venenoerva"))
-              if(!checksave(who, 11, "for"))
-                amt := RandomDiceRoll("1d2");
-		DoTempMod(who, "venenoerva", 0-amt*5, 600);
-		SendSysMessage(who, "Voce foi envenenado", 3, 40);
-	      else
-		SendSysMessage(who, "Voce resistiu ao veneno", 3, 90);
-              endif
-            endif
-    0xbf01:
-            if (canmod(who, "venenoputrido"))
-              if(!checksave(who, 10, "for"))
-		DoTempMod(who, "venenoputrido", 0-1*5, 600);
-		SendSysMessage(who, "Voce foi envenenado", 3, 40);
-	      else
-		SendSysMessage(who, "Voce resistiu ao veneno", 3, 90);
-              endif
-            endif
-    0xbf02:
-            if (canmod(who, "venenocobra"))
-              if(!checksave(who, 11, "for"))
-                amt := RandomDiceRoll("1d6");
-		DoTempMod(who, "venenocobra", 0-amt*5, 600);
-		SendSysMessage(who, "Voce foi envenenado", 3, 40);
-	      else
-		SendSysMessage(who, "Voce resistiu ao veneno", 3, 90);
-              endif
-            endif
-    0xbf03:
-            if (canmod(who, "venenoaranha"))
-              if(!checksave(who, 16, "for"))
-                amt := RandomDiceRoll("1d6");
-		DoTempMod(who, "venenoaranha", 0-amt*5, 600);
-		SendSysMessage(who, "Voce foi envenenado", 3, 40);
-	      else
-		SendSysMessage(who, "Voce resistiu ao veneno", 3, 90);
-              endif
-            endif
-
-    0xbf04:
-            if (canmod(who, "venenoescorpiao"))
-              if(!checksave(who, 18, "for"))
-                amt := RandomDiceRoll("1d6");
-		DoTempMod(who, "venenoescorpiao", 0-amt*5, 60);
-		SendSysMessage(who, "Voce foi envenenado", 3, 40);
-	      else
-		SendSysMessage(who, "Voce resistiu ao veneno", 3, 90);
-              endif
-            endif
-    0xbf05:
-            if (canmod(who, "venenowyvern"))
-              if(!checksave(who, 17, "for"))
-                amt := RandomDiceRoll("2d6");
-		DoTempMod(who, "venenowyvern", 0-amt*5, 600);
-		SendSysMessage(who, "Voce foi envenenado", 3, 40);
-              else
-		SendSysMessage(who, "Voce resistiu ao veneno", 3, 90);
-              endif
-            endif
-    0xbf06:
-            if (canmod(who, "venenoliche"))
-              if(!checksave(who, 17, "for"))
-                amt := RandomDiceRoll("2d6");
-		DoTempMod(who, "venenoliche", 0-amt*5, 60);
-		SendSysMessage(who, "Voce foi envenenado", 3, 40);
-              else
-                SendSysMessage(who, "Voce resistiu ao veneno", 3, 90);
-              endif
-            endif
+  var acfgfile := ReadConfigFile(":*:itemdesc");
+  var theitem := acfgfile[the_item.objtype];
+  var level, difficulty, points, poisonType;
+  level := Cint(GetObjProperty(the_poison, "level"));
+  if (!level)
+    level := RandomDiceRoll("1d5");
+  endif
+  //se for uma poçao que nao a default a formula eh essa:
+  difficulty := 15*level + 10;
+  points := difficulty;
+  case(the_poison.objtype)
+    0xbf00: level := 1; difficulty := 40; points := 50; poisonType := "defaultPoison";
+      0xbf01: poisonType :="strPoison"; difficulty := 60; points := 70;
+    0xbf07: poisonType :="dexPoison"; difficulty := 60; points := 70;
+    0xbf06: poisonType :="intPoison"; difficulty := 60; points := 70;
+    0xbf02: poisonType:="staminaPoison"; difficulty := 60; points := 70;
+    0xbf03: poisonType:="paralyzePoison"; difficulty := 80; points := 100;
+    0xef54: poisonType :="manaPoison"; difficulty := 40; points := 70;
+    0xbf04: level := 3; difficulty := 80; points := 60; poisonType := "defaultPoison";
+    0xdc04: level := 2; difficulty := 60; points := 40; poisonType := "defaultPoison";
+    0xbf05: level := 4; difficulty := 100; points := 100; poisonType := "defaultPoison";
+    default: difficulty := 0; points := 0; poisonType := "invalid";
   endcase
- // AddPoison(who, "venenoerva", 120, who, 1);
+
+  if(!CheckResist(critter, FORTITUDE, difficulty, 0))
+ 		SendSysMessage(who, "Voce foi envenenado", 3, 40);
+    TS_StartTimer(critter, "defaultPoison", 30, lvl, who);
+  else
+    SendSysMessage(who, "Voce resistiu ao veneno", 3, 90);
+  endif
 endfunction
 
