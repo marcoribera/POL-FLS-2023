@@ -58,16 +58,16 @@ program do_poisoning(who)
 	difficulty := 15*level + 10;
 	points := difficulty;
 	case(the_poison.objtype)
-		0xbf00: level := 1; difficulty := 10; points := 50; poisonType := "defaultPoison";
-    		0xbf01: poisonType :="strPoison"; difficulty := 60; points := 70;
+		0xbf00: level := 1; difficulty := 40; points := 50; poisonType := "defaultPoison";
+    	0xbf01: poisonType :="strPoison"; difficulty := 60; points := 70;
 		0xbf07: poisonType :="dexPoison"; difficulty := 60; points := 70;
 		0xbf06: poisonType :="intPoison"; difficulty := 60; points := 70;
 		0xbf02: poisonType:="staminaPoison"; difficulty := 60; points := 70;
 		0xbf03: poisonType:="paralyzePoison"; difficulty := 80; points := 100;
 		0xef54: poisonType :="manaPoison"; difficulty := 40; points := 70;
-		0xbf04: level := 3; difficulty := 60; points := 60; poisonType := "defaultPoison";
-		0xdc04: level := 2; difficulty := 40; points := 40; poisonType := "defaultPoison";
-		0xbf05: level := 4; difficulty := 80; points := 100; poisonType := "defaultPoison";
+		0xbf04: level := 3; difficulty := 80; points := 60; poisonType := "defaultPoison";
+		0xdc04: level := 2; difficulty := 60; points := 40; poisonType := "defaultPoison";
+		0xbf05: level := 4; difficulty := 100; points := 100; poisonType := "defaultPoison";
 		default: difficulty := 0; points := 0; poisonType := "invalid";
 	endcase
 
@@ -135,7 +135,7 @@ program do_poisoning(who)
 		endif
 		SetObjProperty(the_item, "poisonInfo", poisonInfo);
 		if (the_item.isA(POLCLASS_WEAPON))
-			if (!TemHabilidade(who, "Veneno Puro"))
+			if (!TemHabilidade(who, "Mestre dos Venenos"))
 				if(the_item.hp < 11);
 					MoveObjectToLocation(the_item, 1, 1, 1, who.realm, MOVEOBJECT_FORCELOCATION);
 					SetObjProperty(the_item, "broken", 1);
@@ -147,6 +147,7 @@ program do_poisoning(who)
 					SendSysMessageEx(who, "A arma ja estava muito danificada e se quebrou na aplicacao do veneno.", SSM_FAIL);
 				else
 					the_item.hp := the_item.hp - 10;
+					UpdateItem(the_item);
 				endif
 			endif
 		endif

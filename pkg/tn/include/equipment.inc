@@ -25,6 +25,7 @@ function SetEquipmentMods(who, item)
 
 		mod_percentual := (parryskill-80.0) /100.0; //Acima de 0 o cara consegue mais proteção que o item base oferece e abaixo, menos.
 
+		SendSysMessage(who, "Eficiencia do escudo: " + CStr((1.0 + mod_percentual)*100.0) +"%.");
 		SetObjProperty(item, "parry_mod_percentual", mod_percentual);
 		item.resist_physical_mod := CInt(item.resist_physical * mod_percentual);
 		item.resist_fire_mod := CInt(item.resist_fire * mod_percentual);

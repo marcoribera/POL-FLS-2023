@@ -24,6 +24,8 @@ include "include/client";
 include "include/sounds";
 include ":spells:swordmage";
 include ":taming:taming";
+include ":charactercreation:resists";
+
 
 var item_cfg := ReadConfigFile(":*:itemdesc");
 var taming_cfg := ReadConfigFile(":taming:taming");
@@ -919,7 +921,11 @@ function PoisonChecks(attacker, defender, weapon, armor, basedamage, rawdamage)
 				return 0;
 			endif
 			if (randomint(100) < 20)
-				TS_StartTimer(defender, "defaultPoison", 60, 2, attacker);
+				if (CheckResist(defender, FORTITUDE, 15,-20*2))
+					SendSysMessageEx(defender, "Voce resistiu ao veneno.", SSM_INFO);
+				else
+					TS_StartTimer(defender, "defaultPoison", 60, 2, attacker);
+				endif
 			endif
 		else
 			var poisonInfo := GetObjProperty(weapon, "poisonInfo" );
@@ -940,7 +946,12 @@ function PoisonChecks(attacker, defender, weapon, armor, basedamage, rawdamage)
 			if (poisonInfo.name == "paralyzePoison")
 				poisonInfo.time := 2;
 			endif
-			TS_StartTimer(defender, poisonInfo.name, poisonInfo.time, poisonInfo.level, attacker);
+
+			if (CheckResist(defender, FORTITUDE, 15,-20*poisonInfo.level))
+				SendSysMessageEx(defender, "Voce resistiu ao veneno.", SSM_INFO);
+			else
+				TS_StartTimer(defender, poisonInfo.name, poisonInfo.time, poisonInfo.level, attacker);
+			endif
 		endif
 	else //se for npc checa a skill
 		if (temhabilidade(defender, "Senso da Natureza"))
@@ -966,7 +977,11 @@ function PoisonChecks(attacker, defender, weapon, armor, basedamage, rawdamage)
 				if (poisonName == "paralyzePoison")
 					time := 10;
 				endif
-				TS_StartTimer(defender, poisonName, time, level, attacker);
+				if (CheckResist(defender, FORTITUDE, 15,-20*level))
+					SendSysMessageEx(defender, "Voce resistiu ao veneno.", SSM_INFO);
+				else
+					TS_StartTimer(defender, poisonName, time, level, attacker);
+				endif
 			endif
 		else
 			return 0;

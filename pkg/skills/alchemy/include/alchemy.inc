@@ -1,6 +1,10 @@
 include ":timedScripts:timedScripts";
 include ":tn:cooldown";
 include "include/say";
+include ":fls_core:fls_characters";
+include ":charactercreation:resists";
+use cfgfile;
+
 
 CONST DRINK_SOUND := 0x32;
 
@@ -40,7 +44,7 @@ function empty_bottle(character, potion, potiontype := 0)
 		endif
 	return 1;
 	endif
-    
+
   PlaySoundEffect(character, DRINK_SOUND);
   PrintText(character, "*usa uma pocao*");
   var goles;
@@ -51,11 +55,11 @@ function empty_bottle(character, potion, potiontype := 0)
 	else
 		goles := cint(GetObjProperty(potion, "goles"));
 	endif
-  
+
 	if(potiontype == 1)  //eh uma poção de 1 so gole
 		goles := 0;
 	endif
-  
+
 	if (goles > 1)
 		goles := goles - 1;
 		SetObjProperty(potion, "goles", goles);
@@ -63,7 +67,7 @@ function empty_bottle(character, potion, potiontype := 0)
 		SetObjProperty(potion, "acabou", 1);
 		SetObjProperty(potion, "goles", 0);
 	endif
-  
+
 endfunction
 
 //essa funcao so se mantem pra checar os kindlings. se nao quiser checar isso use .isReagent();
@@ -92,7 +96,7 @@ function isotherreagent(what)
 		0xF78: return 1;
 		0xF8F: return 1;
 		0xF90: return 1;
-    
+
 		0xee25: return 1;
 		0xee26: return 1;
 		0xee27: return 1;
@@ -159,7 +163,7 @@ function GetReagName(objtype)
    return "madeira morta";
   elseif (objtype == 0xf91 )
    return "coracao do verme";
-    
+
   elseif ( objtype == 0xef1a)
    return "glandula de wyvern";
   elseif (objtype == 0xef1b)
@@ -195,38 +199,43 @@ function is_poison(potion)
 endfunction
 
 function do_poison(who, potion)
-  empty_bottle(who, potion);
-  case (potion.objtype)
-    0xbf00: 
-     var lvl := Cint(GetObjProperty(potion, "strength"));
-     if (lvl)
-      TS_StartTimer(who, "defaultPoison", 120, lvl);
-     else
-        TS_StartTimer(who, "defaultPoison", 120, 1);
-     endif
-		SendSysMessage(who, "Voce foi envenenado", 3, 40);
-    0xbf01:
-		TS_StartTimer(who, "strPoison", 120, 2);
-		SendSysMessage(who, "Voce foi envenenado", 3, 40);
-    0xbf02:
-		TS_StartTimer(who, "staminaPoison", 120, 2);
-		SendSysMessage(who, "Voce foi envenenado", 3, 40);
-    0xbf03:
-		TS_StartTimer(who, "paralyzePoison", 120, 2);
-		SendSysMessage(who, "Voce foi envenenado", 3, 40);
-
-    0xbf04:
-		TS_StartTimer(who, "defaultPoison", 120, 3);
-		SendSysMessage(who, "Voce foi envenenado", 3, 40);
-    0xbf06:
-		TS_StartTimer(who, "manaPoison", 120, 5);
-		SendSysMessage(who, "Voce foi envenenado", 3, 40);
-    0xbf05:
-		TS_StartTimer(who, "defaultPoison", 120, 5);
-		SendSysMessage(who, "Voce foi envenenado", 3, 40);
-    0xdc04:
-		TS_StartTimer(who, "defaultPoison", 120, 2);
-		SendSysMessage(who, "Voce foi envenenado", 2, 40);
+  var level, difficulty, points, poisonType;
+  level := Cint(GetObjProperty(potion, "level"));
+  if (!level)
+    level := RandomDiceRoll("1d5");
+  endif
+  //se for uma poçao que nao a default a formula eh essa:
+  difficulty := 15*level + 10;
+  points := difficulty;
+  case(potion.objtype)
+    0xbf00: level := 1; difficulty := 40; points := 50; poisonType := "defaultPoison";
+    0xbf01: poisonType :="strPoison"; difficulty := 60; points := 70;
+    0xbf07: poisonType :="dexPoison"; difficulty := 60; points := 70;
+    0xbf06: poisonType :="intPoison"; difficulty := 60; points := 70;
+    0xbf02: poisonType:="staminaPoison"; difficulty := 60; points := 70;
+    0xbf03: poisonType:="paralyzePoison"; difficulty := 80; points := 100;
+    0xef54: poisonType :="manaPoison"; difficulty := 40; points := 70;
+    0xbf04: level := 3; difficulty := 80; points := 60; poisonType := "defaultPoison";
+    0xdc04: level := 2; difficulty := 60; points := 40; poisonType := "defaultPoison";
+    0xbf05: level := 4; difficulty := 100; points := 100; poisonType := "defaultPoison";
+    default: difficulty := 0; points := 0; poisonType := "invalid";
   endcase
+  PlaySoundEffect(who, 0x248);
+    SendSysMessageEx(who, "Voce aplicou o veneno com sucesso.", SSM_INFO);
+    var poisonInfo := struct;
+    poisonInfo.+name := poisonType;
+    poisonInfo.+level := level;
+    poisonInfo.+dosage := 20 - (level*2);
+    poisonInfo.+acc := who.acctname;
+    poisonInfo.+time := 40 + level*10;
+    if (temHabilidade(who, "Veneno Puro"))
+      poisonInfo.dosage := CInt(poisonInfo.dosage * 1.5);
+      poisonInfo.time := CInt(poisonInfo.time * 1.2);
+    endif
 
+    if (CheckResist(who, FORTITUDE, 15,-20*poisonInfo.level))
+      SendSysMessageEx(who, "Voce resistiu ao veneno.", SSM_INFO);
+    else
+      TS_StartTimer(who, poisonInfo.name, poisonInfo.time, poisonInfo.level, who);
+    endif
 endfunction

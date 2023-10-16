@@ -11,13 +11,14 @@ program textcmd_dupe( who )
     var what := Target( who, TGTOPT_NOCHECK_LOS );
     
     if (what.isA(POLCLASS_ITEM))
-      copyitem := CreateItemCopyAtLocation(who.x, who.y, who.z, what);
+      copyitem := CreateItemCopyAtLocation(who.x, who.y, who.z, what, who.realm);
 	  SetObjProperty(copyitem, "createdby", who.acctname + " " + who.name);
+	  print("dupado");
 	        
       if (what.isA(POLCLASS_CONTAINER))
         items := EnumerateItemsInContainer(what);
         foreach item in items
-          newitem := CreateItemCopyAtLocation(who.x,who.y,who.z,item);
+          newitem := CreateItemCopyAtLocation(who.x,who.y,who.z, item, who.realm);
           MoveItemToContainer(newitem, copyitem, item.x, item.y);
 		  SetObjProperty(newitem, "createdby", who.acctname + " " + who.name);
         endforeach
