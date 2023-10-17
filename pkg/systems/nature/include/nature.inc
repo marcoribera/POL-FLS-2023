@@ -129,7 +129,7 @@ function weathereffects(type, duration, severity := 5)
             foreach item in itemsinbag
                 if (item.objtype in fire_weapons)
                     SetObjProperty(item, "balas", 0);
-                    SendSysMessageEx(mob, "A polvora da sua arma molhou!", SSM_INFO);
+                    SendSysMessageEx(person, "A polvora da sua arma molhou!", SSM_INFO);
                 endif
             endforeach
 			if (person.x < 4174)
