@@ -180,7 +180,7 @@ var summoned := GetObjProperty(me, "summoned");
 			//SetTrueSkill(owner, "Taming", skill);
 
 			SendSysMessageEX(owner, me.name+" esta infeliz e o proximo comando sera o ultimo!", SSM_INFO_IC);
-			SetCooldown(me, "aviso", 2);
+			SetCooldown(me, "aviso", 4);
 
 
 			//if ( me.graphic in mountables )
