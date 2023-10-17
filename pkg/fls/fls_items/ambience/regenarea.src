@@ -31,7 +31,8 @@ program setupsound(rune)
 
 			//regen de DP
 			if(i == 0)
-				AP_SetVital(people, "DP", 0.01);
+                var regen:= AP_GetVital(people, "DP")+GetObjProperty(rune, "DP");
+				AP_SetVital(people, "DP", regen);
 			endif
 
 		endforeach
