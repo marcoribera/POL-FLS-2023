@@ -81,7 +81,9 @@ function GetNumSummons(who)
 
 	foreach serial in tamed
 		var pet := SystemFindObjectBySerial(serial);
-		if ( pet.master == who && GetObjProperty(pet, "summoned")) //se é summon
+		if(!pet)
+			tamed.erase(_serial_iter);
+		elseif ( pet.master == who && GetObjProperty(pet, "summoned")) //se é summon
 			var cfg := ReadConfigFile(":brainAI:npcdesc");
 			var npctemplate := pet.npctemplate;
 			npctemplate := npctemplate[10, len(npctemplate)-9];

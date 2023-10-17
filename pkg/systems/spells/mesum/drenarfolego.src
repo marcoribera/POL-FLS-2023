@@ -16,7 +16,6 @@ program SpellScript(params)
 		SendSysMessageEx(who, "Isto nao pode ser alvejado por essa magia.", SSM_FAIL);
 		return;
 	endif
-	SetObjProperty(who, "#Casting",1);
 
 	PlaySoundEffect(targ, SFX_SPELL_WEAKEN);
 
@@ -24,7 +23,7 @@ program SpellScript(params)
 	var oldx := who.x;
 	var oldy := who.y;
 
-	who.frozen := 1;
+	//who.frozen := 1;
 
 	var amt := 10;
 
@@ -40,17 +39,19 @@ program SpellScript(params)
 		if (CheckResist(targ, VONTADE, 70, -CInt(AP_GetSkill(who, MAGICLORE)/2.5))) // Muito mais Difícil de resistir
 			SendSysMessageEx(who, "Voce nota que o alvo nao foi afetado.", SSM_FAIL);
 			SendSysMessageEx(targ, "Voce resistiu a magia.", SSM_INFO);
-			who.frozen := 0;
+			//who.frozen := 0;
 			return;
 		endif
 	else
 		if (CheckResist(targ, VONTADE, 30, -CInt(AP_GetSkill(who, MAGICLORE)/2.5)))
 			SendSysMessageEx(who, "Voce nota que o alvo nao foi afetado.", SSM_FAIL);
 			SendSysMessageEx(targ, "Voce resistiu a magia.", SSM_INFO);
-			who.frozen := 0;
+			//who.frozen := 0;
 			return;
 		endif
 	endif
+
+	SetObjProperty(who, "#Casting",1);
 
 	while  (time < 10)
 
@@ -92,7 +93,7 @@ program SpellScript(params)
 		sleep(1);
 	endwhile
 
-	who.frozen := 0;
+	//who.frozen := 0;
 	EraseObjProperty(who, "#Casting");
 	return 1;
 endprogram
