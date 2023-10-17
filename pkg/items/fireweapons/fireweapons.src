@@ -230,8 +230,8 @@ program fireweapons(who, item)
             dmg := dmg - ((dist - max_range) * 10);
         endif
     endif
-
-	if (dmg < 1)
+    
+	if (dmg < 1 || (TemHabilidade(targ, "Pele de Rocha") && IsRaging(targ)))
 		dmg := 1;
 	endif
 
