@@ -191,6 +191,9 @@ function SplashObject(who, bucket, targ)
 			DestroyItem(targ);
 		else
 			PrintTextAbove(targ, "*fica molhado*");
+            SetObjProperty(targ, "molhado", 1);
+            sleep(15);
+            EraseObjProperty(targ, "molhado");
 		endif
 	endif
 
