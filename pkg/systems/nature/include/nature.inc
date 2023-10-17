@@ -125,7 +125,7 @@ function weathereffects(type, duration, severity := 5)
             if (!GetObjProperty(person, "molhado"))
                 SetObjProperty(person, "molhado", 1);
             endif
-            var itemsinbag := EnumerateItemsInContainer(mob.backpack);
+            var itemsinbag := EnumerateItemsInContainer(person.backpack);
             foreach item in itemsinbag
                 if (item.objtype in fire_weapons)
                     SetObjProperty(item, "balas", 0);
