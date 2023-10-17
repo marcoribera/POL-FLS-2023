@@ -182,6 +182,9 @@ function SplashObject(who, bucket, targ)
 	//	elseif ( targ.IsA(POLCLASS_MOBILE) )
 	//		CureSpecific(targ, "poostink", -1);
 		endif
+        SetObjProperty(targ, "molhado", 1);
+        sleep(15);
+        EraseObjProperty(targ, "molhado");
 	else
 		if ((targ.objtype >= 14732) && (targ.objtype <= 14746))
 			PrintTextAbove(targ, "*O fogo apaga*");
@@ -191,9 +194,6 @@ function SplashObject(who, bucket, targ)
 			DestroyItem(targ);
 		else
 			PrintTextAbove(targ, "*fica molhado*");
-            SetObjProperty(targ, "molhado", 1);
-            sleep(15);
-            EraseObjProperty(targ, "molhado");
 		endif
 	endif
 
