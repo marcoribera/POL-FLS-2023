@@ -180,10 +180,12 @@ program SpellStarter(params)
 				if (TemHabilidade(mobile, "Mago Precavido"))
 					HealMana(mobile, cint(spellinfo.mana*0.5));
 				endif
-				PlaySoundEffect(mobile, SFX_SPELL_FAIL);
-				PlayObjectCenteredEffect(mobile, GFX_FIZZLE, 5, 50);
-				EraseObjProperty(mobile, "#Casting");
-				EraseObjProperty(mobile, "#magiasilenciosa");
+                if (!GetObjProperty(mobile, "#magiasilenciosa"))
+                    PlaySoundEffect(mobile, SFX_SPELL_FAIL);
+                    PlayObjectCenteredEffect(mobile, GFX_FIZZLE, 5, 50);
+                endif
+                    EraseObjProperty(mobile, "#Casting");
+                    EraseObjProperty(mobile, "#magiasilenciosa");
 				return 0;
 			endif
 
@@ -191,7 +193,9 @@ program SpellStarter(params)
 			if ( Events_Waiting() )
 				SendSysMessageEx(mobile, "Voce nao conseguiu se concentrar o suficiente para invocar esta magia.", SSM_FAIL);
 				FailSpell(mobile);
-				PlaySoundEffect(mobile, SFX_SPELL_FAIL);
+                if (!GetObjProperty(mobile, "#magiasilenciosa"))
+                    PlaySoundEffect(mobile, SFX_SPELL_FAIL);
+                endif
 				EraseObjProperty(mobile, "#Casting");
 				EraseObjProperty(mobile, "#magiasilenciosa");
 				if (TemHabilidade(mobile, "Mago Precavido"))
@@ -202,19 +206,19 @@ program SpellStarter(params)
 
 			// Perform casting animation depending on spell target
 			if (GetObjProperty(mobile, "#magiasilenciosa") == error)
-			if (spellinfo.spelltype != "Swordmage")
-				//printtextabove(mobile, " " + spellinfo.spelltype);
-				case ( spellinfo.range )
-					"Distancia":
-						PerformAction(mobile, ANIM_CAST_DIR);
-						break;
-					"Area":
-						PerformAction(mobile, ANIM_CAST_AREA);
-						break;
-					default:
-						PerformAction(mobile, ANIM_CAST_DIR);
-				endcase
-			endif
+                if (spellinfo.spelltype != "Swordmage")
+                    //printtextabove(mobile, " " + spellinfo.spelltype);
+                    case ( spellinfo.range )
+                        "Distancia":
+                            PerformAction(mobile, ANIM_CAST_DIR);
+                            break;
+                        "Area":
+                            PerformAction(mobile, ANIM_CAST_AREA);
+                            break;
+                        default:
+                            PerformAction(mobile, ANIM_CAST_DIR);
+                    endcase
+                endif
 			endif
 
 			cycles := cycles - 1;
@@ -229,8 +233,11 @@ program SpellStarter(params)
 			if ( (orig_hp > AP_GetVital(mobile, "Hits") && (GetObjProperty(mobile, "kit") != "Mago de Combate") ) )
 				SendSysMessageEx(mobile, "Voce nao conseguiu se concentrar o suficiente para invocar esta magia.", SSM_FAIL);
 				FailSpell(mobile);
-				PlaySoundEffect(mobile, SFX_SPELL_FAIL);
-				PlayObjectCenteredEffect(mobile, GFX_FIZZLE, 5, 50);
+                if (!GetObjProperty(mobile, "#magiasilenciosa"))
+       				PlaySoundEffect(mobile, SFX_SPELL_FAIL);
+                    PlayObjectCenteredEffect(mobile, GFX_FIZZLE, 5, 50);
+                endif				
+                EraseObjProperty(mobile, "#magiasilenciosa");
 				EraseObjProperty(mobile, "#Casting");
 				if (TemHabilidade(mobile, "Mago Precavido"))
 					HealMana(mobile, cint(spellinfo.mana*0.5));
@@ -242,7 +249,10 @@ program SpellStarter(params)
 			if ( Events_Waiting() )
 				SendSysMessageEx(mobile, "Voce nao conseguiu se concentrar o suficiente para invocar esta magia.", SSM_FAIL);
 				FailSpell(mobile);
-				PlaySoundEffect(mobile, SFX_SPELL_FAIL);
+                if (!GetObjProperty(mobile, "#magiasilenciosa"))
+       				PlaySoundEffect(mobile, SFX_SPELL_FAIL);
+                endif
+                EraseObjProperty(mobile, "#magiasilenciosa");
 				EraseObjProperty(mobile, "#Casting");
 				if (TemHabilidade(mobile, "Mago Precavido"))
 					HealMana(mobile, cint(spellinfo.mana*0.5));
@@ -357,8 +367,9 @@ program SpellStarter(params)
 			if (TemHabilidade(mobile, "Mago Precavido"))
 				HealMana(mobile, cint(spellinfo.mana*0.5));
 			endif
-
-			PlaySoundEffect(mobile, SFX_SPELL_FAIL);
+            if (!GetObjProperty(mobile, "#magiasilenciosa"))
+			    PlaySoundEffect(mobile, SFX_SPELL_FAIL);
+            endif
 			SendSysMessageEX(mobile, "Voce falhou em invocar a magia.", SSM_FAIL);
 		endif
 
