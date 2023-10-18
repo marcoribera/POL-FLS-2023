@@ -523,7 +523,7 @@ function DamageFLS(defender, dmg, type := DMG_FORCED, source := 0)
 		endforeach
 	endif
 
-  DisplayDamage(defender, totaldmg, source);
+  	DisplayDamage(defender, totaldmg, source);
 
 	ApplyRawDamage(defender, totaldmg);
 
