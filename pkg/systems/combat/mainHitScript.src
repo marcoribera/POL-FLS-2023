@@ -492,6 +492,10 @@ function WearDownArmor(defender, armor, rawdamage, weapon)
 				else
 					armor.hp := armorhp;
 				endif
+				var nome := armor.name;
+				SetName(armor, nome + " -");
+				sleepms(30);
+				SetName(armor, nome);
 			endif
 		endif
 	endif
@@ -541,6 +545,10 @@ function WearDownShield(defender, shield, rawdamage, weapon)
 				else
 					shield.hp := shieldhp;
 				endif
+				var nome := shield.name;
+				SetName(shield, nome + " -");
+				sleepms(30);
+				SetName(shield, nome);
 			endif
 		endif
 	endif
@@ -584,6 +592,10 @@ function WearDownWeapon(attacker, weapon)
 				else
 					weapon.hp := weaponhp;
 				endif
+				var nome := weapon.name;
+				SetName(weapon, nome + " -");
+				sleepms(30);
+				SetName(weapon, nome);
 			endif
 			return 1;
 		endif
