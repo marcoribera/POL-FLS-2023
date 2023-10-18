@@ -282,3 +282,58 @@ function FillArray(starts, ends, incr := 1)
 	return 0;
 endfunction
 
+function FindObjInModel(search_for, equal, to_search)
+	foreach item in to_search
+		var item_prop := item.get_member(search_for);
+		if ( item_prop == equal)
+			return item;
+		endif
+      sleepms(2);
+	endforeach
+
+	return 0;
+endfunction
+
+function removeIndexes(byref the_array, index_array)
+   index_array.Reverse(); //cheat for pol
+   foreach index in index_array
+      the_array.erase(index);
+      sleepms(2);
+   endforeach
+endfunction
+
+/*
+ * RemoveFromArray(byref the_array, find_what)
+ *
+ * Purpose
+ * Finds the first instance of something in an array.
+ *
+ * Parameters
+ * the_array:	Array to search.
+ * find_what:	What to look for.
+ *
+ * Return value
+ * Returns > 1 (the index) if it is found.
+ * Returns 0 if 'find_what' was not found.
+ *
+ */
+function RemoveFromArray(the_array, delete_what)
+	if ( Lower(TypeOf(delete_what)) != "array")
+		delete_what := array{delete_what};
+	endif
+
+	var iter_to_remove := array{};
+	foreach item in (the_array)
+		if (item in delete_what)
+			iter_to_remove += _item_iter;
+		endif
+		sleepms(5);
+	endforeach
+
+	iter_to_remove.Reverse();
+	foreach iter in iter_to_remove
+		the_array.Erase(iter);
+	endforeach
+
+	return the_array;
+endfunction
