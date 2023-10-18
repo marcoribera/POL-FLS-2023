@@ -47,6 +47,7 @@ program fireweapons(who, item)
 		SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
 		return;
 	endif
+
     // Verifica se a arma está municiada
 	var balas := cint(GetObjProperty(item, "balas"));
 	if (balas <= 0)
