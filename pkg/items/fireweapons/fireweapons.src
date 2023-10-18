@@ -230,8 +230,8 @@ program fireweapons(who, item)
             dmg := dmg - ((dist - max_range) * 10);
         endif
     endif
-
-	if (dmg < 1)
+    
+	if (dmg < 1 || (TemHabilidade(targ, "Pele de Rocha") && IsRaging(targ)))
 		dmg := 1;
 	endif
 
@@ -250,6 +250,8 @@ program fireweapons(who, item)
     if (wet == 1)
         SendSysMessageEx(who, "A polvora esta molhada", SSM_FAIL);
         PlaySoundEffect(who, 0x4D0);
+        balas := balas - 1;
+	    SetObjProperty(item, "balas", balas);
 		return;
 	endif
     var random := randomint(10);

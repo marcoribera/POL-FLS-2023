@@ -76,10 +76,17 @@ program controleclima(who)
 		endif
 
 		var bolts := RandomInt(5);
-
+        var fire_weapons := Array{0xC5FD, 0xC5FE, 0xC5FF, 0xC600, 0xc606};
 		SetWeatherForPlayer(who, type, 50 );
 		foreach mob in enemies
-            SetObjProperty(mob, "molhado", 1);
+           SetObjProperty(mob, "molhado", 1);
+           var itemsinbag := EnumerateItemsInContainer(mob.backpack);
+            foreach item in itemsinbag
+                if (item.objtype in fire_weapons)
+                    SetObjProperty(item, "balas", 0);
+                    SendSysMessageEx(mob, "A polvora da sua arma molhou!", SSM_INFO);
+                endif
+            endforeach
 			SetWeatherForPlayer(mob, type, 50 );
 			if ( !(mob in who.party.members))
 				if (distance(mob, who) < 20)
