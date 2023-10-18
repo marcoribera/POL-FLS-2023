@@ -49,3 +49,23 @@ function UC(strs)
   endif
   return result;
 endfunction
+
+function GetInput(character, item, uc_prompt, langcode := "ENG") // item is a placeholder, pass anything
+   var request := RequestInputUC(character, item, UC(uc_prompt), langcode);
+   if (!request) return; endif
+
+   return CChrZ(request.uc_text);
+endfunction
+
+function SendSystemReport(above_object, text, color := _DEFAULT_UCCOLOR, character := 0)
+   if (above_object.npctemplate)
+      return;
+   elseif (!character)
+      character := above_object;
+   endif
+
+   if (character == "all")
+      return PrintText(above_object, text, 9, color);
+   endif
+   return PrintTextAbovePrivateUC(above_object, UC(text), "ENG", character, 0x10, color);
+endfunction
