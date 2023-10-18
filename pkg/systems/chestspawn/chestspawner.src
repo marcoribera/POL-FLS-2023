@@ -4,13 +4,14 @@ use os;
 include ":loot:lootParser";
 include ":traps:traps";
 include ":chestspawn:treasurechest";
-
+
+
 program spawntesthet(item)
 	var rng := GetObjProperty(item,"range");
 	var amt := GetObjProperty(item,"amount");
 	var frq := GetObjProperty(item,"duration");
 
-	sleep(RandomInt(100));
+	sleep(20+RandomInt(20)+RandomInt(80));
 
 	//RESETA OS BAUS CRIADOS
 	foreach thing in ListItemsNearLocation(cint(item.x), cint(item.y), LIST_IGNORE_Z, CInt(rng)*2,  item.realm)
@@ -23,9 +24,13 @@ program spawntesthet(item)
 	endforeach
 	EraseObjProperty(item, "chests");
 
-	if((!amt) or (!frq))
+	if((!amt) || (!frq))
 		print("Chest Spawner " + item.serial + " at: " + item.x + ", " + item.y + " is improperly configured");
 		return;
+	endif
+
+	if(frq < 7200) //intervalo de atualização mínimo a cada 2h
+		frq := 7200;
 	endif
 
 	var current, newamt;
@@ -45,10 +50,11 @@ program spawntesthet(item)
 		current := currentChests.size();
 		//current := len(chestarray);
 		newamt := CInt(amt - current);
-//		printtextabove(item, "current " + current + " amt " + amt + " new amt " + newamt); 
-		if(newamt > 0)			/*while( 1 )
+//		printtextabove(item, "current " + current + " amt " + amt + " new amt " + newamt);
+		if(newamt > 0)
+			/*while( 1 )
 				var playernear := hasplayernear(item.x, item.y, item.realm);
-		
+
 				if (!playernear)
 					break;
 				else
@@ -65,7 +71,7 @@ program spawntesthet(item)
 //			printtextabove(item, " novo current " + currentChests.size());
 			SetObjProperty(item, "chests", currentChests);
 		 endif
-		 
+
 		//RESETA OS BAUS CRIADOSe looteados
 		foreach thing in ListItemsNearLocation(cint(item.x), cint(item.y), LIST_IGNORE_Z, CInt(rng)*2,  item.realm)
 			if(thing.locked == 0)
@@ -75,7 +81,7 @@ program spawntesthet(item)
 			endif
 			sleepms(10);
 		endforeach
-		
+
 		sleep(frq);
 	endwhile
 endprogram
