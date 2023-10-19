@@ -121,6 +121,11 @@ program death(params)
             endif
 			if ( AP_GetVital(ghost, "DP") < 10 || CInt(GetObjProperty(ghost, "morto")) )
 				SendSysMessage(ghost, "Voce morreu.");
+				var region := GetRegionName(corpse);
+				var tipo := "morreu";
+				var coords := {corpse.x, corpse.y};
+				var nome := GetObjProperty(killer, "nome_inicial");
+				Start_script(":DiscordWebhook:discord", {tipo, nome, killer.acctname, ghost.name, region, coords});			
 				SetObjProperty(corpse, "morto", 1);
 				SetObjProperty(ghost, "morto", 1);
 				SetObjProperty(corpse, "deathtimer", polcore().systime);
