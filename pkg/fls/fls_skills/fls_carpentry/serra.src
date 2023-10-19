@@ -128,9 +128,9 @@ function MakeBoardSerra(who, item, nova_tabua)
             toras := 20;
         endif
         if(TemHabilidade(who,"Secagem da Madeira"))
-            CreateItemInContainer (who.backpack, nova_tabua, toras*2);
+            CreateItemInContainer (who.backpack, nova_tabua, toras*4);
         else
-            CreateItemInContainer (who.backpack, nova_tabua, toras);
+            CreateItemInContainer (who.backpack, nova_tabua, toras*2);
         endif
         SubtractAmount(item, toras);
         //fim alternativa
