@@ -24,8 +24,6 @@ program danoarea(rune)
 				if((!people.npctemplate || people.master) && !(people.cmdlevel))
 					if (GetObjProperty(rune, "hits"))
 						DamageFLS(people, CInt(GetObjProperty(rune, "hits")),  GetObjProperty(rune, "tipodano"));
-					else
-						DamageFLS(people, 1, DMG_FORCED);
 					endif
 
 					if (GetObjProperty(rune, "stam"))
