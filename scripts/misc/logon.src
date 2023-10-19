@@ -248,7 +248,7 @@ function CanPassiveIncreaseSkill(who, skill)
 		bonus_tempo := bonus_tempo + 20;
 	endif
 	//verifica se ainda não alcancou o cap máximo permitido para aquela skill e se não atingiu o cap permitido por tempo de criação do personagem
-	if( (limiteportempo(mobile) + valorinicial(mobile, skill))  > true_skill)
+	if( (limiteportempo(who) + valorinicial(who, skill))  > true_skill)
 		return 1;
 	else
 		return 0;
