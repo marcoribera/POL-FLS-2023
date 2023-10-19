@@ -67,7 +67,7 @@ program SpellStarter(params)
 			EraseObjProperty(mobile, "#Casting");
 			return 0;
 		else
-			if(!TemHabilidade(mobile, "Meditacao em Combate"))
+			if(!TemHabilidade(mobile, "Concentracao Aprimorada"))
 			mobile.frozen := 1;
 			endif
 		endif
@@ -163,7 +163,7 @@ program SpellStarter(params)
 		var orig_hp := AP_GetVital(mobile, "Hits");
 		var delay := spellinfo.delay + Cint(GetObjProperty(mobile, "#delayspell"));
 		var moveCheck_script;
-		if(!TemHabilidade(mobile, "Meditacao em Combate"))
+		if(!TemHabilidade(mobile, "Concentracao Aprimorada"))
 			moveCheck_script := Start_Script(":fls_magery:moveCheck/moveCheck", array{mobile, Getpid()});
 		endif
 
