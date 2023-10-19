@@ -266,6 +266,9 @@ function CreateBossStructGump(who, byref boss)
 		magery := GFTextEntry( chargump, 380, 245, 100, 20, 1150, boss.magery+"");
 	endif
 
+    GFAddButton(chargump, 110, 485, 2103, 2104, 1, 666);
+    GFTextLine(chargump, 50, 480, 1153, "TrueBoss");
+
 	GFTextLine(chargump, 50, 205, 1153, "Desc: ");
 	GFAddButton( chargump, 35, 210, 2103, 2104, 1, 500);
 		if (boss.descmod)
@@ -472,6 +475,15 @@ function CreateBossStructGump(who, byref boss)
 		endif
 		CreateBossStructGump(who, boss);
 
+    elseif ( input[0] == 666 )
+        var yes := YesNo(who, "TrueBoss?");
+        if (yes == 1)
+            if (!boss.trueboss)
+                boss.+trueboss := 1;
+            endif
+        endif
+        CreateBossStructGump(who, boss);
+
 	elseif ( input[0] == 30 || input[0] == 31 || input[0] == 32 || input[0] == 33 || input[0] == 34 || input[0] == 35)
 		var index := input[0] - 29;
 
@@ -516,6 +528,11 @@ function SetBoss(npc, boss)
 	npc.truecolor := boss.color;
 	SetObjProperty(npc, "descmod", Cstr(boss.descmod));
 	SetObjProperty(npc, "dmgbonus", Cdbl(boss.dmg));
+
+	if (boss.trueboss)
+        Setobjproperty(npc, "true_boss", 1);
+    endif
+
 	if (boss.resist)
 		npc.resist_physical_mod := Cint(boss.resist);
 	else
@@ -665,6 +682,10 @@ function CreateBoss(boss, x, y, z, realm)
 	SetName(npc, boss.name);
 	npc.color := boss.color;
 	npc.truecolor := boss.color;
+
+    if (boss.trueboss)
+        Setobjproperty(npc, "true_boss", 1);
+    endif
 
 	SetObjProperty(npc, "dmgbonus", Cdbl(boss.dmg));
 	if (boss.resist)
