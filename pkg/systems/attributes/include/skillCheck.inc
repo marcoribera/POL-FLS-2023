@@ -85,8 +85,8 @@ function SkillCheck(mobile, attrib_name, difficulty, award_diff:=0, advance_flag
 	else
 		if (chanceUp > 50)
 			chanceUp := 50;
-		elseif (chanceUp < 2)
-			chanceUp := 2;
+		elseif (chanceUp < 0)
+			chanceUp := 0;
 		endif
 		CheckSkillAdvance(mobile, attrib_name, award_diff, chanceUp);
 	endif
