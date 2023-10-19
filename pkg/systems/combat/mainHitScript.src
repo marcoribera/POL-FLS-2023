@@ -407,10 +407,10 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 		endif
 
         //Esse é o IF que trata o caso de alguém com skill alta tentar upar em bicho mais fraco
-		if ( skillDefender - 10 < skillAttacker )
+		/*if ( skillDefender - 10 < skillAttacker )
 			//printtextabove(attacker, "return " + skillDefender);
 			return 0;
-		endif
+		endif*/
 	endif
 
 	//Sendo o alvo um personagem jogador ou NPC com combate melhor que o atacante, permite o up de skill de combate
