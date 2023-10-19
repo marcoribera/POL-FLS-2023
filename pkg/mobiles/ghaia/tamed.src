@@ -319,7 +319,7 @@ function ProcessSpeech(ev)
 
 		endif
 
-	elseif ( text["corra"] )
+	elseif ( text[name+" corra"] )
 		if(obediencecheck()== 0)
 			return;
 		endif
@@ -329,9 +329,9 @@ elseif ( text["todos corram"])
 		if(obediencecheck()== 0)
 			return;
 		endif
-		go("run", todos);
+		go("run", todos := 1);
 		
-	elseif ( text["ande"] )
+	elseif ( text[name+" ande"] )
 		if(obediencecheck()== 0)
 			return;
 		endif
@@ -341,7 +341,7 @@ elseif ( text["todos andem"])
 		if(obediencecheck()== 0)
 			return;
 		endif
-		go("walk", todos);
+		go("walk", todos := 1);
 		
 	elseif ( text[name+" novo dono"] || text["todos novo dono"] )
         if(obediencecheck()== 0)
@@ -996,7 +996,7 @@ function Go(forma, todos)
 	data.+y := tloc.y;
 	data.+type := forma;
 	following := 0;
-	
+	print("todos eh "+todos);
 	
 	if( todos == 1 )
 		AllCommand(GO_LOC_CMD, data);
