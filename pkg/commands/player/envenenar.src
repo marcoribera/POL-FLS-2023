@@ -147,7 +147,10 @@ program do_poisoning(who)
 					SendSysMessageEx(who, "A arma ja estava muito danificada e se quebrou na aplicacao do veneno.", SSM_FAIL);
 				else
 					the_item.hp := the_item.hp - 10;
-					UpdateItem(the_item);
+					var nome := the_item.name;
+					SetName(the_item, nome + " -");
+					sleepms(30);
+					SetName(the_item, nome);
 				endif
 			endif
 		endif

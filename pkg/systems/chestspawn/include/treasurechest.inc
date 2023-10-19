@@ -23,8 +23,10 @@ function CreateTreasureChests(lvl, amt, rng, x, y, z, realm, lootname)
 			checker := 0;
 			newx := cint(x + RandomInt(rng) - RandomInt(rng));
 			newy := cint(y + RandomInt(rng) - RandomInt(rng));
-			newz := (GetMapInfo(x, y, realm)).z;
-			if (z > newz+10)
+			newz := GetWorldHeight(x, y, realm);
+			if (z > newz+5)
+				newz := z;
+			elseif(z < newz-5)
 				newz := z;
 			endif
 			if(len(ListItemsNearLocation(newx, newy, newz, 0, realm)) == 0)
@@ -49,7 +51,7 @@ function CreateTreasureChests(lvl, amt, rng, x, y, z, realm, lootname)
 				var players := EnumerateOnlineCharacters();
 				foreach player in players
 					if (player.cmdlevel > 2 )
-						SendSysMessageEx(player, "Chestspawner em x " + x + " y " + y + " z " + z + " esta consumindo muito a CPU, delete-o ou recrie-o". SSM_FAIL); 
+						SendSysMessageEx(player, "Chestspawner em x " + x + " y " + y + " z " + z + " esta consumindo muito a CPU, delete-o ou recrie-o". SSM_FAIL);
 					endif
 				endforeach
 			endif
@@ -71,7 +73,7 @@ function CreateTreasureChests(lvl, amt, rng, x, y, z, realm, lootname)
 
 		lootgroup := lootname;
 		Loot_Generate(chest, lootgroup);
-	
+
 		total := total + 1;
 		sleep(10);
 	endwhile

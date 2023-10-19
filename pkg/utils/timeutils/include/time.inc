@@ -269,3 +269,26 @@ function AddTimeStamp(what)
 
 	return(FormatTime(ts, "[<MON> <DAY> <YY> <HH>:<MM>:<SS>]: ") + what);
 endfunction
+
+function GetTimeBetween(old_time, new_time, type := "days")
+	var diff_calc;
+	if (type == "days")
+		diff_calc := SECONDS_IN_DAY;
+	elseif (type == "hours")
+		diff_calc := SECONDS_IN_HOUR;
+	elseif (type == "seconds")
+		diff_calc := 1;
+	elseif (type == "years")
+		diff_calc := SECONDS_IN_YEAR;
+	elseif (type == "minutes")
+		diff_calc := SECONDS_IN_MINUTE;
+	elseif (type == "weeks")
+		diff_calc := SECONDS_IN_WEEK;
+	else
+		print("Wrong type for GetTimeBetween: {}".format(type) );
+		return 0;
+	endif
+
+	var diff := Floor((new_time - old_time)/diff_calc);
+	return diff;
+endfunction

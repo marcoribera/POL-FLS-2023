@@ -67,6 +67,11 @@ function Boss1Fight(opponent, alerted := 0)
 		if ( dist > 20)
 			if ( isBloodied(opponent) && TemHabilidade(opponent, "Baixo Limiar de Furia") )
 				LogToFile(":fls_core:berserker.log", opponent.name+" ("+opponent.acctname+") peidou pra "+me.name+" em "+opponent.x+" "+opponent.y, LOG_DATETIME);
+				var tipo := "thuriao";
+				var region := GetRegionName(opponent);
+				var coords := {opponent.x, opponent.y};
+				var nome := GetObjProperty(opponent, "nome_inicial");
+				Start_script(":DiscordWebhook:discord", {tipo, nome, opponent.acctname, me.name, region, coords});
 				foreach x in EnumerateOnlineCharacters()
 					if (x.cmdlevel > 0)
 						SendSysMessageEx(x, opponent.name+" BERSERKER PEIDAO!", SSM_REQUEST);

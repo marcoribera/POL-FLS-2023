@@ -82,7 +82,7 @@ function CanFight(me, mobile, align)
 		endif
 	  endif
 
-	  	if (povo == "Numajene")
+	  	if (povo == "Numajene" )
 		        if ( (mytemplate == "spiritbear") || (mytemplate == "spiritpanther") || (mytemplate == "spiritserpent") 
                 || (mytemplate == "spiritwolf") || (mytemplate == "spiritualbear") || (mytemplate == "phasespider") 
                 || (mytemplate == "eruva") || (mytemplate == "criafuria")  || (mytemplate == "luine") 
@@ -92,7 +92,7 @@ function CanFight(me, mobile, align)
 		endif
 
       //printtextabove(me, "mytemplate " + mytemplate + " " + cint(GetObjProperty(mobile, "empatiacomanimais")));
-      if ( (GetObjProperty(mobile, "kit") == "criado por lobos") || (cint(GetObjProperty(mobile, "empatiacomanimais")) == 1) || TemHabilidade(mobile, "Senso da Natureza" ) || TemHabilidade(mobile, "Campestre" ) || (GetObjProperty(mobile.owner, "kit") == "criado por lobos") || (cint(GetObjProperty(mobile.owner, "empatiacomanimais")) == 1) || TemHabilidade(mobile.owner, "Senso da Natureza" ) || TemHabilidade(mobile.owner, "Campestre")) //verifica se tem empatia por animais
+      if ( (GetObjProperty(mobile, "kit") == "criado por lobos") || (cint(GetObjProperty(mobile, "empatiacomanimais")) == 1) || TemHabilidade(mobile, "Senso da Natureza" ) || TemHabilidade(mobile, "Campestre" ) )//verifica se tem empatia por animais
         if ( (mytemplate == "giantbat") || (mytemplate == "giantrat") || (mytemplate == "gianttoad")
         || (mytemplate == "giantserpent") || (mytemplate == "snake") || (mytemplate == "mongbat") || (mytemplate == "naja")
         || (mytemplate == "warg") || (mytemplate == "polarbear") || (mytemplate == "lynx") ||  (mytemplate == "cougar")
@@ -135,13 +135,32 @@ function CanFight(me, mobile, align)
   else //se for um npc verifica se eh inimigo
     if (align == ALIGN_EVIL)
       if (mobile.master) //se for bicho tamado, é atacado!
-	if ( (mytemplate == "giantbat") || (mytemplate == "giantrat") || (mytemplate == "gianttoad")
+	  var povo_owner := mobile.master;
+	  var chardata := GetObjProperty(povo_owner,"chardata");
+		if ( (GetObjProperty(mobile.master, "kit") == "criado por lobos") || (cint(GetObjProperty(mobile.master, "empatiacomanimais")) == 1) || TemHabilidade(mobile.master, "Senso da Natureza" ) || TemHabilidade(mobile.master, "Campestre") )
+			if ( (mytemplate == "giantbat") || (mytemplate == "giantrat") || (mytemplate == "gianttoad")
         	|| (mytemplate == "giantserpent") || (mytemplate == "snake") || (mytemplate == "mongbat") || (mytemplate == "naja")
 	        || (mytemplate == "warg") || (mytemplate == "wolf") || (mytemplate == "polarbear") || (mytemplate == "lynx") ||  (mytemplate == "cougar")
 	        ||  (mytemplate == "alligator")  || (mytemplate == "panther") || (mytemplate == "grizzlybear") || (mytemplate == "sapop"))
-	            return 0;
-        endif
-        return 1;
+				return 0;
+			endif
+		endif
+        if 	(chardata["povo"] == "Numajene" ) 
+		        if ( (mytemplate == "spiritbear") || (mytemplate == "spiritpanther") || (mytemplate == "spiritserpent") 
+                || (mytemplate == "spiritwolf") || (mytemplate == "spiritualbear") || (mytemplate == "phasespider") 
+                || (mytemplate == "eruva") || (mytemplate == "criafuria")  || (mytemplate == "luine") 
+                || (mytemplate == "centaur") || (mytemplate == "dryad")  || (mytemplate == "fadinha"))
+				return 0;
+				endif
+		endif
+        if ( GetObjProperty(mobile.master, "kit") == "Bandido")
+
+				if ( (mytemplate == "MercenarioRecruta") || (mytemplate == "MercenarioBesteiro") || (mytemplate == "Mercenario") || (mytemplate == "MercenarioLider") || (mytemplate == "MercenarioExperiente") )
+				return 0;
+				endif
+		endif
+
+		return 1;
       endif
     endif
     var enemies := GetConfigStringArray( npccfgfile[mytemplate], "enemy" );

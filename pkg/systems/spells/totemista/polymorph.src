@@ -131,27 +131,21 @@ function Transforma(who, animal, snd, graphic,namepoly)
 		npc.kill();
 
 		var metamorfose := struct;
-
 		//Define a cor do cabelo como cor do polymorph
 		var hair := GetEquipmentByLayer(who, LAYER_HAIR);
 		var beard := GetEquipmentByLayer(who, LAYER_BEARD);
 		var polymorphColor := CInt(hair.color);
 		if(!polymorphColor)
 			polymorphColor := CInt(beard.color);
-		else
-			polymorphColor := CInt(who.color);
 		endif
 		metamorfose.+originalcolor := who.color;
 		metamorfose.+originalgraphic := who.graphic;
 		metamorfose.+newgraphic := graphic;
 		SetObjProperty(who, "metamorfose", metamorfose);
 		who.graphic := graphic;
-		who.truegraphic := graphic;
-		who.graphic := graphic;
 		// who.truegraphic := graphic;
 		//	who.squelch(-1);
 		who.color := polymorphColor;
-		who.color := 0;
 	endif
 
 	// Alterado por Edmond

@@ -316,8 +316,10 @@ function HealPatient(mobile, targ, heal_skill, aux_skill, bonus, poison)
 		SendSysMessage(mobile, "Seu paciente esta muito distante.");
 		return 0;
 	endif
-	if ( SkillCheck(mobile, MEDICINE, -1) > 0 )
-		heal_amt := heal_amt / 2;
+	if (!SkillCheck(mobile, MEDICINE, -1))
+		heal_amt := heal_amt / 3;
+	else
+		SendSysMessageEx(mobile, "Tratando o melhor que consegue.", SSM_INFO);
 	endif
 	if (heal_amt < 5)
 		SendSysMessage(mobile, "A cura foi ineficaz.");
@@ -349,12 +351,12 @@ function HealPatient(mobile, targ, heal_skill, aux_skill, bonus, poison)
 			return 1;
 		endif
 		//HealDamage(targ, CInt(heal_amt/5));
-    HealFLS(targ, CInt(heal_amt/q));
-    r := r + resto;
-    if (r > 1)
-      HealFLS(targ, 1);
-      r := r - 1;
-    endif
+	    HealFLS(targ, CInt(heal_amt/q));
+	    r := r + resto;
+	    if (r > 1)
+	      HealFLS(targ, 1);
+	      r := r - 1;
+	    endif
 		RecalcVitals(targ);
 	endfor
 	SendSysMessage(targ, "Acabou o efeito das bandagens.");
@@ -364,7 +366,7 @@ function HealPatient(mobile, targ, heal_skill, aux_skill, bonus, poison)
 	if ((poison == 1) )
 		// Should be enough to cure all poison.
 		TS_CurePoison(targ, 10000, "P", 10);
-	elseif(   (poison == 2))
+	elseif((poison == 2))
 		TS_LowerDuration(targ, "bleed", -1);
 	endif
 	return 1;
@@ -476,7 +478,7 @@ function HealNpcCorpse(mobile, targ, aux_skill)
 endfunction
 
 function GetHealingAmt(heal_skill, aux_skill)
-	var amt := Ceil(heal_skill);
+	var amt := Ceil(heal_skill + (aux_skill/2.0));
 	return amt;
 endfunction
 

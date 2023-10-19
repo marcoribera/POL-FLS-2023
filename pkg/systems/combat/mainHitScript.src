@@ -406,12 +406,11 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 			endif
 		endif
 
-		/*
-		if ( skillDefender - 10 < skillAttacker )
+        //Esse é o IF que trata o caso de alguém com skill alta tentar upar em bicho mais fraco
+		/*if ( skillDefender - 10 < skillAttacker )
 			//printtextabove(attacker, "return " + skillDefender);
 			return 0;
-		endif
-		*/
+		endif*/
 	endif
 
 	//Sendo o alvo um personagem jogador ou NPC com combate melhor que o atacante, permite o up de skill de combate
@@ -492,6 +491,10 @@ function WearDownArmor(defender, armor, rawdamage, weapon)
 				else
 					armor.hp := armorhp;
 				endif
+				var nome := armor.name;
+				SetName(armor, nome + " -");
+				sleepms(30);
+				SetName(armor, nome);
 			endif
 		endif
 	endif
@@ -541,6 +544,10 @@ function WearDownShield(defender, shield, rawdamage, weapon)
 				else
 					shield.hp := shieldhp;
 				endif
+				var nome := shield.name;
+				SetName(shield, nome + " -");
+				sleepms(30);
+				SetName(shield, nome);
 			endif
 		endif
 	endif
@@ -584,6 +591,10 @@ function WearDownWeapon(attacker, weapon)
 				else
 					weapon.hp := weaponhp;
 				endif
+				var nome := weapon.name;
+				SetName(weapon, nome + " -");
+				sleepms(30);
+				SetName(weapon, nome);
 			endif
 			return 1;
 		endif
