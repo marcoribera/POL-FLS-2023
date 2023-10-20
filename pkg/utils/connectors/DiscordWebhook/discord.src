@@ -34,7 +34,10 @@ elseif (tipo == "pvp")
 	var message := "**PVP** -> *"+name+"* conta ["+acct_name+"] derrubou "+boss_name+" conta ["+item+"] na regiao "+region+", coordenadas: "+coords ;
 	var outbound := PresetDiscordMessage( message);
 elseif (tipo == "thuriao")
-	var message := "**THURIAO** -> *"+name+"* conta ["+acct_name+"] derrubou "+boss_name+" na regiao "+region+", coordenadas: "+coords ;
+	var message := "**THURIAO** -> *"+name+"* conta ["+acct_name+"] peidou para "+boss_name+" na regiao "+region+", coordenadas: "+coords ;
+	var outbound := PresetDiscordMessage( message);
+elseif (tipo == "morreu")
+	var message := "**MORREU** -> *"+name+"* conta ["+acct_name+"] matou "+boss_name+" na regiao "+region+", coordenadas: "+coords ;
 	var outbound := PresetDiscordMessage( message);
 endif
 	//if(outbound == error)

@@ -393,7 +393,7 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 	//Testa se é possivel ganhar skill com o NPC alvo
 	if (defender.npctemplate && attacker.connected)
 		//se a skill do atacante for maior que a do defender +10, nao sobe
-		var skillDefender := cint(AP_GetSkill(defender,defender.weapon.attribute)) + 10;
+		var skillDefender := cint(AP_GetSkill(defender,defender.weapon.attribute));
 		var skillAttacker := cint(AP_GetSkill(attacker, attacker.weapon.attribute));
 		if(TemHabilidade(attacker, "Maestria de Devastacao"))
 			if(GetObjProperty(attacker.weapon, "swordmage") == attacker.serial)
@@ -402,15 +402,15 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 		endif
 		if(TemHabilidade(defender, "Maestria de Devastacao"))
 			if(GetObjProperty(defender.weapon, "swordmage") == defender.serial)
-			skillDefender := cint(AP_GetSkill(defender,MELEECOMBAT1H)) + 10;
+			skillDefender := cint(AP_GetSkill(defender,MELEECOMBAT1H));
 			endif
 		endif
 
         //Esse é o IF que trata o caso de alguém com skill alta tentar upar em bicho mais fraco
-		/*if ( skillDefender - 10 < skillAttacker )
+		if ( skillDefender + 10 < skillAttacker )
 			//printtextabove(attacker, "return " + skillDefender);
 			return 0;
-		endif*/
+		endif
 	endif
 
 	//Sendo o alvo um personagem jogador ou NPC com combate melhor que o atacante, permite o up de skill de combate

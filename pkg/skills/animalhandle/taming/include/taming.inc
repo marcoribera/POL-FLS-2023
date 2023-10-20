@@ -61,12 +61,15 @@ function GetNumPets(who)
 			else
 				num_tamed := num_tamed + Cint(cfg.petslot);
 			endif
-		elseif ( !pet || pet.master !=who )
+		else
 			tamed.erase(_serial_iter);
 		endif
 		sleepms(2);
 	endforeach
 
+	if(!tamed)
+		tamed := array;
+	endif
 	SetObjProperty(who, "TamedPets", tamed);
 	who.followers := num_tamed;
 	return num_tamed;
@@ -81,9 +84,7 @@ function GetNumSummons(who)
 
 	foreach serial in tamed
 		var pet := SystemFindObjectBySerial(serial);
-		if(!pet)
-			tamed.erase(_serial_iter);
-		elseif ( pet.master == who && GetObjProperty(pet, "summoned")) //se é summon
+		if ( pet.master == who && GetObjProperty(pet, "summoned")) //se é summon
 			var cfg := ReadConfigFile(":brainAI:npcdesc");
 			var npctemplate := pet.npctemplate;
 			npctemplate := npctemplate[10, len(npctemplate)-9];
@@ -93,11 +94,14 @@ function GetNumSummons(who)
 			else
 				num_tamed := num_tamed + Cint(cfg.petslot);
 			endif
-		elseif ( !pet || pet.master !=who )
+		else
 			tamed.erase(_serial_iter);
 		endif
 		sleepms(2);
 	endforeach
+	if(!tamed)
+		tamed := array;
+	endif
 	SetObjProperty(who, "SummonedPets", tamed);
 	return num_tamed;
 endfunction
@@ -106,22 +110,33 @@ endfunction
 function ErasePet(who, myserial)
 
 	var tamed := GetObjProperty(who, "TamedPets");
-	if ( !tamed )
-		return;
+	if ( tamed )
+		foreach serial in tamed
+			if ( myserial == serial )
+				MP_Unmount(who);
+				tamed.erase(_serial_iter);
+				SetObjProperty(who, "TamedPets", tamed);
+				var pet := SystemFindObjectBySerial(serial);
+				who.followers := who.followers - GetPetCost(pet);
+				break;
+			endif
+			sleepms(2);
+		endforeach
 	endif
-
-	foreach serial in tamed
-		if ( myserial == serial )
-			MP_Unmount(who);
-			tamed.erase(_serial_iter);
-			SetObjProperty(who, "TamedPets", tamed);
-			var pet := SystemFindObjectBySerial(serial);
-			who.followers := who.followers - GetPetCost(pet);
-			return;
-		endif
-		sleepms(2);
-	endforeach
-
+	tamed := GetObjProperty(who, "SummonedPets");
+	if ( tamed )
+		foreach serial in tamed
+			if ( myserial == serial )
+				MP_Unmount(who);
+				tamed.erase(_serial_iter);
+				SetObjProperty(who, "SummonedPets", tamed);
+				var pet := SystemFindObjectBySerial(serial);
+				break;
+			endif
+			sleepms(2);
+		endforeach
+	endif
+	return;
 endfunction
 
 //adiciona o serial do pet
