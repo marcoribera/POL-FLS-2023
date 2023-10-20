@@ -24,9 +24,6 @@ endprogram
 function AddItemDescMod(who, item)
 	var descmod:=GetObjProperty(item,"descmod");
 	var str := SmallRequestGump(who, "Descreva o item", 0);
-	if(descmod!=error)
-		SetObjProperty(item, "descmod", str + "<br>" + descmod);
-	else
-		SetObjProperty(item, "descmod", str + "<br>");
-	endif
+
+    SetObjProperty(item, "descmod", str + "<br>");
 endfunction
