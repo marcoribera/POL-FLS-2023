@@ -324,25 +324,25 @@ function ProcessSpeech(ev)
 			return;
 		endif
 		go("run", 0);
-	
+
 elseif ( text["todos corram"])
 		if(obediencecheck()== 0)
 			return;
 		endif
 		go("run", todos := 1);
-		
+
 	elseif ( text[name+" ande"] )
 		if(obediencecheck()== 0)
 			return;
 		endif
 		go("walk", 0);
-	
+
 elseif ( text["todos andem"])
 		if(obediencecheck()== 0)
 			return;
 		endif
 		go("walk", todos := 1);
-		
+
 	elseif ( text[name+" novo dono"] || text["todos novo dono"] )
         if(obediencecheck()== 0)
           return;
@@ -445,7 +445,7 @@ endif
 		//checkbond para ver se já tem animal fidelizado
 		var check_bond := 0;
 		var pets := GetObjProperty(owner, "TamedPets");
-		var habs := TemHabilidade(owner, "Lider do Bando") || TemHabilidade(owner, "Rei do Gado"); 
+		var habs := TemHabilidade(owner, "Lider do Bando") || TemHabilidade(owner, "Rei do Gado");
 			foreach serial in pets
 				var pet := SystemFindObjectBySerial(serial);
 			if (GetObjProperty(pet, "bond") == "fiel")
@@ -669,7 +669,12 @@ function Transfer(targ)
 		return;
 	endif
 
-	 if ( (GetNumPets(targ) + GetPetCost(me)) > GetMaxPets(targ) )
+	if(GetObjProperty(me, "summoned"))
+		me.kill();
+		return;
+	endif
+
+	if ( (GetNumPets(targ) + GetPetCost(me)) > GetMaxPets(targ) )
 		Say("*" + me.name+ " nao aceita " + targ.name + "como dono.");
 		return;
 	endif
@@ -696,7 +701,10 @@ function UnTame()
 	PrintTextAbovePrivate(me, "*"+me.name+" pode viver livre novamente.*", me.master);
 	ErasePet(me.master, me.serial);
 	me.SetMaster(0);
-
+	if(GetObjProperty(me, "summoned"))
+		me.kill();
+		return;
+	endif
 	var orig_script := GetObjProperty(me, "script");
 
 	if ( !orig_script )
@@ -997,7 +1005,7 @@ function Go(forma, todos)
 	data.+type := forma;
 	following := 0;
 	print("todos eh "+todos);
-	
+
 	if( todos == 1 )
 		AllCommand(GO_LOC_CMD, data);
 	else

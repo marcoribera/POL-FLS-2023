@@ -54,7 +54,7 @@ program summontotem(params)
 
 	if (espirito)
 		SendSysMessageEx(who, "Voce teve sucesso em invocar a criatura.", SSM_INFO);
-		AddPet(who, espirito.serial);
+		//AddPet(who, espirito.serial);
 	else
 		SendSysMessageEx(who, "Voce falhou em invocar a criatura.", SSM_FAIL);
 		return;
@@ -83,9 +83,6 @@ program summontotem(params)
 	endif
 
 	TS_StartTimer(espirito, "summon", duracao );
-	var summoned := GetObjProperty(who, "SummonedPets");
-	summoned.append(espirito);
-	SetObjProperty(who, "SummonedPets",summoned);
 	return 1;
 
 endprogram

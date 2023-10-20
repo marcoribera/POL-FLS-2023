@@ -5,7 +5,11 @@ function summon(template, targ,  mage)
 	undead.SetMaster(mage);
 
 	var summons := GetObjProperty(mage, "SummonedPets");
+	if(!summons)
+		summons := array;
+	endif
 	summons.append(undead.serial);
+
 	SetObjProperty(mage, "SummonedPets", summons);
 
 	SetObjProperty(undead, "GuardKill", 1);
