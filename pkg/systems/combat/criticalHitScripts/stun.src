@@ -23,7 +23,7 @@ program HitScript(params)
 	if (dmg < 5)
 		dmg := 5;
 	endif
-	
+
 	var pet_instinto := Cstr(Getobjproperty(attacker, "Critic"));
 	//print("instinto eh "+pet_instinto);
 	if (pet_instinto == "Bote")

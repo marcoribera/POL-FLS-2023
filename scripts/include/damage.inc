@@ -463,12 +463,10 @@ function CalculateTotalDamageBonus(dmg, who, defender)
     endif
 
     if (TemHabilidade(who, "Artista Marcial") )
-		var monk_weapons := array{ 0x0df0, 0x13f9, 0x0e8a, 0x0e81};
+		var monk_weapons := array{ 0x0df0, 0x13f9, 0x0e8a, 0x0e81, 0x1F020};
         var isArmor := array{"ArmaduraPesada", "ArmaduraMedia", "ArmaduraLeve"};
-        if (who.weapon.objtype == 0x1F020)
-            other := other + 2.0;
-		elseif ( who.weapon.objtype in monk_weapons)
-			other := other + 1.5;
+    	if ( who.weapon.objtype in monk_weapons)
+			other := other + 2.0;
 		endif
         var i_config := ReadConfigFile(":*:itemdesc");
 		var this_item := "";
