@@ -9,26 +9,38 @@ include "include/client";
 
 program equipweapon(who, item)
 
-var descmod_item:=GetObjProperty(item,"descmod");
-var descmod:={};
+	var descmod_item:=GetObjProperty(item,"descmod");
+	var descmod:=array;
+	var aux:=array;
+
+	descmod:=GetObjProperty(who,"descmod");
 
 	if(descmod_item != error)
-		if(GetObjProperty(who,"descmod") == error)
-			descmod.append(descmod_item);
-			SetObjProperty(who,"descmod",descmod);
-		else
-			descmod:=GetObjProperty(who,"descmod");
-			if (descmod_item in descmod)
+		var add := 1;
+		if(descmod != error)
+			foreach desc in descmod
+				if (descmod_item == desc)
+					add := 0;
+				endif
+			endforeach
+			if(add)
+				aux := descmod;
+				aux.append(descmod_item);
 			else
-				descmod.append(descmod_item);
-				SetObjProperty(who,"descmod",descmod);
+				aux := descmod;
 			endif
+		else
+			aux.append(descmod_item);
 		endif
-
-		var ori_name:=who.name;
-		SetName(who, " ");
-		SetName(who, ori_name);
 	endif
+	if(aux.size() == 0)
+		EraseObjProperty(who,"descmod");
+	else
+		SetObjProperty(who,"descmod",aux);
+	endif
+	var ori_name:=who.name;
+	SetName(who, " ");
+	SetName(who, ori_name);
 
     var dual_weapons := Array{0x27a9, 0x27ab, 0x8fd, 0x27af};
     var left_hand := GetEquipmentByLayer(who, LAYER_HAND2);
