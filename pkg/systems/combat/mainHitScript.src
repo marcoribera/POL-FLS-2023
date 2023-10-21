@@ -392,7 +392,6 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 	endif
 	//Testa se é possivel ganhar skill com o NPC alvo
 	if (defender.npctemplate && attacker.connected)
-		//se a skill do atacante for maior que a do defender +10, nao sobe
 		var skillDefender := cint(AP_GetSkill(defender,defender.weapon.attribute));
 		var skillAttacker := cint(AP_GetSkill(attacker, attacker.weapon.attribute));
 		if(TemHabilidade(attacker, "Maestria de Devastacao"))
@@ -405,10 +404,8 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 			skillDefender := cint(AP_GetSkill(defender,MELEECOMBAT1H));
 			endif
 		endif
-
-        //Esse é o IF que trata o caso de alguém com skill alta tentar upar em bicho mais fraco
-		if ( skillDefender + 10 < skillAttacker )
-			//printtextabove(attacker, "return " + skillDefender);
+		//se a skill do atacante for maior que a do defender +10, nao sobe
+		if ((skillDefender + 10)  < skillAttacker )
 			return 0;
 		endif
 	endif
