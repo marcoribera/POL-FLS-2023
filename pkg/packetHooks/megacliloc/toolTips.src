@@ -372,22 +372,22 @@ exported function MegaCliloc( who, byref packet )
 		endif
 
 		desc := GetObjProperty(item, "description");
+		if(desc == error)
+			 desc := "";
+		endif
 
 		//EXIBE SE TEM PROPRIEDADE MAGICA
 		if (GetObjProperty(item,"magic"))
-			xDesc := xDesc + roxo + "Mâgico<br>";
+			xDesc := xDesc + roxo + "Magico<br>";
 		endif
 
 		var descmods := GetObjProperty(item, "descmod");
 
 		//JUNTA AS DESCRIÇÕES DO DOS PROPS DO PERSONAGEM
-		if((descmods!=error) && (desc == error))
-			 desc := descmods;
-		endif
 
 		if(descmods != error)
 			foreach descmod in descmods
-				desc:=desc + descmod ;
+				desc := desc + descmod;
 			endforeach
 		endif
 
