@@ -187,11 +187,12 @@ program core_npcDeath(params)
 		var fin := SystemFindObjectBySerial(char_name, SYSFIND_SEARCH_OFFLINE_MOBILES);
 		var nome := GetObjProperty(fin, "nome_inicial");
 		var coords := GetObjProperty(corpse, "anchor");
+		var trueBoss := GetObjProperty(corpse, "true_boss");
 		if ( isBoss(corpse) )
-			if (fin.cmdlevel <= 0 && GetObjProperty(corpse, "true_boss") == 1)//Para acionar o DiscordWebhook
+			if (fin.cmdlevel <= 0 && trueBoss == 1)//Para acionar o DiscordWebhook
 				var tipo := "boss"; 
 				Start_script (":DiscordWebhook:discord", {tipo, nome, fin.acctname, corpse_name, region, coords, 0});
-			elseif (fin.cmdlevel == 4 && GetObjProperty(corpse, "true_boss") == 1)
+			elseif (fin.cmdlevel == 4 && trueBoss == 1)
 				var finOwner := Cint(GetObjProperty(fin, "owner"));
 				var fin_owner := SystemFindObjectBySerial(finOwner);
 				if (!finOwner)
