@@ -45,9 +45,22 @@ program magia(who, spellname)
             endforeach
 		endif
 	endforeach
+    foreach item in ListEquippedItems(who)
+        if (item.objtype == 24905)
+            var spells := GetObjProperty(item, "spells");
+            foreach s in spells
+                if ( s == id)
+                    spellbook := 1;
+                    booktype := GetBookType(item);
+                    break;
+                endif
+            endforeach
+            break;
+        endif
+    endforeach
 
 	if ( !spellbook)
-		SendSysMessageEx(who, "Voce nao possui a magia " + spellname + " nos seu grimorio.", SSM_FAIL);
+		SendSysMessageEx(who, "Voce nao possui a magia " + spellname + " no seu totem.", SSM_FAIL);
 		return;
 	endif
 
