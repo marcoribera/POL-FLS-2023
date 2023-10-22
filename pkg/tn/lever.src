@@ -3,19 +3,16 @@ use os;
 use cfgfile;
 use util;
 use vitals;
-use datafile;
 
 include "include/client";
 include ":attributes:attributes";
-include ":gumps:requestGump";
+include ":gumps:requestgump";
 include ":gumps:gumps";
 include ":tn:tngumps";
 include "include/damage";
 include ":timedscripts:timedScripts";
 include ":traps:traps";
-include ":levers:lever";
-include ":tn:boss";
-include ":combat:hitscripts";
+include ":tn:lever";
 
 function ConstructGump(item)
    var opts := item.GetLeverOpts();
@@ -40,12 +37,12 @@ function ConstructGump(item)
       GFTextLine(gump, 45, y, _ifElse(opts.moveitems, 520, 500), "Mover objetos");
       GFAddButton(gump, 25, y+2, 2117, 2118, GF_CLOSE_BTN, 101);
       y += 20;
-      GFTextLine(gump, 45, y, _ifElse(opts.teleport_to, 520, 500), "Teleportar usuário");
+      GFTextLine(gump, 45, y, _ifElse(opts.teleport_to, 520, 500), "Spawnar NPC");
       GFAddButton(gump, 25, y+2, 2117, 2118, GF_CLOSE_BTN, 5);
    endif
-
+   
    y += 20;
-   GFTextLine(gump, 45, y, _ifElse(opts.graphicarrays, 520, 500), "Mudar gráfico da alavanca");
+   GFTextLine(gump, 45, y, _ifElse(opts.graphicarrays, 520, 500), "Mudar grafico da alavanca");
    GFAddButton(gump, 25, y+2, 2117, 2118, GF_PAGE_BTN, 2);
    y += 20;
    GFTextLine(gump, 45, y, _ifElse(GetObjProperty(item, "HaveTrap"), 520, 500), "Adicionar armadilhas");
@@ -70,18 +67,12 @@ function ConstructGump(item)
    y += 20;
    GFTextLine(gump, 45, y, _ifElse(opts.walkon, 520, 500), "Ativar ao andar por cima");
    GFAddButton(gump, 25, y+2, 2117, 2118, GF_CLOSE_BTN, 7);
-   
-   y += 20;
-   GFTextLine(gump, 45, y, _ifElse(opts.spawn_boss, 520, 500), "Spawn Boss");
-   GFAddButton(gump, 25, y+2, 2117, 2118, GF_CLOSE_BTN, 55);
-
    y += 20;
    GFTextLine(gump, 45, y, _ifElse(GetObjProperty(item, "status") == "on", 520, 500), "Resetar agora");
    GFAddButton(gump, 25, y+2, 2117, 2118, GF_CLOSE_BTN, 8);
 
-
    GFPage(gump, 2);
-   GFTextLine(gump, 145, 50, 900, "Escolha o gráfico da alavanca");
+   GFTextLine(gump, 145, 50, 900, "Escolha o grafico da alavanca");
 
    GFTilePic(gump, 105, 120, 4237);
    GFAddButton(gump, 85, 130, 210, 211, GF_CLOSE_BTN, 20);
@@ -93,16 +84,16 @@ function ConstructGump(item)
    GFAddButton(gump, 345, 270, 210, 211, GF_CLOSE_BTN, 23);
 
    GFAddButton(gump, 45, 350, 2453, 2454, GF_PAGE_BTN, 1);
-
+   
    GFPage(gump, 3);
    GFPage(gump, 4);
    GFTextLine(gump, 145, 50, 900, "Escolha a armadilha da alavanca");
-
+   
    GFTilePic(gump, 105, 120, 4347);
    GFTilePic(gump, 355, 120, 4414);
    GFTilePic(gump, 105, 270, 4401);
    GFTilePic(gump, 355, 270, 8128);
-
+   
    GFAddButton(gump, 85, 130, 210, 211, GF_CLOSE_BTN, 15);
    GFAddButton(gump, 345, 130, 210, 211, GF_CLOSE_BTN, 16);
    GFAddButton(gump, 85, 270, 210, 211, GF_CLOSE_BTN, 17);
@@ -113,13 +104,6 @@ function ConstructGump(item)
 endfunction
 
 program lever(who, item)
-	var cfg := GetObjProperty(item,"configboss");
-		sendsysmessage(who, ""+cfg);
-		if  (cfg == error)
-		cfg := struct;
-		cfg.+boss := struct;
-	endif
-	
    _resolveParams(who, item);
    if ( !ReserveItem(item) || GetObjProperty(item, "#inuse") == 1 )
       SendSysMessage(who, "O item esta em uso.");
@@ -142,20 +126,20 @@ program lever(who, item)
          7: togglewalkon(who, item);
          8: reset(item, 1);
          9: setPowerEvent(who, item);
-
-         15:
+         
+         15: 
             SetObjProperty(item, "HaveTrap", "Explosion");
             AddTrap(item, "Explosion", trapstrength);
-         16:
+         16: 
             SetObjProperty(item, "HaveTrap", "PoisonGas");
             AddTrap(item, "PoisonGas", trapstrength);
-         17:
+         17: 
             SetObjProperty(item, "HaveTrap", "Needle");
             AddTrap(item, "Needle", trapstrength);
-         18:
+         18: 
             SetObjProperty(item, "HaveTrap", "Magic");
             AddTrap(item, "Magic", trapstrength);
-
+         
          20: item.graphic := 0x108e;           // graphic 1
             item.name    := "alavanca";
          21: item.graphic := 0x1095;           // graphic 2
@@ -165,7 +149,6 @@ program lever(who, item)
          23: item.graphic := 0x1092;           // graphic 4
             item.name    := "interruptor";
          24: setprp(who, item);           // setobjproperty()
-		 55: spawn_boss (who, item, cfg);
          98: changegraphic(who, item);
          97: setOnofftext(who, item);
          99: normalusage(who, item);           // use item like normal
@@ -182,7 +165,7 @@ endprogram
 function setMoveObject(who, item)
    var opts := item.GetLeverOpts();
 
-   SendSysMessageEx(who, "Escolha o que você deseja mover.");
+   SendSysMessageEx(who, "Escolha o que voce deseja mover.");
    var trg;
    var newarray := array{};
    while(1 && who.connected)
@@ -200,8 +183,8 @@ function setMoveObject(who, item)
    if (!opts.movetime) opts.movetime := 15; endif
 
    var input_list := array{};
-   input_list.append(struct{ "title" := "Quantas vezes será repetido o movimento?", "marked" := ""+cint(opts.movetime) });
-   input_list.append(struct{ "title" := "Qual posição será movida? (+x +y +z)", "marked" := " ".join(opts.movefinal) });
+   input_list.append(struct{ "title" := "Quantas vezes sera repetido o movimento?", "marked" := ""+cint(opts.movetime) });
+   input_list.append(struct{ "title" := "Qual posicaoo sera movida? (+x +y +z)", "marked" := " ".join(opts.movefinal) });
    var output := QuestionsGump(who, input_list);
    if (!output)
       return;
@@ -219,8 +202,8 @@ endfunction
 
 function setHiding(who, item)
 	var dif := Cint(RadioGump(who, 0, 0, "Qual o level do interruptor?", array{"1", "2", "3", "4", "5", "Remover"}, 0, 1));
-   if (!dif)
-      EraseObjProperty(item, "level");
+   if (!dif) 
+      EraseObjProperty(item, "level"); 
       item.invisible := 0;
       return;
    endif
@@ -231,10 +214,10 @@ endfunction
 
 function setPowerEvent(who, item)
    var powerword := GetObjProperty(item, "powerword");
-   if (!powerword) powerword := ""; endif
+   //if (!powerword) powerword := ""; endif
 
    var input_list := array{};
-   input_list.append(struct{ "title" := "Qual frase irá revelar a alavanca? (em branco para remover)", "marked" := powerword });
+   input_list.append(struct{ "title" := "Qual frase ira revelar a alavanca? (em branco para remover)", "marked" := powerword });
    var output := QuestionsGump(who, input_list);
    if (!output)
       return;
@@ -281,14 +264,14 @@ endfunction
 function setOpenDoor(who, item)
    var opts := item.GetLeverOpts();
    var newarray := array{};
-   SendSysMessageEx(who,"Escolha a porta que você deseja linkar com esta alavanca. Esc para cancelar");
+   SendSysMessageEx(who,"Escolha a porta que voce deseja linkar com esta alavanca. Esc para cancelar");
    var trg;
    while(1)
          trg := Target(who);
          if(!trg)
             break;
          elseif (!trg.isDoor())
-            SendSysMessageEx(who, "Isso não é uma porta", SSM_FAIL);
+            SendSysMessageEx(who, "Isso nao e uma porta", SSM_FAIL);
             continue;
          endif
          newarray.append(trg.serial);
@@ -315,11 +298,11 @@ endfunction
 
 function setOnofftext(who, item)
    var opts := item.GetLeverOpts();
-
+   
    if (!opts.ontext) opts.ontext := ""; endif
 
    var input_list := array{};
-   input_list.append(struct{ "title" := "Qual frase será enviada quando alavanca for ativada?", "marked" := opts.ontext });
+   input_list.append(struct{ "title" := "Qual frase sera enviada quando alavanca for ativada?", "marked" := opts.ontext });
    var output := QuestionsGump(who, input_list);
    if (!output)
       return;
@@ -338,21 +321,34 @@ endfunction
 function linkteleport(who, item)
    var opts := item.GetLeverOpts();
 
+   var input_list := array{};
+   input_list.append(struct{ "title" := "Qual NPC sera spawnado?", "marked" := opts.teleport_to });
+   var output := QuestionsGump(who, input_list);
+   if (!output)
+      return;
+   endif
+
+   if (!output[1])
+      opts.-"teleport_to";
+   else
+      opts.teleport_to := output[1];
+   endif
+
    item.setLeverOpts(opts);
-   SendSysMessageEx(who,"O teleporte foi adicionado a alavanca");
+   SendSysMessageEx(who,"O monstro sera invocado quando ativado");
 endfunction
 
 function doorstatus(who, item)
    var opts := item.GetLeverOpts();
    var newarray := array{};
-   SendSysMessageEx(who,"Escolha a porta que você deseja linkar com esta alavanca. Esc para cancelar", SSM_REQUEST);
+   SendSysMessageEx(who,"Escolha a porta que voce deseja linkar com esta alavanca. Esc para cancelar", SSM_REQUEST);
    var trg;
    while(1)
       trg := Target(who);
       if(!trg)
          break;
       elseif (!trg.isDoor())
-         SendSysMessageEx(who, "Isso não é uma porta", SSM_FAIL);
+         SendSysMessageEx(who, "Isso nao e uma porta", SSM_FAIL);
          continue;
       endif
       newarray.append(trg.serial);
@@ -369,7 +365,7 @@ endfunction
 function bindlights(who, item)
    var opts := item.GetLeverOpts();
    var newarray := array{};
-   SendSysMessageEx(who,"Escolha as luzes que você deseja linkar com esta alavanca. Esc para cancelar", SSM_REQUEST);
+   SendSysMessageEx(who,"Escolha as luzes que voce deseja linkar com esta alavanca. Esc para cancelar", SSM_REQUEST);
    var trg;
    while(1)
       trg := Target(who);
@@ -391,8 +387,8 @@ endfunction
 
 function bindlevers(who, item)
    var opts := item.GetLeverOpts();
-   SendSysMessageEx(who,"Escolha as alavancas que você deseja linkar com esta alavanca. Esc para cancelar", SSM_REQUEST);
-   SendSysMessageEx(who,"As alavancas escolhidas perderão suas proprieades", SSM_INFO);
+   SendSysMessageEx(who,"Escolha as alavancas que voce deseja linkar com esta alavanca. Esc para cancelar", SSM_REQUEST);
+   SendSysMessageEx(who,"As alavancas escolhidas perderao suas proprieades e funcionarao", SSM_INFO);
    SendSysMessageEx(who,"em conjunto com esta alavanca", SSM_INFO);
    var trg;
    var newarray := array{};
@@ -401,7 +397,7 @@ function bindlevers(who, item)
       if(!trg)
          break;
       elseif (trg.objtype != 0x108c)
-         SendSysMessageEx(who,"Isso não é uma alavanca.");
+         SendSysMessageEx(who,"Isso nao e uma alavanca.");
          continue;
       endif
 
@@ -415,8 +411,8 @@ function bindlevers(who, item)
 
    opts.linked_to := newarray;
    var input_list := array{};
-   input_list.append(struct{ "title" := "Todas as alavancas devem ser acionadas?", "marked" := cint(opts.all_levers)+1, "radio" := array{"Não", "Sim"} });
-   input_list.append(struct{ "title" := "Precisam ordem para serem acionadas (random)?", "marked" := cint(opts.all_levers_order)+1, "radio" := array{"Não", "Sim"} });
+   input_list.append(struct{ "title" := "Todas as alavancas devem ser acionadas?", "marked" := cint(opts.all_levers)+1, "radio" := array{"N�o", "Sim"} });
+   input_list.append(struct{ "title" := "Precisam ordem para serem acionadas (random)?", "marked" := cint(opts.all_levers_order)+1, "radio" := array{"N�o", "Sim"} });
    var output := QuestionsGump(who, input_list);
    if (!output)
       return;
@@ -466,32 +462,16 @@ endfunction
 function togglewalkon(who, item)
    var opts := item.GetLeverOpts();
    if (opts.walkon)
-      SendSysMessageEx(who, "O item não será mais ativado ao andar por cima", SSM_FAIL);
+      item.invisible:=0;
+      item.graphic:= 0x108e;
+      SendSysMessageEx(who, "O item nao sera mais ativado ao andar por cima", SSM_FAIL);
       opts.-"walkon";
    else
-      SendSysMessageEx(who, "O item será mais ativado ao andar por cima", SSM_INFO);
+      item.graphic:= 4010;
+      SendSysMessageEx(who, "O item sera ativado ao andar por cima", SSM_INFO);
+      item.movable := 0;
+      item.invisible:=1;
       opts.walkon := 1;
    endif
-   item.setLeverOpts(opts);
-endfunction
-
-function spawn_boss(who, item, cfg)
-   var opts := item.GetLeverOpts();
-   var loc := RequestGump(who, "Escreva: nada  para aparecer onde a alavanca esta (Mude o graphic da alavanca para um passable!)", "OU Digite o x y z onde quer q o boss apareça: ", "", 1);
-       loc := splitwords(loc);
-   if (loc[1] == "nada")
-		SetObjProperty(item, "loc", 1);
-	else
-		var x := SetObjProperty(item, "x", loc[1]);
-		var y := SetObjProperty(item, "y", loc[2]);
-		var z := SetObjProperty(item, "z", loc[3]);
-   endif
-CreateBossStructGump(who, cfg.boss);
-	var erro := setobjproperty(item, "configboss", cfg);
-	
-	
-	SendSysmessage(who, "Configurado." + erro);
-
-opts.spawn_boss := 1;
    item.setLeverOpts(opts);
 endfunction

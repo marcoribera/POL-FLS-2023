@@ -2,8 +2,7 @@ const ONLY_ON := 0x11;
 
 include ":traps:traps";
 include "include/arrays";
-include ":tn:boss";
-include ":combat:hitscripts";
+include ":tn:cooldown";
 
 function ChangeLeverStatus(la, only_on_levers := 0)
    if (typeof(la) != "Array")
@@ -123,6 +122,11 @@ function CheckAllLevers(lever, lever_list, opts)
 endfunction
 
 function normalusage(who, item)
+
+   if (GetObjProperty(item, "trap_inativa"))
+      return 1;
+   endif
+
    if (GetObjProperty(item, "#inuse"))
       return;
    endif
@@ -140,9 +144,9 @@ function normalusage(who, item)
    endif
 
    if (status == "off")
-      PrintTextAbove(who, "*Ativa*");
+      PrintTextAbovePrivate(who, "*Ativa*", who);
    else
-      PrintTextAbove(who, "*Desativa*");
+      PrintTextAbovePrivate(who, "*Desativa*", who);
    endif
 
    var lever_list := array{item.serial};
@@ -162,7 +166,7 @@ function normalusage(who, item)
 
    if (opts.all_levers)
       if (!CheckAllLevers(item, lever_list, opts)) 
-         SendSysMessageEx(who, "Você não percebe nada de diferente", SSM_FAIL);
+         SendSysMessageEx(who, "Voce nao percebe nada de diferente", SSM_FAIL);
          if (RunTraps(item, who)) //se estiver errado, vai cair no outro runtraps
             SetObjProperty(item, "trapSpoted", 1);
             PrintText(who, "*dispara armadilha*"); 
@@ -174,18 +178,20 @@ function normalusage(who, item)
       ChangeLeverStatus(lever_list);
    endif
    
-   if (RunTraps(item, who))
-      SetObjProperty(item, "trapSpoted", 1);
-      PrintText(who, "*dispara armadilha*");
-      ChangeLeverStatus(lever_list);
+   if ( GetObjProperty(item, "HaveTrap"))
+         (RunTraps(item, who));
+         SetObjProperty(item, "trapSpoted", 1);
+         PrintText(who, "*dispara armadilha*");
+         ChangeLeverStatus(lever_list);
       return;
+      
    endif
-
    var msg := opts.ontext;
    if(!msg)
-      msg := "Você ouve algo se movendo...";
+      msg := "Voce ouve algo se movendo...";
    endif
-   SendSysMessageEx(who, msg, SSM_INFO);
+   //SendSysMessageEx(who, msg, SSM_INFO);
+   PrintText(who, msg);
 
    if (opts.lights)
       lightswitch(item, opts);
@@ -204,34 +210,10 @@ function normalusage(who, item)
       moveObjects(item, opts);
    endif
    if (opts.teleport_to)
-      teleporter(item, opts);
+      var monstro := opts.teleport_to;
+      var npc := CreateNPCFromTemplate(monstro, item.x, item.y, item.z, 0, item.realm);
+      SetObjProperty(item, "trap_inativa", 1);
    endif
-	if (opts.spawn_boss)
-		if (status == "off")
-			spawnBoss(item, opts);
-		else
-		  var boss :=  SystemFindObjectBySerial( GetObjProperty(item, "champ") );
-			ApplyDamage( boss, 20000);
-			EraseObjProperty(item, "champ");
-		endif
-	endif
-endfunction
-
-function spawnBoss(item, opts)
-   SetObjProperty(item, "#inuse", 1);
-   Detach();
- var cfg := GetObjProperty(item, "configboss");
- var creature;
-		if (GetObjProperty(item, "loc") ==1 )
-			creature := Createboss(cfg.boss, item.x, item.y, item.z, item.realm);
-		else
-			var x := GetObjProperty(item, "x");
-			var y := GetObjProperty(item, "y");
-			var z := GetObjProperty(item, "z");
-			creature := Createboss(cfg.boss, cint(x), cint(y), cint(z), item.realm);
-			endif
- SetObjProperty(item, "champ", creature.serial);
- EraseObjProperty(item, "#inuse");
 endfunction
 
 function changegraphiclever(item, opts)
@@ -387,9 +369,10 @@ function reset(item, force_reset := 0)
    if (opts.moveitems)
       moveObjects(item, opts);
    endif
-//   	if (opts.spawn_boss)
-	//	spawnBoss(item, opts);
-	//endif
+
+   if (GetObjProperty(item, "trap_inativa"))
+      EraseObjProperty(item, "trap_inativa");
+   endif
 
    SetRandomOrder(item);
 endfunction

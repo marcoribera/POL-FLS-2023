@@ -149,8 +149,8 @@ if(killer.acctname)
 	var tipo := "pvp";
 	var coords := {corpse.x, corpse.y};
 	var nome := GetObjProperty(killer, "nome_inicial");
-
-	Start_script(":DiscordWebhook:discord", {tipo, nome, killer.acctname, ghost.name, region, coords, ghost.acctname});
+	var nome_ghost := GetObjProperty(ghost, "nome_inicial"); 
+	Start_script(":DiscordWebhook:discord", {tipo, nome, killer.acctname, nome_ghost, region, coords, ghost.acctname});
 endif
 	SendSysMessage(ghost, "Voce desmaiou.");
 
