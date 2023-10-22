@@ -20,7 +20,8 @@ program SpellScript(params)
 		return;
 	endif
 
-	var lvl := cdbl(AP_GetSkill(who, MAGICLORE)/100);
+	var lvl := cdbl(AP_GetSkill(who, MAGICLORE) * 0.4 / 100);
+
 
 	/*
 	if (lvl > 0.7)
