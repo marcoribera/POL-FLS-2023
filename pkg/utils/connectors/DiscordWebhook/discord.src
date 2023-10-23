@@ -37,7 +37,10 @@ elseif (tipo == "thuriao")
 	var message := "**THURIAO** -> *"+name+"* conta ["+acct_name+"] peidou para "+boss_name+" na regiao "+region+", coordenadas: "+coords ;
 	var outbound := PresetDiscordMessage( message);
 elseif (tipo == "morreu")
-	var message := "**MORREU** -> *"+name+"* conta ["+acct_name+"] matou "+boss_name+" na regiao "+region+", coordenadas: "+coords ;
+	var message := "**MORREU** -> *"+name+"* conta ["+acct_name+"] morreu em combate com "+boss_name+" na regiao "+region+", coordenadas: "+coords ;
+	var outbound := PresetDiscordMessage( message);
+elseif (tipo == "pk")
+	var message := "**PK** -> *"+name+"* conta ["+acct_name+"] decepou a cabeça de "+boss_name+" conta ["+item+"] na regiao "+region+", coordenadas: "+coords ;
 	var outbound := PresetDiscordMessage( message);
 endif
 	//if(outbound == error)

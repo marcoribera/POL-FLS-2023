@@ -88,10 +88,10 @@ function SysBook_ParseZuluCfgElem(elem_name, byref cfg_file)
 	var book_info := struct;
 	book_info.+Author := cfg_elem.Author;
 	book_info.+Title := cfg_elem.Title;
-	book_info.+NumPages := CInt(cfg_elem.Pages);
+	book_info.+NumPages := 50;
 	book_info.+Contents := array;
 	
-	var num_pages := CInt(cfg_elem.Pages);
+	var num_pages := 50;
 	var page_num := 1;
 	for ( page_num; page_num <= num_pages; page_num:=page_num+1 )
 		var line_num := 1;
