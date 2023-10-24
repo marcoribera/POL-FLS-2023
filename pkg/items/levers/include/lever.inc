@@ -221,15 +221,26 @@ function spawnBoss(item, opts)
    SetObjProperty(item, "#inuse", 1);
    Detach();
  var cfg := GetObjProperty(item, "configboss");
+ var text_above := GetObjProperty(item, "txtabove");
  var creature;
 		if (GetObjProperty(item, "loc") ==1 )
 			creature := Createboss(cfg.boss, item.x, item.y, item.z, item.realm);
+			sleepms(20);
+			if (!text_above)
+			else
+			PrintTextAbove(creature,""+text_above);
+			endif
 		else
 			var x := GetObjProperty(item, "x");
 			var y := GetObjProperty(item, "y");
 			var z := GetObjProperty(item, "z");
 			creature := Createboss(cfg.boss, cint(x), cint(y), cint(z), item.realm);
+			sleepms(20);
+			if (!text_above)
+			else
+				PrintTextAbove(creature,""+text_above);
 			endif
+		endif
  SetObjProperty(item, "champ", creature.serial);
  EraseObjProperty(item, "#inuse");
 endfunction

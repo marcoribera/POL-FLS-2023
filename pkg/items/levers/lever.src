@@ -486,6 +486,12 @@ function spawn_boss(who, item, cfg)
 		var y := SetObjProperty(item, "y", loc[2]);
 		var z := SetObjProperty(item, "z", loc[3]);
    endif
+ 
+  var loc2 := RequestGump(who, "Escreva o que deseja que apareça em textabove na criatura, se nao quer deixe em branco");
+  if (loc2 == "")
+  else
+  SetObjProperty(item, "txtabove", loc2);
+  endif
 CreateBossStructGump(who, cfg.boss);
 	var erro := setobjproperty(item, "configboss", cfg);
 	

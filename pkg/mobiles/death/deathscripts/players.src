@@ -20,7 +20,7 @@ program death(params)
 
 	var corpse := params[1];
 	var ghost := params[2];
-
+	Setobjproperty(corpse, "account", ghost.acctname);
 		//sendsysmessage(ghost, " " + corpse.x + " " + corpse.y);
 
 	if (GetObjProperty(ghost, "forjoumorte") == 1)
@@ -125,8 +125,8 @@ program death(params)
 				var region := GetRegionName(corpse);
 				var tipo := "morreu";
 				var coords := {corpse.x, corpse.y};
-				var nome := GetObjProperty(killer, "nome_inicial");
-				Start_script(":DiscordWebhook:discord", {tipo, nome, killer.acctname, ghost.name, region, coords});			
+				var nome := GetObjProperty(ghost, "nome_inicial");
+				Start_script(":DiscordWebhook:discord", {tipo, nome, ghost.acctname, killer.name, region, coords});			
 				SetObjProperty(corpse, "morto", 1);
 				SetObjProperty(ghost, "morto", 1);
 				SetObjProperty(corpse, "deathtimer", polcore().systime);
@@ -219,7 +219,6 @@ program death(params)
 
 //	RessPlayer(ghost, corpse);
 	KataWakeUp(ghost, corpse);
-
 	return 1;
 endprogram
 
