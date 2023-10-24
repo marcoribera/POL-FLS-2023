@@ -229,6 +229,15 @@ function GFCraftNewPage(who, byref gump, skill_config, MenuName, skill_name)
         			continue;
       			endif
       			itemdesc := lower(itemdesc);
+      			if(skill_name =="Alchemy")
+      				var config := ReadConfigFile(":*:itemdesc");
+        			config := config[objtype];
+        			if(lower(config.desc) == "pocao")
+      					itemdesc := config.Type;
+      				elseif(lower(config.desc) == "tinta")
+      					itemdesc := config.name;
+      				endif
+      			endif
 
 			if (craft_config[objtype].difficulty <= (AP_GetSkill(who, craft_skill) + 15))
 				if(ItemY >= 243)
