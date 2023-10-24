@@ -14,6 +14,7 @@ include ":tn:cooldown";
 include ":charactercreation:habilidades";
 include ":attributes:advanceCheck";
 include ":charactercreation:resists";
+include ":charactercreation:createchar";
 
 program death(params)
 
@@ -136,23 +137,25 @@ program death(params)
 					logs := dias;
 				endif
 				FindAccount(ghost.acctname).setprop("mortelog", logs);
+                var skill_heir := get_heir_skills(ghost);
+                FindAccount(ghost.acctname).setprop("herdeiro", skill_heir);
 				SendSysMessage(ghost, "Seu proximo char tera " + dias + "adicionados ao seu createdate");
-
+                
 				sleep(5);
 				return 1;
 			endif
 		endif
 	endif
 
-if(killer.acctname)
-	var region := GetRegionName(corpse);
-	var tipo := "pvp";
-	var coords := {corpse.x, corpse.y};
-	var nome := GetObjProperty(killer, "nome_inicial");
-	var nome_ghost := GetObjProperty(ghost, "nome_inicial"); 
-	Start_script(":DiscordWebhook:discord", {tipo, nome, killer.acctname, nome_ghost, region, coords, ghost.acctname});
-endif
-	SendSysMessage(ghost, "Voce desmaiou.");
+    if(killer.acctname)
+        var region := GetRegionName(corpse);
+        var tipo := "pvp";
+        var coords := {corpse.x, corpse.y};
+        var nome := GetObjProperty(killer, "nome_inicial");
+        var nome_ghost := GetObjProperty(ghost, "nome_inicial"); 
+        Start_script(":DiscordWebhook:discord", {tipo, nome, killer.acctname, nome_ghost, region, coords, ghost.acctname});
+    endif
+        SendSysMessage(ghost, "Voce desmaiou.");
 
 	var pacto := PactoSepulturaCheck(ghost, corpse);
 	if (pacto == 1)
@@ -369,4 +372,40 @@ function PactoSepulturaCheck(ghost, corpse)
 	endif
 	return pacto;
 
+endfunction
+
+function get_heir_skills(who)
+    var primarias := GetPrimarias(who);
+    var chardata := GetObjProperty(who, "chardata");
+    var primarias_sum := 0;
+    foreach skill in primarias
+        primarias_sum += Cint(AP_GetTrueSkill(who, skill));
+    endforeach
+    if (chardata.kit == "Sabe-Tudo")
+        primarias_sum *= 2;
+    endif
+    var bonus_primarias := (primarias_sum - 80) / 2;
+
+    var secundarias := GetSecundarias(who);
+    var count := 0;
+    var secundarias_sum := 0;
+
+    foreach skill in secundarias
+        count++;
+        secundarias_sum += Cint(AP_GetTrueSkill(who, skill));
+    endforeach
+    var bonus_secundarias := (secundarias_sum - (count * 20)) / 2;
+
+    var terciarias := GetTerciarias(who);
+    var terciarias_sum := 0;
+    foreach skill in terciarias
+        terciarias_sum += Cint(AP_GetTrueSkill(who, skill));
+    endforeach
+    var bonus_terciarias := (terciarias_sum / 2);
+
+    var skills_bonus := struct;
+    skills_bonus.+bonus_primarias := bonus_primarias;
+    skills_bonus.+bonus_secundarias := bonus_secundarias;
+    skills_bonus.+bonus_terciarias := bonus_terciarias;
+    return skills_bonus;
 endfunction

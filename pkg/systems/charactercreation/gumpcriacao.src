@@ -1318,6 +1318,14 @@ program createchar(who)
 		SetObjProperty(who, "bonus_tempo", 1);
 	endif
 	*/
+	var heir_skills := FindAccount(who.acctname).getprop("herdeiro");
+	if (heir_skills)
+		privalue := heir_skills.bonus_primarias + 40.0;
+		secvalue := heir_skills.bonus_secundarias + 20;
+		tercvalue := heir_skills.bonus_terciarias;
+        FindAccount(who.acctname).setprop("herdado", 1);
+	endif
+    
 	foreach primaria in primarias
 		AP_setTrueSkill(who, primaria, privalue);
 	endforeach
