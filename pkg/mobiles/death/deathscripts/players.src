@@ -384,7 +384,7 @@ function get_heir_skills(who)
     if (chardata.kit == "Sabe-Tudo")
         primarias_sum *= 2;
     endif
-    var bonus_primarias := (primarias_sum - 80) / 2;
+    var bonus_primarias := (primarias_sum - 80) / 4;
 
     var secundarias := GetSecundarias(who);
     var count := 0;
@@ -394,14 +394,14 @@ function get_heir_skills(who)
         count++;
         secundarias_sum += Cint(AP_GetTrueSkill(who, skill));
     endforeach
-    var bonus_secundarias := (secundarias_sum - (count * 20)) / 2;
+    var bonus_secundarias := (secundarias_sum - (count * 20)) / 4;
 
     var terciarias := GetTerciarias(who);
     var terciarias_sum := 0;
     foreach skill in terciarias
         terciarias_sum += Cint(AP_GetTrueSkill(who, skill));
     endforeach
-    var bonus_terciarias := (terciarias_sum / 2);
+    var bonus_terciarias := (terciarias_sum / 4);
 
     var skills_bonus := struct;
     skills_bonus.+bonus_primarias := bonus_primarias;
