@@ -22,11 +22,11 @@ var who := params[1];
 	
 	endif
 	
-		TS_StartCoolDown(who, "voltarcd", 300);
+    TS_StartCoolDown(who, "voltarcd", 300);
 	
 	SendSysMessageEx(who, "Voce volta ao normal.", SSM_FAIL);
 
-	TS_LowerDuration(who, "metamorfosedruida", 10000, 1);
+	TS_LowerDuration(who, "metamorfosedruida", -1, 1);
 	
 	endprogram
 	
