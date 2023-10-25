@@ -230,7 +230,7 @@ program SpellStarter(params)
 
 		while ( delay > 0 )
 			// If mobile is injured and does not have the protection spell on, fail the spell
-			if ( (orig_hp > AP_GetVital(mobile, "Hits") && (GetObjProperty(mobile, "kit") != "Mago de Combate") ) )
+			if ( (orig_hp > AP_GetVital(mobile, "Hits") && !TemHabilidade(mobile, "Concentracao Aprimorada") ) )
 				SendSysMessageEx(mobile, "Voce nao conseguiu se concentrar o suficiente para invocar esta magia.", SSM_FAIL);
 				FailSpell(mobile);
                 if (!GetObjProperty(mobile, "#magiasilenciosa"))

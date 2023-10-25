@@ -56,6 +56,9 @@ program arremesso(params)
 	elseif ( targ.isa(POLCLASS_CORPSE) )
 		SendSysMessageEx(who, "Voce nao pode arremessar corpos.", SSM_FAIL);
 		return 0;
+    elseif (targ.serial == who.serial)
+        SendSysMessageEx(who, "Voce nao pode se arremessar.", SSM_FAIL);
+        return 0;
 	endif
 
 	SendSysMessageEx(who, "Aonde vai arremessar?", SSM_REQUEST);
