@@ -15,7 +15,7 @@ program cureScript(params)
 	who.color := metamorfose.originalcolor;
 	who.graphic := metamorfose.originalgraphic;
 	who.truegraphic := metamorfose.originalgraphic;
-	who.squelch(0);
+	//who.squelch(0);
 
 	var namechar:=GetObjProperty(who,"charname");
 
