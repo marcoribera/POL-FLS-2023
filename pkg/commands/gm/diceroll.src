@@ -18,8 +18,8 @@ program diceroll(who, text)
 // 0x2E2 dropgem2
     var roll := RandomDiceRoll(text);
     PrintTextAbove(targ, "*" + text + " = " + roll + "*");
-    PlaySoundEffect(targ, 0x2E2);
-
+    PlaySoundEffect(targ, 738);
+    PlaySoundEffect(targ, 739);
 // 0x503 shaku bad (fail)
 // 0x504 shaku good (succ)
 endprogram
