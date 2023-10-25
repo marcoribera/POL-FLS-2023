@@ -144,11 +144,11 @@ function Transforma(who, animal, snd, graphic,namepoly)
 		SetObjProperty(who, "metamorfose", metamorfose);
 		who.graphic := graphic;
 		// who.truegraphic := graphic;
-        if (TemHabilidade(who, "Treinamento Druidico"))
-            who.squelch(0);
-        else
-            who.squelch(-1);
-        endif
+        //if (TemHabilidade(who, "Treinamento Druidico"))
+        //    who.squelch(0);
+        //else
+        //    who.squelch(-1);
+        //endif
 		who.color := polymorphColor;
 	endif
 
