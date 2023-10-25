@@ -156,26 +156,8 @@ endfunction
  *
  */
 function CheckSkillAdvance(mobile, skill_name, award_diff, pass_chance)
-
-
 	if (!g_skill_debug)
 		g_skill_debug := (GetObjProperty(mobile, "SkillDebug") != error);
-	endif
-
-	var trainingSkills := getObjProperty(mobile, "trainingSkills"); //se nao tiver skill pra subir
-	if (trainingSkills != error)
-		if (trainingSkills.size() > 0 )
-			if (!(skill_name in trainingSkills))
-				SkillDbgMsg(mobile,"nao ta no training skills");
-
-				return;
-			endif
-		endif
-	endif
-
-	if ( GetObjProperty(mobile, "NoGains") ) //se tiver sem upar skill
-		SkillDbgMsg(mobile, "Flag NoGains setada.");
-		return 0;
 	endif
 
     if(TemHabilidade(mobile, "Artista Marcial") && skill_name == "Wrestling")
@@ -193,10 +175,27 @@ function CheckSkillAdvance(mobile, skill_name, award_diff, pass_chance)
         endforeach
     endif
 
+	var trainingSkills := getObjProperty(mobile, "trainingSkills"); //se nao tiver skill pra subir
+	if (trainingSkills != error)
+		if (trainingSkills.size() > 0 )
+			if (!(skill_name in trainingSkills))
+				SkillDbgMsg(mobile,"nao ta no training skills");
+
+				return;
+			endif
+		endif
+	endif
+
+	if ( GetObjProperty(mobile, "NoGains") ) //se tiver sem upar skill
+		SkillDbgMsg(mobile, "Flag NoGains setada.");
+		return 0;
+	endif
+
+
 	var true_skill := AP_GetTrueSkill(mobile, skill_name);
 	var maximo := AP_CheckClassSkillCap(mobile, skill_name);
 	if ( true_skill >= maximo ) //verifica quanto pode subir com base na classe
-	//	printtextabove(mobile, "to no maximo da skill");
+		//printtextabove(mobile, "to no maximo da skill");
 		SkillDbgMsg(mobile, "Chegou no maximo da classe: " + maximo);
 		return 0;
 	endif
@@ -241,7 +240,7 @@ function CheckSkillAdvance(mobile, skill_name, award_diff, pass_chance)
 
 	if ( true_skill < CDbl(settings.FreeGainUntil) )
 		SkillDbgMsg(mobile, "Free Gain.");
-	elseif ( DifficultyTooEasy(true_skill, award_diff) )
+	elseif ( DifficultyTooEasy(true_skill, award_diff)  && !(TemHabilidade(mobile, "Artista Marcial")))
 		SkillDbgMsg(mobile, "Too Easy.");
 		return 0;
 	elseif ( adv_check > pass_chance )
@@ -259,7 +258,7 @@ function CheckSkillAdvance(mobile, skill_name, award_diff, pass_chance)
 	endif
 */
 
-//	printtextabove(mobile, "oi, minha skill subiu");
+	//printtextabove(mobile, "oi, minha skill subiu");
 
 	//if (!PointsToIncrease(AP_GetTrueSkill(mobile, skill_name)))
 	//	SkillDbgMsg(mobile, "Nao passou.");
