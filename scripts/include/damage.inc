@@ -78,19 +78,40 @@ function getNewDamageList(attacker)
 		endif
 
 		var ammo := GetObjProperty(attacker.weapon, "ammo");
+
+//		SendSysMessage( attacker, "Municao usada:" + ammo);
 		if (ammo)
 			var cfg:=ReadConfigFile(":woodworking:itemdesc");
 			var elem := FindConfigElem(cfg, ammo);
+//			SendSysMessage( attacker, "elem:" + elem);
 			var dmgtype := GetConfigStringArray(elem, "dmgtype");
-			if (dmgtype[1])
+//			SendSysMessage( attacker, "dmgtype:" + dmgtype);
+			var dmgbonus := CDbl(GetConfigString(elem, "dmgbonus"))/100.0;
+//			SendSysMessage( attacker, "dmgbonus:" + dmgbonus);
+			if(dmgtype)
 				foreach dmg in dmgtype
-					var physicalreduction := Cdbl( (list[DMG_PHYSICAL] * elem.dmgbonus) / 100.0 );
-					if (dmg != "Physical")
-						list[DMG_PHYSICAL] := Cdbl(list[DMG_PHYSICAL] - physicalreduction);
-					endif
+//					SendSysMessage( attacker, "Entendeu que tem ao menos um tipo especial de dano");
+					case (dmg)
+						"Physical":
+							list[DMG_PHYSICAL] += dmgbonus[_dmg_iter];
+							break;
+						"Cold":
+							list[DMG_COLD] += dmgbonus[_dmg_iter];
+							break;
+						"Fire":
+							list[DMG_FIRE] += dmgbonus[_dmg_iter];
+							break;
+						"Poison":
+							list[DMG_POISON] += dmgbonus[_dmg_iter];
+							break;
+						"Energy":
+							list[DMG_ENERGY] += dmgbonus[_dmg_iter];
+							break;
+						default:
+							break;
+					endcase
 				endforeach
 			endif
-
 		endif
 
 		return list;
@@ -328,7 +349,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 			if (lower(categoriaDefender) == "undead" )
 				blessbonus := CDbl(GetObjProperty(who.weapon, "blessedbonus"));
 				if (!blessbonus)
-					blessbonus := 0.2; //20% - balanceamento depois da mudanca de calculo do dano
+					blessbonus := 0.4; //20% - balanceamento depois da mudanca de calculo do dano
 				endif
 			endif
 		endif
