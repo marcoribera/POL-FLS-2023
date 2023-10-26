@@ -156,6 +156,7 @@ program fireweapons(who, item)
 
 	TurnObjectToward(who, targ.x, targ.y);
 	PrintText(who, "*mirando em *" + targ.name);
+    PlaySoundEffect(who, 0x667);
 	who.frozen := 1;
     var i := 0;
     for (i := 0; i < cd; i++)

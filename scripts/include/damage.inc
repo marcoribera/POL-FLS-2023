@@ -283,6 +283,8 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 			tatics := tatics + CDbl(AP_GetSkill(who, SURVIVAL))/150.0; //Aplica bonus de Survival se forem criaturas selvagens ou dragões
 			SkillCheck(who, SURVIVAL, -1);
 		endif
+	else
+		tatics := CDbl(AP_GetSkill(who, TACTICS))/100.0; //Armazena o valor da skill que afeta dano
 	endif
 
 	//Bonus STR
@@ -349,7 +351,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 		var manamoment 	:= AP_GetVital(who, "MANA");
 		var manatotal	:= AP_GetVitalMaximumValue(who, "MANA");
 		if 	(manamoment >= manatotal / 2)
-			other := other + 0.5;
+			other := other + (manamoment / 200);
 		endif
 	endif
 
@@ -481,8 +483,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 	endif
 
 	//Multiplicador de tactics X multiplicador de força X multiplicadores de habilidades e itens X Multiplicador de buff X multiplicador de Debuff
-
-	dmg := CInt(dmg*(0.5+tatics)*(1.0+str)*(1.0+(weapon+other))*(inimigo_predileto)*(1.0+blessbonus)*(1.0-reducao_dano));
+	dmg := CInt(dmg*(1.0+(2*tatics))*(1.0+str)*(1.0+(weapon+other))*(inimigo_predileto)*(1.0+blessbonus)*(1.0-reducao_dano));
 	if (dmg < 1)
 		dmg := 1;
 	endif
