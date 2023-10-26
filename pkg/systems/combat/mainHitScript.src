@@ -396,6 +396,12 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 	if (defender.npctemplate && attacker.connected)
 		var skillAttacker := cint(AP_GetSkill(attacker, attacker.weapon.attribute));
 		var skillDefender := cint(AP_GetSkill(defender, WRESTLING));
+        if (attacker.weapon.objtype == 0x13b9 && !attacker.shield) // bastarda
+            skillAttacker := cint(AP_GetSkill(attacker, MELEECOMBAT2H));
+        endif
+        if (defender.weapon.objtype == 0x13b9 && !defender.shield)
+		    skillDefender := cint(AP_GetSkill(attacker, MELEECOMBAT2H));
+        endif
 		if(TemHabilidade(attacker, "Maestria de Devastacao"))
 			if(GetObjProperty(attacker.weapon, "swordmage") == attacker.serial)
 			skillAttacker := cint(AP_GetSkill(attacker, MELEECOMBAT1H));

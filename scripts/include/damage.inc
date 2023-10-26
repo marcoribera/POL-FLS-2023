@@ -427,12 +427,12 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 
 	if (TemHabilidade(who, "Estilo Mao Livre"))
 		if (who.weapon.attribute == "MeleeCombat1H" && !who.shield)
-			other := other + 0.4; //10% - balanceamento depois da mudanca de calculo do dano
+			other := other + 0.4; 
 		endif
 	endif
 
     if (who.weapon.objtype == 0x13b9 && !who.shield)
-        other := other + 0.2; //10% - balanceamento depois da mudanca de calculo do dano
+        other := other + 0.1; 
     endif
 
 	if (isBloodied(defender))
