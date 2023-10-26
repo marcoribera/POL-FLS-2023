@@ -394,14 +394,16 @@ function get_heir_skills(who)
         count++;
         secundarias_sum += Cint(AP_GetTrueSkill(who, skill));
     endforeach
-    var bonus_secundarias := (secundarias_sum - (count * 20)) / 4;
+    var bonus_secundarias := (secundarias_sum - (count * 20)) / (count * 2);
 
     var terciarias := GetTerciarias(who);
     var terciarias_sum := 0;
+    count := 0;
     foreach skill in terciarias
+        count++;
         terciarias_sum += Cint(AP_GetTrueSkill(who, skill));
     endforeach
-    var bonus_terciarias := (terciarias_sum / 4);
+    var bonus_terciarias := (terciarias_sum / (count * 2));
 
     var skills_bonus := struct;
     skills_bonus.+bonus_primarias := bonus_primarias;
