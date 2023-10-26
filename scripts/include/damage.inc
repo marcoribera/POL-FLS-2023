@@ -351,7 +351,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 		var manamoment 	:= AP_GetVital(who, "MANA");
 		var manatotal	:= AP_GetVitalMaximumValue(who, "MANA");
 		if 	(manamoment >= manatotal / 2)
-			other := other + 0.5;
+			other := other + (manatotal / 200);
 		endif
 	endif
 
