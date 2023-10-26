@@ -410,6 +410,10 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 		endif
 	endif
 
+    if (who.weapon.objtype == 0x13b9 && !who.shield)
+        other := other + 0.2; //10% - balanceamento depois da mudanca de calculo do dano
+    endif
+
 	if (isBloodied(defender))
 		if (temHabilidade(who, "Golpe de Misericordia"))
 			other:= other + 0.75; //75% - balanceamento depois da mudanca de calculo do dano
