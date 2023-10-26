@@ -2,6 +2,7 @@
 
 use uo;
 include ":attributes:attributes";
+include "include/say";
 
 program canRemove(character, container, item, move_type)
 	if (container.ownerserial == character.serial)
@@ -21,6 +22,11 @@ program canRemove(character, container, item, move_type)
 	if ("cursed" in (mods.keys()) && GetObjProperty(item, "#EquippedOn") == container.ownerserial)
 		SendSysMessage(character, "Este item parece estar preso ao usuario");
 		return 0;
-	endif	
+	endif
+
+	if (container.objtype == 0xEFFF) //Se for remains
+        PrintText(character, "*Pegou "+ item.desc +" do "+ container.desc +"*", 41); //Imprime a mensagem de removendo item
+    endif
+
 	return 1;
 endprogram
