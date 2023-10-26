@@ -32,15 +32,16 @@ function GetMapsInBackpack(who)
 	var items := EnumerateItemsInContainer(who.backpack);
 	var maps := array;
     	foreach item in items
-		//sendsysmessage(who, " " + isTreasureMap(item) + " " + item.objtype);
-		if ( isTreasureMap(item) )
-			if ( !isSolved(item) )
-				maps.append(item);
+			//sendsysmessage(who, " " + isTreasureMap(item) + " " + item.objtype);
+			if ( isTreasureMap(item) )
+				if ( !isSolved(item) )
+					maps.append(item);
+				endif
 			endif
-		endif
-	endforeach
-	return maps;
+			
+		endforeach
 
+	return maps;
 
 endfunction
 
@@ -72,7 +73,7 @@ function DigForMap(who, targ, map)
 
 	var chestx := Cint(GetObjProperty( map, "chestx" ));
 	var chesty := Cint(GetObjProperty( map, "chesty" ));
-	var chestz := GetWorldHeight(chestx, chesty);
+var chestz := who.z;
 
 	if((!chestx) || (!chesty))
 		SendSysMessage( who, "Este nao parece ser um mapa de tesouro.", SSM_FAIL );
@@ -101,9 +102,11 @@ function DigForMap(who, targ, map)
 		return;
 
 	elseif((distn < range) && (len(mobiles) > 0))
-		SendSysMessageEx(who,"voce patou de cavar porque algo esta sobre o tesouro.");
+		SendSysMessageEx(who,"voce parou de cavar porque algo esta sobre o tesouro.");
 		return;
 	else
+		who.frozen := 1;
+		PrintTextAbove(who, "*Comeca a cavar o tesouro*");
 
 		var i := 1;
 		var mex := who.x;
@@ -113,15 +116,15 @@ function DigForMap(who, targ, map)
 		var loot := "treasuremap" + maplevel;
 
 		var chest;
-		chestz := chestz -8;
-		sendsysmessage(who, " " + chestz-8);
-		var chests := CreateTreasureChests(maplevel, 1, 0, chestx, chesty, chestz-8, who.realm, loot);
+		chestz := who.z;
+		sendsysmessage(who, " " + who.z);
+		var chests := CreateTreasureChests(maplevel, 1, 0, chestx, chesty, who.z, who.realm, loot);
 		chest := chests[1];
 /*		if (GetObjProperty(map, "tesouroescondido") == 1)
 			Loot_Generate(chest, loot);
 		endif  	*/
 
-		var ret := MoveObjectToLocation(chest, chest.x, chest.y, chestz-8, who.realm,  MOVEOBJECT_FORCELOCATION);
+		var ret := MoveObjectToLocation(chest, chest.x, chest.y, chest.z, who.realm,  MOVEOBJECT_FORCELOCATION);
 //		sendsysmessage(who, " " + ret);
 
 		chest.movable := 0;

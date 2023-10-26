@@ -387,7 +387,9 @@ exported function MegaCliloc( who, byref packet )
 
 		if(descmods != error)
 			foreach descmod in descmods
-				desc := desc + descmod;
+				if(descmod)
+					desc := desc + descmod;
+				endif
 			endforeach
 		endif
 

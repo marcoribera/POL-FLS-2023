@@ -5,6 +5,8 @@ include "include/client";
 include "include/say";
 include ":attributes:attributes";
 include ":charactercreation:habilidades";
+include ":coords:coords";
+
 program decode_map( who, map )
 	if(!Accessible(who, map))
 		SendSysMessageEx(who, "Voce nao alcanca o mapa.", SSM_FAIL);
@@ -27,6 +29,7 @@ program decode_map( who, map )
 	endif
 endprogram
 
+/*
 function GetMaxMapLevel(who)
 	var skill := 0;//AP_GetSkill( who, CARTOGRAPHY );
 	if( skill >= 100 )
@@ -43,16 +46,19 @@ function GetMaxMapLevel(who)
 		return 0;
 	endif
 endfunction
+*/
 
 function CreateTreasureMap(who, oldmap, maplevel)
 	var map := CreateItemInBackpack( who, GetObjtypeByName("map_nonedit"), 1 );
-	if (TemHabilidade(who, "Tesouro Escondido"))
+
+	/*if (TemHabilidade(who, "Tesouro Escondido"))
 		SetObjProperty(map, "tesouroescondido", 1);
 	endif
+	*/
 
 	SetObjProperty(map, "level", maplevel);
 	SetObjProperty(map, "decoder", who.serial);
-	map.name := "mapa do tesouro [lvl " + maplevel + "] [desvendado por " + who.name + "]";
+	//map.name := "Mapa do tesouro [Coordenadas: " + coordenada + "] [desvendado por " + who.name + "]";
 	SetTreasureCoords(map);
 	SendSysMessage( who, "Voce desvendou o mapa!" );
 	DestroyItem( oldmap );
@@ -69,7 +75,12 @@ function SetTreasureCoords( map );
 	SetObjProperty( map, "chestx", x );
 	SetObjProperty( map, "chesty", y );
 	SetObjProperty( map, "chestz", z );
-	SetName( map, "a treasure map" );
+	//SetName( map, "a treasure map" );
+	var chstx := GetObjProperty(map, "chestx");
+	var chsty := GetObjProperty(map, "chesty");
+	var coordenada := ToSextant(chstx, chsty);
+	SetName( map, "Mapa do tesouro [Coordenadas: " + coordenada + "]");
+	/*
 	if( x < 265 )
 		map.xwest := 0;
 	else
@@ -85,4 +96,14 @@ function SetTreasureCoords( map );
 	map.gumpwidth := 200;
 	map.gumpheight := 200;
 	map.AppendPin(x,y);
+	*/
 endfunction
+
+/*
+function SetMapName( who, map )
+	var chstx := GetObjProperty(map, "chestx");
+	var chsty := GetObjProperty(map, "chesty");
+	var coordenada := ToSextant(chstx, chsty);
+	SetName( map, "Mapa do tesouro [Coordenadas: " + coordenada + "] [desvendado por " + who.name + "]");
+endfunction
+*/

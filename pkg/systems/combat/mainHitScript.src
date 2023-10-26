@@ -91,18 +91,6 @@ program MainHitScript( params )
 	//Calcula a chance do projétil não quebrar
 	ArrowRecovery(attacker, defender, weapon);
 
-	//Verifica se o ataque foi realizado de uma posição onde bloquear é possível e, sendo, processa o teste de bloaqueio
-	if ( (!Cint(GetObjProperty(attacker, "backstab"))) && !IsBehind(defender, attacker.x, attacker.y))
-		//Calcula o bloqueio e os danos no escudo do defensor
-		ParryCheck(attacker, defender, rawdamage, weapon);
-	endif
-
-	//Calcula os danos na arma do atacante
-	WearDownWeapon(attacker, weapon);
-
-	//Calcula os danos na armadura do defensor
-	WearDownArmor(defender, armor, rawdamage, weapon);
-
 	//Calcula os danos
 	basedamage := CalculateTotalDamageBonus(rawdamage, attacker, defender);
 	if (cint(GetObjProperty(attacker, "#mataroumorrer")) > 0 )
@@ -113,6 +101,20 @@ program MainHitScript( params )
 			basedamage := basedamage + basedamage * 0.2; //+20% de dano
 		endif
 	endif
+
+	//Verifica se o ataque foi realizado de uma posição onde bloquear é possível e, sendo, processa o teste de bloaqueio
+	if ( (!Cint(GetObjProperty(attacker, "backstab"))) && !IsBehind(defender, attacker.x, attacker.y))
+		//Calcula o bloqueio e os danos no escudo do defensor
+		ParryCheck(attacker, defender, basedamage, weapon);
+	endif
+
+	//Calcula os danos na arma do atacante
+	WearDownWeapon(attacker, weapon);
+
+	//Calcula os danos na armadura do defensor
+	WearDownArmor(defender, armor, rawdamage, weapon);
+
+
 	WeaponHitScripts(attacker, defender, weapon, armor, basedamage, rawdamage);
 	ArmorHitScripts(attacker, defender, weapon, armor, basedamage, rawdamage);
 
@@ -392,8 +394,8 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 	endif
 	//Testa se é possivel ganhar skill com o NPC alvo
 	if (defender.npctemplate && attacker.connected)
-		var skillDefender := cint(AP_GetSkill(defender,defender.weapon.attribute));
 		var skillAttacker := cint(AP_GetSkill(attacker, attacker.weapon.attribute));
+		var skillDefender := cint(AP_GetSkill(defender, WRESTLING));
 		if(TemHabilidade(attacker, "Maestria de Devastacao"))
 			if(GetObjProperty(attacker.weapon, "swordmage") == attacker.serial)
 			skillAttacker := cint(AP_GetSkill(attacker, MELEECOMBAT1H));
@@ -501,7 +503,7 @@ endfunction
 
 function WearDownShield(defender, shield, rawdamage, weapon)
 
-	var bonus;
+	var bonus := 0;
 	//Amplia o dano no escudo se a arma tiver a propriedade
 	if (CInt(GetObjProperty(weapon, "ArmorDmg") == 1))
 		bonus := RandomInt(3)+1;
@@ -518,13 +520,13 @@ function WearDownShield(defender, shield, rawdamage, weapon)
 		var wearchance := armr_elem.WearChance;
 		if ( TemHabilidade(defender, "Conservar Equipamento"))
 			wearchance := wearchance/2;
-			if (wearchance < 1)
-				wearchance := 1;
+			if (wearchance < 40)
+				wearchance := 40;
 			endif
 		endif
 
 		//if (CInt(rawdamage) > dmg_to_wear)
-		if (CDbl(rawdamage) > dmg_to_wear)
+		if ( (CDbl(rawdamage) > dmg_to_wear) || (bonus > 0))
 			if (RandomDiceRoll("1d100") <= wearchance)
 				SendSysMessage(defender, shield.desc+" foi danificado.");
 				var shieldhp := shield.hp;
@@ -548,7 +550,6 @@ function WearDownShield(defender, shield, rawdamage, weapon)
 			endif
 		endif
 	endif
-
 	return 1;
 endfunction
 
@@ -712,13 +713,13 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 		EraseObjProperty(attacker, "#nextcritical");
 		autoCritical := 1;
 	endif
-
+/*
 	if (!autoCritical)
 		if (GetCooldown(attacker, "critical") > 0)
 			return 1;
 		endif
 	endif
-
+*/
 	//chance total = prop da arma  (pra bonus magicos) + prop do mob (pra npcs ou magias) + valor no itemdesc
 
 	var skillCriticalBonus;
@@ -733,10 +734,12 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 		if(categoriaDefender == "GiantAnimal" || categoriaDefender == "Animal" || categoriaDefender == "EvilAnimal" || categoriaDefender == "Snow" || categoriaDefender == "Mount" || categoriaDefender == "Plantas" || categoriaDefender == "Terathan" || categoriaDefender == "Dragon")
 			skillCriticalBonus := skillCriticalBonus + CInt(AP_GetSkill(attacker, SURVIVAL)/20); //Aplica bonus de Survival se forem criaturas selvagens ou dragões
 		endif
+	else
+		skillCriticalBonus := CInt(AP_GetSkill(attacker, TACTICS)/20); //Aplica bonus de magiclore na chance de critico quando é Mago de Combate
 	endif
 
 	//critico base da arma, critico extra da CProp da da arma, critico extra do CProp do personagem, critico extra da skill do personagem, critico extra de Habilidade especial do personagem
-	var chance := Cint( Cint(GetObjProperty(weapon, "CriticalChance")) + Cint(GetObjProperty(attacker, "CriticalChance")) + Cint((item_cfg[weapon.objtype]).CriticalChance )) + CInt(AP_GetSkill(attacker, skillUsedForCritical)/20) + Cint(GetObjProperty(attacker, "#CriticalChance"));	//Limpa a CProp de bonus critico para o próximo ataque
+	var chance := Cint( Cint(GetObjProperty(weapon, "CriticalChance")) + Cint(GetObjProperty(attacker, "CriticalChance")) + Cint((item_cfg[weapon.objtype]).CriticalChance )) + skillCriticalBonus + Cint(GetObjProperty(attacker, "#CriticalChance"));	//Limpa a CProp de bonus critico para o próximo ataque
 	EraseObjProperty(attacker, "#CriticalChance");
 
 	if (!chance)
@@ -1128,8 +1131,8 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 
 	//sobe a skill
 	if (attacker.npctemplate && defender.connected)
-		skill := cint(skill) + 15;
-		var skillAttacker := cint(AP_GetSkill(attacker, attacker.weapon.attribute));
+		skill := cint(skill);
+		var skillAttacker := cint(AP_GetSkill(attacker, WRESTLING)) + 10;
 		if ( skill < skillAttacker )
 			//printtextabove(attacker, "return " + skillDefender);
 		else
@@ -1154,13 +1157,11 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 		PrintText(defender, "*defende o golpe*");
 		SetCooldown(attacker, "parrydelay", parryDelay);
 	endif
-
-	rawdamage := 0;
-
 	//Aplica dano no shield
 
 	WearDownShield(defender, shield, rawdamage, weapon);
-
+	performaction(defender,ANIM_TWIST_DODGE);
+	rawdamage := 0;
 	return 1;
 endfunction
 

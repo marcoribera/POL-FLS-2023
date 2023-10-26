@@ -16,6 +16,8 @@ use util;
 
 //include "include/findCity";
 //include "include/www";
+include ":containers:containers";
+include "include/say";
 include ":gumps:yesNo";
 include ":architect:include/architect";
 include ":architect:include/systemclock";
@@ -1470,14 +1472,36 @@ endfunction
  * returns <objref> to the created item
 */
 function create_marked(who, x, y, z, type)
+    var prop := dictionary;
+    var custo := 10; //Pedras necessarias para criar uma parede
+    var objtype := GetObjTypeByName("rock");
+    prop["objtype"] := objtype;
+    var total_rocks := AmountInContainer(who.backpack, prop);
 
-  var created:= CreateItemAtLocation (x, y, z, type);
-  created.movable:= 0;
-//  created.saveonexit:= 0;
-//  created.usescript:= ":architect:cantuse";
-  SetObjProperty (created, "#built_by_architect", who.serial);
-  return created;
+    if (total_rocks < custo)
+        SendSysMessageEx(who, "Voce nao tem pedras suficientes.", SSM_INFO);
+        return;
+    else
+        foreach item in EnumerateItemsInContainer(who.backpack)
+            if(item.objtype == objtype)
+                DestroyItem(item);
+                custo := custo - 1;
 
+                if(custo == 0)
+                    break;
+                endif
+            endif
+        endforeach
+
+        SendSysMessageEx(who, "Voce usou a(s) pedra(s).", SSM_INFO);
+        var created:= CreateItemAtLocation (x, y, z, type);
+        created.movable:= 0;
+        //  created.saveonexit:= 0;
+        //  created.usescript:= ":architect:cantuse";
+        SetObjProperty (created, "#built_by_architect", who.serial);
+
+        return created;
+    endif
 endfunction
 
 
