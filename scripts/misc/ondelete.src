@@ -24,6 +24,10 @@ program core_onDelete(who)
 
 		return 1;
 	elseif ( age >= SECONDS_IN_WEEK )
+	    //Remove todos os pontos rp da conta ao deletar
+	    findAccount(who.acctname).setProp("RPpoints", 0);
+	    SysLog("Account ["+who.acctname+"] removido pontos rp "+who.name+" ("+who.serial+")");
+
 		SysLog("Account ["+who.acctname+"] deleting character "+who.name+" ("+who.serial+")");
 		
 		var tamedpets := Getobjproperty(who, "TamedPets");
