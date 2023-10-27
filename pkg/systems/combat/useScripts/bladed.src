@@ -220,10 +220,11 @@ function FazPergaminhoEmBranco(who, item)
 		return 0;
 	else
 		var RequiredSkill := 10;
-		var SurvivalSkill := AP_GetSkill (who, SURVIVAL);
+		var SurvivalSkill := AP_GetSkill (who, SURVIVAL); 
+		var DomesticWorkSkill :=  AP_GetSkill (who, DomesticWork);
 		//sendsysmessage(who, "gmdebug: skinning " + myskill);
 
-		if (SurvivalSkill < RequiredSkill)
+		if (SurvivalSkill < RequiredSkill && DomesticWorkSkill < RequiredSkill)
 			SendSysMessage(who, "Voce nao sabe como fazer este item.");
 			return 0;
 		endif
@@ -244,6 +245,13 @@ function FazPergaminhoEmBranco(who, item)
 					PerformAction(who, ANIM_SALUTE);
 					sleep(1);
 				endfor
+				var skill;
+				if (DomesticWorkSkill > SurvivalSkill)
+					skill := 1;
+				else
+					skill := 2;
+				endif
+				if (skill == 2)
 				if (SkillCheck(who, SURVIVAL, RequiredSkill));
 					if (!CreateItemInContainer(who.backpack, UOBJ_BLANK_SCROLL, 1))
 						PrintTextAbovePrivate (who, "*Sua mochila esta cheia!*", who);
@@ -255,6 +263,20 @@ function FazPergaminhoEmBranco(who, item)
 				else
 					SendSysMessage (who, "Voce arruinou os materiais.");
 					return 0;
+				endif
+				elseif(skill == 1)
+				if (SkillCheck(who, DomesticWork, RequiredSkill));
+					if (!CreateItemInContainer(who.backpack, UOBJ_BLANK_SCROLL, 1))
+						PrintTextAbovePrivate (who, "*Sua mochila esta cheia!*", who);
+						return 0;
+					else
+						SendSysMessage (who, "Voce fez um pergaminho em branco.");
+						return 1;
+					endif
+				else
+					SendSysMessage (who, "Voce arruinou os materiais.");
+					return 0;
+				endif
 				endif
 			endif
 		until(who.x != xInicial || who.y != yInicial);

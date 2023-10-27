@@ -107,7 +107,7 @@ var chestz := who.z;
 	else
 		who.frozen := 1;
 		PrintTextAbove(who, "*Comeca a cavar o tesouro*");
-
+		SendSysMessage(who, "NÃO DESLOGUE, A ANIM DEMORA UM POUCO, aguarde o boneco terminar de cavar!", SSM_INFO);
 		var i := 1;
 		var mex := who.x;
 		var mey := who.y;

@@ -54,7 +54,7 @@ program OreMining(who, tool)
 		SendSysMessage(who, "Muito longe.");
 		return;
 	elseif ( !CanMine(targ, "Stone") )
-		var maps := GetMapsInBackpack(who);
+		/*var maps := GetMapsInBackpack(who);
 		//sendsysmessage(who, " " + maps);
 		if (maps.size() > 0)
 			var map := maps[1];
@@ -67,11 +67,9 @@ program OreMining(who, tool)
 			endif
 			DigForMap(who, targ, map);
 			return;
-		else
+		else*/
 			SendSysMessageEx(who, "Voce nao pode minerar aqui.", SSM_FAIL);
 			return;
-		endif
-
 	endif
 
 //	sendsysmessage(who, CanMine(targ, "Stone") + " " );

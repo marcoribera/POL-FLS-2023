@@ -26,12 +26,40 @@ program SandMining(who, scoop)
 
 	SendSysMessage(who, "O que voce deseja fazer?");
 	var targ := TargetCoordinates(who);
+var maps := GetMapsInBackpack(who);
 
 	if ( CoordinateDistance(who.x, who.y, targ.x, targ.y) > 2 )
 		SendSysMessage(who, "Muito longe.");
 		return;
-
-	elseif (targ.item.objtype == 0xEFFF || targ.item.objtype == 0x2006)
+	endif
+	
+	if (maps.size() > 0)
+		var question := "Voce deseja procurar seu tesouro?";
+		var yes := "SIM";
+		var no := "NAO";
+		var create_method := YesNo(who, question, yes, no);
+		var item := 0;
+		if (create_method)
+			if (maps.size() > 0)
+			var map := maps[1];
+				if (maps.size() > 1)
+					SendSysMessageEx(who, "Escolha o mapa que quer procurar.", SSM_REQUEST);
+					map := target(who);
+					if (!(isTreasureMap(map)))
+						return;
+					endif
+				endif
+			DigForMap(who, targ, map);
+			return;
+			else
+				SendSysMessageEx(who, "Seu mapa ja foi revelado.", SSM_FAIL);
+			return;
+			endif
+		else
+		endif
+	endif
+	
+	if (targ.item.objtype == 0xEFFF || targ.item.objtype == 0x2006)
 		EnterrarCorpo(who, scoop, targ);
 		return;
 	elseif (targ.item.objtype == 0x0EE0 || targ.item.objtype == 0x0EE1 || targ.item.objtype == 0x0EE2 || targ.item.objtype == 0x0EDF)
