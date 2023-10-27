@@ -1105,11 +1105,7 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 
 	//Calcula se defendeu ou não
 	var defendeu := 0;
-	if ( RandomInt(100) >= parry_chance )
-		return 0; //Não bloqueou
-
-	//Defendeu
-	else
+	if ( RandomInt(100) < parry_chance )
 		//Verifica habilidade Defesas Gloriosas e, se cabível, aplica seu efeito
 		defendeu := 1;
 		//PerformAction(defender, 13);
@@ -1143,6 +1139,10 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 				SkillCheck(defender, PARRY, -1);
 			endif
 		endif
+	endif
+
+	if(!defendeu)
+		return 0;
 	endif
 
 	Performaction(defender,ANIM_TWIST_DODGE);
