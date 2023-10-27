@@ -88,6 +88,12 @@ program MainHitScript( params )
 	//Processa o aumento ou não de skill de combate
 	SkillChecks(attacker, defender, weapon, rawdamage);
 
+	//Verifica se o ataque foi realizado de uma posição onde bloquear é possível e, sendo, processa o teste de bloaqueio
+	if ( (!Cint(GetObjProperty(attacker, "backstab"))) && !IsBehind(defender, attacker.x, attacker.y))
+		//Calcula o bloqueio e os danos no escudo do defensor
+		ParryCheck(attacker, defender, rawdamage, weapon);
+	endif
+
 	//Calcula a chance do projétil não quebrar
 	ArrowRecovery(attacker, defender, weapon);
 
@@ -102,23 +108,18 @@ program MainHitScript( params )
 		endif
 	endif
 
-	//Verifica se o ataque foi realizado de uma posição onde bloquear é possível e, sendo, processa o teste de bloaqueio
-	if ( (!Cint(GetObjProperty(attacker, "backstab"))) && !IsBehind(defender, attacker.x, attacker.y))
-		//Calcula o bloqueio e os danos no escudo do defensor
-		ParryCheck(attacker, defender, basedamage, weapon);
-	endif
 
 	//Calcula os danos na arma do atacante
 	WearDownWeapon(attacker, weapon);
 
 	//Calcula os danos na armadura do defensor
-	WearDownArmor(defender, armor, basedamage, weapon);
+	WearDownArmor(defender, armor, rawdamage, weapon);
 
 
-	WeaponHitScripts(attacker, defender, weapon, armor, basedamage, basedamage);
-	ArmorHitScripts(attacker, defender, weapon, armor, basedamage, basedamage);
+	WeaponHitScripts(attacker, defender, weapon, armor, basedamage, rawdamage);
+	ArmorHitScripts(attacker, defender, weapon, armor, basedamage, rawdamage);
 
-	PoisonChecks(attacker, defender, weapon, armor, basedamage, basedamage);
+	PoisonChecks(attacker, defender, weapon, armor, basedamage, rawdamage);
 
 	//se tiver feito um movimento, executa ele e retorna (nao causa o dano normal)
 	var move := GetObjProperty(attacker, "movement");
@@ -434,6 +435,7 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 		SetObjProperty(attacker, "#CS_GainTime", ReadGameClock()+gain_wait);
 		if ( rawdamage > 0 )
 			SkillCheck(attacker, weapon.attribute, -1);
+			sleepms(20);
 			SkillCheck(attacker, skillUsedForCritical, -1);
 		endif
 	endif
@@ -473,35 +475,34 @@ function WearDownArmor(defender, armor, rawdamage, weapon)
 		var wearchance := armr_elem.WearChance;
 		if ( TemHabilidade(defender, "Conservar Equipamento"))
 			wearchance := wearchance/2;
-			if (wearchance < 1)
-				wearchance := 1;
+			if (wearchance < 10)
+				wearchance := 10;
 			endif
 		endif
 
 		//if (CInt(rawdamage) > dmg_to_wear)
-		if ( CDbl(rawdamage) > dmg_to_wear )
-			if (RandomDiceRoll("1d100") <= wearchance)
-				SendSysMessage(defender, armor.desc+" foi danificada.");
-				var armorhp := armor.hp;
-				armorhp := armorhp - Cint(armr_elem.WearRate + bonus);
-				if ( armorhp <= 0 )
-					SendSysMessage(defender, armor.desc+" foi destruida.");
-					SetObjProperty(armor, "broken", 1);
-					SetObjProperty(armor, "realdesc", armor.desc);
-					SetName(armor, armor.desc+" [danificado]");
-					MoveItemToContainer(armor, defender.backpack);
-					//DestroyItem(armor);
-				elseif ( armor.hp > armor.maxhp )
-					armor.hp := armor.maxhp;
-				else
-					armor.hp := armorhp;
-				endif
-				var nome := armor.name;
-				SetName(armor, nome + " -");
-				sleepms(30);
-				SetName(armor, nome);
+		if (RandomDiceRoll("1d100") <= wearchance)
+			SendSysMessage(defender, armor.desc+" foi danificada.");
+			var armorhp := armor.hp;
+			armorhp := armorhp - Cint(armr_elem.WearRate + bonus);
+			if ( armorhp <= 0 )
+				SendSysMessage(defender, armor.desc+" foi destruida.");
+				SetObjProperty(armor, "broken", 1);
+				SetObjProperty(armor, "realdesc", armor.desc);
+				SetName(armor, armor.desc+" [danificado]");
+				MoveItemToContainer(armor, defender.backpack);
+				//DestroyItem(armor);
+			elseif ( armor.hp > armor.maxhp )
+				armor.hp := armor.maxhp;
+			else
+				armor.hp := armorhp;
 			endif
+			var nome := armor.name;
+			SetName(armor, nome + " -");
+			sleepms(30);
+			SetName(armor, nome);
 		endif
+		//endif
 	endif
 
 	return 1;
@@ -526,34 +527,31 @@ function WearDownShield(defender, shield, rawdamage, weapon)
 		var wearchance := armr_elem.WearChance;
 		if ( TemHabilidade(defender, "Conservar Equipamento"))
 			wearchance := wearchance/2;
-			if (wearchance < 40)
-				wearchance := 40;
+			if (wearchance < 20)
+				wearchance := 20;
 			endif
 		endif
-
 		//if (CInt(rawdamage) > dmg_to_wear)
-		if ( (CDbl(rawdamage) > dmg_to_wear) || (bonus > 0))
-			if (RandomDiceRoll("1d100") <= wearchance)
-				SendSysMessage(defender, shield.desc+" foi danificado.");
-				var shieldhp := shield.hp;
-				shieldhp := shieldhp - Cint(armr_elem.WearRate + bonus);
-				if ( shieldhp <= 0 )
-					SendSysMessage(defender, shield.desc+" foi destruido.");
-					SetObjProperty(shield, "broken", 1);
-					SetObjProperty(shield, "realdesc", shield.desc);
-					SetName(shield, shield.desc+" [danificado]");
-					MoveItemToContainer(shield, defender.backpack);
-					//DestroyItem(shield);
-				elseif (shield.hp > shield.maxhp)
-					shield.hp := shield.maxhp;
-				else
-					shield.hp := shieldhp;
-				endif
-				var nome := shield.name;
-				SetName(shield, nome + " -");
-				sleepms(30);
-				SetName(shield, nome);
+		if (RandomDiceRoll("1d100") <= wearchance)
+			SendSysMessage(defender, shield.desc+" foi danificado.");
+			var shieldhp := shield.hp;
+			shieldhp := shieldhp - Cint(armr_elem.WearRate + bonus);
+			if ( shieldhp <= 0 )
+				SendSysMessage(defender, shield.desc+" foi destruido.");
+				SetObjProperty(shield, "broken", 1);
+				SetObjProperty(shield, "realdesc", shield.desc);
+				SetName(shield, shield.desc+" [danificado]");
+				MoveItemToContainer(shield, defender.backpack);
+				//DestroyItem(shield);
+			elseif (shield.hp > shield.maxhp)
+				shield.hp := shield.maxhp;
+			else
+				shield.hp := shieldhp;
 			endif
+			var nome := shield.name;
+			SetName(shield, nome + " -");
+			sleepms(30);
+			SetName(shield, nome);
 		endif
 	endif
 	return 1;
@@ -572,8 +570,8 @@ function WearDownWeapon(attacker, weapon)
 			//Diminui pela metade a chance de um equipamento quebrar com a habilidde Conservar Equipamento
 			if (TemHabilidade(attacker, "Conservar Equipamento"))
 				wearchance := wearchance/2;
-				if (wearchance < 1)
-					wearchance := 1;
+				if (wearchance < 10)
+					wearchance := 10;
 				endif
 			endif
 
@@ -719,13 +717,13 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 		EraseObjProperty(attacker, "#nextcritical");
 		autoCritical := 1;
 	endif
-/*
+
 	if (!autoCritical)
 		if (GetCooldown(attacker, "critical") > 0)
 			return 1;
 		endif
 	endif
-*/
+
 	//chance total = prop da arma  (pra bonus magicos) + prop do mob (pra npcs ou magias) + valor no itemdesc
 
 	var skillCriticalBonus;
@@ -752,10 +750,10 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 		return 1;
 	endif
 
-	var critcooldown := 60;
+	var critcooldown := 30;
 	if (TemHabilidade(attacker, "Maestria no Combate"))
-		chance := chance * 2.5;
-		critcooldown := 30;
+		chance := chance * 2.0;
+		critcooldown := 15;
 	endif
 // Inicio vivisec Igor-----------------------------
 	var bonus_Preservar_Orgaos := 0;
@@ -1114,7 +1112,6 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 	else
 		//Verifica habilidade Defesas Gloriosas e, se cabível, aplica seu efeito
 		defendeu := 1;
-		performaction(defender,ANIM_TWIST_DODGE);
 		//PerformAction(defender, 13);
 		if (GetCooldown(defender, "defesasgloriosas"))
 			TS_StartTimer(attacker, "paralysis", 5);
@@ -1139,20 +1136,17 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 
 	//sobe a skill
 	if (attacker.npctemplate && defender.connected)
-		skill := cint(skill);
-		var skillAttacker := cint(AP_GetSkill(attacker, WRESTLING)) + 10;
-		if ( skill < skillAttacker )
-			//printtextabove(attacker, "return " + skillDefender);
+		if (defendeu)
+			SkillCheck(defender, PARRY, -1);
 		else
-			if (defendeu)
+			if ( RandomInt(5) == 1 )
 				SkillCheck(defender, PARRY, -1);
-			else
-				if ( RandomInt(5) == 1 )
-					SkillCheck(defender, PARRY, -1);
-				endif
 			endif
 		endif
 	endif
+
+	Performaction(defender,ANIM_TWIST_DODGE);
+
 	//Exibe o efeito visual do bloqueio
 
 	if (blocker)

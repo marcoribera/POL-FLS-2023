@@ -305,7 +305,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 			SkillCheck(who, SURVIVAL, -1);
 		endif
 	else
-		tatics := CDbl(AP_GetSkill(who, TACTICS))/100.0; //Armazena o valor da skill que afeta dano
+		tatics := CDbl(AP_GetSkill(who, TACTICS))/200.0; //Armazena o valor da skill que afeta dano
 	endif
 
 	//Bonus STR
@@ -325,7 +325,12 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 	//Calcula modificador total do atributo
 	var str := CDbl(AP_GetStat(who, stat)+strBonus)/150.0;
 	*/
-	var str := CDbl(AP_GetStat(who, stat)-60.0)/200.0;
+	var str;
+	if (who.npctemplate)
+		str := CDbl(AP_GetStat(who, stat))/200.0;
+	else
+		str := CDbl(AP_GetStat(who, stat)-60.0)/200.0;
+	endif
 	//Quando equipado arco curto, longo, besta, besta pesada e besta de repeticao a força não implica em modificador de dano
 	if ( (who.weapon.objtype == 0x13B2) || (who.weapon.objtype == 0x26CC) || (who.weapon.objtype == 0x0f4f) || (who.weapon.objtype == 0x13fd) || (who.weapon.objtype == 0x26CD) )
 		str := 0;
@@ -427,12 +432,12 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 
 	if (TemHabilidade(who, "Estilo Mao Livre"))
 		if (who.weapon.attribute == "MeleeCombat1H" && !who.shield)
-			other := other + 0.4; 
+			other := other + 0.4;
 		endif
 	endif
 
     if (who.weapon.objtype == 0x13b9 && !who.shield)
-        other := other + 0.1; 
+        other := other + 0.1;
     endif
 
 	if (isBloodied(defender))
@@ -508,7 +513,8 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 	endif
 
 	//Multiplicador de tactics X multiplicador de força X multiplicadores de habilidades e itens X Multiplicador de buff X multiplicador de Debuff
-	dmg := CInt(dmg*(1.0+(2*tatics))*(1.0+str)*(1.0+(weapon+other))*(inimigo_predileto)*(1.0+blessbonus)*(1.0-reducao_dano));
+	//dmg := CInt(dmg*(1.0+(2*tatics))*(1.0+str)*(1.0+(weapon+other))*(inimigo_predileto)*(1.0+blessbonus)*(1.0-reducao_dano));
+	dmg := CInt(dmg*Pow(1.0+tatics,2.0)*(1.0+str)*(1.0+(weapon+other))*(inimigo_predileto)*(1.0+blessbonus)*(1.0-reducao_dano));
 	if (dmg < 1)
 		dmg := 1;
 	endif
