@@ -448,7 +448,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 
 	if ( IsRaging(who))
 		if (temHabilidade(who, "Baixo Limiar de Furia") || GetObjProperty(who, "NpcFuria"))
-			other:= other + 0.5; //50% de bonus - balanceamento depois da mudanca de calculo do dano
+			other:= other + 1.0; //50% de bonus - balanceamento depois da mudanca de calculo do dano
 			PrintText(who, "*enfurecido*");
 		endif
 		if (temHabilidade(who, "Furia Primitiva"))
