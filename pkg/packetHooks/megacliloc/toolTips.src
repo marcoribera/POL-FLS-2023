@@ -165,16 +165,7 @@ function getTipoStringDesc(elem, item) //Exibe o tipo de arma
 	if (item.isa(POLCLASS_WEAPON))
 		return CStr(elem.TipoAtaque) + "<br>" + CSTR(elem.Attribute);
 	elseif (item.isa(POLCLASS_ARMOR))
-		var tipo;
-		case (CStr(elem.TipoProtecao))
-			"ArmaduraLeve": tipo := "Armadura Leve"; break;
-			"ArmaduraMedia": tipo := "Armadura Media"; break;
-			"ArmaduraPesada": tipo := "Armadura Pesada"; break;
-			"EscudoLeve": tipo := "Escudo Leve"; break;
-			"EscudoMedio": tipo := "Escudo Medio"; break;
-			"EscudoPesado": tipo := "Escudo Pesado"; break;
-		endcase
-		return tipo;
+		return CStr(elem.TipoProtecao) + "<br>";
 	endif
 endfunction
 
@@ -194,7 +185,6 @@ endfunction
 function getParryBonus(elem, item)
 	var parrybonusI := Cint(GetObjProperty(item, "parrybonus"));
 	var parrybonusE := Cint(elem.parrybonus);
-	var difer := Cint(parrybonusI - parrybonusE);
 	if (parrybonusI > 0)
 		return CSTR(parrybonusE) + " (+" + CSTR(parrybonusI) + ")";
 	elseif (parrybonusI < 0)
@@ -386,11 +376,15 @@ exported function MegaCliloc( who, byref packet )
 		//JUNTA AS DESCRIÇÕES DO DOS PROPS DO PERSONAGEM
 
 		if(descmods != error)
-			foreach descmod in descmods
-				if(descmod)
-					desc := desc + descmod;
-				endif
-			endforeach
+			if(item.IsA(POLCLASS_MOBILE))
+				foreach descmod in descmods
+					if(descmod)
+						desc := desc + descmod;
+					endif
+				endforeach
+			elseif(item.IsA(POLCLASS_ITEM))
+				desc := desc + descmods;
+			endif
 		endif
 
 		//LIMITA O TAMANHO DAS DESCRIÇÕES
@@ -404,12 +398,12 @@ exported function MegaCliloc( who, byref packet )
 			if (linguagem!=error)
 				var linguas := GetObjProperty(who, "linguas");
 				if (temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica") || linguagem in linguas)
-					xDesc := xDesc + white + "" + desc + "<BR>";
+					xDesc := xDesc + white + "" + desc + "<br>";
 				else
-					xDesc :=  xDesc + "*Inscrições em Língua Desconhecida*<BR>";
+					xDesc :=  xDesc + "*Inscrições em Língua Desconhecida*<br>";
 				endif
 			else
-				xDesc := xDesc + white + "" + desc + "<BR>";
+				xDesc := xDesc + white + "" + desc + "<br>";
 			endif
 		endif
 
