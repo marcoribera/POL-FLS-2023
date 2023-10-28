@@ -42,6 +42,13 @@ program core_npcDeath(params)
 		CreateItemInContainer(corpse, "soulstone", 1);
 	endif
 
+	foreach item in (EnumerateItemsInContainer(corpse))
+	    //Lista de itens que podem dropar do npc, mas ficam com prop de restrito_mob, não deixando o player equipar
+        if (item.objtype == 0x1415 || item.objtype == 0x1416 || item.objtype == 0x1410 || item.objtype == 0x1417 || item.objtype == 0x1411 || item.objtype == 0x141A || item.objtype == 0x1414 || item.objtype == 0x1418 || item.objtype == 0x1413)
+            SetObjProperty(item, "restrito_mob", 1);
+        endif
+    endforeach
+
 	if (getObjProperty(corpse, "owner")) //se for tamed, atualiza a prop tamedpets do master
 		var masterserial := getObjProperty(corpse, "owner");
 		var master := SystemFindObjectBySerial(masterserial);
