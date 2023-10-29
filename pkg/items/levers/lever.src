@@ -126,7 +126,7 @@ program lever(who, item)
       return;
    endif
 
-   if(who.cmdlevel > 2)
+   if(who.cmdlevel > 0)
       var gump := ConstructGump(item);
       var res  := GFSendGump(who, gump);
 
