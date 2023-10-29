@@ -40,9 +40,12 @@ var staffmode:= 0;
 var undo:= array{};
 
 program architect_gump(who)
-
+var arquiteto := GetObjProperty(who, "arquiteto") == 1; //PODE SER O TEM HABILIDADE, pra players q tiverem isso pra poder usar
   if (who.cmdlevel < STAFFMODELEVEL)
-	return 0;
+		if(!arquiteto)
+		return 0;
+		else
+	endif
   else
     staffmode:= 1;
     SendSysMessage (who, "*running in staff mode*");
@@ -1478,7 +1481,12 @@ function create_marked(who, x, y, z, type)
     prop["objtype"] := objtype;
     var total_rocks := AmountInContainer(who.backpack, prop);
 
-    if (total_rocks < custo)
+  if (who.cmdlevel < STAFFMODELEVEL) //para staff não precisar das pedras
+  else
+    staffmode:= 1;
+  endif
+
+    if (total_rocks < custo && !staffmode)
         SendSysMessageEx(who, "Voce nao tem pedras suficientes.", SSM_INFO);
         return;
     else

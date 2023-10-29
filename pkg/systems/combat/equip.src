@@ -42,6 +42,12 @@ program equipweapon(who, item)
 	SetName(who, " ");
 	SetName(who, ori_name);
 
+    //Nao deixa o player equipar itens que sao restritos a mobs
+	if (GetObjProperty(item,"restrito_mob"))
+        SendSysMessageEx(who, "Voce nao pode equipar esse item.", SSM_FAIL);
+        return 0;
+    endif
+
     var dual_weapons := Array{0x27a9, 0x27ab, 0x8fd, 0x27af};
     var left_hand := GetEquipmentByLayer(who, LAYER_HAND2);
     var right_hand := GetEquipmentByLayer(who, LAYER_HAND1);
