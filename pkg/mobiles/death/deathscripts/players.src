@@ -137,6 +137,7 @@ program death(params)
 					logs := dias;
 				endif
 				FindAccount(ghost.acctname).setprop("mortelog", logs);
+                FindAccount(ghost.acctname).setprop("heir_days", dias);
                 var skill_heir := get_heir_skills(ghost);
                 FindAccount(ghost.acctname).setprop("herdeiro", skill_heir);
 				SendSysMessage(ghost, "Seu proximo char tera " + dias + "adicionados ao seu createdate");

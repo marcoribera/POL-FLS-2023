@@ -51,7 +51,7 @@ program Logon(who)
     var heirdat := FindAccount(who.acctname).getprop("herdado");
 
     if (heirdat)
-        var dias := FindAccount(who.acctname).getprop("mortelog");
+        var dias := FindAccount(who.acctname).getprop("heir_days");
         SetObjProperty(who, "createdate", dias);
     endif
 

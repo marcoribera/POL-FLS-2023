@@ -85,6 +85,7 @@ program fichaRP(who, text)
         elseif(FindAccount(who.acctname).getprop("herdado"))
             FindAccount(who.acctname).eraseprop("herdeiro");
             FindAccount(who.acctname).eraseprop("herdado");
+            FindAccount(who.acctname).eraseprop("heir_days");
 		endif
 
 		var comp := Array;
