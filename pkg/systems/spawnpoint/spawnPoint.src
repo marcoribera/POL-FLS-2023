@@ -51,7 +51,7 @@ array{
 
 program use_spawnpoint(who, spawnpoint)
 	EraseObjProperty(spawnpoint, "IgnoreLOS");
-	if(who.cmdlevel < 2)
+	if(who.cmdlevel < 1)
 		return;
 	endif
 	var spawn := GetObjProperty(spawnpoint, "Spawn");
