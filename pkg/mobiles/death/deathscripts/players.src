@@ -130,8 +130,20 @@ program death(params)
 				SetObjProperty(corpse, "morto", 1);
 				SetObjProperty(ghost, "morto", 1);
 				SetObjProperty(corpse, "deathtimer", polcore().systime);
-				var dias := GetObjProperty(ghost, "createdate");
-				dias := (polcore().systime - dias)/2;
+				//var dias := GetObjProperty(ghost, "createdate");			
+                var dias := idadeCharInDays(ghost);
+                print("dias: " + dias);
+                if (dias < 2 || dias == error || dias > 1000) // byte hell, char recriado muitas vzes tava vindo com 19k+ dias 
+                    dias := 2;
+                endif
+				SendSysMessage(ghost, "Seu proximo char comecara com " + Cint((dias / 2)) + " dias de cap.");
+			    dias := Cint((dias / 2)) * 86400; // 24h em segundos
+				dias := (polcore().systime - dias);
+                //if (dias == error)
+                //    dias := polcore().systime;
+                //endif
+                print("dias: " + dias);
+                print("time_now: " + polcore().systime);
 				var logs := FindAccount(ghost).getprop("mortelog");
 				if (logs == error || logs < dias)
 					logs := dias;
@@ -140,7 +152,6 @@ program death(params)
                 FindAccount(ghost.acctname).setprop("heir_days", dias);
                 var skill_heir := get_heir_skills(ghost);
                 FindAccount(ghost.acctname).setprop("herdeiro", skill_heir);
-				SendSysMessage(ghost, "Seu proximo char tera " + dias + "adicionados ao seu createdate");
                 
 				sleep(5);
 				return 1;
@@ -204,14 +215,21 @@ program death(params)
 			SetObjProperty(corpse, "morto", 1);
 			SetObjProperty(ghost, "morto", 1);
 			SetObjProperty(corpse, "deathtimer", polcore().systime);
-			var dias := GetObjProperty(ghost, "createdate");
-			dias := (polcore().systime - dias) / 2;
+            var dias := idadeCharInDays(ghost);
+            print("dias: " + dias);
+            if (dias < 2 || dias == error || dias > 1000) // byte hell, char recriado muitas vzes tava vindo com 19k+ dias 
+                dias := 2;
+            endif
+            SendSysMessage(ghost, "Seu proximo char comecara com " + Cint((dias / 2)) + " dias de cap.");
+            dias := Cint((dias / 2)) * 86400; // 24h em segundos
 			var logs := FindAccount(ghost).getprop("mortelog");
-				if (logs == error || logs < dias)
-				logs := dias;
-				endif
-			FindAccount(ghost.acctname).setprop("mortelog", logs);
-			SendSysMessage(ghost, "Seu proximo char tera " + dias + "adicionados ao seu createdate");
+            if (logs == error || logs < dias)
+                logs := dias;
+            endif
+            FindAccount(ghost.acctname).setprop("mortelog", logs);
+            FindAccount(ghost.acctname).setprop("heir_days", dias);
+            var skill_heir := get_heir_skills(ghost);
+            FindAccount(ghost.acctname).setprop("herdeiro", skill_heir);
 			return 1;
 		endif
 		tempo := tempo - 1;
@@ -411,4 +429,12 @@ function get_heir_skills(who)
     skills_bonus.+bonus_secundarias := bonus_secundarias;
     skills_bonus.+bonus_terciarias := bonus_terciarias;
     return skills_bonus;
+endfunction
+
+function idadeCharInDays(character)// para 10000 deu 292 segundos 300
+    var criadoEm := cint(GetObjProperty(character, "createdate"));
+    var tempoAgora := polcore().systime;// segundos
+    var tempoDevida:= tempoAgora - criadoEm;
+    var dias := cint(tempoDevida/(86400));//24horas*60minutos*60segundos = 86400 segundos
+    return dias;
 endfunction
