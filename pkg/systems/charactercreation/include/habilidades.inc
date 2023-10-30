@@ -1,3 +1,6 @@
+use cfgfile;
+
+include ":attributes:attributes";
 
 function NivelHabilidade(habilidade, classe)
 
@@ -324,9 +327,29 @@ function ComprarHabGump(who, habs, habsfac)
 
 endfunction
 
+function EnumeratePhysicalItemsInMobile(mobile)
+	var EquipList := array;
+
+	var SkipLayers := {11, 16, 21, 25};
+	var i;
+
+	for (i:=0; i<=25; i:=i+1)
+		if (!(i in SkipLayers))
+			var layer := GetEquipmentByLayer(mobile, i);
+			if (layer)
+				EquipList.append(layer);
+			endif
+		endif
+	endfor
+
+	return EquipList;
+endfunction
+
 function comprarHabilidade(who, item, nv:=-1)
 	//SendSysMessage(who,"[Interno] Tentando comprar Hab Level "+nv);
+	var itemdesc := ReadConfigFile("::itemdesc");
 	var nivel;
+
 	if (nv != -1)
 		nivel := nv;
 	elseif (item)
@@ -415,6 +438,16 @@ function comprarHabilidade(who, item, nv:=-1)
 			who.resist_cold_mod  := who.resist_cold_mod + 25;
 			who.resist_poison_mod  := who.resist_poison_mod + 25;
 			who.resist_energy_mod  := who.resist_energy_mod + 25;
+		elseif(escolhida == "Aura de Corrupcao" || escolhida == "Devocao")
+            var equips := EnumeratePhysicalItemsInMobile(who);
+            //foreach para pegar todos os equips no corpo e remover as penalidades
+            foreach equip in equips
+                if ((equip.isa(POLCLASS_ARMOR)) && equip.resist_physical > 0)
+                    //Quando comprar a habilidade de Aura de Corrupca ou Devocao, a penalidade eh removida
+                    var penalty := CInt(itemdesc[equip.objtype].MageryPenalty);
+                    AP_ModifySkillMod(who, MAGERY, (-1)*penalty);
+                endif
+            endforeach
 		endif
 		myhabs[nivel] := escolhida;
 		habs[nivel] := 2;
