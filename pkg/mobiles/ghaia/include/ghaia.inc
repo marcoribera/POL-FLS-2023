@@ -86,7 +86,8 @@ function CanFight(me, mobile, align)
 		        if ( (mytemplate == "spiritbear") || (mytemplate == "spiritpanther") || (mytemplate == "spiritserpent") 
                 || (mytemplate == "spiritwolf") || (mytemplate == "spiritualbear") || (mytemplate == "phasespider") 
                 || (mytemplate == "eruva") || (mytemplate == "luine") 
-                || (mytemplate == "centaur") || (mytemplate == "dryad")  || (mytemplate == "fadinha") || (mytemplate == "najassur") || (mytemplate == "pytnas") || (mytemplate == "carniceiro") || (mytemplate == "dragonete"))
+                || (mytemplate == "centaur") || (mytemplate == "dryad")|| (mytemplate == "fadinha") || (mytemplate == "najassur") 
+                || (mytemplate == "pytnas") || (mytemplate == "carniceiro") || (mytemplate == "dragonete") || (mytemplate == "criafuria"))
 				return 0;
 				endif
 		endif
