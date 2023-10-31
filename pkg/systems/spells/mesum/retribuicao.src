@@ -39,5 +39,11 @@ program SpellScript(params)
 	SendSysMessageEx(targ, "Olho por olho...", SSM_INFO);
 	TS_StartTimer(targ, "dmgreturn", time, lvl);
 
+	if (GetObjProperty(who, "#magiasilenciosa"))
+        SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+    endif
+    //Remove prop de magia silenciosa apos o cast ser completo
+    EraseObjProperty(who, "#magiasilenciosa");
+
 	return 1;
 endprogram

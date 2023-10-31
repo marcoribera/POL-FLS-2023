@@ -17,8 +17,9 @@ program SpellScript(params)
 		return;
 	endif
 
-
-	PlaySoundEffect(targ, SFX_SPELL_WEAKEN);
+    if (!GetObjProperty(who, "#magiasilenciosa"))
+        PlaySoundEffect(targ, SFX_SPELL_WEAKEN);
+    endif
 
 	var time := 0;
 	var oldx := who.x;
@@ -32,6 +33,13 @@ program SpellScript(params)
 		if (CheckResist(targ, VONTADE, 70, -CInt(AP_GetSkill(who, MAGICLORE)/2.5))) // Muito mais Difícil de resistir
 			SendSysMessageEx(who, "Voce nota que o alvo nao foi afetado.", SSM_FAIL);
 			SendSysMessageEx(targ, "Voce resistiu a magia.", SSM_INFO);
+
+			if (GetObjProperty(who, "#magiasilenciosa"))
+                SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+            endif
+            //Remove prop de magia silenciosa apos o cast ser completo
+            EraseObjProperty(who, "#magiasilenciosa");
+
 			who.frozen := 0;
 		return;
 		endif
@@ -39,6 +47,13 @@ program SpellScript(params)
 		if (CheckResist(targ, VONTADE, 30, -CInt(AP_GetSkill(who, MAGICLORE)/2.5)))
 			SendSysMessageEx(who, "Voce nota que o alvo nao foi afetado.", SSM_FAIL);
 			SendSysMessageEx(targ, "Voce resistiu a magia.", SSM_INFO);
+
+			if (GetObjProperty(who, "#magiasilenciosa"))
+                SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+            endif
+            //Remove prop de magia silenciosa apos o cast ser completo
+            EraseObjProperty(who, "#magiasilenciosa");
+
 			who.frozen := 0;
 		return;
 		endif
@@ -66,6 +81,12 @@ program SpellScript(params)
 
 	who.frozen := 0;
 	targ.frozen := 0;
+
+	if (GetObjProperty(who, "#magiasilenciosa"))
+        SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+    endif
+    //Remove prop de magia silenciosa apos o cast ser completo
+    EraseObjProperty(who, "#magiasilenciosa");
 
 	return 1;
 endprogram

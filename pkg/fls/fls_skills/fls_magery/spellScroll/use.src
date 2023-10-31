@@ -3,6 +3,7 @@ use os;
 use cfgfile;
 
 include ":fls_magery:basicMagery";
+include "include/say";
 
 program useScroll(who, scroll)
 
@@ -23,6 +24,12 @@ program useScroll(who, scroll)
 			return 0;
 		endif
 	endif
-	
+
+	if (GetObjProperty(who, "#magiasilenciosa"))
+        SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+    endif
+    //Remove prop de magia silenciosa apos o cast ser completo
+    EraseObjProperty(who, "#magiasilenciosa");
+
 	return 1;
 endprogram

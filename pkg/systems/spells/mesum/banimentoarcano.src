@@ -28,7 +28,10 @@ program SpellScript(params)
 		return;
 	endif
 
-	PlaySoundEffect(who, SFX_SPELL_TELEKINESIS );
+    if (!GetObjProperty(who, "#magiasilenciosa"))
+        PlaySoundEffect(who, SFX_SPELL_TELEKINESIS );
+    endif
+
 	if(TemHabilidade(who, "Vontade Esmagadora"))
 		if (CheckResist(targ, VONTADE, 25 + cint(AP_GetSkill(who, MAGICLORE))))
 			SendSysMessageEx(who, "Voce nota que o alvo nao foi afetado.", SSM_FAIL);
@@ -45,13 +48,20 @@ program SpellScript(params)
 
 	var location := {targ.x, targ.y, targ.z};
 
-	PlayMovingEffectXYZEx( targ.x, targ.y, targ.z, targ.x, targ.y, targ.z + 60, targ.realm, GFX_LARGE_FIREBALL, 1, 10, 2320);
+    if (!GetObjProperty(who, "#magiasilenciosa"))
+        PlayMovingEffectXYZEx( targ.x, targ.y, targ.z, targ.x, targ.y, targ.z + 60, targ.realm, GFX_LARGE_FIREBALL, 1, 10, 2320);
+    endif
 	Corromper(who, 27, targ);
 
 	MoveObjectToLocation(targ, 10, 10, 10, targ.realm,  MOVEOBJECT_FORCELOCATION );
 	sleep(120);
 	MoveObjectToLocation(targ, location[1], location[2], location[3], targ.realm,  MOVEOBJECT_FORCELOCATION );
 
+    if (GetObjProperty(who, "#magiasilenciosa"))
+        SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+    endif
+    //Remove prop de magia silenciosa apos o cast ser completo
+    EraseObjProperty(who, "#magiasilenciosa");
 
 	return 1;
 endprogram     
