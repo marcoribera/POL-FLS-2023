@@ -30,9 +30,16 @@ program SpellScript(params)
 	endif
 	AP_SetVital(who, MANA, mana);
 	
- 
-	PlaySoundEffect(who, 385);
+    if (!GetObjProperty(who, "#magiasilenciosa"))
+        PlaySoundEffect(who, 385);
+    endif
 	SendSysMessageEx(who, "Voce converteu sua energia vital em mana", SSM_INFO);
+
+	if (GetObjProperty(who, "#magiasilenciosa"))
+        SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+    endif
+    //Remove prop de magia silenciosa apos o cast ser completo
+    EraseObjProperty(who, "#magiasilenciosa");
 	
 	return 1;
 endprogram 

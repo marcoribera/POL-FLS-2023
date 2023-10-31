@@ -30,7 +30,9 @@ program SpellScript(params)
 		return 0;
 	endif
 
-	PlaySoundEffect(who, SFX_SPELL_TELEKINESIS );	
+    if (!GetObjProperty(who, "#magiasilenciosa"))
+        PlaySoundEffect(who, SFX_SPELL_TELEKINESIS );
+    endif
 
 	if ( targ.Telekinesis(who) );
 		sleepms(20);
@@ -52,6 +54,11 @@ program SpellScript(params)
 		endif
 	endif
 
+    if (GetObjProperty(who, "#magiasilenciosa"))
+        SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+    endif
+    //Remove prop de magia silenciosa apos o cast ser completo
+    EraseObjProperty(who, "#magiasilenciosa");
 
 	return 1;
 

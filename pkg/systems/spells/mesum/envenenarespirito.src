@@ -30,6 +30,13 @@ program SpellScript(params)
 		else
 			SendSysMessageEx(who, "O alvo  resistiu a magia.", SSM_FAIL);
 			SendSysMessageEx(targ, "Voce resistiu a magia.", SSM_INFO);
+
+			if (GetObjProperty(who, "#magiasilenciosa"))
+                SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+            endif
+            //Remove prop de magia silenciosa apos o cast ser completo
+            EraseObjProperty(who, "#magiasilenciosa");
+
 			return;
 		endif
 	else
@@ -39,9 +46,22 @@ program SpellScript(params)
 		else
 			SendSysMessageEx(who, "O alvo  resistiu a magia.", SSM_FAIL);
 			SendSysMessageEx(targ, "Voce resistiu a magia.", SSM_INFO);
+
+			if (GetObjProperty(who, "#magiasilenciosa"))
+                SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+            endif
+            //Remove prop de magia silenciosa apos o cast ser completo
+            EraseObjProperty(who, "#magiasilenciosa");
+
 			return;
 		endif
 	endif
+
+    if (GetObjProperty(who, "#magiasilenciosa"))
+        SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+    endif
+    //Remove prop de magia silenciosa apos o cast ser completo
+    EraseObjProperty(who, "#magiasilenciosa");
 
 	return 1;
 endprogram

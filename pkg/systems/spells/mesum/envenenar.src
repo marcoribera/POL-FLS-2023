@@ -55,5 +55,12 @@ program SpellScript(params)
 	endif
 	Set_Critical( 0 );
 	PrintTextAbovePrivate(targ, "Veneno level "+lvl + ".", who, 3, 38); // vermelho
+
+	if (GetObjProperty(who, "#magiasilenciosa"))
+        SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+    endif
+    //Remove prop de magia silenciosa apos o cast ser completo
+    EraseObjProperty(who, "#magiasilenciosa");
+
 	return 1;
 endprogram

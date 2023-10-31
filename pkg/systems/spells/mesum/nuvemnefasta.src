@@ -55,5 +55,12 @@ program SpellScript(params)
 		SetObjProperty(item, "PoisonLevel", lvl);
 	endforeach
 	Set_Critical(0);
+
+	if (GetObjProperty(who, "#magiasilenciosa"))
+        SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+    endif
+    //Remove prop de magia silenciosa apos o cast ser completo
+    EraseObjProperty(who, "#magiasilenciosa");
+
 	return 1;
 endprogram
