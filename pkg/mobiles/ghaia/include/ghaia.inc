@@ -85,8 +85,9 @@ function CanFight(me, mobile, align)
 	  	if (povo == "Numajene" )
 		        if ( (mytemplate == "spiritbear") || (mytemplate == "spiritpanther") || (mytemplate == "spiritserpent") 
                 || (mytemplate == "spiritwolf") || (mytemplate == "spiritualbear") || (mytemplate == "phasespider") 
-                || (mytemplate == "eruva") || (mytemplate == "criafuria")  || (mytemplate == "luine") 
-                || (mytemplate == "centaur") || (mytemplate == "dryad")  || (mytemplate == "fadinha"))
+                || (mytemplate == "eruva") || (mytemplate == "luine") 
+                || (mytemplate == "centaur") || (mytemplate == "dryad")|| (mytemplate == "fadinha") || (mytemplate == "najassur") 
+                || (mytemplate == "pytnas") || (mytemplate == "carniceiro") || (mytemplate == "dragonete") || (mytemplate == "criafuria"))
 				return 0;
 				endif
 		endif
@@ -97,7 +98,7 @@ function CanFight(me, mobile, align)
         || (mytemplate == "giantserpent") || (mytemplate == "snake") || (mytemplate == "mongbat") || (mytemplate == "naja")
         || (mytemplate == "warg") || (mytemplate == "polarbear") || (mytemplate == "lynx") ||  (mytemplate == "cougar")
         || (mytemplate == "alligator") || (mytemplate == "panther") || (mytemplate == "grizzlybear") || (mytemplate == "wolf") || (mytemplate == "sapop") || (mytemplate == "jackal")
-	|| (mytemplate == "giantscorpion") || (mytemplate == "carangueijo") || (mytemplate == "wolfleather") || (mytemplate == "najassur") || (mytemplate == "pytnas") || (mytemplate == "carniceiro") || (mytemplate == "dragonete") )
+	|| (mytemplate == "giantscorpion") || (mytemplate == "carangueijo") || (mytemplate == "wolfleather") )
 			if (isBoss(mobile)) //verifica se é boss
 				return 1;
 			else
@@ -148,8 +149,8 @@ function CanFight(me, mobile, align)
         if 	(chardata["povo"] == "Numajene" ) 
 		        if ( (mytemplate == "spiritbear") || (mytemplate == "spiritpanther") || (mytemplate == "spiritserpent") 
                 || (mytemplate == "spiritwolf") || (mytemplate == "spiritualbear") || (mytemplate == "phasespider") 
-                || (mytemplate == "eruva") || (mytemplate == "criafuria")  || (mytemplate == "luine") 
-                || (mytemplate == "centaur") || (mytemplate == "dryad")  || (mytemplate == "fadinha"))
+                || (mytemplate == "eruva") || (mytemplate == "luine") 
+                || (mytemplate == "centaur") || (mytemplate == "dryad")  || (mytemplate == "fadinha") || (mytemplate == "najassur") || (mytemplate == "pytnas") || (mytemplate == "carniceiro") || (mytemplate == "dragonete"))
 				return 0;
 				endif
 		endif

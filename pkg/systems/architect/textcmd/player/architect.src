@@ -16,6 +16,8 @@ use util;
 
 //include "include/findCity";
 //include "include/www";
+include ":containers:containers";
+include "include/say";
 include ":gumps:yesNo";
 include ":architect:include/architect";
 include ":architect:include/systemclock";
@@ -38,9 +40,12 @@ var staffmode:= 0;
 var undo:= array{};
 
 program architect_gump(who)
-
+var arquiteto := GetObjProperty(who, "arquiteto") == 1; //PODE SER O TEM HABILIDADE, pra players q tiverem isso pra poder usar
   if (who.cmdlevel < STAFFMODELEVEL)
-	return 0;
+		if(!arquiteto)
+		return 0;
+		else
+	endif
   else
     staffmode:= 1;
     SendSysMessage (who, "*running in staff mode*");
@@ -1470,14 +1475,41 @@ endfunction
  * returns <objref> to the created item
 */
 function create_marked(who, x, y, z, type)
+    var prop := dictionary;
+    var custo := 10; //Pedras necessarias para criar uma parede
+    var objtype := GetObjTypeByName("rock");
+    prop["objtype"] := objtype;
+    var total_rocks := AmountInContainer(who.backpack, prop);
 
-  var created:= CreateItemAtLocation (x, y, z, type);
-  created.movable:= 0;
-//  created.saveonexit:= 0;
-//  created.usescript:= ":architect:cantuse";
-  SetObjProperty (created, "#built_by_architect", who.serial);
-  return created;
+  if (who.cmdlevel < STAFFMODELEVEL) //para staff não precisar das pedras
+  else
+    staffmode:= 1;
+  endif
 
+    if (total_rocks < custo && !staffmode)
+        SendSysMessageEx(who, "Voce nao tem pedras suficientes.", SSM_INFO);
+        return;
+    else
+        foreach item in EnumerateItemsInContainer(who.backpack)
+            if(item.objtype == objtype)
+                DestroyItem(item);
+                custo := custo - 1;
+
+                if(custo == 0)
+                    break;
+                endif
+            endif
+        endforeach
+
+        SendSysMessageEx(who, "Voce usou a(s) pedra(s).", SSM_INFO);
+        var created:= CreateItemAtLocation (x, y, z, type);
+        created.movable:= 0;
+        //  created.saveonexit:= 0;
+        //  created.usescript:= ":architect:cantuse";
+        SetObjProperty (created, "#built_by_architect", who.serial);
+
+        return created;
+    endif
 endfunction
 
 

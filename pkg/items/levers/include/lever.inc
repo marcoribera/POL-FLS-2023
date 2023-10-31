@@ -2,6 +2,8 @@ const ONLY_ON := 0x11;
 
 include ":traps:traps";
 include "include/arrays";
+include ":tn:boss";
+include ":combat:hitscripts";
 
 function ChangeLeverStatus(la, only_on_levers := 0)
    if (typeof(la) != "Array")
@@ -204,7 +206,43 @@ function normalusage(who, item)
    if (opts.teleport_to)
       teleporter(item, opts);
    endif
+	if (opts.spawn_boss)
+		if (status == "off")
+			spawnBoss(item, opts);
+		else
+		  var boss :=  SystemFindObjectBySerial( GetObjProperty(item, "champ") );
+			ApplyDamage( boss, 20000);
+			EraseObjProperty(item, "champ");
+		endif
+	endif
+endfunction
 
+function spawnBoss(item, opts)
+   SetObjProperty(item, "#inuse", 1);
+   Detach();
+ var cfg := GetObjProperty(item, "configboss");
+ var text_above := GetObjProperty(item, "txtabove");
+ var creature;
+		if (GetObjProperty(item, "loc") ==1 )
+			creature := Createboss(cfg.boss, item.x, item.y, item.z, item.realm);
+			sleepms(20);
+			if (!text_above)
+			else
+			PrintTextAbove(creature,""+text_above);
+			endif
+		else
+			var x := GetObjProperty(item, "x");
+			var y := GetObjProperty(item, "y");
+			var z := GetObjProperty(item, "z");
+			creature := Createboss(cfg.boss, cint(x), cint(y), cint(z), item.realm);
+			sleepms(20);
+			if (!text_above)
+			else
+				PrintTextAbove(creature,""+text_above);
+			endif
+		endif
+ SetObjProperty(item, "champ", creature.serial);
+ EraseObjProperty(item, "#inuse");
 endfunction
 
 function changegraphiclever(item, opts)
@@ -360,6 +398,9 @@ function reset(item, force_reset := 0)
    if (opts.moveitems)
       moveObjects(item, opts);
    endif
+//   	if (opts.spawn_boss)
+	//	spawnBoss(item, opts);
+	//endif
 
    SetRandomOrder(item);
 endfunction

@@ -15,9 +15,17 @@ program SpellScript(params)
 
 
 	SetObjProperty(who, "#presenteespiritual", ReadGameClock()+cint(AP_GetSkill(who, MAGICLORE)*6) );
-	PlaySoundEffect(who, 385);
+	if (!GetObjProperty(who, "#magiasilenciosa"))
+        PlaySoundEffect(who, 385);
+    endif
 	SendSysMessageEx(who, "Cada morte e um presente.", SSM_INFO);
 	Corromper(who, 29, 0);
+
+	if (GetObjProperty(who, "#magiasilenciosa"))
+        SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+    endif
+    //Remove prop de magia silenciosa apos o cast ser completo
+    EraseObjProperty(who, "#magiasilenciosa");
 	
 	return 1;
 endprogram 

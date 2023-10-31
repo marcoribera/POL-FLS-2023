@@ -14,12 +14,13 @@ include ":tn:cooldown";
 include ":charactercreation:habilidades";
 include ":attributes:advanceCheck";
 include ":charactercreation:resists";
+include ":charactercreation:createchar";
 
 program death(params)
 
 	var corpse := params[1];
 	var ghost := params[2];
-
+	Setobjproperty(corpse, "account", ghost.acctname);
 		//sendsysmessage(ghost, " " + corpse.x + " " + corpse.y);
 
 	if (GetObjProperty(ghost, "forjoumorte") == 1)
@@ -124,35 +125,49 @@ program death(params)
 				var region := GetRegionName(corpse);
 				var tipo := "morreu";
 				var coords := {corpse.x, corpse.y};
-				var nome := GetObjProperty(killer, "nome_inicial");
-				Start_script(":DiscordWebhook:discord", {tipo, nome, killer.acctname, ghost.name, region, coords});			
+				var nome := GetObjProperty(ghost, "nome_inicial");
+				Start_script(":DiscordWebhook:discord", {tipo, nome, ghost.acctname, killer.name, region, coords});			
 				SetObjProperty(corpse, "morto", 1);
 				SetObjProperty(ghost, "morto", 1);
 				SetObjProperty(corpse, "deathtimer", polcore().systime);
-				var dias := GetObjProperty(ghost, "createdate");
-				dias := (polcore().systime - dias)/2;
+				//var dias := GetObjProperty(ghost, "createdate");			
+                var dias := idadeCharInDays(ghost);
+                print("dias: " + dias);
+                if (dias < 2 || dias == error || dias > 1000) // byte hell, char recriado muitas vzes tava vindo com 19k+ dias 
+                    dias := 2;
+                endif
+				SendSysMessage(ghost, "Seu proximo char comecara com " + Cint((dias / 2)) + " dias de cap.");
+			    dias := Cint((dias / 2)) * 86400; // 24h em segundos
+				dias := (polcore().systime - dias);
+                //if (dias == error)
+                //    dias := polcore().systime;
+                //endif
+                print("dias: " + dias);
+                print("time_now: " + polcore().systime);
 				var logs := FindAccount(ghost).getprop("mortelog");
 				if (logs == error || logs < dias)
 					logs := dias;
 				endif
 				FindAccount(ghost.acctname).setprop("mortelog", logs);
-				SendSysMessage(ghost, "Seu proximo char tera " + dias + "adicionados ao seu createdate");
-
+                FindAccount(ghost.acctname).setprop("heir_days", dias);
+                var skill_heir := get_heir_skills(ghost);
+                FindAccount(ghost.acctname).setprop("herdeiro", skill_heir);
+                
 				sleep(5);
 				return 1;
 			endif
 		endif
 	endif
 
-if(killer.acctname)
-	var region := GetRegionName(corpse);
-	var tipo := "pvp";
-	var coords := {corpse.x, corpse.y};
-	var nome := GetObjProperty(killer, "nome_inicial");
-
-	Start_script(":DiscordWebhook:discord", {tipo, nome, killer.acctname, ghost.name, region, coords, ghost.acctname});
-endif
-	SendSysMessage(ghost, "Voce desmaiou.");
+    if(killer.acctname)
+        var region := GetRegionName(corpse);
+        var tipo := "pvp";
+        var coords := {corpse.x, corpse.y};
+        var nome := GetObjProperty(killer, "nome_inicial");
+        var nome_ghost := GetObjProperty(ghost, "nome_inicial"); 
+        Start_script(":DiscordWebhook:discord", {tipo, nome, killer.acctname, nome_ghost, region, coords, ghost.acctname});
+    endif
+        SendSysMessage(ghost, "Voce desmaiou.");
 
 	var pacto := PactoSepulturaCheck(ghost, corpse);
 	if (pacto == 1)
@@ -200,14 +215,21 @@ endif
 			SetObjProperty(corpse, "morto", 1);
 			SetObjProperty(ghost, "morto", 1);
 			SetObjProperty(corpse, "deathtimer", polcore().systime);
-			var dias := GetObjProperty(ghost, "createdate");
-			dias := (polcore().systime - dias) / 2;
+            var dias := idadeCharInDays(ghost);
+            print("dias: " + dias);
+            if (dias < 2 || dias == error || dias > 1000) // byte hell, char recriado muitas vzes tava vindo com 19k+ dias 
+                dias := 2;
+            endif
+            SendSysMessage(ghost, "Seu proximo char comecara com " + Cint((dias / 2)) + " dias de cap.");
+            dias := Cint((dias / 2)) * 86400; // 24h em segundos
 			var logs := FindAccount(ghost).getprop("mortelog");
-				if (logs == error || logs < dias)
-				logs := dias;
-				endif
-			FindAccount(ghost.acctname).setprop("mortelog", logs);
-			SendSysMessage(ghost, "Seu proximo char tera " + dias + "adicionados ao seu createdate");
+            if (logs == error || logs < dias)
+                logs := dias;
+            endif
+            FindAccount(ghost.acctname).setprop("mortelog", logs);
+            FindAccount(ghost.acctname).setprop("heir_days", dias);
+            var skill_heir := get_heir_skills(ghost);
+            FindAccount(ghost.acctname).setprop("herdeiro", skill_heir);
 			return 1;
 		endif
 		tempo := tempo - 1;
@@ -216,7 +238,6 @@ endif
 
 //	RessPlayer(ghost, corpse);
 	KataWakeUp(ghost, corpse);
-
 	return 1;
 endprogram
 
@@ -370,4 +391,50 @@ function PactoSepulturaCheck(ghost, corpse)
 	endif
 	return pacto;
 
+endfunction
+
+function get_heir_skills(who)
+    var primarias := GetPrimarias(who);
+    var chardata := GetObjProperty(who, "chardata");
+    var primarias_sum := 0;
+    foreach skill in primarias
+        primarias_sum += Cint(AP_GetTrueSkill(who, skill));
+    endforeach
+    if (chardata.kit == "Sabe-Tudo")
+        primarias_sum *= 2;
+    endif
+    var bonus_primarias := (primarias_sum - 80) / 4;
+
+    var secundarias := GetSecundarias(who);
+    var count := 0;
+    var secundarias_sum := 0;
+
+    foreach skill in secundarias
+        count++;
+        secundarias_sum += Cint(AP_GetTrueSkill(who, skill));
+    endforeach
+    var bonus_secundarias := (secundarias_sum - (count * 20)) / (count * 2);
+
+    var terciarias := GetTerciarias(who);
+    var terciarias_sum := 0;
+    count := 0;
+    foreach skill in terciarias
+        count++;
+        terciarias_sum += Cint(AP_GetTrueSkill(who, skill));
+    endforeach
+    var bonus_terciarias := (terciarias_sum / (count * 2));
+
+    var skills_bonus := struct;
+    skills_bonus.+bonus_primarias := bonus_primarias;
+    skills_bonus.+bonus_secundarias := bonus_secundarias;
+    skills_bonus.+bonus_terciarias := bonus_terciarias;
+    return skills_bonus;
+endfunction
+
+function idadeCharInDays(character)// para 10000 deu 292 segundos 300
+    var criadoEm := cint(GetObjProperty(character, "createdate"));
+    var tempoAgora := polcore().systime;// segundos
+    var tempoDevida:= tempoAgora - criadoEm;
+    var dias := cint(tempoDevida/(86400));//24horas*60minutos*60segundos = 86400 segundos
+    return dias;
 endfunction

@@ -78,19 +78,40 @@ function getNewDamageList(attacker)
 		endif
 
 		var ammo := GetObjProperty(attacker.weapon, "ammo");
+
+//		SendSysMessage( attacker, "Municao usada:" + ammo);
 		if (ammo)
 			var cfg:=ReadConfigFile(":woodworking:itemdesc");
 			var elem := FindConfigElem(cfg, ammo);
+//			SendSysMessage( attacker, "elem:" + elem);
 			var dmgtype := GetConfigStringArray(elem, "dmgtype");
-			if (dmgtype[1])
+//			SendSysMessage( attacker, "dmgtype:" + dmgtype);
+			var dmgbonus := CDbl(GetConfigString(elem, "dmgbonus"))/100.0;
+//			SendSysMessage( attacker, "dmgbonus:" + dmgbonus);
+			if(dmgtype)
 				foreach dmg in dmgtype
-					var physicalreduction := Cdbl( (list[DMG_PHYSICAL] * elem.dmgbonus) / 100.0 );
-					if (dmg != "Physical")
-						list[DMG_PHYSICAL] := Cdbl(list[DMG_PHYSICAL] - physicalreduction);
-					endif
+//					SendSysMessage( attacker, "Entendeu que tem ao menos um tipo especial de dano");
+					case (dmg)
+						"Physical":
+							list[DMG_PHYSICAL] += dmgbonus[_dmg_iter];
+							break;
+						"Cold":
+							list[DMG_COLD] += dmgbonus[_dmg_iter];
+							break;
+						"Fire":
+							list[DMG_FIRE] += dmgbonus[_dmg_iter];
+							break;
+						"Poison":
+							list[DMG_POISON] += dmgbonus[_dmg_iter];
+							break;
+						"Energy":
+							list[DMG_ENERGY] += dmgbonus[_dmg_iter];
+							break;
+						default:
+							break;
+					endcase
 				endforeach
 			endif
-
 		endif
 
 		return list;
@@ -283,6 +304,8 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 			tatics := tatics + CDbl(AP_GetSkill(who, SURVIVAL))/150.0; //Aplica bonus de Survival se forem criaturas selvagens ou dragões
 			SkillCheck(who, SURVIVAL, -1);
 		endif
+	else
+		tatics := CDbl(AP_GetSkill(who, TACTICS))/200.0; //Armazena o valor da skill que afeta dano
 	endif
 
 	//Bonus STR
@@ -302,7 +325,12 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 	//Calcula modificador total do atributo
 	var str := CDbl(AP_GetStat(who, stat)+strBonus)/150.0;
 	*/
-	var str := CDbl(AP_GetStat(who, stat)-50.0)/100.0;
+	var str;
+	if (who.npctemplate)
+		str := CDbl(AP_GetStat(who, stat))/200.0;
+	else
+		str := CDbl(AP_GetStat(who, stat)-60.0)/200.0;
+	endif
 	//Quando equipado arco curto, longo, besta, besta pesada e besta de repeticao a força não implica em modificador de dano
 	if ( (who.weapon.objtype == 0x13B2) || (who.weapon.objtype == 0x26CC) || (who.weapon.objtype == 0x0f4f) || (who.weapon.objtype == 0x13fd) || (who.weapon.objtype == 0x26CD) )
 		str := 0;
@@ -326,7 +354,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 			if (lower(categoriaDefender) == "undead" )
 				blessbonus := CDbl(GetObjProperty(who.weapon, "blessedbonus"));
 				if (!blessbonus)
-					blessbonus := 0.2; //20% - balanceamento depois da mudanca de calculo do dano
+					blessbonus := 0.4; //20% - balanceamento depois da mudanca de calculo do dano
 				endif
 			endif
 		endif
@@ -349,7 +377,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 		var manamoment 	:= AP_GetVital(who, "MANA");
 		var manatotal	:= AP_GetVitalMaximumValue(who, "MANA");
 		if 	(manamoment >= manatotal / 2)
-			other := other + 0.5;
+			other := other + (manamoment / 200);
 		endif
 	endif
 
@@ -404,9 +432,13 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 
 	if (TemHabilidade(who, "Estilo Mao Livre"))
 		if (who.weapon.attribute == "MeleeCombat1H" && !who.shield)
-			other := other + 0.4; //10% - balanceamento depois da mudanca de calculo do dano
+			other := other + 0.4;
 		endif
 	endif
+
+    if (who.weapon.objtype == 0x13b9 && !who.shield)
+        other := other + 0.1;
+    endif
 
 	if (isBloodied(defender))
 		if (temHabilidade(who, "Golpe de Misericordia"))
@@ -416,7 +448,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 
 	if ( IsRaging(who))
 		if (temHabilidade(who, "Baixo Limiar de Furia") || GetObjProperty(who, "NpcFuria"))
-			other:= other + 0.5; //50% de bonus - balanceamento depois da mudanca de calculo do dano
+			other:= other + 1.0; //50% de bonus - balanceamento depois da mudanca de calculo do dano
 			PrintText(who, "*enfurecido*");
 		endif
 		if (temHabilidade(who, "Furia Primitiva"))
@@ -481,7 +513,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 	endif
 
 	//Multiplicador de tactics X multiplicador de força X multiplicadores de habilidades e itens X Multiplicador de buff X multiplicador de Debuff
-
+	//dmg := CInt(dmg*(1.0+(2*tatics))*(1.0+str)*(1.0+(weapon+other))*(inimigo_predileto)*(1.0+blessbonus)*(1.0-reducao_dano));
 	dmg := CInt(dmg*Pow(1.0+tatics,2.0)*(1.0+str)*(1.0+(weapon+other))*(inimigo_predileto)*(1.0+blessbonus)*(1.0-reducao_dano));
 	if (dmg < 1)
 		dmg := 1;

@@ -136,7 +136,6 @@ function FailSpell(who)
 		PlaySoundEffect(who, SFX_SPELL_FAIL);
 		PlayObjectCenteredEffect(who, GFX_FIZZLE, 5, 50);
 	endif
-	EraseObjProperty(who, "#magiasilenciosa");
 	return 1;
 endfunction
 

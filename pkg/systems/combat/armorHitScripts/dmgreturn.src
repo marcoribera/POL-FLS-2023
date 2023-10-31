@@ -25,7 +25,14 @@ program HitScript(params)
     if (GetCooldown(attacker, "corpofechado") > 0)
         dmg := 1;
     endif
-	ApplyDamageEX(attacker, dmg, DMG_PHYSICAL);
+    var chardata := GetObjProperty(defender, "chardata");
+    
+    if(chardata.magia != "Mesum")
+	    ApplyDamageEX(attacker, dmg, DMG_PHYSICAL);
+    else
+        ApplyDamageEX(attacker, dmg, DMG_POISON);
+    endif
+
 	
 	return 1;
 endprogram

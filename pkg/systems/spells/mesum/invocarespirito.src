@@ -42,18 +42,20 @@ program SpellScript(params)
 	SendSysMessageEx(who, "Voce liberta as almas aprisionadas invocando um espirito", SSM_INFO);
 
 	//Efeito da magia
-	PlayMovingEffectXYZ( who.x, who.y, who.z, who.x, who.y + 5, who.z, 14202, 1, 0, 0, who.realm );
-	PlaySoundEffect(who, 386);
-	PlayMovingEffectXYZ( who.x, who.y, who.z, who.x - 5, who.y - 5, who.z, 14202, 1, 0, 0, who.realm );
-	PlayMovingEffectXYZ( who.x, who.y, who.z, who.x + 5 , who.y  + 5, who.z, 14202, 1, 0, 0, who.realm );
-	PlaySoundEffect(who, 386);
-	PlayMovingEffectXYZ( who.x, who.y, who.z, who.x, who.y - 5, who.z, 14202, 1, 0, 0, who.realm );
-	PlayMovingEffectXYZ( who.x, who.y, who.z, who.x + 5  , who.y - 5, who.z, 14202, 1, 0, 0, who.realm );
-	PlaySoundEffect(who, 386);
-	PlayMovingEffectXYZ( who.x, who.y, who.z, who.x + 5, who.y, who.z, 14202, 1, 0, 0, who.realm );
-	PlayMovingEffectXYZ( who.x, who.y, who.z, who.x + 5, who.y - 5, who.z, 14202, 1, 0, 0, who.realm );
-	PlaySoundEffect(who, 386);
-	PlayMovingEffectXYZ( who.x, who.y, who.z, who.x - 5, who.y, who.z, 14202, 1, 0, 0, who.realm );
+	if (!GetObjProperty(who, "#magiasilenciosa"))
+        PlayMovingEffectXYZ( who.x, who.y, who.z, who.x, who.y + 5, who.z, 14202, 1, 0, 0, who.realm );
+        PlaySoundEffect(who, 386);
+        PlayMovingEffectXYZ( who.x, who.y, who.z, who.x - 5, who.y - 5, who.z, 14202, 1, 0, 0, who.realm );
+        PlayMovingEffectXYZ( who.x, who.y, who.z, who.x + 5 , who.y  + 5, who.z, 14202, 1, 0, 0, who.realm );
+        PlaySoundEffect(who, 386);
+        PlayMovingEffectXYZ( who.x, who.y, who.z, who.x, who.y - 5, who.z, 14202, 1, 0, 0, who.realm );
+        PlayMovingEffectXYZ( who.x, who.y, who.z, who.x + 5  , who.y - 5, who.z, 14202, 1, 0, 0, who.realm );
+        PlaySoundEffect(who, 386);
+        PlayMovingEffectXYZ( who.x, who.y, who.z, who.x + 5, who.y, who.z, 14202, 1, 0, 0, who.realm );
+        PlayMovingEffectXYZ( who.x, who.y, who.z, who.x + 5, who.y - 5, who.z, 14202, 1, 0, 0, who.realm );
+        PlaySoundEffect(who, 386);
+        PlayMovingEffectXYZ( who.x, who.y, who.z, who.x - 5, who.y, who.z, 14202, 1, 0, 0, who.realm );
+    endif
 
 
 	undead := createnpcfromtemplate(undeadtemplate, who.x, who.y, who.z, 0 , who.realm);
@@ -77,6 +79,12 @@ program SpellScript(params)
 
 	SendSysMessageEx(who, "Voce teve sucesso ao invocar um espirirto.", SSM_INFO);
 	Corromper(who, 75, "0");
+
+	if (GetObjProperty(who, "#magiasilenciosa"))
+        SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+    endif
+    //Remove prop de magia silenciosa apos o cast ser completo
+    EraseObjProperty(who, "#magiasilenciosa");
 	
 	return 1;
 endprogram 

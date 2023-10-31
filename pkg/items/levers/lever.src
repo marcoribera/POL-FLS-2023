@@ -3,6 +3,7 @@ use os;
 use cfgfile;
 use util;
 use vitals;
+use datafile;
 
 include "include/client";
 include ":attributes:attributes";
@@ -13,6 +14,8 @@ include "include/damage";
 include ":timedscripts:timedScripts";
 include ":traps:traps";
 include ":levers:lever";
+include ":tn:boss";
+include ":combat:hitscripts";
 
 function ConstructGump(item)
    var opts := item.GetLeverOpts();
@@ -67,9 +70,15 @@ function ConstructGump(item)
    y += 20;
    GFTextLine(gump, 45, y, _ifElse(opts.walkon, 520, 500), "Ativar ao andar por cima");
    GFAddButton(gump, 25, y+2, 2117, 2118, GF_CLOSE_BTN, 7);
+   
+   y += 20;
+   GFTextLine(gump, 45, y, _ifElse(opts.spawn_boss, 520, 500), "Spawn Boss");
+   GFAddButton(gump, 25, y+2, 2117, 2118, GF_CLOSE_BTN, 55);
+
    y += 20;
    GFTextLine(gump, 45, y, _ifElse(GetObjProperty(item, "status") == "on", 520, 500), "Resetar agora");
    GFAddButton(gump, 25, y+2, 2117, 2118, GF_CLOSE_BTN, 8);
+
 
    GFPage(gump, 2);
    GFTextLine(gump, 145, 50, 900, "Escolha o gráfico da alavanca");
@@ -104,13 +113,20 @@ function ConstructGump(item)
 endfunction
 
 program lever(who, item)
+	var cfg := GetObjProperty(item,"configboss");
+		sendsysmessage(who, ""+cfg);
+		if  (cfg == error)
+		cfg := struct;
+		cfg.+boss := struct;
+	endif
+	
    _resolveParams(who, item);
    if ( !ReserveItem(item) || GetObjProperty(item, "#inuse") == 1 )
       SendSysMessage(who, "O item esta em uso.");
       return;
    endif
 
-   if(who.cmdlevel > 2)
+   if(who.cmdlevel > 0)
       var gump := ConstructGump(item);
       var res  := GFSendGump(who, gump);
 
@@ -149,6 +165,7 @@ program lever(who, item)
          23: item.graphic := 0x1092;           // graphic 4
             item.name    := "interruptor";
          24: setprp(who, item);           // setobjproperty()
+		 55: spawn_boss (who, item, cfg);
          98: changegraphic(who, item);
          97: setOnofftext(who, item);
          99: normalusage(who, item);           // use item like normal
@@ -455,5 +472,32 @@ function togglewalkon(who, item)
       SendSysMessageEx(who, "O item será mais ativado ao andar por cima", SSM_INFO);
       opts.walkon := 1;
    endif
+   item.setLeverOpts(opts);
+endfunction
+
+function spawn_boss(who, item, cfg)
+   var opts := item.GetLeverOpts();
+   var loc := RequestGump(who, "Escreva: nada  para aparecer onde a alavanca esta (Mude o graphic da alavanca para um passable!)", "OU Digite o x y z onde quer q o boss apareça: ", "", 1);
+       loc := splitwords(loc);
+   if (loc[1] == "nada")
+		SetObjProperty(item, "loc", 1);
+	else
+		var x := SetObjProperty(item, "x", loc[1]);
+		var y := SetObjProperty(item, "y", loc[2]);
+		var z := SetObjProperty(item, "z", loc[3]);
+   endif
+ 
+  var loc2 := RequestGump(who, "Escreva o que deseja que apareça em textabove na criatura, se nao quer deixe em branco");
+  if (loc2 == "")
+  else
+  SetObjProperty(item, "txtabove", loc2);
+  endif
+CreateBossStructGump(who, cfg.boss);
+	var erro := setobjproperty(item, "configboss", cfg);
+	
+	
+	SendSysmessage(who, "Configurado." + erro);
+
+opts.spawn_boss := 1;
    item.setLeverOpts(opts);
 endfunction

@@ -99,7 +99,7 @@ exported function handleUCOutgoing( character, byref packet )
 	SendSysMessage(source,"msg "+ packet.GetUnicodeString(48,length_of_text));
 */
 
-	if ( (getObjProperty(source, "metamorfose") != error) || (getObjProperty(source, "mudo") != error) || (getObjProperty(source, "#sleep") != error))
+	if ( (getObjProperty(source, "metamorfose") != error && !TemHabilidade(source, "Treinamento Druidico")) || (getObjProperty(source, "mudo") != error) || (getObjProperty(source, "#sleep") != error))
 		if  (type != 0x02)
 			return 1;
 		endif

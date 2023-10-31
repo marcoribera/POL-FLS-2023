@@ -9,26 +9,44 @@ include "include/client";
 
 program equipweapon(who, item)
 
-var descmod_item:=GetObjProperty(item,"descmod");
-var descmod:={};
+	var descmod_item:=GetObjProperty(item,"descmod");
+	var descmod:=array;
+	var aux:=array;
+
+	descmod:=GetObjProperty(who,"descmod");
 
 	if(descmod_item != error)
-		if(GetObjProperty(who,"descmod") == error)
-			descmod.append(descmod_item);
-			SetObjProperty(who,"descmod",descmod);
-		else
-			descmod:=GetObjProperty(who,"descmod");
-			if (descmod_item in descmod)
+		var add := 1;
+		if(descmod != error)
+			foreach desc in descmod
+				if (descmod_item == desc)
+					add := 0;
+				endif
+			endforeach
+			if(add)
+				aux := descmod;
+				aux.append(descmod_item);
 			else
-				descmod.append(descmod_item);
-				SetObjProperty(who,"descmod",descmod);
+				aux := descmod;
 			endif
+		else
+			aux.append(descmod_item);
 		endif
-
-		var ori_name:=who.name;
-		SetName(who, " ");
-		SetName(who, ori_name);
 	endif
+	if(aux.size() == 0)
+		EraseObjProperty(who,"descmod");
+	else
+		SetObjProperty(who,"descmod",aux);
+	endif
+	var ori_name:=who.name;
+	SetName(who, " ");
+	SetName(who, ori_name);
+
+    //Nao deixa o player equipar itens que sao restritos a mobs
+	if (GetObjProperty(item,"restrito_mob"))
+        SendSysMessageEx(who, "Voce nao pode equipar esse item.", SSM_FAIL);
+        return 0;
+    endif
 
     var dual_weapons := Array{0x27a9, 0x27ab, 0x8fd, 0x27af};
     var left_hand := GetEquipmentByLayer(who, LAYER_HAND2);
@@ -59,6 +77,13 @@ var descmod:={};
 			SendSysMessageEx(who, "Voce nao pode equipar nada nessa forma.");
 			return 0;
 		endif
+	endif
+
+	if (TemHabilidade(who, "Baixo Limiar de Furia"))
+			if (item.objtype == 0x13ec || item.objtype == 0x13ed || item.objtype == 0x13ee || item.objtype == 0x13ef || item.objtype == 0x13f0 || item.objtype == 0x13f1 || item.objtype == 0x13f2 || item.objtype == 0x13BB || item.objtype == 0x13C0 || item.objtype == 0x13BE || item.objtype == 0x13C3 || item.objtype == 0x13BF || item.objtype == 0xFFE6 || item.objtype == 0x13C4 || item.objtype == 0x1415 || item.objtype == 0x1416 || item.objtype == 0x1410 || item.objtype == 0x1417 || item.objtype == 0x1411 || item.objtype == 0x141A || item.objtype == 0x1414 || item.objtype == 0x1418 || item.objtype == 0x1413) 
+				SendSysMessageEx(who, "Como Berserker voce se recusa a usar armaduras de metal", SSM_FAIL);
+				return 0;
+			endif
 	endif
 
 	if ( !GetCooldown(item, "blessweapon") && GetObjProperty(item, "armaSagradaOriginalColor") != error )

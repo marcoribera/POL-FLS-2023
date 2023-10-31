@@ -8,11 +8,13 @@ program lingua(who)
 	var linguas := GetObjProperty(who, "linguas");
 	var qt_atual := linguas.size();
 	var linguasDesejadas;
+	var linguasOpt := array{"Antigo vanirio", "Antigo aquilrano", "Antigo thuriao", "Antigo Asanita", "Antigo Zharkiano", "Draconiano", "Abissal", "Silvestre", "Lingua dos Mortos"};
 	if (linguas != error)
 		var qt_atual := linguas.size();
-		SendSysMessageEx(who, "Ja tem lingua.", SSM_FAIL);
+		SendSysMessageEx(who, "Ja conhece lingua(s) extra(s).", SSM_FAIL);
 		if (qt_atual < qt)
-			linguasDesejadas := CheckBoxGump(who, 200, 300, "Escolha " + Cstr(qt-qt_atual) + " nova lingua. ", linguas);
+			SendSysMessageEx(who, "Aprendeu com sua inteligencia os idiomas: " + CStr(linguas), SSM_INFO);
+			linguasDesejadas := CheckBoxGump(who, 200, 300, "Escolha " + Cstr(qt-qt_atual) + ".", linguasOpt);
 			foreach idioma in linguas
 				if(!(idioma in  linguasDesejadas))
 					SendSysMessageEx(who, "Voce deve manter os idiomas anteriores.", SSM_FAIL);
@@ -34,7 +36,6 @@ program lingua(who)
 	else
 		if (qt > 0)
 			//SendSysMessageEx(who, "Escolha " + qt +" idiomas.", SSM_INFO);
-			var linguasOpt := array{"Antigo vanirio", "Antigo aquilrano", "Antigo thuriao", "Antigo Asanita", "Antigo Zharkiano", "Draconiano", "Abissal", "Silvestre", "Lingua dos Mortos"};
 			linguasDesejadas := CheckBoxGump(who, 200, 300, "Escolha " + qt + " linguas:", linguasOpt);
 			if (linguasDesejadas.size() > qt)
 				SendSysMessageEx(who, "Voce escolheu mais do que devia.", SSM_FAIL);

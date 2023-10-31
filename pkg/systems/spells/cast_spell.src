@@ -185,7 +185,6 @@ program SpellStarter(params)
                     PlayObjectCenteredEffect(mobile, GFX_FIZZLE, 5, 50);
                 endif
                     EraseObjProperty(mobile, "#Casting");
-                    EraseObjProperty(mobile, "#magiasilenciosa");
 				return 0;
 			endif
 
@@ -197,7 +196,6 @@ program SpellStarter(params)
                     PlaySoundEffect(mobile, SFX_SPELL_FAIL);
                 endif
 				EraseObjProperty(mobile, "#Casting");
-				EraseObjProperty(mobile, "#magiasilenciosa");
 				if (TemHabilidade(mobile, "Mago Precavido"))
 					HealMana(mobile, cint(spellinfo.mana*0.5));
 				endif
@@ -230,14 +228,13 @@ program SpellStarter(params)
 
 		while ( delay > 0 )
 			// If mobile is injured and does not have the protection spell on, fail the spell
-			if ( (orig_hp > AP_GetVital(mobile, "Hits") && (GetObjProperty(mobile, "kit") != "Mago de Combate") ) )
+			if ( (orig_hp > AP_GetVital(mobile, "Hits") && !TemHabilidade(mobile, "Concentracao Aprimorada") ) )
 				SendSysMessageEx(mobile, "Voce nao conseguiu se concentrar o suficiente para invocar esta magia.", SSM_FAIL);
 				FailSpell(mobile);
                 if (!GetObjProperty(mobile, "#magiasilenciosa"))
        				PlaySoundEffect(mobile, SFX_SPELL_FAIL);
                     PlayObjectCenteredEffect(mobile, GFX_FIZZLE, 5, 50);
-                endif				
-                EraseObjProperty(mobile, "#magiasilenciosa");
+                endif
 				EraseObjProperty(mobile, "#Casting");
 				if (TemHabilidade(mobile, "Mago Precavido"))
 					HealMana(mobile, cint(spellinfo.mana*0.5));
@@ -252,7 +249,6 @@ program SpellStarter(params)
                 if (!GetObjProperty(mobile, "#magiasilenciosa"))
        				PlaySoundEffect(mobile, SFX_SPELL_FAIL);
                 endif
-                EraseObjProperty(mobile, "#magiasilenciosa");
 				EraseObjProperty(mobile, "#Casting");
 				if (TemHabilidade(mobile, "Mago Precavido"))
 					HealMana(mobile, cint(spellinfo.mana*0.5));
@@ -376,7 +372,6 @@ program SpellStarter(params)
 	endif
 
 	//MS_SpellDebug(mobile, "Spell starter completed.");
-	EraseObjProperty(mobile, "#magiasilenciosa");
 	EraseObjProperty(mobile, "#Casting");
 
 	return 1;

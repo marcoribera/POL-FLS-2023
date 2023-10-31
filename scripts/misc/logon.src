@@ -35,6 +35,8 @@ program Logon(who)
 
 	var createdat :=  getobjproperty(who, "createdate");
 	var obitodat := FindAccount(who.acctname).getprop("mortelog");
+
+
 	if (!obitodat)
 		if (createdat == error)
 		SetObjProperty(who, "createdate", polcore().systime);
@@ -46,6 +48,12 @@ program Logon(who)
 		endif
 
 	endif
+    var heirdat := FindAccount(who.acctname).getprop("herdado");
+
+    if (heirdat)
+        var dias := FindAccount(who.acctname).getprop("heir_days");
+        SetObjProperty(who, "createdate", dias);
+    endif
 
 	//checa se vai subir skill passiva
 	if (CInt(FindAccount(who.acctname).getprop("nota")) == 4)

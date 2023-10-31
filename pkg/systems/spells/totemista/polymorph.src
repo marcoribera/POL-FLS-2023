@@ -37,8 +37,7 @@ program summontotem(params)
 
 	var skill_a := getConfigInt(elem, "skill_a");
 	var skill_d := getConfigInt(elem, "skill_d");
-	var bonus := (AP_GetSkill(who, MAGICLORE)-20.0)/4; //skill 0 -> -5 // Skill 20 -> 0 // Skill 40 -> +5 // Skill 100 -> +20
-    //var bonus := CINT(AP_GetSkill(who, MAGICLORE)/5);
+    var bonus := CINT(AP_GetSkill(who, MAGICLORE)/5);
 	if (temHabilidade(who, "Forma Atroz"))
 		skill_a := skill_a + bonus;
 		skill_d := skill_d + bonus;
@@ -59,6 +58,7 @@ program summontotem(params)
 
     var moon_fase := GetGlobalProperty("moonfase");
     if (graphic == 1070 && moon_fase == "cheia")
+    	SetObjProperty(who, "polymorphbonus_moon", bonus);
     	AP_SetSkillMod(who, TACTICS, AP_GetSkillMod(who, TACTICS) + bonus);
 		skill_a := skill_a + bonus;
 		skill_d := skill_d + bonus;
@@ -144,12 +144,16 @@ function Transforma(who, animal, snd, graphic,namepoly)
 		SetObjProperty(who, "metamorfose", metamorfose);
 		who.graphic := graphic;
 		// who.truegraphic := graphic;
-		//	who.squelch(-1);
+        //if (TemHabilidade(who, "Treinamento Druidico"))
+        //    who.squelch(0);
+        //else
+        //    who.squelch(-1);
+        //endif
 		who.color := polymorphColor;
 	endif
 
 	// Alterado por Edmond
-	print("name: " + namepoly);
+	//print("name: " + namepoly);
 	SetName(who,namepoly);
 
 endfunction

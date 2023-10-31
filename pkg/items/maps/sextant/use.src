@@ -7,10 +7,9 @@ use math;
 
 program useScript(who, sextant)
 	PrintTextAbovePrivate(who, ToSextant(who.x, who.y), who);
-	
+	//PrintTextAbovePrivate(who, "*Suas Coordenadas: " + who.x + "-" + who.y + "*", who);
 	return 1;
 endprogram
-
 
 function ToSextant(x, y)
 	var latitude_direction, longitude_direction;

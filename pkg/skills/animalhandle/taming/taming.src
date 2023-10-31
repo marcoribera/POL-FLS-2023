@@ -43,7 +43,7 @@ program TamingSkill(who)
 //checar se já tem animal fidelizado
 	var check_bond := 0;
 	var petsi := GetObjProperty(who, "TamedPets");
-	var habs := TemHabilidade(who, "Lider do Bando") || TemHabilidade(who, "Rei do Gado"); 
+	var habs := TemHabilidade(who, "Lider do Bando") || TemHabilidade(who, "Rei do Gado");
 		foreach serial in petsi
 			var pety := SystemFindObjectBySerial(serial);
 			if (GetObjProperty(pety, "bond") == "fiel")
@@ -107,6 +107,17 @@ program TamingSkill(who)
 		y := y + 20;
 	endforeach
 
+	 pets := GetObjProperty(who, "SummonedPets");
+	foreach serial in pets
+		var pet := SystemFindObjectBySerial(serial);
+		GFTextLine(yn_gump, 40, y, 1153, "" + pet.name + "(invocado)");
+		if (GetObjProperty(pet, "summoned"))
+			GFAddButton(yn_gump, 20, y+4, 2103, 2104, GF_CLOSE_BTN, (100+i));
+		endif
+		i := i + 1;
+		y := y + 20;
+	endforeach
+
 	var input := GFSendGump(who, yn_gump);
 	input := input[0];
 
@@ -129,7 +140,7 @@ program TamingSkill(who)
 		endif
 		//resetar os demais para "nao" e deixa só o selecionado como "sim"
 		var pets_all := GetObjProperty(who, "TamedPets");
-		var habs := TemHabilidade(who, "Lider do Bando") || TemHabilidade(who, "Rei do Gado"); 
+		var habs := TemHabilidade(who, "Lider do Bando") || TemHabilidade(who, "Rei do Gado");
 		foreach serial in pets_all
 			var pet_each := SystemFindObjectBySerial(serial);
 			if ( habs && GetObjProperty(pet_each, "bond") == "fiel")

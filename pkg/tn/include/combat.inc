@@ -18,10 +18,10 @@ function CalculateRawDamage(attacker, weapon)
 		var weaponelem := FindConfigElem(weaponcfg, weapon.objtype);
 		var dmg;
 		if ( GetObjProperty(attacker, "metamorfose") != error)
-      dmg := RandomDiceRoll( GetObjProperty(attacker, "dicedmg"));
+      		dmg := RandomDiceRoll( GetObjProperty(attacker, "dicedmg"));
 		else
-    dmg :=  RandomDiceRoll(cstr(weaponelem.Damage));
-    endif
+    		dmg :=  RandomDiceRoll(cstr(weaponelem.Damage));
+    	endif
 		return (  dmg + weapon.dmg_mod );
 	endif
 

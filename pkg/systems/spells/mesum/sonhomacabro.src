@@ -19,13 +19,27 @@ program SpellScript(params)
 		if (CheckResist(targ, VONTADE, 70, -CInt(AP_GetSkill(who, MAGICLORE)/2.5))) // Muito mais Difícil de resistir
 			SendSysMessageEx(who, "Voce nota que o alvo nao foi afetado.", SSM_FAIL);
 			SendSysMessageEx(targ, "Voce resistiu a magia.", SSM_INFO);
-		return;
+
+			if (GetObjProperty(who, "#magiasilenciosa"))
+                SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+            endif
+            //Remove prop de magia silenciosa apos o cast ser completo
+            EraseObjProperty(who, "#magiasilenciosa");
+
+		    return;
 		endif
 	else
 		if (CheckResist(targ, VONTADE, 30, -CInt(AP_GetSkill(who, MAGICLORE)/2.5)))
 			SendSysMessageEx(who, "Voce nota que o alvo nao foi afetado.", SSM_FAIL);
 			SendSysMessageEx(targ, "Voce resistiu a magia.", SSM_INFO);
-		return;
+
+			if (GetObjProperty(who, "#magiasilenciosa"))
+                SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+            endif
+            //Remove prop de magia silenciosa apos o cast ser completo
+            EraseObjProperty(who, "#magiasilenciosa");
+
+		    return;
 		endif
 	endif
 
@@ -35,7 +49,9 @@ program SpellScript(params)
 	if (e == error)
 		printtextabove(who, "sonho " + e);
 	endif
-	PlaySoundEffect(who, 0x658);
+	if (!GetObjProperty(who, "#magiasilenciosa"))
+        PlaySoundEffect(who, 0x658);
+    endif
 	SendSysMessageEx(who, "O alvo adormeceu.", SSM_INFO);
 
 	PlayObjectCenteredEffect(targ, 0xB8FB, 3, 56);
@@ -46,6 +62,11 @@ program SpellScript(params)
 		sleep(3);
 	endwhile
 
+    if (GetObjProperty(who, "#magiasilenciosa"))
+        SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
+    endif
+    //Remove prop de magia silenciosa apos o cast ser completo
+    EraseObjProperty(who, "#magiasilenciosa");
 
 	return 1;
 endprogram
