@@ -39,6 +39,7 @@ program runScript_CharProfileRequest( params )
 	var chr := SystemFindObjectBySerial(id);
 
 	if(chr.serial == who.serial) //Verifica se o jogador clicou no profile dele ou de outro jogador.
+		
 		var gump := GFCreateGump(0, 0, 640, 480);
 		GFDisposable(gump, 0);
 		GFResizePic(gump, 0, 0, 9200, 342, 319);
@@ -48,7 +49,7 @@ program runScript_CharProfileRequest( params )
 
 		var url_txt :=  GetObjProperty(who, "url");
 		if( !url_txt) //Se não tiver a url ou descrição, deixa em branco
-			url_txt := "";
+			url_txt := " ";
 		endif
 		var txt_1 := GFTextEntry(gump, 10, 36, 311, 53, 500, url_txt, 0);
 
@@ -57,7 +58,7 @@ program runScript_CharProfileRequest( params )
 
 		var descricao_txt := GetObjProperty(who, "descricao");
 		if( !descricao_txt)
-			descricao_txt := "";
+			descricao_txt := " ";
 		endif
 		var txt_2 := 	GFTextEntry(gump, 13, 123, 302, 143,500, descricao_txt, 0);
 
@@ -79,17 +80,120 @@ program runScript_CharProfileRequest( params )
 			SetObjProperty( who, "url", url);
 			SetObjProperty( who, "descricao", descricao);
 
-			SendHTMLGump(who, who.name, "<center><img src=\"" + GetObjProperty(who, "url") + "\" width:200 height:200 align=center></center>" + "<div align=\"left\">" + GetObjProperty(who, "descricao") + "</div>" );
+			var Object_Name;
+			var conhecidos := dictionary;
+			if(GetObjProperty(who, "conhecidos"))
+
+				var ID := Cstr(chr.serial); //Salva o serial do personagem
+				if(GetObjProperty(chr, "disfarce"))
+					ID := Cstr(GetObjProperty(chr, "FakeID")); //Substitui o serial pelo falso quando o personagem observado está disfarçado
+				endif
+
+				conhecidos := GetObjProperty(who, "conhecidos"); //Lista de pessoas conhecidadas
+				if(conhecidos.Exists(ID))
+					Object_Name := conhecidos[ID];
+				else
+					Object_Name := chr.name;
+				endif
+			else
+				Object_Name := chr.name;
+			endif
+
+			//Cria o Gump de Profile
+			var gump := GFCreateGump();
+
+			//Gump
+			GFPage(gump, 0);
+			
+			//Background
+			GFResizePic(gump, 4, 3, 9270, 267, 383);
+			
+			//Profile Picture
+			GFHTMLArea(gump, 37, 41, 200, 200,"<img src=\"" + url + "\" width=\"200\" height=\"200\" x=\"0\" y=\"0\">");
+			
+			//Description
+			GFHTMLArea(gump, 20, 273, 236, 100, descricao, 1, 1);
+			
+			//Name
+			GFHTMLArea(gump, 16, 14, 239, 24, Object_Name, 1, 0);
+			
+			//Race
+			GFHTMLArea(gump, 19, 245, 239, 24, GetObjProperty(who, "raca"), 1, 0);
+
+			GFSendGump(who, gump);
+
 		endif
 	elseif (chr.serial != who.serial)
-		if (chr.name == "Desconhecido")
-			var incognito_url := "https://cdn.discordapp.com/attachments/123201376690896897/1051265848494530601/hooded_figure_by_dravek_d8e2ogu-pre.png";
+		if (chr.name == "Incognito" || chr.name == "Desconhecido")
+			var incognito_url := "https://i.ibb.co/xC4mB6Q/desconhecido.jpg";
 			var incognito_descricao := "A fisionomia desse indvíduo é difícil de discernir.";
-			SendHTMLGump(who, "Desconhecido", "<center><img src=\"" + incognito_url + "\" width:200 height:200 align=center></center>" + "<div align=\"left\">" + incognito_descricao + "</div>" );
+			
+			var gump2 := GFCreateGump();
+
+			//Gump
+			GFPage(gump2, 0);
+			
+			//Background
+			GFResizePic(gump2, 4, 3, 9270, 267, 383);
+			
+			//Profile Picture
+			GFHTMLArea(gump2, 37, 41, 200, 200,"<img src=\"" + incognito_url + "\" width=\"200\" height=\"200\" >");
+			
+			//Description
+			GFHTMLArea(gump2, 20, 273, 236, 100, incognito_descricao, 1, 1);
+			
+			//Name
+			GFHTMLArea(gump2, 16, 14, 239, 24, "Incognito", 1, 0);
+			
+			//Race
+			GFHTMLArea(gump2, 19, 245, 239, 24, "Desconhecido", 1, 0);
+
+			GFSendGump(who, gump2);
 		else
 			//who - personagem clicando
 			//chr - personagem clicado
-			SendHTMLGump(who, chr.name, "<center><img src=\"" + GetObjProperty(chr, "url") + "\" width:200 height:200 align=center></center>" + "<div align=\"left\">" + GetObjProperty(chr, "descricao") + "</div>" );
+
+			var Object_Name;
+			var conhecidos := dictionary;
+			if(GetObjProperty(who, "conhecidos"))
+
+				var ID := Cstr(chr.serial); //Salva o serial do personagem
+				if(GetObjProperty(chr, "disfarce"))
+					ID := Cstr(GetObjProperty(chr, "FakeID")); //Substitui o serial pelo falso quando o personagem observado está disfarçado
+				endif
+
+				conhecidos := GetObjProperty(who, "conhecidos"); //Lista de pessoas conhecidadas
+				if(conhecidos.Exists(ID))
+					Object_Name := conhecidos[ID];
+				else
+					Object_Name := chr.name;
+				endif
+			else
+				Object_Name := chr.name;
+			endif
+			
+			var gump2 := GFCreateGump();
+
+			//Gump
+			GFPage(gump2, 0);
+			
+			//Background
+			GFResizePic(gump2, 4, 3, 9270, 267, 383);
+			
+			//Profile Picture
+			GFHTMLArea(gump2, 37, 41, 200, 200,"<img src=\"" + GetObjProperty(chr, "url") + "\" width=\"200\" height=\"200\" x=\"0\" y=\"0\">");
+			
+			//Description
+			GFHTMLArea(gump2, 20, 273, 236, 100, GetObjProperty(chr, "descricao"), 1, 1);
+			
+			//Name
+			GFHTMLArea(gump2, 16, 14, 239, 24, Object_Name, 1, 0);
+			
+			//Race
+			GFHTMLArea(gump2, 19, 245, 239, 24, GetObjProperty(chr, "raca"), 1, 0);
+
+			GFSendGump(who, gump2);
+
 
 			if(who.hidden || who.concealed)//Determina se está hidden e mostra a mensagem de estar sendo observado
 				return;
@@ -168,7 +272,7 @@ program runScript_CharProfileRequest( params )
 	// else
 	// 	SysLog("Unknown profile mode: "+mode);
 	// endif
-
+	
 	return 1;
 
 endprogram
