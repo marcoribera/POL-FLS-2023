@@ -72,7 +72,7 @@ program summontotem(params)
 		espirito.resist_energy_mod  := 25;
 		espirito.resist_fire_mod  := 25;
 		SetObjProperty(espirito, "#ReflexosMod", 25);
-		SetObjProperty(espirito, "#ReflexosMod", 25);
+		SetObjProperty(espirito, "#FortitudeMod", 25);
 		SetObjProperty(espirito, "#VontadeMod", 25);
 	endif
 
