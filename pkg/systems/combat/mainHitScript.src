@@ -475,9 +475,9 @@ function WearDownArmor(defender, armor, rawdamage, weapon)
 		var wearchance := armr_elem.WearChance;
 		if ( TemHabilidade(defender, "Conservar Equipamento"))
 			wearchance := wearchance/2;
-			if (wearchance < 10)
-				wearchance := 10;
-			endif
+			//if (wearchance < 10)
+			//	wearchance := 10;
+			//endif
 		endif
 
 		//if (CInt(rawdamage) > dmg_to_wear)
@@ -527,9 +527,9 @@ function WearDownShield(defender, shield, rawdamage, weapon)
 		var wearchance := armr_elem.WearChance;
 		if ( TemHabilidade(defender, "Conservar Equipamento"))
 			wearchance := wearchance/2;
-			if (wearchance < 20)
-				wearchance := 20;
-			endif
+			//if (wearchance < 20)
+			//	wearchance := 20;
+			//endif
 		endif
 		//if (CInt(rawdamage) > dmg_to_wear)
 		if (RandomDiceRoll("1d100") <= wearchance)
@@ -570,9 +570,9 @@ function WearDownWeapon(attacker, weapon)
 			//Diminui pela metade a chance de um equipamento quebrar com a habilidde Conservar Equipamento
 			if (TemHabilidade(attacker, "Conservar Equipamento"))
 				wearchance := wearchance/2;
-				if (wearchance < 10)
-					wearchance := 10;
-				endif
+				//if (wearchance < 10)
+				//	wearchance := 10;
+				//endif
 			endif
 
 			if ( RandomDiceRoll("1d100") <= wearchance )
