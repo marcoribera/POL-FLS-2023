@@ -103,7 +103,7 @@ program skill_armslore(who)
 				var whos := GetObjProperty(item, "magicwho");
 				if (whos == error)
 					whos := array;
-					if (TemHabilidade(who, "Essencia de Zhark"))
+					if (TemHabilidade(who, "Fluxo Divino"))
 						SetObjProperty(item, "cargas", 30);	
 					endif
 				endif
