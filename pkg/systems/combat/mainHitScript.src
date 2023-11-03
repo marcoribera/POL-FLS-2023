@@ -677,8 +677,10 @@ function WeaponHitScripts(attacker, defender, weapon, armor, basedamage, rawdama
 		var dmg := 1;
         if (TemHabilidade(attacker, "Golpe Afiado"))
             dmg := basedamage + CInt(rawdamage*(AP_GetSkill(attacker, TACTICS)/100));
+            PlaySoundEffect(attacker, 0x510);
         else
             dmg := basedamage + CInt(rawdamage*(AP_GetSkill(attacker, ALCHEMY)/100));
+            PlaySoundEffect(attacker, 0x511);
         endif
 		start_script(":combat:weaponHitScripts/bleedingstrike", array{attacker, defender, weapon, armor, basedamage, dmg*2});
 	endif
