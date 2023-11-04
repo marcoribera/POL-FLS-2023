@@ -392,7 +392,7 @@ function DoPurchase(npc, player, input)
 //		SendSysMessage(player, _i_iter+" -> "+i);
 //	endforeach
 
-	if ( player.cmdlevel >= 3 || (GetObjProperty(player, "faccao") == GetObjProperty(npc, "faccao")))
+	if ( player.cmdlevel >= 3 || ( (GetObjProperty(npc, "faccao") != error) && (GetObjProperty(player, "faccao") == GetObjProperty(npc, "faccao"))))
 		if ( YesNo(player, "Deseja CONFISCAR este objeto?"))
 			confiscar := 1;
 		endif
