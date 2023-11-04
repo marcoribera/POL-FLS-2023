@@ -130,7 +130,7 @@ program MerchantMenu(params)
 		endcase
 
 		input := GFSendGump(player, gump);
-		print("ENVIADO GUMP");
+		//print("ENVIADO GUMP");
 
 		if (!player.connected || player.hidden)
 			break MAIN_LOOP; //Encerra o loop se o char tiver offline para liberar o npc

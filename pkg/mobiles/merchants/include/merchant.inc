@@ -1096,7 +1096,7 @@ function DoWithdraw(npc, player)
 		endif
 		sleepms(2);
 	endforeach
-
+	DarTroco(player, npc, moedas);
 	data_elem.EraseProp(Hex(player.serial));
 	Set_Critical(0);
 endfunction
