@@ -9,6 +9,7 @@
 
 use uo;
 use os;
+use basicio;;
 
 include ":gumps:requestGump";
 include "include/string";
@@ -85,15 +86,17 @@ program MerchantMenu(params)
 		player.hidden := 0;
 		SendSysMessageEx (player, "Voce se revelou ao mercador.", SSM_FAIL);
 	endif
-
-	Setup(npc);
+	//print("SETUP");
+	//Setup(npc);
 	guild_leader  := _ifOr(guild.getProp("leader"), "null");
 
 	MAIN_LOOP: while ( 1 )
+		//print("MAIN LOOP");
 		gump := MainLayout(player); //Gera o Layout padrão do gump do mercador
-
+		//print("MAIN LOOP FEITO");
 		case ( cur_menu )
 			MENU_INTRO: //Se nenhuma opção do menu foi selecionada
+				//print("INTROGUMP");
 				IntroGump(gump); //Exibe instruções no gump
 				break;
 			MENU_ITENS_A_VENDA: //Se menu que está dendo utilizado é o de TODOS os itens a venda
@@ -127,6 +130,7 @@ program MerchantMenu(params)
 		endcase
 
 		input := GFSendGump(player, gump);
+		print("ENVIADO GUMP");
 
 		if (!player.connected || player.hidden)
 			break MAIN_LOOP; //Encerra o loop se o char tiver offline para liberar o npc

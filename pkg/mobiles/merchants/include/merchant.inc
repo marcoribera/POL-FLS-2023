@@ -1,5 +1,3 @@
-use uo;
-
 //include "include/bank";
 include ":datafile:include/datafile";
 include ":merchants:item_template";
