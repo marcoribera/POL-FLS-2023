@@ -9,7 +9,7 @@ include ":timedScripts:timedScripts";
 
 program onRemove(character, container, item, item_amount, move_type)
     // TODO pegar o objtype do container e trocar por grafico de cada um, bainha de adaga/espada/maca
-    container.graphic := 0xa40e;
+    //container.graphic := 0xa40e;
     
 	if (container.ownerserial == character.serial)
 		return 1;
