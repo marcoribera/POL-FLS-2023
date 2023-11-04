@@ -659,7 +659,7 @@ function GetDetails(item, who)
       endif
 
       if (item.quality >= 2)
-         var hits := ;//GetWeaponFeat(item);
+         var hits := item.hp;//GetWeaponFeat(item);
          if (hits)
             ret += "{}{}<br>".format(14, hits);
          endif
