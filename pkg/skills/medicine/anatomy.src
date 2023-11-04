@@ -103,13 +103,13 @@ program skill_Anatomy(who)
 	var strMsg, strFail;
 
 	if(subject.serial == who.serial)
-		strMsg := "Voce";
+		strMsg := "-se";
 	else
-		strMsg := subject.name;
+		strMsg := " "+subject.name;
 		strFail := "das caracteristicas fisicas dessa criatura.";
 	endif
 
-	PrintTextAbove(who, "*examinando " + strMsg + "*");
+	PrintTextAbove(who, "*examinando" + strMsg + "*");
 	if (!Wait(subject, 2))
 		SendSysMessageEx(who, "O paciente precisa ficar preparado.", SSM_FAIL);
 		return 0;
