@@ -2,6 +2,7 @@
 use uo;
 include ":brainai:npcUtil";
 include ":combat:weaponInfo";
+include ":faccao:faccao";
 
 function DistanceChecks(attacker, defender)
 	var cur_range := Distance(attacker, defender);
@@ -34,7 +35,7 @@ function GetWpnCfgInfo(mobile, weapon)
 	endif
 
 endfunction
-  
+
 function PlayHitSounds(attacker, defender)
 	var wpn_a_elem2 := GetWpnCfgInfo(attacker, attacker.weapon);
 	var npc_cfg2	:= ReadConfigFile("::npcdesc");
@@ -45,12 +46,12 @@ function PlayHitSounds(attacker, defender)
 		//NPC intrinsic weapon
 		PlaySoundEffect(attacker, wpn_a_elem2.AttackHitSound);
 	endif
-	
+
 	var damaged_sound;
 	if ( defender.npctemplate )
 		var npctemplate := defender.npctemplate;
 		npctemplate := npctemplate[10, len(npctemplate)-9];
-		damaged_sound := npc_cfg2[npctemplate].DamageSound;		
+		damaged_sound := npc_cfg2[npctemplate].DamageSound;
 	else
 		var sounds;
 		if ( defender.gender == 0 )
@@ -62,7 +63,7 @@ function PlayHitSounds(attacker, defender)
 		endif
 		damaged_sound := sounds[RandomInt(sounds.size())+1];
 	endif
-	
+
 	PlaySoundEffect(defender, damaged_sound);
 endfunction
 
@@ -85,14 +86,14 @@ function PlayAttackAnimation(attacker)
 	if ( attacker.graphic != 400 || attacker.graphic != 401)
 		attack_anim := 0x0c;
 	endif
-	
+
 	PerformAction(attacker, CInt(attack_anim));
-	
+
 	return attack_anim;
 endfunction
-  
+
 function GetRawDmg(attacker)
-  
+
     if (attacker.npctemplate)
       var npcelem := NPC_GetNPCConfig(attacker.npctemplate);
       var dmg := GetConfigString(npcelem, "AttackDamage");
@@ -101,5 +102,5 @@ function GetRawDmg(attacker)
       var dmg := CS_GetWeaponInfo(attacker.weapon, "Damage");
       return RandomDiceRoll(dmg);
     endif
-  
+
 endfunction

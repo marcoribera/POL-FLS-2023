@@ -4,7 +4,7 @@ include ":gumps:gumps";
 include ":gumps:yesNo";
 include ":gumps:requestGump";
 include ":tn:tngumps";
-include ":unicos:item_template";
+include ":merchants:item_template";
 include ":tn:boss";
 
 program motherbrain(who)

@@ -23,13 +23,14 @@ include "include/say";
 include ":charactercreation:habilidades";
 include ":tn:tngumps";
 include ":gumps:htmlGump";
-//include ":faccao:faccao";
+include ":faccao:faccao";
 include "include/arrays";
-//include "include/ghaia";
-//include ":faccao:npc";
+include ":ghaia:ghaia";
+include ":faccao:npc";
 
 set_script_option(SCRIPTOPT_CAN_ACCESS_OFFLINE_MOBILES, 1);
 
+/*
 //Constantes de ID de Botões de Gump
 const BOTAO_ITENS_COLOCAR_A_VENDA := 0x1;
 const BOTAO_ITENS_MEUS_A_VENDA := 0x2;
@@ -66,10 +67,11 @@ const MOEDAS_COBRE		:= 0xba63; //id das moedas de cobre
 const MOEDAS_PRATA		:= 0xba64; //id das moedas de prata
 const MOEDAS_OURO		:= 0xba65; //id das moedas de ouro
 const GOLD_COIN			:= 0xeed;  //id das moedas de ouro (outro tipo válido)
+*/
 
 var item_cfg := ReadConfigFile(":*:itemdesc");
 var npccfgfile := ReadConfigFile( ":brainai:npcdesc" );
-//var guild, guild_leader;
+var guild, guild_leader;
 
 program MerchantMenu(params)
 	var npc := params[1];
@@ -84,8 +86,8 @@ program MerchantMenu(params)
 		SendSysMessageEx (player, "Voce se revelou ao mercador.", SSM_FAIL);
 	endif
 
-	//Setup(npc);
-	//guild_leader  := _ifOr(guild.getProp("leader"), "null");
+	Setup(npc);
+	guild_leader  := _ifOr(guild.getProp("leader"), "null");
 
 	MAIN_LOOP: while ( 1 )
 		gump := MainLayout(player); //Gera o Layout padrão do gump do mercador
@@ -243,8 +245,7 @@ program MerchantMenu(params)
 				cur_menu := MENU_INTRO;
 			endif
 			BOTAO_CONFIGURACAO:
-			//if ( player.serial == guild_leader || player.cmdlevel >= 3);
-			if (player.cmdlevel >= 3)
+			if ( player.serial == guild_leader || player.cmdlevel >= 3);
 				vendoropt(npc, player);
 				cur_menu := MENU_INTRO;
 			else
@@ -252,8 +253,7 @@ program MerchantMenu(params)
 				cur_menu := MENU_INTRO;
 			endif
 			BOTAO_MOVERNPC:
-			//if ( player.serial == guild_leader || player.cmdlevel >= 3);
-			if (player.cmdlevel >= 3)
+			if ( player.serial == guild_leader || player.cmdlevel >= 3);
 				andarnpc(npc, player);
 			else
 				SendSysMessage(player, "Apenas o lider da Faccao pode andar com o vendedor");
@@ -314,6 +314,7 @@ function IntroGump(byref gump)
 	GFTextMid(gump, 170, 200, 455, GF_STDCOLOR, "Use os botoes da esquerda.");
 endfunction
 
+/*
 function DoPurchase(npc, player, input)
 	var info := GetItemsForSaleInfo(npc, input);
 	var cost := info[1];
@@ -343,12 +344,14 @@ function DoPurchase(npc, player, input)
 		elseif (cost_type == MOEDAS_OURO || cost_type == GOLD_COIN)
 			cost_amt := cost_amt*100;
 		endif
+		*/
 /*
 		if (TemHabilidade(player,"Negociador Eximio"))
 			cost_amt := CInt(cost_amt*0.7);
 			SendSysMessage(player, "O custo final vai ser de " + cost_amt);
 		endif
 */
+/*
 		var totalPago := 0;
 		var faltaPagar := cost_amt;
 		//print("Falta Pagar: "+ faltaPagar +" ");
@@ -521,7 +524,8 @@ function DoPurchase(npc, player, input)
 	RemoveItemForSale(npc, input);
 	Set_Critical(0);
 endfunction
-
+*/
+/*
 function ShowForSaleItemsInfo(byref gump, npc, player, input, special := 0)
 	var sell_details:= GetItemsForSaleInfo(npc, input);
 
@@ -602,7 +606,8 @@ function ShowForSaleItemsInfo(byref gump, npc, player, input, special := 0)
 		GFTextLine(gump, 235, 433, GF_STDCOLOR, "Remover");
 	endif
 endfunction
-
+*/
+/*
 function AddMyItemForSale(npc, player)
 
 	var VendorProperty := GetObjProperty(npc, "onlygmsells");
@@ -651,7 +656,8 @@ function AddMyItemForSale(npc, player)
 	AddItem(npc, player, targ);
 
 endfunction
-
+*/
+/*
 function AddItem(npc, player, targ)
 
 	var cost_amt;
@@ -868,7 +874,8 @@ function AddItem(npc, player, targ)
 		AI_Speak(npc, "Me desculpe, mas nao poderei vender isto para voce.");
 	endif
 endfunction
-
+*/
+/*
 function ShowForSaleItems(byref gump, npc, player, special := 0)
 
 	GFResizePic(gump, 170, 15, BKGND_STONESLAB, 455, 450);
@@ -955,13 +962,14 @@ function ShowForSaleItems(byref gump, npc, player, special := 0)
 
 	if (ItensRevogados.Exists(player.serial))
 		var confiscados := ItensRevogados[player.serial];
-		GumpPrompt(player, "Algumas de suas mercadorias foram confiscadas. procure saber os motivos com as autoridades comerciais locais."/* + CStr(confiscados)*/);
+		GumpPrompt(player, "Algumas de suas mercadorias foram confiscadas. procure saber os motivos com as autoridades comerciais locais.");// + CStr(confiscados));
 		//SendSysMessage(player, confiscados);
 		ItensRevogados.Erase(player.serial);
 		SetObjProperty(npc, "ItensRevogados", ItensRevogados);
 	endif
 endfunction
-
+*/
+/*
 function RetrieveMyItem(npc, player, input)
 	Set_Critical(1);
 	var info := GetItemsForSaleInfo(npc, input);
@@ -987,7 +995,8 @@ function RetrieveMyItem(npc, player, input)
 	endif
 	Set_Critical(0);
 endfunction
-
+*/
+/*
 function ShowMyProfit(byref gump, npc, player)
 	GFResizePic(gump, 170, 15, BKGND_STONESLAB, 455, 450);
 	GFTextMid(gump, 170, 25, 455, GF_STDCOLOR, "Meus Ganhos");
@@ -1020,8 +1029,8 @@ function DoWithdraw(npc, player)
 	var account := data_elem.GetProp(Hex(player.serial));
 	var moedas := 0;
 	foreach item in account
-		print("Item: "+item);
-		print("Item (objType: "+item.objtype);
+		//print("Item: "+item);
+		//print("Item (objType: "+item.objtype);
 		if(item.objtype == MOEDAS_OURO || item.objtype == GOLD_COIN)
 			moedas += item.amount * 100;
 		elseif(item.objtype == MOEDAS_PRATA)
@@ -1080,8 +1089,8 @@ function CalculaRecursosDisponiveis(player, cost_type)
 	endif
 	return recursosDisponiveis;
 endfunction
-
-
+*/
+/*
 function DarTroco(player, npc , ValorTroco)
 	var faltaPagar := ValorTroco;
 	if(ValorTroco > 0)
@@ -1091,7 +1100,7 @@ function DarTroco(player, npc , ValorTroco)
 	var ouro := CInt(faltaPagar/100);
 	if(ouro > 0)
 		CreateItemInBackpack(player, MOEDAS_OURO, ouro);
-		//SendSysMessage(player, ouro + " moedas de ouro");
+		SendSysMessage(player, ouro + " moedas de ouro");
 	endif
 	faltaPagar -= CInt(ouro*100);
 
@@ -1099,7 +1108,7 @@ function DarTroco(player, npc , ValorTroco)
 	var prata := CInt(faltaPagar/10);
 	if(prata > 0)
 		CreateItemInBackpack(player, MOEDAS_PRATA, prata);
-		//SendSysMessage(player, prata + " moedas de prata");
+		SendSysMessage(player, prata + " moedas de prata");
 	endif
 	faltaPagar -= CInt(prata*10);
 
@@ -1107,13 +1116,15 @@ function DarTroco(player, npc , ValorTroco)
 	var cobre := CInt(faltaPagar);
 	if(cobre > 0)
 		CreateItemInBackpack(player, MOEDAS_COBRE, cobre);
-		//SendSysMessage(player, cobre + " moedas de cobre");
+		SendSysMessage(player, cobre + " moedas de cobre");
 	endif
 	Set_Critical(0);
 
 	AI_Speak(npc, "Aqui estao suas moedas.");
 	return 1;
 endfunction
+*/
+
 
 function vendoropt(npc, player)
 
@@ -1208,7 +1219,7 @@ function vendoropt(npc, player)
 			if (startbuy)
 				SetObjProperty(npc, "startbuy", startbuy);
 			endif
-			var endbuy := cstr(RequestGump(player, "Qual a mensagem de despedida? [Cancele para deixar padrao]"));
+			var endbuy := cstr(RequestGump(player, "Qual a mensage? [Cancele para deixar padrao]"));
 			if (endbuy)
 				SetObjProperty(npc, "endbuy", endbuy);
 			endif
@@ -1216,11 +1227,11 @@ function vendoropt(npc, player)
 			SendSysMessageEx(player, "Escolha o cofre", SSM_REQUEST);
 			var cofre := Target(player);
 			if (cofre.objtype == 40512 || cofre.objtype == 0x9AB || cofre.objtype == 0xE7C || cofre.objtype == 0xE41 || cofre.objtype == 0xE40 || cofre.objtype == 0xE43 || cofre.objtype == 0xE42)
-				SetObjProperty(npc, "cofreid", cofre.serial);
-				SendSysMessageEx(player, "Os impostos do vendedor irao para este cofre, mantenha-o seguro", SSM_REQUEST);
+			SetObjProperty(npc, "cofreid", cofre.serial);
+			SendSysMessageEx(player, "Os impostos do vendedor irao para este cofre, mantenha-o seguro", SSM_REQUEST);
 			else
-				SendSysMessageEx(player, "Escolha um bau grande o suficiente para recolher os impostos", SSM_REQUEST);
-				return 1;
+			SendSysMessageEx(player, "Escolha um bau grande o suficiente para recolher os impostos", SSM_REQUEST);
+			return 1;
 			endif
 		elseif ( r == "Taxa")
 			var imposto := cint(RequestGump(player, "Insira a taxa cobrada em porcentagem [10 = 10%]"));
@@ -1266,7 +1277,7 @@ function Setup(npc)
       EquipItem(npc, new_pack);
    endif
 
-   //guild_leader  := guild.getProp("leader");
+   guild_leader  := guild.getProp("leader");
 endfunction
 
 function andarnpc(npc, player)

@@ -12,7 +12,7 @@ include ":gumps:gumps";
 include ":tn:tngumps";
 //include ":yggdrasil:boss";
 include ":gumps:yesNo";
-include ":unicos:item_template";
+include ":merchants:item_template";
 include ":gumps:htmlGump";
 include ":keys:key";
 

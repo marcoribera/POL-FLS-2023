@@ -10,7 +10,7 @@ include ":gumps:yesNo";
 include ":gumps:requestGump";
 include ":tn:tngumps";
 include ":spells:tnmagery";
-include ":unicos:item_template";
+include ":merchants:item_template";
 include ":attributes:attributes";
 include ":tn:questevent";
 

@@ -19,7 +19,7 @@ var throwinfo;
 var propallies;
 
 program KillPlayers()
-	
+
 	var ev;
 	var wanders;
 	propallies := dictionary;
@@ -31,10 +31,10 @@ program KillPlayers()
 	EnableMainEvents();
 
     	while(me)
-	
 
-			
-		look_around(); 
+
+
+		look_around();
 		wander();
 		PlayIdleSound();
 
@@ -57,7 +57,7 @@ program KillPlayers()
 
 		if(ev)
 			case(ev.type)
-				SYSEVENT_ENTEREDAREA:   
+				SYSEVENT_ENTEREDAREA:
 					if (CheckLineOfSight( me, ev.source ))
 						if(CanFight(me, ev.source, align)) //verifica se eh inimigo
 							wanders := 0;
@@ -78,8 +78,8 @@ program KillPlayers()
 							endif
 
 			endcase
-		endif	
-		
+		endif
+
 	endwhile
 
 endprogram
@@ -93,7 +93,7 @@ function CloseDistance(opponent)
 	endif
 
 	var dist := CoordinateDistance(me.x, me.y, opponent.x, opponent.y);
-	
+
 	if (me.z > opponent.z +18) //checa se esta em cima de alguma torre
 		if (!CheckLineofSight(me, opponent)) //IA para torres: Verifica se tem visão do oponente
 			if (RandomInt(4) == 0 ) //se não tiver visão, tem 25% de mudar de alvo

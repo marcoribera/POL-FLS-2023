@@ -8,12 +8,12 @@ function CreateItemTemplate(item)
 		temp.+errortext := "Error: CreateItemTemplate() -> Object passed is not an item.";
 		return temp;
 	endif
-	
+
 	var template := GetItemDescriptor(CInt(item.objtype));
 	if ( template == error )
 		return template;
 	endif
-	
+
 	template.+Amount;
 	foreach property in template
 		var item_property := item.get_member(Lower(CStr(_property_iter)));
@@ -87,7 +87,7 @@ function CreateItemTemplate(item)
 		template.CProps.insert(name, GetObjProperty(item, name));
 		sleepms(2);
 	endforeach
-	
+
 	if (item.isBook())
 		var bookinfo := item.extractInfo();
 		if (!item.isWritable())
@@ -95,7 +95,7 @@ function CreateItemTemplate(item)
 		else
 			bookinfo.+readonly := 0;
 		endif
-		
+
 		template.Cprops.insert("bookinfo", bookinfo);
 	endif
 
@@ -153,9 +153,9 @@ endfunction
 
 function CreateItemAtLocationFromTemplate(x, y, z, realm, selling)
 
-	purchase := CreateItemAtLocation(x, y, z, selling, selling.amount, realm);
+	var purchase := CreateItemAtLocation(x, y, z, selling, selling.amount, realm);
 	if ( purchase == error )
-		SendSysMessage(player, "Error - Unable to create item! ->"+purchase.errortext);
+		//SendSysMessage(player, "Error - Unable to create item! ->"+purchase.errortext);
 	endif
 	if (selling.amount == 1)
 		SetName(purchase, selling.desc);

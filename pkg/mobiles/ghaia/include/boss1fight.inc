@@ -1,13 +1,13 @@
 
 
 function Boss1Fight(opponent, alerted := 0)
-    
+
 	if(opponent.serial == me.serial)
 		SetWarMode(0);
 		opponent := 0;
 		return;
 	endif
-    
+
 	var oldprio := set_priority(50);
 	SetOpponent(opponent);
 	DisableMainEvents();
@@ -16,7 +16,7 @@ function Boss1Fight(opponent, alerted := 0)
 	var loops := 0;
 	var ev;
 	var waittime := 0;
-  
+
 	var speech := GetConfigStringArray( npccfgfile[mytemplate], "InitCombatSpeech" );
 	if (speech.size() > 0)
 		if (RandomInt(100)  < 30) //sempre 30% de chance de falar
@@ -29,12 +29,12 @@ function Boss1Fight(opponent, alerted := 0)
 
 		if (me.dead)
 			break;
-		endif  
+		endif
 
 		if (!opponent)
 			break;
 		endif
-  
+
 		if (opponent.dead)
 			var temnego := 0;
 			foreach npc in ListMobilesInLineOfSight(me, areasize + 2)
@@ -49,7 +49,7 @@ function Boss1Fight(opponent, alerted := 0)
 				var end := ReadGameClock() + 10;
 				while (CoordinateDistance(me.x, me.y, corpo.x, corpo.y) < areasize + 5 && end > ReadGameClock())
 					RunAwayFromLocation(corpo.x, corpo.y);
-					sleepms(100);
+					sleepms(3);
 				endwhile
 			endif
 			break;
@@ -110,13 +110,13 @@ function Boss1Fight(opponent, alerted := 0)
 				fire.SetDuration(30);
 				sleepms(100);
 			endfor
-		
+
 			//baixo
 			var x := 4855;
 			for (x := 4857; x <= 4866;  x := x+1)
 				var fire := CreateITemAtLocation( x, 888, 0, 0x398C, 1, me.realm);
 				queue.append(fire);
-				//printtextabove(me, " fire " + fire); 
+				//printtextabove(me, " fire " + fire);
 				fire.SetDuration(30);
 				sleepms(100);
 			endfor
@@ -129,7 +129,7 @@ function Boss1Fight(opponent, alerted := 0)
 				fire.SetDuration(30);
 				sleepms(100);
 			endfor
-		
+
 			var size := queue.size();
 			var locx, locy;
 			var gfx ;
@@ -193,18 +193,18 @@ function Boss1Fight(opponent, alerted := 0)
 					//printtextabove(me, " x " + queue[queue.size()].x  + " y " + queue[queue.size()].y);
 				endif
 			endfor
-		
+
 			SetCooldown(me,  "flamewave", 60);
 //			say("burn");
-      
+
     if (!opponent.dead)
         MoveObjectToLocation(me,  opponent.x, opponent.y, opponent.z, me.realm);
     else
         MoveObjectToLocation(me,  4866, 888,  0, me.realm);
     endif
-        
+
 		endif
-	
+
 		if(!CloseDistance(opponent))
 			loops := loops + 1;
 			waittime := 0;
@@ -212,14 +212,14 @@ function Boss1Fight(opponent, alerted := 0)
 			loops := 0;
 			waittime := 1;
 		endif
-	
+
 		checkFlee(opponent);
-	
+
 		ev := wait_for_event(waittime);
 
 		if(ev.type != SYSEVENT_SPEECH)
 			case (ev.type)
-				SYSEVENT_DAMAGED: 
+				SYSEVENT_DAMAGED:
 
 			//se ele receber dano de alguem mais proximo que o oponente ou se receber dano de alguem e o oponente nao estiver acessivel
 				if( /*(CoordinateDistance(me.x, me.y, ev.source.x, ev.source.y) < CoordinateDistance(me.x, me.y, opponent.x, opponent.y)) ||*/ (!CheckLineOfSight(me, opponent)) || (!opponent))
@@ -238,7 +238,7 @@ function Boss1Fight(opponent, alerted := 0)
 					endif
 				endif
 
-				SYSEVENT_ENGAGED: 
+				SYSEVENT_ENGAGED:
 					if(ev.source)
 						if(RandomInt(6) == 1)
 							opponent := ev.source;
@@ -251,7 +251,7 @@ function Boss1Fight(opponent, alerted := 0)
 					if(ev.source)
 						opponent := ev.source;
 						SetOpponent(opponent);
-						TurnToward(opponent);		
+						TurnToward(opponent);
 					endif
 				EVID_FLEE:
 					if (ev.source)
@@ -260,7 +260,7 @@ function Boss1Fight(opponent, alerted := 0)
 			endcase
 		endif
 	endwhile
-  
+
 	DisableCombatEvents();
 	EnableMainEvents();
 	SetWarMode(0);
