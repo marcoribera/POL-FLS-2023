@@ -107,7 +107,7 @@ program TamingSkill(who)
 		y := y + 20;
 	endforeach
 
-	 pets := GetObjProperty(who, "SummonedPets");
+/*	 pets := GetObjProperty(who, "SummonedPets");
 	foreach serial in pets
 		var pet := SystemFindObjectBySerial(serial);
 		GFTextLine(yn_gump, 40, y, 1153, "" + pet.name + "(invocado)");
@@ -116,7 +116,7 @@ program TamingSkill(who)
 		endif
 		i := i + 1;
 		y := y + 20;
-	endforeach
+	endforeach*/
 
 	var input := GFSendGump(who, yn_gump);
 	input := input[0];

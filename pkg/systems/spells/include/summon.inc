@@ -15,6 +15,7 @@ function summon(template, targ,  mage)
 	SetObjProperty(undead, "GuardKill", 1);
   	SetObjProperty(undead, "summoned", 1);
 	SetObjProperty(undead, "owner", mage.serial);
+	SetObjProperty(undead, "owneri", mage.serial); //adicionado para informação ainda ser disponível depois da execução do Erasepet (para o caso do slot de summon)
 	SetObjProperty(undead, "name", targ.name);
 	SetObjproperty(undead, "script", targ.script);
 	SetObjProperty(undead, "AntigoTreinadorID", mage.serial);

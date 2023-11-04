@@ -4,6 +4,7 @@ include ":traps:traps";
 include "include/arrays";
 include ":tn:boss";
 include ":combat:hitscripts";
+include ":levers:efeitos";
 
 function ChangeLeverStatus(la, only_on_levers := 0)
    if (typeof(la) != "Array")
@@ -215,6 +216,22 @@ function normalusage(who, item)
 			EraseObjProperty(item, "champ");
 		endif
 	endif
+	if (opts.tremor)
+   		var config_tremor := GetObjProperty(item, "tremor_cfg");
+		var danobase := config_tremor[1];
+		var danoale := config_tremor[2];
+		var dif := config_tremor[3];
+		var range := config_tremor[4];
+		EfeitosTremor(item,danobase,danoale,dif,range);
+	endif
+   if (opts.clima) //SEMPRE deixar essa opção para ativar por último, ela é mais longa
+   		var config_clima := GetObjProperty(item, "clima_cfg");
+		var duration := config_clima[1];
+		var range := config_clima[2];
+		var options := GetObjProperty(item, "clima");
+		EfeitosClima (item, options, duration, range);
+   endif
+
 endfunction
 
 function spawnBoss(item, opts)
