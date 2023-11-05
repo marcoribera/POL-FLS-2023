@@ -805,17 +805,20 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 	var pet_critic := GetObjProperty(attacker, "Critic");
 	var pet_txt := Cstr(GetConfigStringArray( taming_cfg[pet_critic], "Text" ));
 	var pet_selvagem := GetObjProperty(attacker, "Selvagem"); //verifica se é animal selvagem - nunca tamado, para dar dano critico
-	//if ( weapon.objtype == 0xF020 ) // Intrinsic fist
-	//	weapon_scripts := GetObjProperty(attacker, "CriticalHitScripts");
+	var npcelem := NPC_GetNPCConfig(attacker.npctemplate);
+	var tem_critico := GetConfigStringArray( npcelem, "CriticalHitScripts" ); //Se tem critico no npcdesc definido
+	//if ( weapon.objtype == 0xF020 && !pet_instinto && !pet_selvagem) // Intrinsic fist
+		//weapon_scripts := GetConfigString(npcelem, "CriticalHitScripts");
 	if ( weapon.IsA(POLCLASS_WEAPON) && !pet_instinto && !pet_selvagem )
-		weapon_scripts :=  GetConfigStringArray( item_cfg[weapon.objtype], "CriticalHitScripts" );
+		if (!tem_critico)
+			weapon_scripts :=  GetConfigStringArray( item_cfg[weapon.objtype], "CriticalHitScripts" );
+		else
+			weapon_scripts :=  GetConfigStringArray( npcelem, "CriticalHitScripts" );
+		endif
 	elseif (pet_instinto == 1 || pet_selvagem == 1)
 		weapon_scripts :=  GetConfigStringArray( taming_cfg[pet_critic], "CriticalHitScripts" );
 		sleepms(5);
 		printtextabove(attacker, ""+pet_txt);
-	elseif (attacker.npctemplate && !pet_selvagem)
-		var npcelem := NPC_GetNPCConfig(attacker.npctemplate);
-		weapon_scripts :=  GetConfigStringArray( npcelem, "CriticalHitScripts" );
 	endif
 	//Duttones: Possivel mudar o critico de npc's. Prioriza sempre o critico da arma.
 
