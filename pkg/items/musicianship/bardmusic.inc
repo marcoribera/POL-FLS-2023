@@ -379,7 +379,6 @@ endfunction
 function tocarBasico(byref who, byref item) //Habilita os efeitos magicos da musica e manda tocar o som da musica
 	if (!TemHabilidade(who, "Talento Musical") && !TemHabilidade(who, "Compositor Talentoso"))
 		return basicoSom(who,item,0);//Efeito de som errado
-		return 0;
 	elseif(Cint(GetObjProperty(who, "#MagicaMusic")) > ReadGameClock()) //verifica se pode voltar a tocar
 		SendSysMessage(who, "Voce deve esperar um momento antes de tocar novamente.",BARD_FONT,BARD_FONT_COLOR_BAD);
 		return 0;
