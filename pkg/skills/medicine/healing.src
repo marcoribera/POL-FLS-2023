@@ -37,7 +37,7 @@ program UseBandage(mobile, bandage)
 	var targ := Target(mobile, TGTOPT_CHECK_LOS+TGTOPT_HELPFUL);
 
 	var heal_skill := AP_GetSkill(mobile, MEDICINE);
-	var quantidade := min( max(1, CInt((heal_skill-60)/4)), min(targ.amount, bandage.amount));
+	var quantidade := min( max(1, CInt((heal_skill)/4)), min(targ.amount, bandage.amount));
 	var bandagem_especial;
 	if (targ.objtype == 0xF85 && (heal_skill >= 70 || temHabilidade(mobile,"Ervas Curativas")) ) //se for ginseng
 		SendSysMessageEx(mobile, "Tentando passar o extrato de ginseng nas ataduras.", SSM_INFO);
@@ -80,8 +80,8 @@ program UseBandage(mobile, bandage)
 			SubtractAmount(bandage, quantidade);
 			SubtractAmount(targ, quantidade);
 			return;
-		endif
-	elseif (targ.objtype == 0x26b7 && (heal_skill >= 84 || temHabilidade(mobile,"Ervas Curativas")) ) //se for cogumelo
+		endif // Antes tava esse aqui que nao tem drop: 0x26b7
+	elseif (targ.objtype == 0xd16 && (heal_skill >= 84 || temHabilidade(mobile,"Ervas Curativas")) ) //se for cogumelo
 		SendSysMessageEx(mobile, "Tentando passar o extrato de cogumelos nas ataduras.", SSM_INFO);
 		PlaySoundEffectPrivate(mobile, 0x1C9, mobile);
 		Sleep(1);

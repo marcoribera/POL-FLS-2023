@@ -453,7 +453,7 @@ function comprarHabilidade(who, item, nv:=-1)
 		habs[nivel] := 2;
 		SetObjProperty(who, "buyhab", habs);
 		SetObjProperty(who, "myhabs", myhabs);
-		return 1;
+		//return 1;
 	else
 		SendSysMessageEx(who, "Falta comprar a habilidade level 4 ou esse nivel ainda nao tem habilidades.", SSM_FAIL);
 	endif
