@@ -80,8 +80,8 @@ program UseBandage(mobile, bandage)
 			SubtractAmount(bandage, quantidade);
 			SubtractAmount(targ, quantidade);
 			return;
-		endif
-	elseif (targ.objtype == 0x26b7 && (heal_skill >= 84 || temHabilidade(mobile,"Ervas Curativas")) ) //se for cogumelo
+		endif // Antes tava esse aqui que nao tem drop: 0x26b7
+	elseif (targ.objtype == 0xd16 && (heal_skill >= 84 || temHabilidade(mobile,"Ervas Curativas")) ) //se for cogumelo
 		SendSysMessageEx(mobile, "Tentando passar o extrato de cogumelos nas ataduras.", SSM_INFO);
 		PlaySoundEffectPrivate(mobile, 0x1C9, mobile);
 		Sleep(1);
