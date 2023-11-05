@@ -1,7 +1,7 @@
 use uo;
 
 include "include/say";
-include ":unicos:item_template";
+include ":merchants:item_template";
 include ":tn:boss";
 include ":timedscripts:timedScripts";
 
@@ -10,10 +10,10 @@ function ConfigureEvent(who)
 	evento.+type := RadioGump(who, 400, 220, "Escolha o tipo de evento.", array{ "Criar Itens", "Abrir Porta", "Criar Npcs", "Abrir Passagem", "Ultimas Palavras"});
 	evento.+realm := Cstr(who.realm);
 	print("evento real eh"+evento.realm);
-	
+
 	if ( (evento.type == "Abrir Porta") || (evento.type == "Abrir Passagem") )
 		var items := array;
-	
+
                 SendSysMessage(who, "Escolha os itens. ESC para cancelar.");
                 var targ := Target(who);
                 if (targ)
@@ -23,7 +23,7 @@ function ConfigureEvent(who)
                     evento.items.append(targ.serial);
                     targ := Target(who);
                 endwhile
-	elseif  (evento.type == "Criar Npcs" ) 
+	elseif  (evento.type == "Criar Npcs" )
                /* evento.+amount := Cint(RequestGump(who, "Quantos npcs vao ser spawnados:", "", "", 1));
                 var loc := RequestGump(who, "Digite o x y z onde eles vao aparecer:", "Escreva 6 6 6 se for para aparecer onde um npc morrer (bosses)", "", 1);
                 loc := splitwords(loc);
@@ -93,7 +93,7 @@ function ExecuteEvent(evento)
 		endwhile
 	elseif (evento.type == "Criar Npcs")
             var amt := 0;
-           print("criar npcs  2 " + evento.x + " " + evento.y + " " + evento.z +  " amt " + evento.amount + " realm " + evento.realm); 
+           print("criar npcs  2 " + evento.x + " " + evento.y + " " + evento.z +  " amt " + evento.amount + " realm " + evento.realm);
             while (amt < evento.amount)
                 var npc := CreateNpcFromTemplate( cstr(evento.npctemplate), Cint(evento.x) + RandomInt(2 * evento.range) - evento.range, Cint(evento.y) + RandomInt(2 * evento.range) - evento.range, Cint(evento.z), 0, Cstr(evento.realm) );
 		print ( "NPC spawn " + npc);
@@ -111,19 +111,29 @@ function ExecuteEvent(evento)
               sleepms(2);
             endwhile
 	    if (evento.bossinfo)
-		var success := 0;
-         	 //print("tem boss");
-          	while ( !success)
-            		var boss := CreateBoss(evento.bossinfo, Cint(evento.x), Cint(evento.y), Cint(evento.z), Cstr(evento.realm));
-            		//print( "boss " + boss);
-            		if (boss)
-                		SetObjProperty(boss, "anchor", array{boss.x, boss.y});
-                		success := 1;
+		var success := 0;
+
+         	 //print("tem boss");
+
+          	while ( !success)
+
+            		var boss := CreateBoss(evento.bossinfo, Cint(evento.x), Cint(evento.y), Cint(evento.z), Cstr(evento.realm));
+
+            		//print( "boss " + boss);
+
+            		if (boss)
+
+                		SetObjProperty(boss, "anchor", array{boss.x, boss.y});
+
+                		success := 1;
+
 				if (evento.summonbosstext)
 					PrintText(boss, evento.summonbosstext);
 				endif
-            		endif
-            		sleepms(2);
+            		endif
+
+            		sleepms(2);
+
 
 	    	endwhile
 	endif

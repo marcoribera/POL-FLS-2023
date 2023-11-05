@@ -16,7 +16,7 @@ include "include/damage";
   fireball
   poisoning
   hallucination
-  
+
   summonundead
   summonair
   summonfire
@@ -55,14 +55,14 @@ const SOUND_EFFECT_WEAKEN := 0x1e7;
 
 
 include ":tn:cooldown";
-    
+
 function SpellFight(opponent, spell_list ,alerted := 0)
   if((opponent.serial == me.serial))
     SetWarMode(0);
     opponent := 0;
     return;
   endif
-    
+
   var oldprio := set_priority(50);
   SetOpponent(opponent);
   DisableMainEvents();
@@ -71,10 +71,10 @@ function SpellFight(opponent, spell_list ,alerted := 0)
   var loops := 0;
   var ev;
   var waittime := 0;
-  
+
   if (!alerted) //se ele ja nao foi alertado por outro aliado
     if (alert_allies) //se esse npc eh do tipo que alerta
-      AlertAllies(me, opponent); 
+      AlertAllies(me, opponent);
     endif
   endif
 
@@ -87,7 +87,7 @@ function SpellFight(opponent, spell_list ,alerted := 0)
 
   SetCooldown(me, "npcspell", 3);
   var dist;
- 
+
   while(me)
 
     if  (me.dead)
@@ -97,7 +97,7 @@ function SpellFight(opponent, spell_list ,alerted := 0)
     if (!opponent)
       break;
     endif
-  
+
     if (opponent.dead)
 	var temnego := 0;
 	foreach npc in ListMobilesInLineOfSight(me, areasize + 2)
@@ -112,7 +112,7 @@ function SpellFight(opponent, spell_list ,alerted := 0)
 		var end := ReadGameClock() + 10;
 		while (CoordinateDistance(me.x, me.y, corpo.x, corpo.y) < areasize + 5 && end > ReadGameClock())
 			RunAwayFromLocation(corpo.x, corpo.y);
-			sleepms(100);
+			sleepms(3);
 		endwhile
 	endif
 	break;
@@ -138,7 +138,7 @@ function SpellFight(opponent, spell_list ,alerted := 0)
     if ( (dist > 6) && ( CInt(npccfgfile[mytemplate].teleport) ) )
 	teleport(me, opponent);
     endif
-  
+
 	if(!CloseDistance(opponent))
 	  loops := loops + 1;
 	  waittime := 0;
@@ -162,13 +162,13 @@ function SpellFight(opponent, spell_list ,alerted := 0)
     DoCombatSpecial(me); ////////////// SPECIALL
 
   endif
-	
+
 	checkFlee(opponent);
-	
+
 	ev := wait_for_event(waittime);
 	if(ev.type != SYSEVENT_SPEECH)
 	  case (ev.type)
-		SYSEVENT_DAMAGED: 
+		SYSEVENT_DAMAGED:
       //if((ev.source.npctemplate) and (CheckLineOfSight(me, ev.source)))
        //   opponent := ev.source;
 			 // 		        SetOpponent(opponent);
@@ -196,16 +196,16 @@ function SpellFight(opponent, spell_list ,alerted := 0)
 							TurnToward(opponent);
 						endif
 			              endif
-        EVID_TAUNT:
-				if(ev.source)
-					opponent := ev.source;
-					SetOpponent(opponent);
-				    TurnToward(opponent);		
-				endif
+		EVID_TAUNT:
+			if(ev.source)
+				opponent := ev.source;
+				SetOpponent(opponent);
+			    TurnToward(opponent);
+			endif
 	  endcase
 	endif
   endwhile
-  
+
   DisableCombatEvents();
   EnableMainEvents();
   SetWarMode(0);
@@ -215,13 +215,13 @@ endfunction
 
 
 function Boss2Fight(opponent, spell_list,alerted := 0)
-    
+
 	if(opponent.serial == me.serial)
 		SetWarMode(0);
 		opponent := 0;
 		return;
 	endif
-    
+
 	var oldprio := set_priority(50);
 	SetOpponent(opponent);
 	DisableMainEvents();
@@ -230,7 +230,7 @@ function Boss2Fight(opponent, spell_list,alerted := 0)
 	var loops := 0;
 	var ev;
 	var waittime := 0;
-  
+
 	var speech := GetConfigStringArray( npccfgfile[mytemplate], "InitCombatSpeech" );
 	if (speech.size() > 0)
 		if (RandomInt(100)  < 30) //sempre 30% de chance de falar
@@ -243,12 +243,12 @@ function Boss2Fight(opponent, spell_list,alerted := 0)
 
 		if (me.dead)
 			break;
-		endif  
+		endif
 
 		if (!opponent)
 			break;
 		endif
-  
+
 		if (opponent.dead)
 			var temnego := 0;
 			foreach npc in ListMobilesInLineOfSight(me, areasize + 2)
@@ -263,7 +263,7 @@ function Boss2Fight(opponent, spell_list,alerted := 0)
 				var end := ReadGameClock() + 10;
 				while (CoordinateDistance(me.x, me.y, corpo.x, corpo.y) < areasize + 5 && end > ReadGameClock())
 					RunAwayFromLocation(corpo.x, corpo.y);
-					sleepms(100);
+					sleepms(3);
 				endwhile
 			endif
 			break;
@@ -285,8 +285,8 @@ function Boss2Fight(opponent, spell_list,alerted := 0)
 				var region := GetRegionName(opponent);
 				var coords := {opponent.x, opponent.y};
 				var nome := GetObjProperty(opponent, "nome_inicial");
-				Start_script(":DiscordWebhook:discord", {tipo, nome, opponent.acctname, me.name, region, coords});			
-			foreach x in EnumerateOnlineCharacters()
+				Start_script(":DiscordWebhook:discord", {tipo, nome, opponent.acctname, me.name, region, coords});
+				foreach x in EnumerateOnlineCharacters()
 					if (x.cmdlevel > 0)
 						SendSysMessageEx(x, opponent.name+" BERSERKER PEIDAO!", SSM_REQUEST);
 					endif
@@ -310,12 +310,12 @@ function Boss2Fight(opponent, spell_list,alerted := 0)
   endif
 
 	if (!GetCooldown(me, "flamewave"))
-    
+
       while (coordinatedistance(me.x, me.y, 4926, 1063 ) > 2)
         RunTowardLocation(4926, 1063);
         sleepms(100);
       endwhile
-    
+
       me.facing := 0;
       Say("*fazendo gestos ritualisticos*");
       sleep(2);
@@ -327,7 +327,7 @@ function Boss2Fight(opponent, spell_list,alerted := 0)
           endif
         endif
       endforeach
-      
+
       var walltype := randomint(3);
       var wall;
       if (walltype == 0)
@@ -337,26 +337,26 @@ function Boss2Fight(opponent, spell_list,alerted := 0)
       elseif (walltype == 2)
         wall := 0x3967;
       endif
-      
+
       var i := 0;
       for (i := 0; i < 15; i := i + 1)
         var fire := CreateITemAtLocation( 4919+i, 1058, 22, wall,1, me.realm);
 				fire.SetDuration(10);
       endfor
-			
+
       foreach mob in mobs
         if (mob == me.opponent)
           MoveObjectToLocation(mob,  4926, 1063, 22, me.realm);
         else
-          MoveObjectToLocation(mob,  4919 + randomint(10)+1, 1049, 22, me.realm);  
+          MoveObjectToLocation(mob,  4919 + randomint(10)+1, 1049, 22, me.realm);
         endif
       endforeach
-      
+
 			SetCooldown(me,  "flamewave", 40);
 //			say("burn");
-     
+
     endif
-	
+
 		if(!CloseDistance(opponent))
 			loops := loops + 1;
 			waittime := 0;
@@ -364,14 +364,14 @@ function Boss2Fight(opponent, spell_list,alerted := 0)
 			loops := 0;
 			waittime := 1;
 		endif
-	
+
 		checkFlee(opponent);
-	
+
 		ev := wait_for_event(waittime);
 
 		if(ev.type != SYSEVENT_SPEECH)
 			case (ev.type)
-				SYSEVENT_DAMAGED: 
+				SYSEVENT_DAMAGED:
 
 			//se ele receber dano de alguem mais proximo que o oponente ou se receber dano de alguem e o oponente nao estiver acessivel
 				if( /*(CoordinateDistance(me.x, me.y, ev.source.x, ev.source.y) < CoordinateDistance(me.x, me.y, opponent.x, opponent.y)) ||*/ (!CheckLineOfSight(me, opponent)) || (!opponent))
@@ -390,7 +390,7 @@ function Boss2Fight(opponent, spell_list,alerted := 0)
 					endif
 				endif
 
-				SYSEVENT_ENGAGED: 
+				SYSEVENT_ENGAGED:
 					if(ev.source)
 						if(RandomInt(6) == 1)
 							opponent := ev.source;
@@ -403,7 +403,7 @@ function Boss2Fight(opponent, spell_list,alerted := 0)
 					if(ev.source)
 						opponent := ev.source;
 						SetOpponent(opponent);
-						TurnToward(opponent);		
+						TurnToward(opponent);
 					endif
 				EVID_FLEE:
 					if (ev.source)
@@ -412,7 +412,7 @@ function Boss2Fight(opponent, spell_list,alerted := 0)
 			endcase
 		endif
 	endwhile
-  
+
 	DisableCombatEvents();
 	EnableMainEvents();
 	SetWarMode(0);
@@ -437,13 +437,13 @@ function CastSpellNPC(opponent, spell_list)
 
   //se sabe magia de heal
   if ( "heal" in spell_list)
- 
+
     if ((AP_GetVital(me, HITS) /AP_GetVitalMaximumValue(me, HITS) < 0.2))
       SetCooldown(me, "npcspell", 5);
       CastHeal(me, me);
       return;
     endif
-    
+
     if ( alert_allies == 1)
         foreach ally in allies
           if ((AP_GetVital(ally, HITS) /AP_GetVitalMaximumValue(ally, HITS) < 0.2))
@@ -453,7 +453,7 @@ function CastSpellNPC(opponent, spell_list)
           endif
         endforeach
     endif
-    
+
   endif
 
 	//contra varios
@@ -496,7 +496,7 @@ function CastSpellNPC(opponent, spell_list)
 					SetCooldown(me, "correntes", cint(AP_GetSkill(me, MAGICLORE))+5);
 					SetCooldown(me, "npcspell", 5);
 				endif
-	
+
 				if (GetCooldown(me, "sonho") == 0)
 					SetCooldown(me, "sonho", cint(AP_GetSkill(me, MAGICLORE))+5);
 					start_script(":spells:mesum/sonhomacabro", array{me, enemies[RandomInt(enemies.size())+1]}); //escolher: melee maior dano
@@ -544,7 +544,7 @@ function CastSpellNPC(opponent, spell_list)
 	if ( (enfraquecer || medo) && (ampliardor || envenenar || vinganca ))
 		if (randomint(2) == 0) //ataca oponente
 			if (vinganca)
-				if ( GetObjProperty(me.opponent, "#vinganca") != error ) //se o alvo nao ta sob o efeito ainda
+				if ( GetObjPRoperty(me.opponent, "#vinganca") != error ) //se o alvo nao ta sob o efeito ainda
 					start_script(":spells:mesum/vinganca", array{me, me.opponent});
 					setCooldown(me, "npcspell", 5);
 				endif
@@ -591,7 +591,7 @@ function CastSpellNPC(opponent, spell_list)
 			endif
 
 		endif
-	endif 
+	endif
 
 
 	if ( envenenarespirito)
@@ -616,8 +616,8 @@ function CastSpellNPC(opponent, spell_list)
 		endforeach
 	endif
 
-	
-  
+
+
   //se tem mtos inimigos perto casta magia de summon ou de area
 if (RandomInt(4) == 0) // 25% de chance
   var area_spells := GetAreaSpells(spell_list);
@@ -639,7 +639,7 @@ if (RandomInt(4) == 0) // 25% de chance
   endif
 endif
 
-  
+
   //se tem so um inimigo casta alguma de magia de ataque nele
   var directspells := GetDirectSpells(spell_list);
   if (directspells.size() >= 1)
@@ -658,14 +658,14 @@ function CastDirect(caster, cast_on, spellname)
   if (dmg < 10)
     dmg := 10;
   endif
-  
+
   if (GetObjProperty(cast_on, "kit") == "abascanto")
 	if (RandomInt(100) < 24)
 		SendSysMessageEx(cast_on, "A magia falha em voce.", SSM_INFO);
 		dmg := 0;
   endif
   endif
-  
+
   if (spellname == "lightning")
       SetCooldown(me, "npcspell", 6);
       PlayLightningBoltEffect( cast_on );
@@ -678,7 +678,7 @@ elseif (spellname == "flamestryke")
       DamageFLS(cast_on, dmg, "Fire", me);
   elseif ( spellname == "fireball")
       SetCooldown(me, "npcspell", 6);
-      PlaySoundEffect( caster, SOUND_EFFECT_FIREBALL ); 
+      PlaySoundEffect( caster, SOUND_EFFECT_FIREBALL );
       PlayMovingEffect(caster, cast_on, GFX_LARGE_FIREBALL, 10, 10, 1);
       //PlayMovingEffectXYZ( caster.x, caster.y, caster.z , cast_on.x, cast_on.y, cast_on.z, 0x36d4, 0x18, 0x10, 0);
       DamageFLS(cast_on, dmg, "Fire", me);
@@ -718,46 +718,40 @@ function CastArea(me, spellname, enemies)
 endfunction
 
 function RainDamage(enemies)
-    
+
     foreach targ in enemies
       PlayObjectCenteredEffect(targ, 0x36cb, 7, 0x10);
       PlaySoundEffect(targ, 0x228);
       DamageFLS(targ, 40, "Fire", me);
     endforeach
-    
+
 endfunction
-    
+
 function CastSummon(me, spell)
   if (spell == "summonundead")
-	for x := 0 to 3
-		var npc := CreateNpcFromTemplate(":brainai:skeleton3", me.x, me.y, me.z, 0, me.realm);
-		SetObjProperty(npc, "summoned", 1);
-	endfor
-	elseif ( spell == "summonfire" )
-		var npc := CreateNpcFromTemplate(":brainai:fireelemental", me.x, me.y, me.z, 0, me.realm);
-		SetObjProperty(npc, "summoned", 1);
-	elseif ( spell == "summonair")
-		var npc := CreateNpcFromTemplate(":brainai:airelemental", me.x, me.y, me.z, 0, me.realm);
-		SetObjProperty(npc, "summoned", 1);
-	elseif ( spell ==  "summonearth")
-		var npc := CreateNpcFromTemplate(":brainai:earthelemental", me.x, me.y, me.z, 0, me.realm);
-		SetObjProperty(npc, "summoned", 1);
-	elseif ( spell ==  "summonice")
-		var npc := CreateNpcFromTemplate(":brainai:snowelemental", me.x, me.y, me.z, 0, me.realm);
-		SetObjProperty(npc, "summoned", 1);
-	endif
-
+    CreateNpcFromTemplate(":brainai:skeleton3", me.x, me.y, me.z, 0, me.realm);
+    CreateNpcFromTemplate(":brainai:skeleton3", me.x, me.y, me.z, 0, me.realm);
+    CreateNpcFromTemplate(":brainai:skeleton3", me.x, me.y, me.z, 0, me.realm);
+  elseif ( spell == "summonfire" )
+    CreateNpcFromTemplate(":brainai:fireelemental", me.x, me.y, me.z, 0, me.realm);
+  elseif ( spell == "summonair")
+    CreateNpcFromTemplate(":brainai:airelemental", me.x, me.y, me.z, 0, me.realm);
+  elseif ( spell ==  "summonearth")
+    CreateNpcFromTemplate(":brainai:earthelemental", me.x, me.y, me.z, 0, me.realm);
+  elseif ( spell ==  "summonice")
+	CreateNpcFromTemplate(":brainai:snowelemental", me.x, me.y, me.z, 0, me.realm);
+  endif
 endfunction
 
 function CastHeal(me, cast_on)
-      
+
     var healed := CInt(AP_GetSkill(me, MAGERY)/2);
     HealFLS(cast_on, healed);
     PlayObjectCenteredEffect( cast_on, EFFECT_SPARKLE, 7, 0x10 );
     PlaySoundEffect( cast_on, SOUND_EFFECT_HEAL );
-    
+
 endfunction
-      
+
 function GetAreaSpells(spell_list)
 
   var direct := array{};
@@ -779,11 +773,11 @@ function GetAreaSpells(spell_list)
     endif
   endforeach
 
-  
+
   return direct;
-  
+
 endfunction
-      
+
 function GetDirectSpells(spell_list)
 
   var direct := array{};
@@ -800,7 +794,7 @@ function GetDirectSpells(spell_list)
       direct.append(spell);
     endif
   endforeach
-  
+
   return direct;
-  
+
 endfunction

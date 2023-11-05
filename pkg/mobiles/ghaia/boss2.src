@@ -9,7 +9,7 @@ include ":ghaia:spell";
 
 var npccfgfile := ReadConfigFile( ":brainai:npcdesc" );
 var me := self();
-var idlesnd1; 
+var idlesnd1;
 var idlesnd2;
 var areasize;
 var alert_allies := 0;
@@ -36,7 +36,7 @@ program KillPlayers()
 	Set_Event_Queue_Size(1000);
 
     	while(me)
-	
+
 		//se tem objetivo, anda na direcao dele, se nao tem so wander
 		if (GetObjProperty(me, "objloc") != error)
 			wanders := 0;
@@ -44,7 +44,7 @@ program KillPlayers()
 		else
 			MoveAround();
 		endif
-		
+
 		wanders := wanders +1;
 		if(wanders >= 30)
 			wanders := 0;
@@ -53,11 +53,11 @@ program KillPlayers()
 		else
 			ev := os::wait_for_event(10);
 		endif
-		
-		
+
+
 		if(ev)
 			case(ev.type)
-				SYSEVENT_ENTEREDAREA:   
+				SYSEVENT_ENTEREDAREA:
 					if (CheckLineOfSight(me, ev.source))
 						if(CanFight(me, ev.source, align)) //verifica se eh inimigo
 							wanders := 0;
@@ -77,10 +77,10 @@ program KillPlayers()
 								flee(ev.source);
 							endif
 			endcase
-		endif	
+		endif
 
 		look_around();
-		sleepms(2);
+		sleepms(100);
 	endwhile
 
 endprogram

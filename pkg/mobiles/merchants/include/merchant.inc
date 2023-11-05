@@ -1,8 +1,47 @@
-use uo;
-
 //include "include/bank";
 include ":datafile:include/datafile";
 include ":merchants:item_template";
+
+//Constantes de ID de Botões de Gump
+const BOTAO_ITENS_COLOCAR_A_VENDA := 0x1;
+const BOTAO_ITENS_MEUS_A_VENDA := 0x2;
+const BOTAO_ITENS_MINHA_CONTA := 0x3;
+const BOTAO_ITENS_RETIRAR := 0x4;
+const BOTAO_ITENS_TODOS_A_VENDA := 0x5;
+const BOTAO_ITENS_CONFISCAR := 0x6;
+const BOTAO_HISTORICO := 0x7;
+const BOTAO_CONFISCADOS := 0x8;
+const BOTAO_CONFIGURACAO := 0x9;
+const BOTAO_MOVERNPC := 0x10;
+
+
+
+//const SHOW_ITEMS_BOUGHT_BTN := 0x7;
+
+const MERCHANT_SELLER := 0xA;
+const MERCHANT_GM := 0xB;
+
+//Constantes de ID para conteudo a ser exibido no Gump
+const MENU_INTRO := 0x0;
+const MENU_ITENS_A_VENDA := 0x1;
+const MENU_ITENS_COMPRAR_CONFISCAR := 0x2;
+const MENU_ITENS_MEUS_A_VENDA := 0x3;
+const MENU_ITENS_RETIRAR_DA_VENDA := 0x4;
+const MENU_ITENS_MEUS_GANHOS := 0x5;
+
+const END_Y			:= 405;	  // nextpage
+
+//Gump Constants
+const BKGND_STONESLAB		:= 9200;  // Gray stone slab background
+const BKGND_BLUESLAB		:= 3600;  // Raised edge (blocky)
+const GF_STDCOLOR		:= 1890;
+
+const MOEDAS_COBRE		:= 0xba63; //id das moedas de cobre
+const MOEDAS_PRATA		:= 0xba64; //id das moedas de prata
+const MOEDAS_OURO		:= 0xba65; //id das moedas de ouro
+const GOLD_COIN			:= 0xeed;  //id das moedas de ouro (outro tipo válido)
+
+
 
 function GetPaymentsDataFile()
 	var data_file := DFOpenDataFile(":merchants:payments", DF_CREATE);
@@ -340,4 +379,793 @@ function GetItemsSoldList(merchant)
 		sleepms(4);
 	endforeach
 	return prop_list;
+endfunction
+
+
+function DoPurchase(npc, player, input)
+	var info := GetItemsForSaleInfo(npc, input);
+	var cost := info[1];
+	var selling := info[2];
+	var confiscar := 0;
+
+//	foreach i in selling
+//		SendSysMessage(player, _i_iter+" -> "+i);
+//	endforeach
+
+	if ( player.cmdlevel >= 3 || ( (GetObjProperty(npc, "faccao") != error) && (GetObjProperty(player, "faccao") == GetObjProperty(npc, "faccao"))))
+		if ( YesNo(player, "Deseja CONFISCAR este objeto?"))
+			confiscar := 1;
+		endif
+	endif
+
+	var cost_type := cost.cost_type;
+	var cost_desc := GetName(cost.cost_type);
+	var cost_name := cost.cost_name;
+	var cost_amt := cost.cost_amt;
+
+	if ( !confiscar )
+		info := array{}; // Cleanup
+
+		if (cost_type == MOEDAS_PRATA)
+			cost_amt := cost_amt*10;
+		elseif (cost_type == MOEDAS_OURO || cost_type == GOLD_COIN)
+			cost_amt := cost_amt*100;
+		endif
+
+		if (TemHabilidade(player,"Negociador Eximio"))
+			cost_amt := CInt(cost_amt*0.7);
+			SendSysMessage(player, "O custo final vai ser de " + cost_amt);
+		endif
+
+		var totalPago := 0;
+		var faltaPagar := cost_amt;
+		//print("Falta Pagar: "+ faltaPagar +" ");
+
+		Set_Critical(1);
+		var recursosDisponiveis := CalculaRecursosDisponiveis(player, cost_type);
+		if (cost_type == MOEDAS_COBRE || cost_type == MOEDAS_PRATA || cost_type == MOEDAS_OURO || cost_type == GOLD_COIN)
+			SendSysMessage(player, "Recurso inicial: " + recursosDisponiveis[5] + " moedas de cobre.");
+		else
+			SendSysMessage(player, "Recurso inicial: " + recursosDisponiveis[5] + " " + GetName(cost_type) + ".");
+		endif
+
+
+		var dicionarioAtual := Dictionary;
+		var recursos := recursosDisponiveis[5];
+		//print("recursos: "+ recursos +" ");
+		var diferenca;
+		var moeda;
+		var item;
+
+		if (recursos >= faltaPagar)
+			if (cost_type == MOEDAS_COBRE || cost_type == MOEDAS_PRATA || cost_type == MOEDAS_OURO || cost_type == GOLD_COIN)
+				if (faltaPagar > 0) //Tenta pagar com os cobres
+					dicionarioAtual := recursosDisponiveis[1];
+					foreach serial in dicionarioAtual //Verifica se da pra pagar só com moedas de cobre
+						moeda := SystemFindObjectBySerial(_serial_iter);
+						diferenca := faltaPagar - moeda.amount;
+						if (diferenca > 0)
+							totalPago += moeda.amount;
+							faltaPagar -= moeda.amount;
+							DestroyItem(moeda);
+						else
+							totalPago += faltaPagar;
+							SubtractAmount(moeda, faltaPagar);
+							faltaPagar := 0;
+							AI_Speak(npc, "Aqui esta sua compra. Volte sempre.");
+							break;
+						endif
+					endforeach
+				endif
+				if (faltaPagar > 0) //Tenta pagar com as pratas
+					dicionarioAtual := recursosDisponiveis[2];
+					foreach serial in dicionarioAtual //Verifica se da pra pagar só com moedas de cobre
+						moeda := SystemFindObjectBySerial(_serial_iter);
+						diferenca := faltaPagar - moeda.amount*10;
+						if (diferenca > 0)
+							totalPago += moeda.amount*10;
+							faltaPagar -= moeda.amount*10;
+							DestroyItem(moeda);
+						else
+							var troco := moeda.amount*10 - faltaPagar;
+							DestroyItem(moeda);
+							totalPago += faltaPagar;
+							DarTroco(player, npc, troco);
+
+							faltaPagar := 0;
+							AI_Speak(npc, "Aqui esta sua compra. Volte sempre.");
+							break;
+						endif
+					endforeach
+				endif
+				if (faltaPagar > 0) //Tenta pagar com os ouros
+					dicionarioAtual := recursosDisponiveis[3];
+					foreach serial in dicionarioAtual //Verifica se da pra pagar só com moedas de cobre
+						moeda := SystemFindObjectBySerial(_serial_iter);
+						//print("Serial: "+ _serial_iter +" Quantidade: "+ serial);
+						//print("Moeda: "+ moeda.amount +" ");
+						//print("Falta Pagar: "+ faltaPagar +" ");
+						diferenca := faltaPagar - moeda.amount*100;
+						if (diferenca > 0)
+							totalPago += moeda.amount*100;
+							faltaPagar -= moeda.amount*100;
+							DestroyItem(moeda);
+						else
+							//print("Vai pagar com ouro");
+							var troco := moeda.amount*100 - faltaPagar;
+							DestroyItem(moeda);
+							totalPago += faltaPagar;
+							DarTroco(player, npc, troco);
+							faltaPagar := 0;
+							AI_Speak(npc, "Aqui esta sua compra. Volte sempre.");
+							break;
+						endif
+					endforeach
+				endif
+			else
+				dicionarioAtual := recursosDisponiveis[4];
+				foreach serial in dicionarioAtual //Verifica se da pra pagar só com moedas de cobre
+					item := SystemFindObjectBySerial(_serial_iter);
+					diferenca := faltaPagar - item.amount;
+					if (diferenca > 0)
+						totalPago += item.amount;
+						faltaPagar -= item.amount;
+						DestroyItem(item);
+					else
+						totalPago += faltaPagar;
+						SubtractAmount(item, faltaPagar);
+						faltaPagar := 0;
+						AI_Speak(npc, "Aqui esta sua compra. Volte sempre.");
+						break;
+					endif
+				endforeach
+			endif
+
+			var template;
+			var itemPagamento;
+			//print("Pago em: "+cost_type);
+			if (cost_type == MOEDAS_COBRE || cost_type == MOEDAS_PRATA || cost_type == MOEDAS_OURO || cost_type == GOLD_COIN)
+				itemPagamento := CreateItemAtLocation(npc.x, npc.y, -100, MOEDAS_COBRE, 1);
+				template := CreateItemTemplate(itemPagamento);
+				template.amount := totalPago;
+				template.desc := "Moedas de cobre ["+selling.desc+"]";
+			else
+				itemPagamento := CreateItemAtLocation(npc.x, npc.y, -100, cost_type, 1);
+				template := CreateItemTemplate(itemPagamento);
+				template.amount := totalPago;
+				template.desc := GetName(cost_type, 1);
+			endif
+			DestroyItem(itemPagamento);
+			AddPaymentForSeller(npc, cost.seller, template);
+
+			//Exibe quanto restou de recursos
+			recursosDisponiveis := CalculaRecursosDisponiveis(player, cost_type);
+			if (cost_type == MOEDAS_COBRE || cost_type == MOEDAS_PRATA || cost_type == MOEDAS_OURO || cost_type == GOLD_COIN)
+				SendSysMessage(player, "Recurso final: " + recursosDisponiveis[5] + " moedas de cobre.");
+			else
+				SendSysMessage(player, "Recurso inicial: " + recursosDisponiveis[5] + " " + GetName(cost_type) + ".");
+			endif
+		else
+			SendSysMessage(player, "Voce nao tem "+ GetName(cost_type, 1)+ " suficiente para comprar isto.");
+			Set_Critical(0);
+			return 0;
+		endif
+		Set_Critical(0);
+	else
+		var ItensRevogados := dictionary;
+
+		var confiscado_info := ", {" + cost_name + " [" + cost_amt + " ";
+		if(cost_type == MOEDAS_COBRE)
+			confiscado_info += "Moedas de Cobre";
+		elseif(cost_type == MOEDAS_PRATA)
+			confiscado_info := "Modeas de Prata";
+		else
+			confiscado_info := "Moedas de Ouro";
+		endif
+
+		confiscado_info += "] [" + GetObjProperty(player, "faccao") + "]}";
+
+		if ( GetObjProperty(npc, "ItensRevogados") )
+			ItensRevogados := GetObjProperty(npc, "ItensRevogados");
+			ItensRevogados.Insert(cost.seller, CStr(ItensRevogados) + ", "+ confiscado_info);
+		else
+			ItensRevogados.Insert(cost.seller, confiscado_info);
+		endif
+		SetObjProperty(npc, "ItensRevogados", ItensRevogados);
+
+		AI_Speak(npc, "Aqui esta o objeto confiscado, avisarei o dono assim que ele aparecer por aqui.");
+	endif
+
+	Set_Critical(1);
+	CreateItemInBackpackFromTemplate(player, selling);
+	RemoveItemForSale(npc, input);
+	Set_Critical(0);
+endfunction
+
+function ShowForSaleItemsInfo(byref gump, npc, player, input, special := 0)
+	var sell_details:= GetItemsForSaleInfo(npc, input);
+
+	GFResizePic(gump, 170, 15, BKGND_STONESLAB, 455, 450);
+	var cost_info := sell_details[1];
+	var selling := sell_details[2];
+
+	var color := GF_STDCOLOR;
+	if ( selling.color )
+		color := selling.color-1;
+	endif
+
+	GFTextLine(gump, 200, 25, GF_STDCOLOR, "Nome");
+	GFTextLine(gump, 400, 25, GF_STDCOLOR, "Quantidade");
+	GFTextLine(gump, 175, 50, GF_STDCOLOR, "Produto");
+	GFTextLine(gump, 420, 50, GF_STDCOLOR, selling.amount);
+	if (!GetObjProperty(npc, "secret") || GetObjProperty(player, "secret"))
+		GFTextLine(gump, 175, 95, GF_STDCOLOR, "Vendedor");
+		var vendor := SystemFindObjectBySerial(cost_info.seller, SYSFIND_SEARCH_OFFLINE_MOBILES);
+		if (vendor.cmdlevel && !player.cmdlevel)
+			GFTextLine(gump, 205, 115, GF_STDCOLOR, "Desconhecido");
+		else
+			var nome := vendor.name;
+			if (GetObjProperty(vendor, "realname"))
+				nome := GetObjProperty(vendor, "realname");
+			endif
+			GFTextLine(gump, 205, 115, GF_STDCOLOR, nome);
+		endif
+	endif
+	GFTextLine(gump, 205, 70, color, selling.desc);
+	GFResizePic(gump, 500, 25, 2620, 120, 100);
+	GFTilePic(gump, 515, 40, selling.graphic);
+
+	color := GF_STDCOLOR;
+	var temp := item_cfg[cost_info.cost_type].color;
+	if ( temp )
+		color := temp-1;
+	endif
+	var cost_name;
+	if (cost_info.objtype == MOEDAS_COBRE)
+		cost_name := "moedas de cobre";
+	elseif (cost_info.objtype == MOEDAS_PRATA)
+		cost_name := "moedas de prata";
+	elseif (cost_info.objtype == MOEDAS_OURO || cost_info.objtype == GOLD_COIN)
+		cost_name := "moedas de ouro";
+	else
+		if (cost_info.cost_name)
+			cost_name := cost_info.cost_name;
+		else
+			cost_name := GetName(cost_info.cost_type);
+		endif
+	endif
+	GFTextLine(gump, 175, 150, GF_STDCOLOR, "Preco");
+	GFTextLine(gump, 420, 150, GF_STDCOLOR, cost_info.cost_amt);
+	GFTextLine(gump, 205, 170, color, cost_name);
+	GFResizePic(gump, 500, 125, 2620, 120, 100);
+	GFTilePic(gump, 515, 140, GetGraphic(cost_info.cost_type));
+
+	GFTextLine(gump, 180, 235, GF_STDCOLOR, "Descricao");
+	GFResizePic(gump, 175, 255, 2620, 445, 140);
+	var desc_lines := GFWordWrap(cost_info.desc, 455);
+	var y_pos := 260;
+	foreach line in desc_lines
+		GFTextLine(gump, 185, y_pos, GF_STDCOLOR, line);
+		y_pos := y_pos+20;
+	endforeach
+
+	GFAddButton(gump, 200, 430, 2151, 2154, 1, input);
+	if(!special)
+		if ( (player.cmdlevel < 3) && (GetObjProperty(npc, "faccao") != GetObjProperty(player, "faccao")) )
+			GFTextLine(gump, 235, 433, GF_STDCOLOR, "Adquirir");
+		elseif (GetObjProperty(npc, "faccao") == GetObjProperty(player, "faccao"))
+			GFTextLine(gump, 235, 433, GF_STDCOLOR, "Adquirir ou Confiscar");
+		else
+			GFTextLine(gump, 235, 433, GF_STDCOLOR, "Adquirir ou Confiscar (GM)");
+		endif
+	else
+		GFTextLine(gump, 235, 433, GF_STDCOLOR, "Remover");
+	endif
+endfunction
+
+function AddMyItemForSale(npc, player)
+
+	var VendorProperty := GetObjProperty(npc, "onlygmsells");
+	if (VendorProperty)
+		if ((VendorProperty == 1 ) && (player.cmdlevel < 3 ))  //Quando o NPC está marcado para só permitir que GM coloque coisas à venda, encerra a função para qualquer um com cmdlevel menor que 3 (GM)
+			SendSysMessage(player, "Voce nao pode colocar itens a venda nesse vendedor.");
+			return;
+		endif
+	endif
+
+	VendorProperty := GetObjProperty(npc, "oneplayersells");
+	if (VendorProperty)
+		if (VendorProperty != player.name) //Quando o NPC está marcado para só permitir que um player específico coloque coisas à venda, encerra a função para qualquer um que não seja esse player
+			SendSysMessage(player, "Voce nao pode vender neste mercador");
+			return;
+		endif
+	endif
+
+
+	VendorProperty := GetObjProperty(npc, "onlyartifice");
+	if (VendorProperty)
+		if (getObjProperty(player, "kit") != "Artifice") //Quando o NPC está marcado para só permitir que um player com Kit Artifice coloque coisas à venda, encerra a função para qualquer um que não tenha o Kit Artifice
+			SendSysMessage(player, "Apenas artifices podem por itens a venda nesse mercador.");
+			return;
+		endif
+	endif
+
+	SendSysMessage(player, "Que item deseja colocar para vender?");
+
+	var targ := target(player); //Seleciona o item.
+
+	var serialid := GetObjProperty(targ,"serialid"); //Armazena o serial do item selecionado
+
+	if (serialid != error) //itens sem serial são inválidos e por isso a função é encerrada
+		SendSysMessageEx(player,"Voce nao pode vender isto.",SSM_FAIL);
+		return 0;
+	endif
+
+	if ( !targ.IsA(POLCLASS_ITEM) ) //Se for selecionado algo que não é um item, a função é encerrada
+		SendSysMessage(player, "Cancelado.");
+		return;
+	elseif (!(targ in EnumerateItemsInContainer(player.backpack))) //Quando o item não está na mochila principal do personagem, não dá pra colocar ele à venda e por isso a função é encerrada
+		SendSysMessage(player, "Apenas itens na mochila principal podem ser vendidos.");
+		return;
+	endif
+	AddItem(npc, player, targ);
+
+endfunction
+
+function AddItem(npc, player, targ)
+
+	var cost_amt;
+	var cost_type;
+	var cost_name;
+	var item;
+	var specialProp := struct;
+
+	if (player.cmdlevel > 2) //Se é GM colocando à venda
+
+		AI_Speak(npc, "O que voce gostaria que eu cobrasse por "+targ.desc+"?"); //GM pode colocar o NPC pra aceitar pagamentos que não sejam apenas moedas
+		SendSysMessage(player, "Selecione um objeto para mostrar ao mercador o que voce deseja cobrar por este item.");
+
+		item := target(player);
+		if ( !item.IsA(POLCLASS_ITEM) )
+			SendSysMessage(player, "Cancelado.");
+			return;
+		endif
+
+		var cost_limit, limit_reason;
+		if ( item.amount > 1 ) //Se o que que foi apontado como pagamento pelo item é stackable
+			cost_limit := 100000;
+			limit_reason := " (item empilhavel)";
+		else
+			cost_limit := 1;
+			limit_reason := " (item nao empilhavel)";
+		endif
+
+		cost_name := item.desc; //Salva o nome do item escolhido
+		if (item.amount > 1) //Quando o item escolhido é empilhável
+			var RemoveNumber := splitwords(cost_name," ",1);  //Ajusta o nome removendo o numero que representa a quantidade do item escolhido
+			cost_name := RemoveNumber[2]; //Atualiza o nome sem á quantidade como prefixo
+		endif
+
+		cost_type := item.objtype; //Salva o tipo de objeto a ser utilizado como pagamento
+
+		AI_Speak(npc, "Que quantidade de '"+cost_name+"' devo cobrar?");
+		cost_amt := RequestGump(player, "Que quantidade de '"+cost_name+"' devo cobrar?", "1 - "+cost_limit+limit_reason, 1, 1);
+		cost_amt := CInt(cost_amt);
+		if ( !cost_amt || cost_amt > cost_limit || cost_amt <= 0 ) //Cancela a operação se forem inseridos valores inválidos
+			SendSysMessage(player, "Cancelado");
+			return;
+		endif
+
+		var specialItem := YesNo(player, "Esse item vai ter uma prop unica? Caso sim, use props do tipo String");
+		if (specialItem)
+			var specialName := RequestGump(player, "Escreva o nome da prop unica");
+			var specialValue := RequestGump(player, "Escreva o valor da prop");
+			if (specialName && specialValue)
+				specialProp.+name := specialName;
+				specialProp.+value := specialValue;
+			endif
+		endif
+
+	else //Se não é GM colocando à venda
+
+		var cost_limit := 100000;
+		var limit_reason := "(item empilhavel)";
+		cost_type := MOEDAS_COBRE;
+
+		cost_amt := CInt(RequestGump(player, "Quantas moedas de cobre deseja cobrar por "+targ.desc+"?", "1 - "+cost_limit+limit_reason, 1, 1));
+
+		if ( !cost_amt || cost_amt <= 0 ) //Valor inválido ou não positivo encerra a função
+			SendSysMessage(player, "Cancelado");
+			return;
+		elseif (cost_amt > cost_limit) //Valor acima do limite encerra a função
+			SendSysMessage(player, "Voce ultrapassou o limite maximo de "+cost_limit+" moedas.");
+			return;
+		endif
+	endif
+
+	var desc := RequestGump(player, "Entre com uma pequena descricao do produto.", "Isso e opcional", "", 1);
+
+	if ( !desc )
+		desc := "";
+	elseif ( Len(desc) > 300 )
+		desc := desc[0,300]+"...";
+	endif
+
+	var infinite := 0;
+
+	if (player.cmdlevel > 2) //Permite deixar itens permanentes a venda na loja se for GM<
+		infinite := YesNo(player, "Voce deseja deixar esse item infinito?");
+	endif
+
+	Set_Critical(1);
+
+	//Verifica se vai cobrar a taxa antes da venda/retirada ou só
+	if (GetObjProperty(npc, "oneplayersells") == player.name)
+		SendSysMessage(player, "Seu vendedor particular nao cobra taxas.");
+	elseif (TemHabilidade(player, "Mercador Reconhecido"))
+		SendSysMessage(player, "Vendedores descontam taxas de Mercadores Reconhecidos apenas depois de vender seus itens.");
+	elseif (!GetObjProperty(npc, "taverneiro"))
+		//Cobra taxas previstas naquele vendedor para quem tem que pagar pra colocar a venda
+		var taxa := 0.0;
+		if (cost_type == MOEDAS_COBRE || cost_type == MOEDAS_PRATA || cost_type == MOEDAS_OURO || cost_type == GOLD_COIN)
+			if(GetObjProperty(npc, "taxap")) // 0.0 equivale a 0% e 1.0 equivale a 100%
+				var pesoTaxa := CDbl(getObjProperty(npc, "taxap"));
+				if (cost_type == MOEDAS_COBRE)
+					taxa := CInt(1.0 * cost_amt * pesoTaxa);
+				elseif (cost_type == MOEDAS_PRATA)
+					taxa := CInt(10.0 * cost_amt * pesoTaxa);
+				elseif (cost_type == MOEDAS_OURO || cost_type == GOLD_COIN)
+					taxa := CInt(100.0 * cost_amt * pesoTaxa);
+				endif
+			else
+				if (cost_type == MOEDAS_COBRE)
+					taxa := CInt(1.0 * cost_amt * 0.1);
+				elseif (cost_type == MOEDAS_PRATA)
+					taxa := CInt(10.0 * cost_amt * 0.1);
+				elseif (cost_type == MOEDAS_OURO || cost_type == GOLD_COIN)
+					taxa := CInt(100.0 * cost_amt * 0.1);
+				endif
+			endif
+
+			var recursosDisponiveis := CalculaRecursosDisponiveis(player, cost_type);
+			if(taxa > recursosDisponiveis[5])
+				SendSysMessage(player, "Voce precisa pagar " + taxa + " moedas de taxa, mas tem apenas " + recursosDisponiveis[5] + ".");
+				SendSysMessage(player, "Cancelado.");
+				return 0;
+			elseif(taxa > 0)
+				var totalPago := 0;
+				var faltaPagar := taxa;
+				var dicionarioAtual := Dictionary;
+				var recursos := recursosDisponiveis[5];
+				//print("recursos: "+ recursos +" ");
+				var diferenca;
+				var moeda;
+				var item;
+				if (faltaPagar > 0) //Tenta pagar com os cobres
+					dicionarioAtual := recursosDisponiveis[1];
+					foreach serial in dicionarioAtual //Verifica se da pra pagar só com moedas de cobre
+						moeda := SystemFindObjectBySerial(_serial_iter);
+						diferenca := faltaPagar - moeda.amount;
+						if (diferenca > 0)
+							totalPago += moeda.amount;
+							faltaPagar -= moeda.amount;
+							DestroyItem(moeda);
+						else
+							totalPago += faltaPagar;
+							SubtractAmount(moeda, faltaPagar);
+							faltaPagar := 0;
+							break;
+						endif
+					endforeach
+				endif
+				if (faltaPagar > 0) //Tenta pagar com as pratas
+					dicionarioAtual := recursosDisponiveis[2];
+					foreach serial in dicionarioAtual //Verifica se da pra pagar só com moedas de prata
+						moeda := SystemFindObjectBySerial(_serial_iter);
+						diferenca := faltaPagar - moeda.amount*10;
+						if (diferenca > 0)
+							totalPago += moeda.amount*10;
+							faltaPagar -= moeda.amount*10;
+							DestroyItem(moeda);
+						else
+							var troco := moeda.amount*10 - faltaPagar;
+							DestroyItem(moeda);
+							totalPago += faltaPagar;
+							DarTroco(player, npc, troco);
+							faltaPagar := 0;
+							break;
+						endif
+					endforeach
+				endif
+				if (faltaPagar > 0) //Tenta pagar com os ouros
+					dicionarioAtual := recursosDisponiveis[3];
+					foreach serial in dicionarioAtual //Verifica se da pra pagar só com moedas de ouro
+						moeda := SystemFindObjectBySerial(_serial_iter);
+						//print("Serial: "+ _serial_iter +" Quantidade: "+ serial);
+						//print("Moeda: "+ moeda.amount +" ");
+						//print("Falta Pagar: "+ faltaPagar +" ");
+						diferenca := faltaPagar - moeda.amount*100;
+						if (diferenca > 0)
+							totalPago += moeda.amount*100;
+							faltaPagar -= moeda.amount*100;
+							DestroyItem(moeda);
+						else
+							//print("Vai pagar com ouro");
+							var troco := moeda.amount*100 - faltaPagar;
+							DestroyItem(moeda);
+							totalPago += faltaPagar;
+							DarTroco(player, npc, troco);
+							faltaPagar := 0;
+							break;
+						endif
+					endforeach
+				endif
+
+				if (GetObjProperty(npc, "cofreid"))
+					var cofser := getObjProperty(npc, "cofreid");
+					var cofrereal := SystemFindObjectBySerial(cofser);
+					CreateItemInContainer( cofrereal, "moedacobre", taxa);
+				endif
+
+				SendSysMessage(player, "Voce pagou " + taxa + " moedas de taxa. Restaram " + CStr(recursosDisponiveis[5] - taxa) + " moedas.");
+
+			endif
+		endif
+	endif
+
+	var result := AddItemForSale(npc, player, targ, cost_type, cost_name, cost_amt, desc, infinite, specialProp);
+	Set_Critical(0);
+
+	if (result != error)
+		AI_Speak(npc, "Tudo certo. Colocarei seu item a venda.");
+		SendSysMessage(player, "O item foi adicionado com sucesso.");
+	else
+		AI_Speak(npc, "Me desculpe, mas nao poderei vender isto para voce.");
+	endif
+endfunction
+
+function ShowForSaleItems(byref gump, npc, player, special := 0)
+
+	GFResizePic(gump, 170, 15, BKGND_STONESLAB, 455, 450);
+	GFTextMid(gump, 170, 25, 455, GF_STDCOLOR, "Minhas vendas");
+	GFPage(gump, 1);
+
+	var items_a_venda := GetItemsForSale(npc);
+	var ItensRevogados := dictionary;
+
+	if ( GetObjProperty(npc, "ItensRevogados") )
+		ItensRevogados := GetObjProperty(npc, "ItensRevogados");
+	endif
+
+	var y_pos := 45;
+	foreach serial in items_a_venda
+		var info := GetItemsForSaleInfo(npc, serial);
+		var item := info[2];
+		var cost_info := info[1];
+		var donoDoItem := SystemFindObjectBySerial(cost_info.seller, SYSFIND_SEARCH_OFFLINE_MOBILES);
+		//print( "array: " + items_a_venda + " item " + info);
+		//print("serial "  + cost_info.seller  + " player " + player);
+		if (!donoDoItem)
+			RemoveItemForSale(npc, serial);
+			//print("removendo item do vendor de char deletado.");
+		endif
+		info := info[1];
+
+		//print("inso.seller " + info.seller + " player.serial " + player.serial);
+		var cost_name;
+		if( (!special) || (info.seller == CInt(player.serial)) ) // Quando a propriedade especial esta desabilitada ou o item não é seu, exibe eles na lsita de itens à venda
+			if( y_pos > END_Y )
+				GFAddButton(gump, 230, 25, 2224, 2224, GF_PAGE_BTN, gump.cur_page+1);
+				y_pos := 45;
+				GFPage(gump, gump.cur_page+1);
+
+			endif
+			if(gump.cur_page > 1)
+				GFAddButton(gump, 200, 25, 2223, 2223, GF_PAGE_BTN, gump.cur_page-1);
+			endif
+
+			var color := GF_STDCOLOR;
+			if ( item.color )
+				color := item.color-1;
+			endif
+
+			if (cost_info.objtype == MOEDAS_COBRE)
+				cost_name := "moedas de cobre";
+			elseif (cost_info.objtype == MOEDAS_PRATA)
+				cost_name := "moedas de prata";
+			elseif (cost_info.objtype == MOEDAS_OURO || cost_info.objtype == GOLD_COIN)
+				cost_name := "moedas de ouro";
+			else
+				if (cost_info.cost_name)
+					cost_name := cost_info.cost_name;
+				else
+					cost_name := GetName(cost_info.cost_type);
+				endif
+			endif
+
+			var itemLAbel := item.desc + " -> " + cost_info.cost_amt + " " + cost_name;
+			var itemLAbelSize := Len(itemLAbel);
+			var tamanhoMaximo := 58;
+
+
+			if( itemLAbelSize < tamanhoMaximo)
+				//Adiciona os caracteres restamtes de descrição resumida na frente do nome do item à venda
+				var desc_resumida := cost_info.desc;
+				if ( (!desc_resumida) || (desc_resumida == error) || (desc_resumida == ""))
+					itemLAbel += "";
+				elseif ( Len(desc_resumida) > tamanhoMaximo - itemLAbelSize )
+					itemLAbel += " ("+ desc_resumida[1,tamanhoMaximo - itemLAbelSize]+ "...)";
+				else
+					itemLAbel += " ("+desc_resumida+")";
+				endif
+			endif
+
+			GFAddButton(gump, 175, y_pos+3, 2117, 2118, 1, serial);
+			GFTextLine(gump, 195, y_pos, color, itemLAbel);
+			//GFTextLine(gump, 195, y_pos, color, item.desc + " -> " + cost_info.cost_amt + " " + cost_name );
+			y_pos := y_pos+20;
+			sleepms(2);
+		endif
+	endforeach
+
+	if (ItensRevogados.Exists(player.serial))
+		var confiscados := ItensRevogados[player.serial];
+		GumpPrompt(player, "Algumas de suas mercadorias foram confiscadas. procure saber os motivos com as autoridades comerciais locais." + CStr(confiscados));
+		SendSysMessage(player, confiscados);
+		ItensRevogados.Erase(player.serial);
+		SetObjProperty(npc, "ItensRevogados", ItensRevogados);
+	endif
+endfunction
+
+function RetrieveMyItem(npc, player, input)
+	Set_Critical(1);
+	var info := GetItemsForSaleInfo(npc, input);
+	var cost := info[1];
+	var selling := info[2];
+	info := array{}; // Cleanup
+
+	if (selling.amount > 1) //Quando o item escolhido é empilhável
+		var RemoveNumber := splitwords(selling.desc," ",1);  //Ajusta o nome removendo o numero que representa a quantidade do item escolhido
+		selling.desc := RemoveNumber[2]; //Atualiza o nome sem á quantidade como prefixo
+	endif
+
+	AI_Speak(npc, "Certo. Aqui esta seu produto.");
+	RemoveItemForSale(npc, input, 1); //Terceira propriedade indica que o item inifito deve ser removido da lista
+	var purchase := CreateItemInBackPack(player, selling, selling.amount);
+	if ( purchase == error )
+		purchase := CreateItemAtLocation(player.x, player.y, player.z, selling, selling.amount);
+		if ( purchase == error )
+			SendSysMessage(player, "Error - Unable to create item! ->"+purchase.errortext);
+		else
+			AI_Speak(npc, "Eu nao fui capaz de colocar o item na sua bolsa. Coloquei aos seus pes entao.");
+		endif
+	endif
+	Set_Critical(0);
+endfunction
+
+function ShowMyProfit(byref gump, npc, player)
+	GFResizePic(gump, 170, 15, BKGND_STONESLAB, 455, 450);
+	GFTextMid(gump, 170, 25, 455, GF_STDCOLOR, "Meus Ganhos");
+	GFPage(gump, 1);
+
+	var items_inside := GetSellerAccount(npc, player.serial);
+
+	var y_pos := 45;
+	foreach template in items_inside
+		var color := GF_STDCOLOR;
+		if ( template.color )
+			color := template.color-1;
+		endif
+
+		GFTextLine(gump, 175, y_pos, color, template.desc);
+		y_pos := y_pos+20;
+		sleepms(2);
+	endforeach
+
+	if( len(items_inside) > 0 )
+		y_pos += 20;
+		GFAddButton(gump, 175, y_pos+3, 2117, 2118, 1, BOTAO_ITENS_RETIRAR);
+		GFTextLine(gump, 195, y_pos, GF_STDCOLOR, "Retirar tudo");
+	endif
+endfunction
+
+function DoWithdraw(npc, player)
+	Set_Critical(1);
+	var data_elem := GetPaymentsDataElem(Hex(npc.serial));
+	var account := data_elem.GetProp(Hex(player.serial));
+	var moedas := 0;
+	foreach item in account
+		//print("Item: "+item);
+		//print("Item (objType: "+item.objtype);
+		if(item.objtype == MOEDAS_OURO || item.objtype == GOLD_COIN)
+			moedas += item.amount * 100;
+		elseif(item.objtype == MOEDAS_PRATA)
+			moedas += item.amount * 10;
+		elseif(item.objtype == MOEDAS_COBRE)
+			moedas += item.amount;
+		else
+			var withdraw := CreateItemInBackPack(player, item, item.amount);
+			if( withdraw == error )
+				withdraw := CreateItemAtLocation(player.x, player.y, player.z, item, item.amount);
+				if ( withdraw == error )
+					SendSysMessage(player, "Error - Unable to create item! ->"+withdraw.errortext);
+				else
+					AI_Speak(npc, "Eu nao fui capaz de colocar o item na sua bolsa. Coloquei aos seus pes entao.");
+				endif
+			endif
+		endif
+		sleepms(2);
+	endforeach
+	DarTroco(player, npc, moedas);
+	data_elem.EraseProp(Hex(player.serial));
+	Set_Critical(0);
+endfunction
+
+
+function CalculaRecursosDisponiveis(player, cost_type)
+	var recursosDisponiveis := Dictionary;
+	recursosDisponiveis[1] := Dictionary; //Cobre
+	recursosDisponiveis[2] := Dictionary; //Prata
+	recursosDisponiveis[3] := Dictionary; //Ouro
+	recursosDisponiveis[4] := Dictionary; //Outros
+	recursosDisponiveis[5] := 0; //Total
+
+	if (cost_type == MOEDAS_COBRE || cost_type == MOEDAS_PRATA || cost_type == MOEDAS_OURO || cost_type == GOLD_COIN)
+		foreach item in EnumerateItemsInContainer(player.backpack)
+			if (item.objtype == MOEDAS_COBRE)
+				recursosDisponiveis[1][item.serial] := item.amount;
+				recursosDisponiveis[5] += item.amount;
+			elseif (item.objtype == MOEDAS_PRATA)
+				recursosDisponiveis[2][item.serial] := item.amount;
+				recursosDisponiveis[5] += item.amount*10;
+			elseif (item.objtype == MOEDAS_OURO || item.objtype == GOLD_COIN)
+				recursosDisponiveis[3][item.serial] := item.amount;
+				recursosDisponiveis[5] += item.amount*100;
+			endif
+			//print("Valor Disponivel : "+ recursosDisponiveis[5] +" ");
+		endforeach
+	else
+		foreach item in EnumerateItemsInContainer(player.backpack)
+			if (item.objtype == cost_type)
+				recursosDisponiveis[4][item.serial] := item.amount;
+				recursosDisponiveis[5] += item.amount;
+				//print("Valor Disponivel : "+ recursosDisponiveis[5] +" ");
+			endif
+		endforeach
+	endif
+	return recursosDisponiveis;
+endfunction
+
+
+function DarTroco(player, npc , ValorTroco)
+	var faltaPagar := ValorTroco;
+	if(ValorTroco > 0)
+		SendSysMessage(player, "Recebeu:"); //Comentar quando for colocar em produção
+	endif
+	Set_Critical(1);
+	var ouro := CInt(faltaPagar/100);
+	if(ouro > 0)
+		CreateItemInBackpack(player, MOEDAS_OURO, ouro);
+		SendSysMessage(player, ouro + " moedas de ouro");
+	endif
+	faltaPagar -= CInt(ouro*100);
+
+
+	var prata := CInt(faltaPagar/10);
+	if(prata > 0)
+		CreateItemInBackpack(player, MOEDAS_PRATA, prata);
+		SendSysMessage(player, prata + " moedas de prata");
+	endif
+	faltaPagar -= CInt(prata*10);
+
+
+	var cobre := CInt(faltaPagar);
+	if(cobre > 0)
+		CreateItemInBackpack(player, MOEDAS_COBRE, cobre);
+		SendSysMessage(player, cobre + " moedas de cobre");
+	endif
+	Set_Critical(0);
+
+	AI_Speak(npc, "Aqui estao suas moedas.");
+	return 1;
 endfunction
