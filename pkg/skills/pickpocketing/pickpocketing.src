@@ -239,7 +239,6 @@ function CriticalFailure(mobile, targ)
 	endif
 	SendSysMessageEx(mobile, "Voce chamou muita atencao!", SSM_FAIL);
 				if (TS_GetTimerInfo(targ, "sleep"))
-					print("entrou");
 					SendSysMessageEx(mobile, "Voce acordou o alvo!", SSM_FAIL);
 					TS_LowerDuration(targ, "sleep", -1);
 				endif
