@@ -50,9 +50,14 @@ exported function HandleSendStats( character, byref packet )
 	var serial := packet.GetInt32(PLAYER_ID);
 	var source := SystemFindObjectBySerial(serial);
 	var Object_Name;
+	var url;
+
+	url := GetObjProperty(source, "url");
+
 	if (source.IsA(POLCLASS_MOBILE))
 		//PREENCHE NOME DO MOBILE
 		Object_Name := source.name;
+
 
 		//Cor do nome dos NPC conforme skill de combate
 		if (!source.npctemplate)
@@ -83,6 +88,8 @@ exported function HandleSendStats( character, byref packet )
 			endif
 			packet.SetString(NAME_ID, Object_Name,1);
 		endif
+		//Envia a url do portrait junto com o status
+		packet.SetString(121, url, 1);
 	endif
 /*
 	var serial := packet.GetInt32(PLAYER_ID);
