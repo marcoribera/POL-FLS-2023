@@ -186,7 +186,10 @@ function normalusage(who, item)
    if(!msg)
       msg := "Você ouve algo se movendo...";
    endif
-   SendSysMessageEx(who, msg, SSM_INFO);
+   var chars := ListmobilesNearLocation(item.x, item.y, item.z, 10, item.realm);
+	foreach char in chars
+		SendSysMessageEx(char, msg, SSM_INFO);
+	endforeach
 
    if (opts.lights)
       lightswitch(item, opts);
@@ -207,6 +210,9 @@ function normalusage(who, item)
    if (opts.teleport_to)
       teleporter(item, opts);
    endif
+   	if (opts.graphicarraysitem)
+		changegraphici(item, opts);
+	endif
 	if (opts.spawn_boss)
 		if (status == "off")
 			spawnBoss(item, opts);
@@ -268,6 +274,27 @@ endfunction
 
 function changegraphiclever(item, opts)
   SetObjProperty(item, "#inuse", 1);
+  EraseObjProperty(item, "#inuse");
+endfunction
+
+function changegraphici(item, opts)
+  SetObjProperty(item, "#inuse", 1);
+
+  var serial;
+  
+  foreach serial in  (opts.graphicarraysitem)
+     serial := SystemFindObjectBySerial(CInt(serial));
+     var stat :=  GetObjProperty(item, "status");
+     if ( (stat == error) || (stat == "on"))
+        serial.graphic := GetObjProperty(serial, "graphicto");
+        //setobjproperty(item, "status", "unreleased");
+     else
+        serial.graphic := GetObjProperty(serial, "originalgraphic");
+        //setobjproperty(item, "status", "released");
+     endif
+    
+  endforeach
+
   EraseObjProperty(item, "#inuse");
 endfunction
 
@@ -364,7 +391,6 @@ function reset(item, force_reset := 0)
    if ( GetObjProperty(item, "status") != "on" || GetObjProperty(item, "#inuse"))
       return;
    endif
-
    var reset_cd := GetObjProperty(item, "reset_cd");
    if (reset_cd && reset_cd > polcore().systime && !force_reset)
       return;
@@ -422,6 +448,17 @@ function reset(item, force_reset := 0)
 //   	if (opts.spawn_boss)
 	//	spawnBoss(item, opts);
 	//endif
-
+	if (opts.graphicarraysitem)
+		  var serial;
+  foreach serial in  (opts.graphicarraysitem)
+     serial := SystemFindObjectBySerial(CInt(serial));
+         serial.graphic := GetObjProperty(serial, "originalgraphic");
+endforeach
+	endif
+	if (opts.spawn_boss)
+		  var boss :=  SystemFindObjectBySerial( GetObjProperty(item, "champ") );
+			ApplyDamage( boss, 20000);
+			EraseObjProperty(item, "champ");
+	endif
    SetRandomOrder(item);
 endfunction
