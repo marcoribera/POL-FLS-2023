@@ -9,7 +9,6 @@ include "include/sysEvent";
 include ":ghaia:generic";
 
 program loko(params)
-print("entrou");
 	var who := params[1];
 	var event := params[2];
 
