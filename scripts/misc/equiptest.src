@@ -64,6 +64,11 @@ program EquipTest(mobile, item, start_up)
 			endif
 			mobile.name := "Desconhecido";
 			mobile.title_race := "Desconhecido";
+
+			SetObjProperty(mobile, "Incognito", "true");
+			var old_url := GetObjProperty(mobile, "url");
+			SetObjProperty(mobile, "old_url", old_url);
+			SetObjProperty(mobile, "url", "https://th.bing.com/th/id/OIG.0XmfkJZCmPd.wGE6C9x_?pid=ImgGn&w=1024&h=1024&rs=1");
 		endif
 	else
 		// Unable to equip but no reaso was given above.

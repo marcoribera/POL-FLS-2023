@@ -35,6 +35,8 @@ program UnequipTest(mobile, item)
 			endif
 			EraseObjProperty(mobile, "realname");
 			EraseObjProperty(mobile, "realrace");
+			EraseObjProperty(mobile, "Incognito");
+			SetObjProperty(mobile, "url", GetObjProperty(mobile, "old_url"));
 		endif
 	endif
 
