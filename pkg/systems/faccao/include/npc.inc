@@ -1,5 +1,5 @@
 // ###########################################
-// # 
+// #
 // # AddNPC
 // # remNPC
 // # editNPC
@@ -9,11 +9,11 @@
 // # DismissNPC
 // # CheckPrivilegies
 // # GetReports
-// # 
+// #
 // ###########################################
 
 include ":datafile:include/datafile";
-include ":unicos:item_template";
+include ":merchants:item_template";
 
 function AddNpc(guild, npc)
    if (typeof(guild) == "String")
@@ -29,7 +29,7 @@ function AddNpc(guild, npc)
       "price" := npc.price,
       "name" := npc.name
    };
-   if (!new_npc.template) 
+   if (!new_npc.template)
       return 0;
    elseif (!new_npc.equipment)
       return 0;
@@ -63,7 +63,7 @@ function remNPC(guild, index)
    if (typeof(guild) == "String")
       guild := FindGuild(guild);
    endif
-   if (typeof(index) == "Integer") 
+   if (typeof(index) == "Integer")
       var npc_list := listNPC(guild);
       npc_list.Erase(index);
       guild.setProp("npcs", npc_list);

@@ -91,10 +91,10 @@ program Logon(who)
 					sleep(2);
 				endforeach
 
-				if(!possiveis)
+				if(possiveis.size(0))
 					SetObjProperty(who, "lastprize", polcore().systime);
 					SendSysMessage(who, who.name + " (" + who.acctname + ") nao tem como melhorar passivamente com o cap atual.");
-					break;
+					return;
 				endif
 
 				chosen := possiveis[ RandomInt(possiveis.size())+1 ];

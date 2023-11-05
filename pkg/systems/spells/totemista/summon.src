@@ -51,8 +51,43 @@ program summontotem(params)
 	endif
 
 	var espirito := summon(template, targ, who);
+		var slot;
+	if (espirito) //Para adicionar em qual slot o animal vai se encaixar, necessário para exibir na barra de buff
+		var numsum := Getobjproperty(who, "Summon_num");
+		var slot1 := Getobjproperty(who, "slot1");
+		var slot2 := Getobjproperty(who, "slot2");
+		var slot3 := Getobjproperty(who, "slot3");
+		var slot4 := Getobjproperty(who, "slot4");
+			if (!numsum)
+				SetObjProperty(who, "Summon_num", 1);
+				numsum := Getobjproperty(who, "Summon_num");
+				SetObjProperty(who, "slot1", 1);
+				espirito.name := ""+espirito.name+""+1;
+				slot := 1;
+			else
+				Setobjproperty(who, "Summon_num", numsum + 1);
+				if (!slot1)
+					SetObjProperty(who, "slot1", 1);
+					espirito.name := ""+espirito.name+""+1;
+					slot := 1;
+					
+				elseif (!slot2)
+					SetObjProperty(who, "slot2", 1);
+					espirito.name := ""+espirito.name+""+2;
+					slot := 2;
+				
+				elseif (!slot3)
+					SetObjProperty(who, "slot3", 1);
+					espirito.name := ""+espirito.name+""+3;
+					slot := 3;
 
-	if (espirito)
+				elseif (!slot4)
+					SetObjProperty(who, "slot4", 1);
+					espirito.name := ""+espirito.name+""+4;
+					slot := 4;
+
+				endif
+			endif
 		SendSysMessageEx(who, "Voce teve sucesso em invocar a criatura.", SSM_INFO);
 		//AddPet(who, espirito.serial);
 	else
@@ -72,7 +107,7 @@ program summontotem(params)
 		espirito.resist_energy_mod  := 25;
 		espirito.resist_fire_mod  := 25;
 		SetObjProperty(espirito, "#ReflexosMod", 25);
-		SetObjProperty(espirito, "#ReflexosMod", 25);
+		SetObjProperty(espirito, "#FortitudeMod", 25);
 		SetObjProperty(espirito, "#VontadeMod", 25);
 	endif
 
@@ -82,7 +117,11 @@ program summontotem(params)
 		duracao := duracao*2; //skill 0 -> 50s // Skill 20 -> 72s // Skill 40 -> 98s // Skill 100 -> 170s
 	endif
 
-	TS_StartTimer(espirito, "summon", duracao );
+
+var summon_number := GetNumSummons(who) + 1;
+	TS_StartTimer(espirito, "summon", duracao ); //inicio do timedScripts no summon
+	TS_StartTimer(who, "summon_"+slot, duracao ); //inicio do timedScripts no char
+SetObjProperty(espirito, "slot", slot); //seta o slot que o summon vai usar (se 1, 2, 3 ou 4)
 	return 1;
 
 endprogram

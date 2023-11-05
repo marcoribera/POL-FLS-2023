@@ -44,30 +44,42 @@ program core_npcDeath(params)
 
 	foreach item in (EnumerateItemsInContainer(corpse))
 	    //Lista de itens que podem dropar do npc, mas ficam com prop de restrito_mob, não deixando o player equipar
-	    var lista_itens := {
-            0x1415, //Plate
-            0x1416, //Plate
-            0x1410, //Plate
-            0x1417, //Plate
-            0x1411, //Plate
-            0x141A, //Plate
-            0x1414, //Plate
-            0x1418, //Plate
-            0x1413  //Plate
-	    };
+	    //var lista_itens := {
+        //    0x1415, //Plate
+        //    0x1416, //Plate
+        //    0x1410, //Plate
+        //    0x1417, //Plate
+        //    0x1411, //Plate
+        //    0x141A, //Plate
+        //    0x1414, //Plate
+        //    0x1418, //Plate
+        //    0x1413  //Plate
+	    //};
 
-	    foreach item_lista in lista_itens
-	        if (item.objtype == item_lista)
-                SetObjProperty(item, "restrito_mob", 1);
-                break;
+	    //foreach item_lista in lista_itens
+	    //    if (item.objtype == item_lista)
+        //        SetObjProperty(item, "restrito_mob", 1);
+        //        break;
+        //    endif
+        //endforeach
+        if (item.isA(POLCLASS_ARMOR) || item.isA(POLCLASS_WEAPON))
+            if (!GetObjProperty(item, "itemunico"))
+                item.hp -= Cint(item.hp * 0.8);
             endif
-        endforeach
+        endif
     endforeach
 
 	if (getObjProperty(corpse, "owner")) //se for tamed, atualiza a prop tamedpets do master
 		var masterserial := getObjProperty(corpse, "owner");
 		var master := SystemFindObjectBySerial(masterserial);
-		if(!getobjproperty(corpse, "Necro"))
+		var summon := GetObjProperty(corpse, "summoned");
+		if(summon == 1) // se for summon de totemista para retirar da barra de buff e liberar o slot
+			var masterseriali := getObjProperty(corpse, "owneri");
+			var masteri := SystemFindObjectBySerial(masterseriali);
+			var timer_num := GetObjProperty(corpse, "slot");
+			var timer := "summon_"+timer_num;
+			TS_LowerDuration(masteri, timer, -1);													   
+		elseif(!getobjproperty(corpse, "Necro"))
 			GetNumPets(master);
 		else
 			var numbersummons := Cint(GetObjProperty(master, "NecroSummons"));

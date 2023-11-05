@@ -56,7 +56,7 @@ program default_poison(params)
     endfor
 
 //	TS_CurePoison(who, 120,"P", 5);
-	TS_LowerDuration(who, "bleed", -1);
+	TS_LowerDuration(who, "bleedingstrike", -1);
 	var script := GetProcess(GetPid());
 	script.kill();
 	

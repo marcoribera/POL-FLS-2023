@@ -6,6 +6,7 @@ include "include/say";
 
 program cureScript(params)
 	var mobile := params[1];
+
 	PrintText(mobile, "*sumindo pouco a pouco*");
 	if (getObjProperty(mobile, "owner"))
 		var masterserial := getObjProperty(mobile, "owner");

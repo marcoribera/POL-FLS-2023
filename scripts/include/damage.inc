@@ -453,7 +453,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 		endif
 		if (temHabilidade(who, "Furia Primitiva"))
 			if (GetObjProperty(who, "metamorfose") != error)
-				other:= other + 0.5; //50% de bonus - balanceamento depois da mudanca de calculo do dano
+				other:= other + 1.0; //50% de bonus - balanceamento depois da mudanca de calculo do dano
 				PrintText(who, "*enfurecido*");
 			endif
 		endif

@@ -71,7 +71,7 @@ exported function GetManaRegenRate(mobile)
 		base_regen := base_regen + base_regen;
 	endif
 
-	if (TemHabilidade(mobile, "Adrenalina Espiritual"))
+	if (TemHabilidade(mobile, "Fluxo Divino"))
 		base_regen := base_regen + base_regen;
 	endif
 

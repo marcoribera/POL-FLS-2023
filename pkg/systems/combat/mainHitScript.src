@@ -475,9 +475,9 @@ function WearDownArmor(defender, armor, rawdamage, weapon)
 		var wearchance := armr_elem.WearChance;
 		if ( TemHabilidade(defender, "Conservar Equipamento"))
 			wearchance := wearchance/2;
-			if (wearchance < 10)
-				wearchance := 10;
-			endif
+			//if (wearchance < 10)
+			//	wearchance := 10;
+			//endif
 		endif
 
 		//if (CInt(rawdamage) > dmg_to_wear)
@@ -527,9 +527,9 @@ function WearDownShield(defender, shield, rawdamage, weapon)
 		var wearchance := armr_elem.WearChance;
 		if ( TemHabilidade(defender, "Conservar Equipamento"))
 			wearchance := wearchance/2;
-			if (wearchance < 20)
-				wearchance := 20;
-			endif
+			//if (wearchance < 20)
+			//	wearchance := 20;
+			//endif
 		endif
 		//if (CInt(rawdamage) > dmg_to_wear)
 		if (RandomDiceRoll("1d100") <= wearchance)
@@ -570,9 +570,9 @@ function WearDownWeapon(attacker, weapon)
 			//Diminui pela metade a chance de um equipamento quebrar com a habilidde Conservar Equipamento
 			if (TemHabilidade(attacker, "Conservar Equipamento"))
 				wearchance := wearchance/2;
-				if (wearchance < 10)
-					wearchance := 10;
-				endif
+				//if (wearchance < 10)
+				//	wearchance := 10;
+				//endif
 			endif
 
 			if ( RandomDiceRoll("1d100") <= wearchance )
@@ -677,8 +677,10 @@ function WeaponHitScripts(attacker, defender, weapon, armor, basedamage, rawdama
 		var dmg := 1;
         if (TemHabilidade(attacker, "Golpe Afiado"))
             dmg := basedamage + CInt(rawdamage*(AP_GetSkill(attacker, TACTICS)/100));
+            PlaySoundEffect(attacker, 0x510);
         else
             dmg := basedamage + CInt(rawdamage*(AP_GetSkill(attacker, ALCHEMY)/100));
+            PlaySoundEffect(attacker, 0x511);
         endif
 		start_script(":combat:weaponHitScripts/bleedingstrike", array{attacker, defender, weapon, armor, basedamage, dmg*2});
 	endif

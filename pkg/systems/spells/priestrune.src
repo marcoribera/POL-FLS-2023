@@ -22,7 +22,7 @@ program usavarinha(who, wand)
 	var cargas := GetObjProperty(wand, "cargas");
 	if (cargas == error)
 		cargas := 20;
-		if ( temHabilidade(who, "Essencia de Zhark") )
+		if ( temHabilidade(who, "Fluxo Divino") )
 			cargas := 30;
 		endif
 	endif

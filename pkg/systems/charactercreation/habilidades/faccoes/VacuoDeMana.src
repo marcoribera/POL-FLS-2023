@@ -37,9 +37,7 @@ program vacuodemana(params)
 	SendSysMessageEx(attacker, "O panteão zharkiano testemunha sua fé", SSM_INFO);
 	//SetObjProperty(attacker, "#golpeceleste", 1);
 	var danomana := (AP_GetVitalMaximumValue(defender, "mana") - AP_GetVital(defender, "mana")) * 1.2;
-    if (defender.npctemplate)
-        danomana := GetResist(attacker, VONTADE);
-    endif
+        danomana += GetResist(attacker, VONTADE);
 
 	DamageFLS(defender, danomana, DMG_FORCED, attacker);
 endprogram 
