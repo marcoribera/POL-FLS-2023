@@ -9,7 +9,7 @@ include "include/sysEvent";
 include ":ghaia:generic";
 
 program loko(params)
-print("entrou");
+//print("entrou");
 	var who := params[1];
 	var event := params[2];
 
@@ -17,7 +17,7 @@ print("entrou");
 		return;
 	endif
 
-	if (event.onlybloodied) 
+	if (event.onlybloodied)
 		if ( !IsBloodied(who) )
 			return;
 		endif
@@ -35,7 +35,7 @@ print("entrou");
 		return;
 	endif
 
-	TS_StartCooldown(who, event.name, event.cd); 
+	TS_StartCooldown(who, event.name, event.cd);
 	//executa os states
 	foreach state in (event.steps)
 
@@ -49,12 +49,12 @@ print("entrou");
 			ev.x := state.x;
 			ev.y := state.y;
 			var loop := 1;
-    			while (loop)	
+    			while (loop)
 				SendEvent(who, ev);
             			if (CoordinateDistance( who.x, who.y, state.x, state.y ) <= 1 )
 					EraseObjPRoperty(who, "noclosecombat");
 					loop := 0;
-				else 
+				else
 					loop := 1;
 				endif
 				sleepms(100);
@@ -125,13 +125,13 @@ print("entrou");
 			endif
 			if (state.target == "Fixed Loc")
 				if (state.graphictype == "Stationary")
-					
+
 				elseif (state.graphictype == "Moving")
 					var startx := Cint(state.startx) + RandomInt(2 * state.startradius) - state.startradius;
 					var starty :=  Cint(state.starty) + RandomInt(2 * state.startradius) - state.startradius;
 					var endx := Cint(state.endx) + RandomInt(2 * state.endradius) - state.endradius;
 					var endy := Cint(state.endy) + RandomInt(2 * state.endradius) - state.endradius;
-					PlayMovingEffectXYZ(startx,  starty, Cint(state.startz), endx, endy, Cint(state.endz), state.fxid, state.speed, state.loop); 
+					PlayMovingEffectXYZ(startx,  starty, Cint(state.startz), endx, endy, Cint(state.endz), state.fxid, state.speed, state.loop);
 				endif
 			else
 				foreach t in targ
@@ -145,7 +145,7 @@ print("entrou");
 					if (state.direction == "Mob->Player")
 						PlayMovingEffect(who, t, state.fxid, state.speed, state.loops);
 					else
-						PlayMovingEffect(t, who, state.fxid, state.speed, state.loops); 
+						PlayMovingEffect(t, who, state.fxid, state.speed, state.loops);
 					endif
 				endif
 				endforeach
@@ -169,7 +169,7 @@ print("entrou");
 					elseif (vital == "Mana")
 						AP_ConsumeVital(t, MANA, state.dmg);
 					endif
-				endforeach	
+				endforeach
 			endforeach
 		elseif (state.type == "Summon Npcs") // Summonar NPC
 			var amt := 0;
@@ -212,7 +212,7 @@ function GetAllOpponents(who)
 				if (mobile.acctname || mobile.script == ":ghaia:tamed" )
 					a.append(mobile);
 				endif
-			endif 
+			endif
 		endif
 	endforeach
 
