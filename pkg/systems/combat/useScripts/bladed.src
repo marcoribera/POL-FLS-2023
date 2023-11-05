@@ -349,6 +349,9 @@ function CarveObject(who, tool, objtype, targ)
 		        0xd01:
 		        	kindling := CreateItemInBackpack(who, 0xee28, 1);
 		        	kindling.color := 2129; //cypress
+                //0x309C:
+                //    kindling := CreateItemInBackpack(who, 0xee29, 1);
+                //    kindling.color := RandomInt(3000); //Numaja graveto
 		        default:
 		        	CreateItemInBackpack(who, UOBJ_KINDLING, 1);
 			endcase
