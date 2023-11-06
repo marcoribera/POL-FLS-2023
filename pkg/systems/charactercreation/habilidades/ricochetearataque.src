@@ -34,12 +34,11 @@ program doubleattack(params)
 	endforeach
 
 	var targ := hostiles[RandomInt(targets.size())+1 ];
-
-	printtext(targ, "dano");
+	printtext(targ, "*Ricocheteado*");
 
 	var dmgList := dictionary;
 	dmgList := getNewDamageList(attacker);
-	var total := CalculateTotalDamage(targ, basedamage, attacker, dmgList);
+	var total := CalculateTotalDamage(attacker, basedamage, targ, dmgList);
 	ApplyRawDamage(targ, total);
 	MostraDano(attacker, targ, total);
 	MakeBleed(targ);

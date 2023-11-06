@@ -110,7 +110,6 @@ function LJ_GetDataElem(elem_name)
 	return data_elem;
 endfunction
 
-
 function LJ_GetWoodType(tree)
     case (tree.objtype)
          0xcd6:
@@ -133,6 +132,8 @@ function LJ_GetWoodType(tree)
                 return 0xee3a;
          0xcfe:
                 return 0xee3a;
+         0x390c:
+                return 0x309c; //numaja
          0xd01:
                 return 0xee3a;
 		 0x222E:
@@ -144,7 +145,6 @@ function LJ_GetWoodType(tree)
                 return 0x1bdd;
     endcase
 endfunction
-
 /*
  * LJ_SetWoodType(realm, x_pos, y_pos, wood_type)
  *

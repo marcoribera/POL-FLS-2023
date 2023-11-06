@@ -20,6 +20,7 @@ include ":awareness:awareness";
 include ":tn:boss";
 include ":combat:armorZones";
 include ":combat:include/combat";
+include ":charactercreation:resists";
 
 // estados do npc, todos comecam no INIT, depois podem ir pro WANDER, apos algum tempo no wander se nao for interrompido eles vao pro SLEEP. do WANDER e do SLEEP podem ir pro FIGHT e desse pro VICTORY
 enum STATES
@@ -523,10 +524,9 @@ function throwItem(npc, opponent, dist)
   item.movable := 1;
 
 
-  var chance := GetAttribute(npc, "Dexterity") - GetAttribute(opponent, "Dexterity") / 3;
-
-  if (RandomInt(100) > chance) // Errou!
-
+var chance := RandomInt(100);
+if (CheckResist(opponent, REFLEXOS, chance)) // Errou!
+	PrintTextAbove(npc, "*Errou!*", _DEFAULT_TEXT_FONT, 38);
     if (throwinfo.misssound)
       PlaySoundEffect(npc, throwinfo.misssound);
     else

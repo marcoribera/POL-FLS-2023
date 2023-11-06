@@ -13,7 +13,7 @@ program TimedScript_Paralysis(params)
 	var mobile := params[1];
 
 	if (temhabilidade(mobile, "Movimento Livre") || GetCooldown(mobile, "vitalidadeinabalavel") || GetCooldown(mobile, "VontadeIndomavel") )
-			return;
+        return;
 	endif
 	
 	PlaySoundEffect(mobile, 0x205);
