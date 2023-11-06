@@ -1,0 +1,48 @@
+use uo;
+use os;
+use cfgfile;
+
+const SIGNSTART := 0xB95;
+const SIGNEND := 0xC0E;
+
+program destroy_radius ( character, text )
+	var params := SplitWords( text );
+	var range, objType, items;
+	var itemCount := 0;
+	
+	if( params.Size() == 0 )
+		items := ListItemsNearLocation( character.x, character.y, character.z, 3 );
+	elseif( params.Size() == 1 )
+		range := CInt( params[1] );
+		
+		if( !range )
+			range := 3;
+		elseif( range > 10 )
+			range := 10;
+		endif
+		items := ListItemsNearLocation( character.x, character.y, character.z, range );
+	elseif( params.Size() == 2 )
+		range := CInt( params[1] );
+		objType := CInt( params[2] );
+		
+		if( !range )
+			range := 3;
+		elseif( range > 10 )
+			range := 10;
+		endif
+		
+		if( !objType )
+			SendSysMessage( character, "Invalid objtype specified, operation canceled." );
+			return;
+		else
+			items := ListItemsNearLocationOfType( character.x, character.y, character.z, range, objtype );
+		endif
+	endif
+	
+	foreach item in items
+		DestroyItem( item );
+		itemCount := itemCount + 1;
+	endforeach
+
+	SendSysMessage( character, "Total items destroyed: " + itemCount );
+endprogram
