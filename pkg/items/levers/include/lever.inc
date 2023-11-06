@@ -144,6 +144,9 @@ function normalusage(who, item)
       PrintTextAbove(who, "*Ativa*");
    else
       PrintTextAbove(who, "*Desativa*");
+			if ( GetObjProperty(item, "powerword"))
+				item.invisible := 1;
+			endif
    endif
 
    var lever_list := array{item.serial};
