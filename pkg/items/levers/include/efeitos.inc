@@ -20,15 +20,17 @@ function EfeitosTremor(item,danobase,danoale,dif,range)
 		foreach char in chars
          PlaySoundEffect( char, 0x222 );
          SendSysMessageEx(char, "O solo nas proximidades treme violentamente.", SSM_INFO);
-
+         if (char.npctemplate == "Zombie")
+            DamageFLS(char, 1000);
+         endif
          if (CheckResist(char,  REFLEXOS, dif))//note: colocar uma variavel de chance de resistir ao terremoto
             PrintTextAbove( char, "*Atraves de movimentos acrobaticos habeis, resiste ao tremor*");
             PerformAction( char, 20);
          else
-
              TS_StartTimer(char, "paralysis", 2);
              PerformAction( char, 21);
              DamageFLS(char, danobase + (RandomInt(danoale)));
+
              var pedra;
              
              for (pedra := 1; pedra <=  (RandomInt( 5 ) + 1); pedra := pedra + 1)
