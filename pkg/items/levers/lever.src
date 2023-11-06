@@ -352,8 +352,22 @@ endfunction
 function linkteleport(who, item)
    var opts := item.GetLeverOpts();
 
-   item.setLeverOpts(opts);
+   var loc := RequestGump(who, "Escreva o x, y e z onde o usuario sera teleportado", "Deixe em branco para apagar o teleport");
+       loc := splitwords(loc);
+if(loc [1] == error || loc[2] == error || loc[3] == error)
+		 opts.-"teleport_to";
+		EraseObjProperty(item, "x_tp");
+		EraseObjProperty(item, "y_tp");
+		EraseObjProperty(item, "z_tp");
+        SendSysMessageEx(who,"O teleporte foi cancelado/apagado");
+else
+		var x := SetObjProperty(item, "x_tp", loc[1]);
+		var y := SetObjProperty(item, "y_tp", loc[2]);
+		var z := SetObjProperty(item, "z_tp", loc[3]);
+   opts.teleport_to := 1;
    SendSysMessageEx(who,"O teleporte foi adicionado a alavanca");
+endif
+   item.setLeverOpts(opts);
 endfunction
 
 function doorstatus(who, item)
