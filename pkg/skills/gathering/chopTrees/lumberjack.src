@@ -89,8 +89,7 @@ function ChopTree(who, tool, targ, orig_x, orig_y)
 		if ( !CanChop(who, tool, targ, orig_x, orig_y) )
 			return 0;
 		endif
-
-			PerformAction(who, ANIM_ATTACK_2HAND_WIDE);
+		PerformAction(who, 0x0b);
 		PlaySoundEffect(who, FLS_SFX_SKILL_LUMBERJACK);
 		sleepms(1200);
 	endfor
@@ -185,13 +184,12 @@ endfunction
 function DetermineLumberDifficulty(logtype)
 
 	case (logtype)
-
+        0x1bdd:
+        	return 10; //madeira;
         0xee36:
         	return 20; //pinheiro
         0xee37:
         	return 30; //carvalho
-        0xee38:
-        	return 75; //nogueira
         0xee39:
         	return 40; //salgueiro
         0xee3a:
@@ -200,8 +198,10 @@ function DetermineLumberDifficulty(logtype)
         	return 60; //angelim
         0xee3c:
         	return 70; //ebano
-        0x1bdd:
-        	return 10; //madeira;
+        0xee38:
+        	return 75; //nogueira
+        0x309c:
+            return 85; //numaja
         default:
         	return 0;
     endcase

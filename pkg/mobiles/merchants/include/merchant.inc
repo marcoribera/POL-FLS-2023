@@ -809,21 +809,21 @@ function AddItem(npc, player, targ)
 		var taxa := 0.0;
 		if (cost_type == MOEDAS_COBRE || cost_type == MOEDAS_PRATA || cost_type == MOEDAS_OURO || cost_type == GOLD_COIN)
 			if(GetObjProperty(npc, "taxap")) // 0.0 equivale a 0% e 1.0 equivale a 100%
-				var pesoTaxa := CDbl(getObjProperty(npc, "taxap"));
+				var pesoTaxa := CInt(getObjProperty(npc, "taxap"));
 				if (cost_type == MOEDAS_COBRE)
-					taxa := CInt(1.0 * cost_amt * pesoTaxa);
+					taxa := CInt(1.0 * cost_amt * (pesoTaxa * 0.01));
 				elseif (cost_type == MOEDAS_PRATA)
-					taxa := CInt(10.0 * cost_amt * pesoTaxa);
+					taxa := CInt(10.0 * cost_amt * (pesoTaxa * 0.01));
 				elseif (cost_type == MOEDAS_OURO || cost_type == GOLD_COIN)
-					taxa := CInt(100.0 * cost_amt * pesoTaxa);
+					taxa := CInt(100.0 * cost_amt * (pesoTaxa * 0.01));
 				endif
 			else
 				if (cost_type == MOEDAS_COBRE)
-					taxa := CInt(1.0 * cost_amt * 0.1);
+					taxa := CInt((1.0 * cost_amt) * 0.1);
 				elseif (cost_type == MOEDAS_PRATA)
-					taxa := CInt(10.0 * cost_amt * 0.1);
+					taxa := CInt((10.0 * cost_amt) * 0.1);
 				elseif (cost_type == MOEDAS_OURO || cost_type == GOLD_COIN)
-					taxa := CInt(100.0 * cost_amt * 0.1);
+					taxa := CInt((100.0 * cost_amt) * 0.1);
 				endif
 			endif
 

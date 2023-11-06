@@ -23,6 +23,8 @@ function GetWoodType(tree)
                 return UOBJ_CYPRESS_LOG;
          0xd01:
                 return UOBJ_CYPRESS_LOG;
+        0x309c:
+                return 0x309c; // numaja
 	 0x3fef:
 	 0x3ff0:
 	 0x3ff1:
@@ -45,7 +47,7 @@ function GetWoodType(tree)
 	 0x2c1f:
 	 0x2c23:
 		return 0xee3c;
-         default: 
-                return UOBJ_DEFAULT_LOG;
+       default: 
+              return UOBJ_DEFAULT_LOG;
     endcase
 endfunction
