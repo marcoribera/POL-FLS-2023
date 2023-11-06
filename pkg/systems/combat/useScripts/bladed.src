@@ -319,6 +319,8 @@ function CarveObject(who, tool, objtype, targ)
 		else
 			var kindling;
 			case (objtype)
+		        default:
+		        	CreateItemInBackpack(who, UOBJ_KINDLING, 1);
 		        0xcd8:
 		        	kindling := CreateItemInBackpack(who, 0xee25, 1);
 		        	kindling.color := 2109; //cedar tree
@@ -349,11 +351,8 @@ function CarveObject(who, tool, objtype, targ)
 		        0xd01:
 		        	kindling := CreateItemInBackpack(who, 0xee28, 1);
 		        	kindling.color := 2129; //cypress
-                //0x309C:
-                //    kindling := CreateItemInBackpack(who, 0xee29, 1);
-                //    kindling.color := RandomInt(3000); //Numaja graveto
-		        default:
-		        	CreateItemInBackpack(who, UOBJ_KINDLING, 1);
+                0x309C:
+					kindling := CreateItemInBackpack(who, array{0xee25, 0xee29, 0xee2a, 0xee2b, 0xee2c, 0xee2d, 0xee2e}.randomentry(), 1);
 			endcase
 			SendSysMessage(who, "Voce colocou alguns gravetos na sua mochila.");
 			return 1;
