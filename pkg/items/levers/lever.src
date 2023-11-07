@@ -355,11 +355,11 @@ function linkteleport(who, item)
    var loc := RequestGump(who, "Escreva o x, y e z onde o usuario sera teleportado", "Deixe em branco para apagar o teleport");
        loc := splitwords(loc);
 if(loc [1] == error || loc[2] == error || loc[3] == error)
-		 opts.-"teleport_to";
 		EraseObjProperty(item, "x_tp");
 		EraseObjProperty(item, "y_tp");
 		EraseObjProperty(item, "z_tp");
         SendSysMessageEx(who,"O teleporte foi cancelado/apagado");
+		opts.-"teleport_to";
 else
 		var x := SetObjProperty(item, "x_tp", loc[1]);
 		var y := SetObjProperty(item, "y_tp", loc[2]);
@@ -546,22 +546,23 @@ foreach r in result
 		tremor_config.append(Cint(loc[4]));
 		SetObjProperty(item,  "tremor_cfg", tremor_config);
         SendSysMessageEx(who, "O efeito area (tremor) estah ativo", SSM_INFO);
+		opts.efeitos := 1;
 	elseif (r ==  "Clima")
 		opts.clima := 1;
 
 		var result2 := RadioGump(who, 220, 250, "Opcoes de Clima", {"Chuva","Neve","Vento","Vento Forte","Tempestade","Tempestade de Raios"});
 			if (result2 == "Chuva")
-				SetObjProperty(item, "clima", 0);
+				SetObjProperty(item, "clima", 1);
 			elseif (result2 == "Neve")
-			SetObjProperty(item, "clima", 1);
+				SetObjProperty(item, "clima", 2);
 			elseif (result2 == "Vento")
-			SetObjProperty(item, "clima", 2);
+				SetObjProperty(item, "clima", 5);
 			elseif (result2 == "Vento Forte")
-			SetObjProperty(item, "clima", 3);
+				SetObjProperty(item, "clima", 6);
 			elseif (result2 == "Tempestade")
-			SetObjProperty(item, "clima", 4);
+				SetObjProperty(item, "clima", 3);
 			elseif (result2 == "Tempestade de Raios")
-			SetObjProperty(item, "clima", 5);
+				SetObjProperty(item, "clima", 4);
 			endif
 		var loc2 := RequestGump(who, "*CLIMA* Escreva na seguinte ordem: duração do efeito e range", "(Os valores abaixo são os padrões)", "20 10");
 		loc2 := splitwords(loc2);
@@ -570,16 +571,17 @@ foreach r in result
 		clima_config.append(Cint(loc2[2]));
 		SetObjProperty(item,  "clima_cfg", clima_config);
         SendSysMessageEx(who, "O efeito area (clima) estah ativo", SSM_INFO);
+		opts.efeitos := 1;
 	elseif (r == "Apagar")
 		EraseObjProperty(item, "clima_cfg");
 		EraseObjProperty(item, "tremor_cfg");
 		EraseObjProperty(item, "clima");
 		opts.-"clima";
 		opts.-"tremor";
+		opts.efeitos := 0;
         SendSysMessageEx(who, "Os efeitos foram deletados", SSM_FAIL);
 	endif
 endforeach
    
-opts.efeitos := 1;
    item.setLeverOpts(opts);
   endfunction

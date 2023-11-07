@@ -57,29 +57,34 @@ var type;
 var som := 0;
 var bolt := 0;
 var ventoForte := 0;
-	if ( options == 0)
+	if ( options == 1) //chuva
 		type := 0;
-	elseif (options == 2)
+	elseif (options == 2) //neve
 		type := 2;
-	elseif ( options == 3 )
+	elseif ( options == 3 ) //tempestade
 		type := 1;
-	elseif (options == 4)
+	elseif (options == 4) //tempestade de raios
 		type := 1;
-		duration := 10;
 		som := 1;
 		bolt := 1;
-	elseif (options == 5)
+	elseif (options == 5) //vento 
 		som := 2;
-	elseif (options == 6)
+	elseif (options == 6)//vento forte
 		som := 2;
 		ventoForte := 1;
 	endif
-	var origx := item.x + 20;
-	var origy := item.y + 20;
-
+	var lever_opts := GetObjProperty(item, "lever_opts");
+	var move := lever_opts."movefinal";
+var origx := cint(move[1]);
+var origy := cint(move[2]);
+var origz := cint(move[3]);
 	var i := 0;
-	var chars := (ListmobilesNearLocation( item.x, item.y, item.z, 20, item.realm ));
-		
+	var chars;
+if (!move)
+	chars := (ListmobilesNearLocation( item.x, item.y, item.z, range, item.realm ));
+else
+	chars := (ListmobilesNearLocation( item.x-origx, item.y-origy, item.z-origz, range, item.realm ));
+endif
 		while (i < duration )
 
 	
