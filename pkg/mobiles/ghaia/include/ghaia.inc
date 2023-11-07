@@ -327,7 +327,8 @@ function InitializeNpc(mobile)
   throwinfo := struct;
   throwinfo.canthrow := 0;
   if (npccfgfile[mytemplate].throwItem != error)
-    throwinfo.canthrow := 1;
+    var donotthrowitem_floor := npccfgfile[mytemplate].notcreateitemfloor;
+	throwinfo.canthrow := 1;
     throwinfo.+misssound := CInt(npccfgfile[mytemplate].throwMiss);
     throwinfo.+hitsound := CInt(npccfgfile[mytemplate].throwHit);
     throwinfo.+delay := CInt(npccfgfile[mytemplate].throwDelay);
@@ -335,6 +336,11 @@ function InitializeNpc(mobile)
     throwinfo.+item := CInt(npccfgfile[mytemplate].throwItem);
     throwinfo.+damage := Cstr(npccfgfile[mytemplate].throwDamage);
     throwinfo.+range :=   CInt(npccfgfile[mytemplate].throwRange);
+	if (!donotthrowitem_floor)
+		throwinfo.+notcreateitemfloor := 0;
+	else
+		throwinfo.+notcreateitemfloor := 1;
+	endif
   endif
 
 
@@ -520,9 +526,10 @@ function throwItem(npc, opponent, dist)
   PlayMovingEffect(npc, opponent, throwinfo.item, 15);
   npc.frozen := 0;
 
+if (throwinfo.notcreateitemfloor != 1)
   var item := CreateItemAtLocation(opponent.x, opponent.y, opponent.z, throwinfo.item, 1);
   item.movable := 1;
-
+endif
 
 var chance := RandomInt(100);
 if (CheckResist(opponent, REFLEXOS, chance)) // Errou!
