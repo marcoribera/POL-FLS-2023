@@ -12,7 +12,7 @@ include ":containers:containers";
 include ":timedScripts:timedScripts";
 include ":gumps:gumps";
 include ":gumps:yesNo";
-include ":gumps:requestgump";
+include ":gumps:requestGump";
 include ":tn:tngumps";
 include ":spells:tnmagery";
 include "include/client";
