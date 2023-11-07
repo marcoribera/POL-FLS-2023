@@ -124,21 +124,22 @@ function iteminfogump(who, item)
 	GFPage(gump, 2);
 
 	GFTextLine(gump, 40, 150, 1153, "Nome: " + lower(item.desc));
-	GFTextLine(gump, 40, 165, 1153, "Cor: " + item.color);
-	GFTextLine(gump, 40, 180, 1153, "Qualidade: " + item.quality);
-	GFTextLine(gump, 40, 195, 1153, "Hp: "  + item.hp);
-	GFTextLine(gump, 40, 210, 1153, "MaxHp_mod: " + item.maxhp_mod);
-	GFTextLine(gump, 40, 225, 1153, "MaxHp: "  + item.maxhp );
-	GFTextLine(gump, 40, 240, 1153, "Newbie: " + item.newbie);
-	GFTextLine(gump, 40, 255, 1153, "Dmg_mod: " + item.dmg_mod);
+	GFTextLine(gump, 40, 165, 1153, "Objtype: " + lower(item.objtype) + " / " + lower(hex(item.objtype))); //evillink teste
+	GFTextLine(gump, 40, 180, 1153, "Cor: " + item.color);
+	GFTextLine(gump, 40, 195, 1153, "Qualidade: " + item.quality);
+	GFTextLine(gump, 40, 210, 1153, "Hp: "  + item.hp);
+	GFTextLine(gump, 40, 225, 1153, "MaxHp_mod: " + item.maxhp_mod);
+	GFTextLine(gump, 40, 240, 1153, "MaxHp: "  + item.maxhp );
+	GFTextLine(gump, 40, 255, 1153, "Newbie: " + item.newbie);
+	GFTextLine(gump, 40, 270, 1153, "Dmg_mod: " + item.dmg_mod);
 
 	GFAddButton( gump, 20, 153, 2103, 2104, 1, 10);
-	GFAddButton( gump, 20, 168, 2103, 2104, 1, 11);
-	GFAddButton( gump, 20, 183, 2103, 2104, 1, 12);
-	GFAddButton( gump, 20, 198, 2103, 2104, 1, 13);
-	GFAddButton( gump, 20, 213, 2103, 2104, 1, 14);
-	GFAddButton( gump, 20, 243, 2103, 2104, 1, 15);
-	GFAddButton( gump, 20, 258, 2103, 2104, 1, 16);
+	GFAddButton( gump, 20, 183, 2103, 2104, 1, 11);
+	GFAddButton( gump, 20, 198, 2103, 2104, 1, 12);
+	GFAddButton( gump, 20, 213, 2103, 2104, 1, 13);
+	GFAddButton( gump, 20, 243, 2103, 2104, 1, 14);
+	GFAddButton( gump, 20, 258, 2103, 2104, 1, 15);
+	GFAddButton( gump, 20, 273, 2103, 2104, 1, 16);
 
 	GFPage(gump, 5);
 
