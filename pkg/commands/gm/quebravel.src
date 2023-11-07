@@ -1,18 +1,204 @@
 use uo;
 use os;
-use util;
 
-program quebravel(who, param)
-	var item := target(who);
-	var life := param;
-	if (!item)
+include "include/say";
+include ":unicos:item_template";
+include ":gumps:gumps";
+include ":gumps:yesNo";
+include ":gumps:requestGump";
+
+var itensnobarril;
+
+program quebrar(who)
+
+	var gump := GFCreateGump(220, 70);
+	GFGumpPic(gump, 0, 0, 0x254E);
+	GFResizePic(gump, 0, 0, 0x254E, 200, 100);	
+	GFTextLine(gump, 30, 15, 2100, "Quebrar com Gathering");
+	GFTextLine(gump, 30, 35, 2100, "Quebrar com Domestic");
+	GFTextLine(gump, 30, 55, 2100, "Quebrar com Survival");
+	GFAddButton(gump, 15, 17, 2117, 2118, 1, 10);
+	GFAddButton(gump, 15, 37, 2117, 2118, 1, 20);
+	GFAddButton(gump, 15, 57, 2117, 2118, 1, 30);
+	var input := GFSendGump(who, gump);
+	input  := input[0];
+	if (input == 10)
+		quebragathering(who);
+	elseif (input == 20)
+		quebradomestic(who);
+	elseif (input ==  30)
+		quebrasurvival(who);
+	endif
+    
+endprogram
+
+function quebragathering(who)
+
+	SendSysMessageEx(who, "O que deseja tornar quebravel?", SSM_REQUEST);
+    var alvo := Target(who);
+
+    if (alvo == who)
+		SendSysMessageEx(who, "Seu instinto de sobrevivencia nao permite.", SSM_FAIL);
+		return 0;
+	endif
+
+	if (alvo in EnumerateItemsInContainer(who.backpack)) 
+		SendSysMessageEx(who, "Voce nao pode tornar algo quebravel na sua bolsa", SSM_FAIL);
+		return 0;
+	endif
+
+    if (!alvo.movable == 0)
+        SendSysMessageEx(who, "Voce nao pode tornar algo movel quebravel", SSM_FAIL);
+		return 0;
+    endif
+
+	if (!alvo)
+        SendSysMessageEx(who, "Cancelado", SSM_FAIL);
+		return 0;
+    endif
+
+	var durabilidade;
+	var hits;
+	hits := RequestGump(who, "Qual a quantidade de vida que o item tera?");
+	SendSysMessageEx(who,"O HP do item sera consumido igual ao valor da skill do player",SSM_INFO);
+	hits := CInt(hits);
+	if ( !hits || hits <= 0 )
+		SendSysMessage(who, "Cancelado");
 		return;
 	endif
 
-	var objProp := GetObjProperty(item, "quebravel");
+	SetObjProperty(alvo, "quebravel", "gathering");
+	SetObjProperty(alvo, "durabilidade", hits);
+	//opcoesdequebrar(who, alvo);
 
-		if(objProp == error)
-			SetObjProperty(item, "quebravel", param);
+endfunction
+
+function quebradomestic(who)
+
+	SendSysMessageEx(who, "O que deseja tornar quebravel?", SSM_REQUEST);
+    var alvo := Target(who);
+
+    if (alvo == who)
+		SendSysMessageEx(who, "Seu instinto de sobrevivencia nao permite.", SSM_FAIL);
+		return 0;
+	endif
+
+	if (alvo in EnumerateItemsInContainer(who.backpack)) 
+		SendSysMessageEx(who, "Voce nao pode tornar algo quebravel na sua bolsa", SSM_FAIL);
+		return 0;
+	endif
+
+    if (!alvo.movable == 0)
+        SendSysMessageEx(who, "Voce nao pode tornar algo movel quebravel", SSM_FAIL);
+		return 0;
+    endif
+
+	if (!alvo)
+        SendSysMessageEx(who, "Cancelado", SSM_FAIL);
+		return 0;
+    endif
+
+	var durabilidade;
+	var hits;
+	hits := RequestGump(who, "Qual a quantidade de vida que o item tera?");
+	SendSysMessageEx(who,"O HP do item sera consumido igual ao valor da skill do player",SSM_INFO);
+	hits := CInt(hits);
+	if ( !hits || hits <= 0 )
+		SendSysMessage(who, "Cancelado");
+		return;
+	endif
+
+	SetObjProperty(alvo, "durabilidade", "domesticwork");
+	//SetObjProperty(alvo, "domesticwork", 1);
+	//opcoesdequebrar(who, alvo);
+
+endfunction
+
+function quebrasurvival(who)
+
+	SendSysMessageEx(who, "O que deseja tornar quebravel?", SSM_REQUEST);
+    var alvo := Target(who);
+
+    if (alvo == who)
+		SendSysMessageEx(who, "Seu instinto de sobrevivencia nao permite.", SSM_FAIL);
+		return 0;
+	endif
+
+	if (alvo in EnumerateItemsInContainer(who.backpack)) 
+		SendSysMessageEx(who, "Voce nao pode tornar algo quebravel na sua bolsa", SSM_FAIL);
+		return 0;
+	endif
+
+    if (!alvo.movable == 0)
+        SendSysMessageEx(who, "Voce nao pode tornar algo movel quebravel", SSM_FAIL);
+		return 0;
+    endif
+
+	if (!alvo)
+        SendSysMessageEx(who, "Cancelado", SSM_FAIL);
+		return 0;
+    endif
+
+	var durabilidade;
+	var hits;
+	hits := RequestGump(who, "Qual a quantidade de vida que o item tera?");
+	SendSysMessageEx(who,"O HP do item sera consumido igual ao valor da skill do player",SSM_INFO);
+	hits := CInt(hits);
+	if ( !hits || hits <= 0 )
+		SendSysMessage(who, "Cancelado");
+		return;
+	endif
+
+	SetObjProperty(alvo, "quebravel", "survival");
+	SetObjProperty(alvo, "durabilidade", hits);
+	//opcoesdequebrar(who, alvo);
+
+endfunction
+
+function opcoesdequebrar(who,item)
+
+/*	if(who.cmdlevel > 0) 	
+		var cancelar := YesNo(who, "O item deve criar algo ao ser destruido?", "Sim", "Nao");
+		if (cancelar == "Nao")
+			SendSysMessage(who, "Cancelado.");
+			return;
 		endif
 
-endprogram
+		var itens:=array;
+	
+	
+		SendSysMessage(who,"Selecione o item ou stack de itens que deseja ser criado ao quebrar:");
+		var targ:= Target(who);
+	
+		if(targ==0)
+			SendSysMessage(who,"Cancelado.");
+			return 0;
+		endif
+
+		if (!targ.IsA(POLCLASS_ITEM) )
+			SendSysMessage(who, "Cancelled.");
+			return 0;
+		endif
+
+		if (targ.objtype ==0xec24)
+			SendSysMessage(who, "Cancelled.");
+			return 0;
+		endif
+
+		var itemtemplate := CreateItemTemplate(targ);
+		itemtemplate.+amout := targ.amount;
+	
+		if(GetObjProperty(item,"itens")==error)
+			itens.append(itemtemplate);
+			SetObjProperty(item,"itens",itens);
+		else
+			itens:=GetObjProperty(item,"itens");
+			itens.append(itemtemplate);
+			SetObjProperty(item,"itens",itens);
+		endif
+
+		SendSysMessageEx(who,"O item " + targ.desc + " sera criado ao destruir o objeto",SSM_INFO);
+		return 0;
+	endif */
+
+endfunction
