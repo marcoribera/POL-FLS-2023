@@ -214,7 +214,6 @@ function GetReagName(objtype)
     0xee2c: return "gravetos numaja azul metálico";
     0xee2d: return "gravetos numaja azul lunar";
     0xee2e: return "gravetos numaja azul penumbra";
-
   endcase
 
 endfunction
