@@ -11,7 +11,7 @@ include ":attributes:attributes";
 include ":containers:containers";
 include ":timedScripts:timedScripts";
 include ":gumps:gumps";
-include ":gumps:yesno";
+include ":gumps:yesNo";
 include ":gumps:requestgump";
 include ":tn:tngumps";
 include ":spells:tnmagery";
