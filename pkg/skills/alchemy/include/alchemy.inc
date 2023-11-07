@@ -70,41 +70,53 @@ function empty_bottle(character, potion, potiontype := 0)
 
 endfunction
 
-//essa funcao so se mantem pra checar os kindlings. se nao quiser checar isso use .isReagent();
-function isotherreagent(what)
+function isotherreagent(what) //essa funcao so se mantem pra checar os kindlings e ingots. se nao quiser checar isso use .isReagent();
 	case(what.objtype)
-		0xf7a:  return 1;
-		0xf7b:  return 1;
-		0xf84:  return 1;
-		0xf85:  return 1;
-		0xf86:  return 1;
-		0xf88:  return 1;
-		0xf8c:  return 1;
-		0xf8d:  return 1;
-		0xef1a: return 1;
-		0xef1b: return 1;
-		0xef1c: return 1;
-		0xef1d: return 1;
-		0xf7d: return 1;
-		0xef1e: return 1;
-		0xf87: return 1;
-		0xf79: return 1;
-		0xf91: return 1;
-		0xf89: return 1;
-		0xf82: return 1;
-		0xF81: return 1;
-		0xF78: return 1;
-		0xF8F: return 1;
-		0xF90: return 1;
+    ///// GRAVETOS /////
+		0xf7a:  
+		0xf7b:  
+		0xf84:  
+		0xf85:  
+		0xf86:  
+		0xf88:  
+		0xf8c:  
+		0xf8d:  
+		0xef1a: 
+		0xef1b: 
+		0xef1c: 
+		0xef1d: 
+		0xf7d: 
+		0xef1e: 
+		0xf87: 
+		0xf79: 
+		0xf91: 
+		0xf89: 
+		0xf82: 
+		0xF81: 
+		0xF78: 
+		0xF8F: 
+		0xF90: 
 
-		0xee25: return 1;
-		0xee26: return 1;
-		0xee27: return 1;
-		0xee28: return 1;
-		0xfc5:  return 1;
-		0x0dea: return 1;
+		0xee25: 
+		0xee26: 
+		0xee27: 
+		0xee28: 
+		0xfc5:  
+		0x0dea: 
 
-		0x1F91: return 1;
+    0xee29: 
+    0xee2a: 
+    0xee2b: 
+    0xee2c: 
+    0xee2d: 
+    0xee2e: 
+
+		0x1F91: 
+
+    ///// INGOTS /////
+		0x6993: //BARRA DE PRATA LUNAR
+		0x630e: //BARRA DE OURO
+      return 1;
 	endcase
 	return 0;
 endfunction
@@ -188,8 +200,23 @@ function GetReagName(objtype)
    return "cinzas";
   elseif (objtype == 0x1F91 )
    return "copo de agua";
-
   endif
+
+  case(objtype) //EvilLink
+    ///// INGOTS /////
+    0x6993: return "barras de prata lunar";
+    0x630e: return "barras de ouro";
+
+    ///// GRAVETOS NUMAJA /////
+    0xee29: return "gravetos numaja preto metálico";
+    0xee2a: return "gravetos numaja verde musgo metálico";
+    0xee2b: return "gravetos numaja dourado";
+    0xee2c: return "gravetos numaja azul metálico";
+    0xee2d: return "gravetos numaja azul lunar";
+    0xee2e: return "gravetos numaja azul penumbra";
+
+  endcase
+
 endfunction
 
 

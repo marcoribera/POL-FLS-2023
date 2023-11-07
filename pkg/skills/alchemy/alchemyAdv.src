@@ -58,7 +58,7 @@ program advalchemy(who, item)
 	endif
        
 	GFTextLine(advgump, 48, 237, 600, "Remover Ingredientes");
-	GFTextLine( advgump, 48, 257, 600, "Adicionar Ingredientes");
+	GFTextLine(advgump, 48, 257, 600, "Adicionar Ingredientes");
 	GFTextLine(advgump, 48, 277, 600, "Preparar Extrato");
 	GFAddButton(advgump, 37, 261, 2103, 2104, 1, 11);//adicionar
 	GFAddButton(advgump, 37, 281, 2103, 2104, 1, 12);//misturar
