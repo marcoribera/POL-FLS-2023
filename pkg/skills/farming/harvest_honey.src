@@ -20,10 +20,10 @@ CONST MAX_PER_HIVE	:= 10;
 program harvest_honey (character, beehive)
 	//Verifica a distância entre o personagem e a Colmeia
 	if (Distance(character, beehive) > 1)
-		SendSysMessage(character, "Você está muito distante!", FONT_NORMAL, COLMEIA_FONT_COLOR_BAD);
+		SendSysMessage(character, "Voce este muito distante!", FONT_NORMAL, COLMEIA_FONT_COLOR_BAD);
 		return 0;
 	else
-		SendSysMessage(character, "Você começou a mexer na Colmeia.", FONT_NORMAL, COLMEIA_FONT_COLOR_NEUTRAL);
+		SendSysMessage(character, "Voce comecou a mexer na Colmeia.", FONT_NORMAL, COLMEIA_FONT_COLOR_NEUTRAL);
 		var already_harvested_amount;
 		//armazena a posição inicial do personagem
 		var character_x1 := character.x;
