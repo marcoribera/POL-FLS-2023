@@ -645,7 +645,12 @@ function ShowForSaleItemsInfo(byref gump, npc, player, input, special := 0)
 	GFResizePic(gump, 175, 230, 2620, 445, 200);
 	var desc_lines := GFWordWrap(cost_info.desc, 455);
 	var y_pos := 260;
-	var tooltip := GetTooltipText(selling, player);
+
+	var tooltip := "Propaganda: ";
+	foreach line in desc_lines
+		tooltip := tooltip + line + "<br>";
+	endforeach
+	tooltip := tooltip + "<br>" + GetTooltipText(selling, player);
 	GFHTMLArea(gump, 185, 235, 430, 185, tooltip, 0, 10);
 
 	GFAddButton(gump, 200, 430, 2151, 2154, 1, input);
@@ -1320,13 +1325,13 @@ function GetTooltipText(item_template, who)
 			//					xDesc := xDesc + "Min Str: " + elem.strrequired + "<br>";
 			//				endif
 			if (elem.DexPenalty || item_template.penaltybonus)
-				xDesc := xDesc + "Redutor Dex : " + getDexPenalty(elem, item_template) + "<br>";
+				xDesc := xDesc + "Redutor Dex : " + getDexPenaltyTemplate(elem, item_template) + "<br>";
 			endif
 			if (elem.parrybonus || item_template.parrybonus)
-				xDesc := xDesc + "Block Bonus: " + getParryBonus(elem, item_template) + "<br>";
+				xDesc := xDesc + "Block Bonus: " + getParryBonusTemplate(elem, item_template) + "<br>";
 			endif
 			if (elem.parrydelay || item_template.parrydelay_mod)
-				xDesc := xDesc + "Delay Bonus: " + getParryDelay(elem, item_template) + "<br>";
+				xDesc := xDesc + "Delay Bonus: " + getParryDelayTemplate(elem, item_template) + "<br>";
 			endif
 			xDesc := xDesc + fisico + "Fisico " + (elem.PhysicalResist + item_template.resist_physical_mod) + "<br>";
 
@@ -1381,7 +1386,7 @@ function GetTooltipText(item_template, who)
 				endif
 			endif
 		endif
-		return Object_Name + "<BR>" + xDesc;
+		return Object_Name + "<br>" + xDesc;
 	endif
 	return "";
 endfunction
@@ -1460,7 +1465,7 @@ function GetConditionTemplate(item) //Durabilidade dos itens
 	*/
 endfunction
 
-function TranslateCritical(crit)
+function TranslateCriticalTemplate(crit)
 	if (crit == "damage3")
 		return "Dano Triplo";
 	elseif (crit == "damage2")
@@ -1484,15 +1489,15 @@ function GetCriticalInfoTemplate(entry)
 
 	var str;
 	foreach crit in criticals
-		str := ParseScriptString(crit);
-		critstr := critstr + TranslateCritical(lower(str)) + "<br>";
+		str := ParseScriptStringTemplate(crit);
+		critstr := critstr + TranslateCriticalTemplate(lower(str)) + "<br>";
 	endforeach
 
 	return critstr;
 
 endfunction
 
-function TranslateHit(crit)
+function TranslateHitTemplate(crit)
 	if (crit == "antimountedhit")
 		return "Anti-montaria";
 	elseif (crit == "chargehit")
@@ -1520,8 +1525,8 @@ function GetHitsInfo(entry)
 
 	var str;
 	foreach crit in criticals
-		str := ParseScriptString(crit);
-		critstr := critstr + TranslateHit(lower(str)) + "<br>";
+		str := ParseScriptStringTemplate(crit);
+		critstr := critstr + TranslateHitTemplate(lower(str)) + "<br>";
 	endforeach
 
 	return critstr;
@@ -1549,8 +1554,8 @@ function GetVelStringDescTemplate(elem, item) //Velocidade da arma. Mostra difer
 	endif
 endfunction
 
-function getParryBonus(elem, item)
-	var parrybonusI := Cint(GetObjProperty(item, "parrybonus"));
+function getParryBonusTemplate(elem, item)
+	var parrybonusI := Cint(item.CProps.parrybonus);
 	var parrybonusE := Cint(elem.parrybonus);
 	if (parrybonusI > 0)
 		return CSTR(parrybonusE) + " (+" + CSTR(parrybonusI) + ")";
@@ -1561,8 +1566,8 @@ function getParryBonus(elem, item)
 	endif
 endfunction
 
-function getParryDelay(elem, item)
-	var parrydelayI := Cint(GetObjProperty(item, "parrydelay_mod"));
+function getParryDelayTemplate(elem, item)
+	var parrydelayI := Cint(item.CProps.parrydelay_mod);
 	var parrydelayE := Cint(elem.parrydelay);
 
 	if (parrydelayI > 0)
@@ -1574,8 +1579,8 @@ function getParryDelay(elem, item)
 	endif
 endfunction
 
-function getDexPenalty(elem, item)
-	var DexPenaltyI := Cint(GetObjProperty(item, "penaltybonus"));
+function getDexPenaltyTemplate(elem, item)
+	var DexPenaltyI := Cint(item.CProps.penaltybonus);
 	var DexPenaltyE := Cint(elem.DexPenalty);
 
 	if (DexPenaltyI > 0)
@@ -1587,7 +1592,7 @@ function getDexPenalty(elem, item)
 	endif
 endfunction
 
-function ParseScriptString(crit)
+function ParseScriptStringTemplate(crit)
 
 	var str := "";
 	var i := 1;
