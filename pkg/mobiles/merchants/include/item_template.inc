@@ -79,6 +79,10 @@ function CreateItemTemplate(item)
 		template["dmg_mod"] := item.dmg_mod;
 	endif
 
+	if ( item.speed_mod != error)
+		template["speed_mod"] := item.speed_mod;
+	endif
+
 	if (item.hitscript != error )
 		template["hitscript"] := item.hitscript;
 	endif
@@ -157,9 +161,6 @@ function CreateItemAtLocationFromTemplate(x, y, z, realm, selling)
 	if ( purchase == error )
 		//SendSysMessage(player, "Error - Unable to create item! ->"+purchase.errortext);
 	endif
-	if (selling.amount == 1)
-		SetName(purchase, selling.desc);
-	endif
 	foreach prop in selling
 		//sendsysmessage(player, " " + _prop_iter + " "+ selling[_prop_iter]);
 		purchase.set_member(_prop_iter, selling[_prop_iter]);
@@ -176,6 +177,9 @@ function CreateItemAtLocationFromTemplate(x, y, z, realm, selling)
 		var book_data_file := DFOpenDataFile(":sysbook:books", DF_CREATE);
 		var book_elem := DFFindElement(book_data_file, Hex(purchase.serial), DF_CREATE);
 		book_elem.SetProp("Contents", bookinfo.contents);
+	endif
+	if (selling.amount == 1)
+		SetName(purchase, selling.desc);
 	endif
 	purchase.movable := 1;
 endfunction

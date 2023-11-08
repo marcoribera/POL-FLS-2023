@@ -132,6 +132,7 @@ function iteminfogump(who, item)
 	GFTextLine(gump, 40, 240, 1153, "MaxHp: "  + item.maxhp );
 	GFTextLine(gump, 40, 255, 1153, "Newbie: " + item.newbie);
 	GFTextLine(gump, 40, 270, 1153, "Dmg_mod: " + item.dmg_mod);
+	GFTextLine(gump, 40, 285, 1153, "Speed_mod: " + item.speed_mod);
 
 	GFAddButton( gump, 20, 153, 2103, 2104, 1, 10);
 	GFAddButton( gump, 20, 183, 2103, 2104, 1, 11);
@@ -140,6 +141,7 @@ function iteminfogump(who, item)
 	GFAddButton( gump, 20, 243, 2103, 2104, 1, 14);
 	GFAddButton( gump, 20, 258, 2103, 2104, 1, 15);
 	GFAddButton( gump, 20, 273, 2103, 2104, 1, 16);
+	GFAddButton( gump, 20, 288, 2103, 2104, 1, 17);
 
 	GFPage(gump, 5);
 
@@ -238,6 +240,9 @@ function iteminfogump(who, item)
 		iteminfogump(who, item);
 	elseif (result[0] == 16 )
 		item.dmg_mod := Cint(RequestGump(who, "Escreva o dmg_mod do item"));
+		iteminfogump(who, item);
+	elseif (result[0] == 17 )
+		item.speed_mod := Cint(RequestGump(who, "Escreva o speed_mod do item"));
 		iteminfogump(who, item);
 	elseif ( result[0] == 20 )
 		var uses := CheckBoxGump(who, 150, 230, "Escolha os usescripts",  array{ "dmg", "heal", "timedscript", "combinacao", "upgrade" });

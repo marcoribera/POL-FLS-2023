@@ -1,6 +1,7 @@
 //include "include/bank";
 include ":datafile:include/datafile";
 include ":merchants:item_template";
+include ":spells:swordmage";
 
 //Constantes de ID de Botões de Gump
 const BOTAO_ITENS_COLOCAR_A_VENDA := 0x1;
@@ -640,14 +641,12 @@ function ShowForSaleItemsInfo(byref gump, npc, player, input, special := 0)
 	GFResizePic(gump, 500, 125, 2620, 120, 100);
 	GFTilePic(gump, 515, 140, GetGraphic(cost_info.cost_type));
 
-	GFTextLine(gump, 180, 235, GF_STDCOLOR, "Descricao");
-	GFResizePic(gump, 175, 255, 2620, 445, 140);
+	GFTextLine(gump, 175, 210, GF_STDCOLOR, "Descricao");
+	GFResizePic(gump, 175, 230, 2620, 445, 200);
 	var desc_lines := GFWordWrap(cost_info.desc, 455);
 	var y_pos := 260;
-	foreach line in desc_lines
-		GFTextLine(gump, 185, y_pos, GF_STDCOLOR, line);
-		y_pos := y_pos+20;
-	endforeach
+	var tooltip := GetTooltipText(selling, player);
+	GFHTMLArea(gump, 185, 235, 430, 185, tooltip, 0, 10);
 
 	GFAddButton(gump, 200, 430, 2151, 2154, 1, input);
 	if(!special)
@@ -1168,4 +1167,440 @@ function DarTroco(player, npc , ValorTroco)
 
 	AI_Speak(npc, "Aqui estao suas moedas.");
 	return 1;
+endfunction
+
+//FUNÇÃO PRA PEGAR DADOS DE TOOLTIP E JOGAR NO GUMP
+function GetTooltipText(item_template, who)
+	var white := "<BASEFONT COLOR=#FFFFFF>";
+	var amareloclaro := "<BASEFONT COLOR=#f5d189>";
+	var laranja :=  "<BASEFONT COLOR=#FFA500>";
+	var roxo := "<BASEFONT COLOR=#d98cd9>";
+	var softgreen := "<BASEFONT COLOR=#a1eca7>";
+	var blueice := "<BASEFONT COLOR=#79b6c9 >";
+	var redfire := "<BASEFONT COLOR=#e95c4b>";
+	var lilas := "<BASEFONT COLOR=#d998a0>";
+	var fisico := "<BASEFONT COLOR=#FFFFFF>";
+
+
+	var Object_Name;
+
+	var xDesc; //Será utilizado para juntar as informações do tooltip do item
+	var desc; //Salva o campo de descrição do item ou personagem
+
+	//Encontra o objeto que terá o tooltip preenchido
+
+	if(item_template)
+
+		var resource_config := ReadConfigFile(":crafting:config/resourceList");
+		if(item_template.material)
+			Object_Name := item_template.desc + " [" + resource_config[item_template.material].name + "]";
+		else
+			Object_Name := item_template.desc;
+		endif
+
+		xDesc := "";
+
+		desc := item_template.description;
+		if(desc == error)
+			 desc := "";
+		endif
+
+		//EXIBE SE TEM PROPRIEDADE MAGICA
+		if (item_template.magic)
+			xDesc := xDesc + roxo + "Magico<br>";
+		endif
+
+		var descmods := item_template.descmod;
+
+		//JUNTA AS DESCRIÇÕES DO DOS PROPS DO PERSONAGEM
+
+		if(descmods != error)
+			foreach descmod in descmods
+				if(descmod)
+					desc := desc + descmod;
+				endif
+			endforeach
+		else
+			desc := desc + descmods;
+		endif
+
+		//LIMITA O TAMANHO DAS DESCRIÇÕES
+		if (len(desc) > 85)
+			desc := desc[1, 85];
+		endif
+
+		//VERIFICA PROPRIEDADES DE IDIOMAS
+		if (desc!=error)
+			var linguagem := item_template.lingua;
+			if (linguagem!=error)
+				var linguas := GetObjProperty(who, "linguas");
+				if (temHabilidade(who, "Arqueologo") || temHabilidade(who, "Formacao Academica") || linguagem in linguas)
+					xDesc := xDesc + white + "" + desc + "<br>";
+				else
+					xDesc :=  xDesc + "*Inscrições em Língua Desconhecida*<br>";
+				endif
+			else
+				xDesc := xDesc + white + "" + desc + "<br>";
+			endif
+		endif
+
+		//ADICIONA DESCRIÇÕES DAS PROPRIEDADES COMUNS DE ARMAS E ARMADURAS
+		var cfg := ReadConfigFile(":*:itemdesc");
+		var elem := FindConfigElem(cfg, item_template.objtype);
+		if (item_template.quality >= 1.1)
+			xDesc := xDesc + white + getQualityTemplate(item_template.quality) + "<br>"; //exibe apenas dois digitos
+		endif
+
+		var cond := GetConditionTemplate(item_template);
+		xDesc := xDesc + "HP: " + GetConditionTemplate(item_template) + "<br>";
+		xDesc := xDesc + "Min Str: " + elem.strrequired + "<br>";
+
+		if(elem.TipoAtaque)
+			xDesc := xDesc + "Dano: " + GetDmgStringDesc(elem,  item_template) + "<br>";
+			xDesc := xDesc + "Velocidade: " + GetVelStringDescTemplate(elem, item_template) + "<br>";
+			xDesc := xDesc + GetTipoStringDescTemplate(elem, item_template) + "<br>";
+			var crits := GetCriticalInfoTemplate(elem);
+			if (crits != "")
+				xDesc := xDesc + laranja + crits;
+			endif
+
+			var hits :=  GetHitsInfo(elem);
+			if (hits != "")
+				xDesc := xDesc + amareloclaro + hits;
+			endif
+
+			xDesc := xDesc + white + "Fisico " + (elem.PhysicalDamage + item_template.damage_physical_mod) + "<br>";
+
+			if ( (elem.ColdDamage + item_template.damage_cold_mod != 0))
+			xDesc := xDesc  + blueice + "Frio " + (elem.ColdDamage + item_template.damage_cold_mod) + "<br>";
+			endif
+			if ( (elem.FireDamage + item_template.damage_fire_mod != 0))
+				xDesc := xDesc + redfire + "Fogo " + (elem.FireDamage + item_template.damage_fire_mod) + "<br>";
+			endif
+			if ( (elem.EnergyDamage + item_template.damage_energy_mod != 0))
+				xDesc := xDesc  + lilas + "Energia " + (elem.EnergyDamage + item_template.damage_energy_mod) + "<br>";
+			endif
+			if ( (elem.PoisonDamage + item_template.damage_poison_mod != 0))
+				xDesc := xDesc  + softgreen + "Veneno " + (elem.PoisonDamage + item_template.damage_poison_mod) + "<br>";
+			endif
+
+			//EXIBE AS GEMAS QUE TEM NA ARMA
+			if ( getObjProperty(item_template, "swordmage") == who.serial)
+				var gems := getobjproperty(item_template, "gems");
+				foreach gem in (gems.keys())
+					xDesc := xDesc + white + gem + " - "+ getSwordSpellName(gems[gem].id) + "<br>";
+				endforeach
+			endif
+			if (item_template.dmg_mod > 0 )
+				xDesc := xDesc + roxo + "Bônus Dano";
+			endif
+			if (item_template.hp_mod > 0)
+				xDesc := xDesc + roxo + "Bônus item_template PVs";
+			endif
+
+			var hitsscripts := item_template.HitScripts;
+			if (hitsscripts != error)
+				foreach hits in hitsscripts
+					if (hits == ":combat:weaponHitScripts/FireHit")
+						xDesc := xDesc + roxo + "Dano de Fogo<br>";
+					elseif ( hits == ":combat:weaponHitScripts/IceHit")
+						xDesc := xDesc + roxo + "Dano de Gelo<br>";
+					elseif ( hits == ":combat:weaponHitScripts/LightningHit")
+						xDesc := xDesc + roxo + "Dano de Energia<br>";
+					endif
+				endforeach
+			endif
+
+			if (item_template.swordmage != error)
+				xDesc := xDesc + white + item_template.swordmage + "<br>";
+			endif
+		elseif (elem.TipoProtecao)
+			//props de armaduras
+			//				if (cint(elem.strrequired) > 0)
+			//					xDesc := xDesc + "Min Str: " + elem.strrequired + "<br>";
+			//				endif
+			if (elem.DexPenalty || item_template.penaltybonus)
+				xDesc := xDesc + "Redutor Dex : " + getDexPenalty(elem, item_template) + "<br>";
+			endif
+			if (elem.parrybonus || item_template.parrybonus)
+				xDesc := xDesc + "Block Bonus: " + getParryBonus(elem, item_template) + "<br>";
+			endif
+			if (elem.parrydelay || item_template.parrydelay_mod)
+				xDesc := xDesc + "Delay Bonus: " + getParryDelay(elem, item_template) + "<br>";
+			endif
+			xDesc := xDesc + fisico + "Fisico " + (elem.PhysicalResist + item_template.resist_physical_mod) + "<br>";
+
+			if (elem.ColdResist + item_template.resist_cold_mod != 0)
+				xDesc := xDesc  + blueice + "Frio " + (elem.ColdResist + item_template.resist_cold_mod) + "<br>";
+			endif
+			if ( elem.FireResist + item_template.resist_fire_mod != 0)
+				xDesc := xDesc + redfire + "Fogo " + (elem.FireResist + item_template.resist_fire_mod) + "<br>";
+			endif
+			if ( elem.EnergyResist + item_template.resist_energy_mod != 0)
+				xDesc := xDesc  + lilas + "Energia " + (elem.EnergyResist + item_template.resist_energy_mod) + "<br>";
+			endif
+			if (elem.PoisonResist + item_template.resist_poison_mod != 0)
+				xDesc := xDesc  + softgreen + "Veneno " + (elem.PoisonResist + item_template.resist_poison_mod) + "<br>";
+			endif
+		endif
+		var pplmage := item_template.magicwho; //magic lore
+		if ( pplmage != error)
+			if (who.serial in pplmage)
+				if (item_template.pocaoname)
+					xDesc := xDesc + white + item_template.pocaoname;
+				endif
+				var mods := item_template.equip;
+				if (mods != error)
+					foreach mod in (mods.keys())
+						if (mod == "strmod")
+							xDesc := xDesc + white + "Bônus For <br>";
+						elseif (mod == "dexmod")
+							xDesc := xDesc + white + "Bônus Des <br>";
+						elseif (mod == "intmod")
+							xDesc := xDesc + white + "Bônus Int <br>";
+						elseif (mod == "hitsmod")
+							xDesc := xDesc + white + "Bônus PVs<br>";
+						elseif (mod == "manamod")
+							xDesc := xDesc + white + "Bônus Mana <br>";
+						elseif (mod == "stammod")
+							xDesc := xDesc + white + "Bônus Stam <br>";
+						elseif (mod == "PhysicalResistMod")
+							xDesc := xDesc + white + "Resistencia Fisica <br>";
+						elseif (mod == "ColdResistMod")
+							xDesc := xDesc + blueice  + "Resistencia Frio <br>";
+						elseif (mod == "FireResistMod")
+							xDesc := xDesc + redfire + "Resistencia Fogo <br>";
+						elseif (mod == "EnergyResistMod")
+							xDesc := xDesc + lilas  + "Resistencia Energia <br>";
+						elseif (mod == "PoisonResistMod")
+							xDesc := xDesc + softgreen  + "Resistencia Veneno <br>";
+						else
+							xDesc := xDesc + roxo + "Bonus " + mod + "<br>";
+						endif
+					endforeach
+				endif
+			endif
+		endif
+		return Object_Name + "<BR>" + xDesc;
+	endif
+	return "";
+endfunction
+
+//COPIA DO GERADOR DE TOOLTIP DO MEGACLILOC.SRC
+
+function GetDmgStringDesc(elem, item)
+	var dmg_mod := CInt(item.dmg_mod);
+	var resultado := CSTR(elem.MinDam) + "-" + CSTR(elem.MaxDam);
+	if (dmg_mod>0)
+		resultado := resultado + " (+" + CSTR(dmg_mod) +")";
+	elseif (dmg_mod<0)
+		resultado := resultado + " (" + CSTR(dmg_mod) +")";
+	endif
+	return resultado;
+	/*
+	var avgdmg := cint(elem.MinDam + elem.MaxDam)/2;
+
+	if(avgdmg >= 20)
+		return "Letal";
+	elseif(avgdmg >= 18)
+		return "Muito";
+	elseif(avgdmg >= 16)
+		return "Bom";
+	elseif(avgdmg >= 14)
+		return "Mediano";
+	elseif(avgdmg >= 12)
+		return "Pouco";
+	elseif(avgdmg >= 10)
+		return "Pouquissimo ";
+	else
+		return "Inofensivo";
+	endif
+	*/
+
+endfunction
+
+function getQualityTemplate(num)
+	var rank;
+	if(num>3.0)
+		rank := "SSS";
+	elseif(num>2.9)
+		rank := "SS";
+	elseif(num>2.7)
+		rank := "S";
+	elseif(num>2.5)
+		rank := "A";
+	elseif(num>2.2)
+		rank := "B";
+	elseif(num>1.9)
+		rank := "C";
+	elseif(num>1.3)
+		rank := "D";
+	elseif(num>1.3)
+		rank := "E";
+	else
+		rank := "F";
+	endif
+	return "Excepcional [Rank "+rank+"]";
+endfunction
+
+function GetConditionTemplate(item) //Durabilidade dos itens
+	return CSTR(item.hp) + "/" + CSTR(item.maxhp);
+	/*
+	var c := cdbl(item.hp) / cdbl(item.maxhp);
+
+	if (c > 0.9)
+		return "Boa";
+	elseif (c > 0.6)
+		return "Pouco Danificada";
+	elseif (c > 0.3)
+		return "Bastante Danificada";
+	else
+		return "Quebradiça";
+	endif
+	*/
+endfunction
+
+function TranslateCritical(crit)
+	if (crit == "damage3")
+		return "Dano Triplo";
+	elseif (crit == "damage2")
+		return "Dano Duplo";
+	elseif (crit == "armorignore")
+		return "Ignorar Armadura";
+	elseif ( crit == "stun")
+		return "Ataque Atordoante";
+	elseif (Crit == "bleed")
+		return "Alvejar Ponto Vital";
+	endif
+
+endfunction
+
+
+function GetCriticalInfoTemplate(entry)
+
+	var criticals := GetconfigStringArray(entry, "CriticalHitScripts");
+
+	var critstr := "";
+
+	var str;
+	foreach crit in criticals
+		str := ParseScriptString(crit);
+		critstr := critstr + TranslateCritical(lower(str)) + "<br>";
+	endforeach
+
+	return critstr;
+
+endfunction
+
+function TranslateHit(crit)
+	if (crit == "antimountedhit")
+		return "Anti-montaria";
+	elseif (crit == "chargehit")
+		return "Carga";
+	elseif (crit == "concussionhit")
+		return "Concussão";
+	elseif ( crit == "freearmorhit")
+		return "Movimento Livre";
+	elseif (crit == "heighthit")
+		return "Diferença de Altura";
+	elseif ( crit == "QueimaRoupa")
+		return "Tiro a Queima Roupa";
+	elseif ( crit == "pushback")
+		return "Golpe Esmagador";
+	elseif ( crit == "passivedisarm")
+		return "Disarme Passivo";
+	endif
+endfunction
+
+function GetHitsInfo(entry)
+
+	var criticals := GetconfigStringArray(entry, "HitScripts");
+
+	var critstr := "";
+
+	var str;
+	foreach crit in criticals
+		str := ParseScriptString(crit);
+		critstr := critstr + TranslateHit(lower(str)) + "<br>";
+	endforeach
+
+	return critstr;
+
+endfunction
+
+function GetTipoStringDescTemplate(elem, item) //Exibe o tipo de arma
+	if (elem.TipoAtaque)
+		return CStr(elem.TipoAtaque) + "<br>" + CSTR(elem.Attribute);
+	elseif (elem.TipoProtecao)
+		return CStr(elem.TipoProtecao) + "<br>";
+	endif
+endfunction
+
+
+function GetVelStringDescTemplate(elem, item) //Velocidade da arma. Mostra diferença pra item base
+	var speedI := Cint(item.speed_mod);
+	var speedE := Cint(elem.Speed);
+	if (speedI > 0)
+		return CSTR(elem.speed) + " (+" + CSTR(speedI) + ")";
+	elseif (speedI < 0)
+		return CSTR(elem.speed) + " (" + CSTR(speedI) + ")";
+	else
+		return CSTR(elem.speed);
+	endif
+endfunction
+
+function getParryBonus(elem, item)
+	var parrybonusI := Cint(GetObjProperty(item, "parrybonus"));
+	var parrybonusE := Cint(elem.parrybonus);
+	if (parrybonusI > 0)
+		return CSTR(parrybonusE) + " (+" + CSTR(parrybonusI) + ")";
+	elseif (parrybonusI < 0)
+		return CSTR(parrybonusE) + " (" + CSTR(parrybonusI) + ")";
+	else
+		return CSTR(parrybonusE);
+	endif
+endfunction
+
+function getParryDelay(elem, item)
+	var parrydelayI := Cint(GetObjProperty(item, "parrydelay_mod"));
+	var parrydelayE := Cint(elem.parrydelay);
+
+	if (parrydelayI > 0)
+		return CSTR(parrydelayE) + " (-" + CSTR(parrydelayI) + ")";
+	elseif (parrydelayI < 0)
+		return CSTR(parrydelayE) + " (+" + CSTR(-parrydelayI) + ")";
+	else
+		return CSTR(parrydelayE);
+	endif
+endfunction
+
+function getDexPenalty(elem, item)
+	var DexPenaltyI := Cint(GetObjProperty(item, "penaltybonus"));
+	var DexPenaltyE := Cint(elem.DexPenalty);
+
+	if (DexPenaltyI > 0)
+		return CSTR(DexPenaltyE) + " (-" + CSTR(DexPenaltyI) + ")";
+	elseif (DexPenaltyI < 0)
+		return CSTR(DexPenaltyE) + " (+" + CSTR(-DexPenaltyI) + ")";
+	else
+		return CSTR(DexPenaltyE);
+	endif
+endfunction
+
+function ParseScriptString(crit)
+
+	var str := "";
+	var i := 1;
+
+	while(crit[i] != "/")
+		i := i + 1;
+	endwhile
+	i := i +1;
+	while (crit[i])
+		str := str + crit[i];
+		i := i + 1;
+	endwhile
+
+	return str;
+
 endfunction
