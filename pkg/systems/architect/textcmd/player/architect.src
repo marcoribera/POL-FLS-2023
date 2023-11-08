@@ -939,11 +939,16 @@ program architect_gump(who)
           endif
 
           foreach element in tbd
-            if (GetObjProperty (element, "#built_by_architect") != who.serial)
-              SendSysMessage (who, lang["delete_err"]);
+            if(staffmode) //Se for staff, pode deletar qualquer coisa
+                undo.append (array{2, element.objtype, element.x, element.y, element.z});
+                DestroyItem (element);
             else
-              undo.append (array{2, element.objtype, element.x, element.y, element.z});
-              DestroyItem (element);
+                if (GetObjProperty (element, "#built_by_architect") != who.serial)
+                  SendSysMessage (who, lang["delete_err"]);
+                else
+                  undo.append (array{2, element.objtype, element.x, element.y, element.z});
+                  DestroyItem (element);
+                endif
             endif
           endforeach
 
