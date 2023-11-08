@@ -939,7 +939,7 @@ program architect_gump(who)
           endif
 
           foreach element in tbd
-            if(staffmode)
+            if(staffmode) //Se for staff, pode deletar qualquer coisa
                 undo.append (array{2, element.objtype, element.x, element.y, element.z});
                 DestroyItem (element);
             else
