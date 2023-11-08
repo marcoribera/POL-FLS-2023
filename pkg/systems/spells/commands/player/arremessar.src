@@ -142,7 +142,7 @@ program arremesso(params)
 		else
             var poisonInfo := GetObjProperty(targ, "poisonInfo");
             var poison_amt := poisonInfo.dosage;
-            var poisonLevel := poisonInfo.level;
+            var poisonLvl := poisonInfo.level;
             if (poisonInfo)
                 poison_amt--;
                 if (!CheckResist(alvo, REFLEXOS, 30,-20*poisonLvl))
