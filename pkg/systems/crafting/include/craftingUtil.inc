@@ -87,6 +87,7 @@ function AddQualityDamageMod(who, craft_skill, byref theitem, quality )
 				5: theitem.damage_poison_mod   := theitem.damage_poison_mod + qtd; break;
 			endcase
 			maxBonus := maxBonus - qtd;
+			sleepms(3);
 		endwhile
 		if(craft_skill == "MetalWorking")
 			if(TemHabilidade(who,"Armas Velozes"))
