@@ -68,7 +68,7 @@ program totem(who, wand)
 //Comando do botão para libertar o summon
 	var input := GFSendGump(who, gump);
 	input := input[0];
-	if (input <= 100)
+	if ((input >= 1) && (input <= 100))
 		var spellid := struct;
 		spellid.+id := spells[input[0]];
 		Start_Script("cast_spell", {who, spellid, 0});
