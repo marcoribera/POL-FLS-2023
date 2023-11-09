@@ -269,7 +269,7 @@ function CreateBossStructGump(who, byref boss)
     GFAddButton(chargump, 110, 485, 2103, 2104, 1, 666);
     GFTextLine(chargump, 50, 480, 1153, "TrueBoss");
 
-	GFTextLine(chargump, 50, 205, 1153, "Descudo: ");
+	GFTextLine(chargump, 50, 205, 1153, "Desc: ");
 	GFAddButton( chargump, 35, 210, 2103, 2104, 1, 500);
 		if (boss.descmod)
 			GFHTMLArea(chargump, 90, 210, 160, 60, "[" + boss.descmod+ "]");
