@@ -21,6 +21,7 @@ include "include/say";
 include ":gumps:yesNo";
 include ":architect:include/architect";
 include ":architect:include/systemclock";
+include ":charactercreation:habilidades";
 
 const SIGENA:= 0;
 
@@ -40,16 +41,15 @@ var staffmode:= 0;
 var undo:= array{};
 
 program architect_gump(who)
-var arquiteto := GetObjProperty(who, "arquiteto") == 1; //PODE SER O TEM HABILIDADE, pra players q tiverem isso pra poder usar
-  if (who.cmdlevel < STAFFMODELEVEL)
-		if(!arquiteto)
-		return 0;
-		else
-	endif
-  else
-    staffmode:= 1;
-    SendSysMessage (who, "*running in staff mode*");
-  endif
+    if (who.cmdlevel < STAFFMODELEVEL)
+        if(!TemHabilidade(who, "Arquiteto")) //Habilidade de construcao necessaria para executar o comando
+            SendSysMessageEx(who, "Voce nao tem habilidade de arquiteto.", SSM_INFO);
+            return 0;
+        endif
+    else
+        staffmode := 1;
+        SendSysMessage(who, "*running in staff mode*");
+    endif
 
   if (!staffmode)
     if (GetGlobalProperty ("#architect"))
@@ -939,11 +939,16 @@ var arquiteto := GetObjProperty(who, "arquiteto") == 1; //PODE SER O TEM HABILID
           endif
 
           foreach element in tbd
-            if (GetObjProperty (element, "#built_by_architect") != who.serial)
-              SendSysMessage (who, lang["delete_err"]);
+            if(staffmode) //Se for staff, pode deletar qualquer coisa
+                undo.append (array{2, element.objtype, element.x, element.y, element.z});
+                DestroyItem (element);
             else
-              undo.append (array{2, element.objtype, element.x, element.y, element.z});
-              DestroyItem (element);
+                if (GetObjProperty (element, "#built_by_architect") != who.serial)
+                  SendSysMessage (who, lang["delete_err"]);
+                else
+                  undo.append (array{2, element.objtype, element.x, element.y, element.z});
+                  DestroyItem (element);
+                endif
             endif
           endforeach
 
@@ -1476,18 +1481,18 @@ endfunction
 */
 function create_marked(who, x, y, z, type)
     var prop := dictionary;
-    var custo := 10; //Pedras necessarias para criar uma parede
-    var objtype := GetObjTypeByName("rock");
-    prop["objtype"] := objtype;
-    var total_rocks := AmountInContainer(who.backpack, prop);
+    var custo := 10; //Quantidade de recursos necessarios para criar uma estrutura
+    var objtype;
 
-  if (who.cmdlevel < STAFFMODELEVEL) //para staff não precisar das pedras
-  else
-    staffmode:= 1;
-  endif
+    if (who.cmdlevel > STAFFMODELEVEL) //para staff não precisar dos recursos
+        staffmode := 1;
+    endif
 
-    if (total_rocks < custo && !staffmode)
-        SendSysMessageEx(who, "Voce nao tem pedras suficientes.", SSM_INFO);
+   prop["objtype"] := get_objtype(type);
+   var total_recursos := AmountInContainer(who.backpack, prop);
+
+    if (total_recursos < custo && !staffmode)
+        SendSysMessageEx(who, "Voce nao tem recursos suficientes.", SSM_INFO);
         return;
     else
         foreach item in EnumerateItemsInContainer(who.backpack)
@@ -1501,7 +1506,7 @@ function create_marked(who, x, y, z, type)
             endif
         endforeach
 
-        SendSysMessageEx(who, "Voce usou a(s) pedra(s).", SSM_INFO);
+        SendSysMessageEx(who, "Voce usou o(s) recursos(s).", SSM_INFO);
         var created:= CreateItemAtLocation (x, y, z, type);
         created.movable:= 0;
         //  created.saveonexit:= 0;
@@ -1587,4 +1592,25 @@ function clear_site(who)
 
   return 1;
 
+endfunction
+
+function get_objtype(type)
+    var madeira_ranges := {{6, 25}, {166, 196}, {541, 559}, {144, 165}, {527, 538}}; //Todas paredes do tipo madeira
+    var pedra_ranges := {{26, 50}, {87, 143}, {197, 231}, {463, 495}, {711, 729}, {958, 1005}}; //Todas paredes do tipo pedra
+
+    // Verifique se o valor está em algum dos intervalos de madeira
+    foreach range in madeira_ranges
+        if (type >= range[0] && type <= range[1])
+            return GetObjTypeByName("logs");
+        endif
+    endforeach
+
+    // Verifique se o valor está em algum dos intervalos de pedra
+    foreach range in pedra_ranges
+        if (type >= range[0] && type <= range[1])
+            return GetObjTypeByName("rock");
+        endif
+    endforeach
+
+    return GetObjTypeByName("rock");
 endfunction

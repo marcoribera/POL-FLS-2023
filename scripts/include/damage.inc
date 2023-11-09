@@ -188,9 +188,13 @@ function CalculateDamage(defender, type, dmg)
 			resist := resist + (AP_GetTrueSkill(defender,PARRY)/1000); // Ganha até +10% de bonus
 		endif
 		if (IsRaging(defender) && TemHabilidade(defender, "Pele de Rocha"))
-			if (resist < 0.5)
-				resist := 0.5;
+			if (resist < 0.6)
+				resist := 0.6;
 			endif
+        elseif (TemHabilidade(defender, "Pele de Rocha"))
+            if (resist < 0.3)
+                resist := 0.3;
+            endif
 		endif
 	endif
 

@@ -142,9 +142,15 @@ program arremesso(params)
 		else
             var poisonInfo := GetObjProperty(targ, "poisonInfo");
             var poison_amt := poisonInfo.dosage;
+            var poisonLvl := poisonInfo.level;
             if (poisonInfo)
                 poison_amt--;
-                TS_StartTimer(alvo, poisonInfo.name, 60, poisonInfo.level, targ);
+                if (!CheckResist(alvo, REFLEXOS, 30,-20*poisonLvl))
+                    TS_StartTimer(alvo, poisonInfo.name, 60, poisonInfo.level, targ);
+                else
+                    SendSysMessage(alvo, "Voce resistiu ao veneno", SSM_INFO);
+                    SendSysMessage(who, "O alvo resistiu ao veneno", SSM_INFO);
+                endif
             endif
             PlayMovingEffect( who, alvo, 0x22C6, 10);
             DamageFLS(alvo, dmg, DMG_PHYSICAL, who);
