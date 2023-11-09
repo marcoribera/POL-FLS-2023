@@ -269,7 +269,7 @@ function CreateBossStructGump(who, byref boss)
     GFAddButton(chargump, 110, 485, 2103, 2104, 1, 666);
     GFTextLine(chargump, 50, 480, 1153, "TrueBoss");
 
-	GFTextLine(chargump, 50, 205, 1153, "Desc: ");
+	GFTextLine(chargump, 50, 205, 1153, "Descudo: ");
 	GFAddButton( chargump, 35, 210, 2103, 2104, 1, 500);
 		if (boss.descmod)
 			GFHTMLArea(chargump, 90, 210, 160, 60, "[" + boss.descmod+ "]");
@@ -526,7 +526,7 @@ function SetBoss(npc, boss)
 	SetName(npc, boss.name);
 	npc.color := boss.color;
 	npc.truecolor := boss.color;
-	SetObjProperty(npc, "descmod", Cstr(boss.descmod));
+	SetObjProperty(npc, "descmodboss", Cstr(boss.descmod));
 	SetObjProperty(npc, "dmgbonus", Cdbl(boss.dmg));
 
 	if (boss.trueboss)
