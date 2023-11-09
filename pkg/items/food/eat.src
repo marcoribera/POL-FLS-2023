@@ -120,16 +120,16 @@ program eat_food(who, food)
 			hungerlvl := 0;
 		endif
 
-		case(hungerlvl)
-			0:  themsg := "voce esta muito cheio";
-			1:  themsg := "voce esta muito cheio";
-			2:  themsg := "voce esta satisfeito";
-			3:  themsg := "voce se sente um pouco mais cheio depois de consumir a comida";
-			4:  themsg := "voce ainda esta com fome";
-			5:  themsg := "voce ainda esta muito faminto";
-		endcase
-
 		AP_SetVital(who, "Hunger", hungerlvl*60);
+
+		case(hungerlvl)
+			0:  themsg := "Voce esta muito bem alimentado!";
+			1:  themsg := "Voce esta muito cheio!";
+			2:  themsg := "Voce esta cheio!";
+			3:  themsg := "Voce esta satisfeito!";
+			4:  themsg := "Voce ainda esta com fome!";
+			5:  themsg := "Voce ainda esta muito faminto!";
+		endcase
 
 		SendSysMessageEx(who, themsg, SSM_INFO);
 
