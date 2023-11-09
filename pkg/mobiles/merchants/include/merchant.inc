@@ -1543,9 +1543,9 @@ endfunction
 
 
 function GetVelStringDescTemplate(elem, item) //Velocidade da arma. Mostra diferença pra item base
-	var speedI := Cint(item.speed_mod);
+	var speedI := CInt(item.CProps.attackspeedbonus);
 	var speedE := Cint(elem.Speed);
-	if (speedI > 0)
+	if (speedI != error)
 		return CSTR(elem.speed) + " (+" + CSTR(speedI) + ")";
 	elseif (speedI < 0)
 		return CSTR(elem.speed) + " (" + CSTR(speedI) + ")";

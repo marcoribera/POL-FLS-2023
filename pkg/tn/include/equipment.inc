@@ -34,6 +34,10 @@ function SetEquipmentMods(who, item)
 		item.resist_energy_mod := CInt(item.resist_energy * mod_percentual);
 	endif
 
+	if (item.isa(POLCLASS_WEAPON))
+		item.speed_mod := CInt(GetObjProperty(item,"attackspeedbonus"));
+	endif
+
 	var penalty  := CInt(itemdesc[item.objtype].DexPenalty);
 	var penaltyBonus := Cint(getObjProperty(item, "penaltybonus"));
 	penalty := penalty - penaltyBonus;
@@ -147,6 +151,9 @@ function RemoveEquipmentMods(who, item)
 		item.resist_energy_mod := 0;
 	endif
 
+	if (item.isa(POLCLASS_WEAPON))
+		item.speed_mod := 0;
+	endif
 
 	AP_ModifyStatMod(who, DEXTERITY, (penalty));
 
