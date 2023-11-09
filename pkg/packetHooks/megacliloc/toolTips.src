@@ -275,8 +275,8 @@ exported function MegaCliloc( who, byref packet )
 
 			//Cor do nome dos NPC conforme skill de combate
 			if (item.npctemplate)
-				var desc_npc := GetObjProperty(item, "descmod");
-				if (isboss(item)) //Adicionado para mostrar descrição do boss
+				var desc_npc := GetObjProperty(item, "descmodboss");
+				if (desc_npc) //Adicionado para mostrar descrição do boss
 					Object_Name := item.name +"<br>"+"<BASEFONT COLOR=#FFFFFF>"+desc_npc;
 				endif
 				if (who.weapon.attribute != WRESTLING)
