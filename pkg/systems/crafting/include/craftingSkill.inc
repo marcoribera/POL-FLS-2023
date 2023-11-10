@@ -4,17 +4,18 @@ include ":attributes:attributes";
 
 function CraftCheckSkill(who, craft_skill, difficulty, points, report:=0)
 
-  difficulty := CDbl(difficulty);
-  points := CDbl(points);
-  if(difficulty == error)
-    return 0;
+  //difficulty := CDbl(difficulty);
+  //points := CDbl(points);
+  //if(difficulty == error)
+  /*
   elseif(difficulty == 0.0)
     if (report)
       return 100;
     endif
     return 1;
   endif
-
+  */
+  
   var chance;
   var effective := CDbl(AP_GetSkill(who, craft_skill));
   if(effective < 0)

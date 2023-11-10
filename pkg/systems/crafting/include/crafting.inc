@@ -131,9 +131,18 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 	var theitem;
 	var mainSkill := CInt(AP_GetSkill(who, craft_skill));
 
-	var skillreq := Cint(craft_config[objtype].skill);
-	var pts  := Cint(craft_config[objtype].points);
-	var diff := Cint(craft_config[objtype].difficulty);
+	var skillreq := craft_config[objtype].skill; //Valor necessário pra aparecer no MENU
+	if (TypeOf(skillreq) == "String")
+		PrintTextAbove(who, "Item " +objtype+ "/" +Hex(objtype)+ " fora dos padroes de dificuldade. Favor comunicar a staff!");
+		return 0;
+	endif
+	var diff := skillreq + 10; //Dificuldade para craftar o item
+	var pts  := diff + 5; //Potência de UP do item
+
+	//SendSysMessage(who, "DEBUG: SKILL:" +mainSkill);
+	//SendSysMessage(who, "DEBUG: REQUER:" +skillreq);
+	//SendSysMessage(who, "DEBUG: DIFICULDADE:" +diff);
+
 	if(mainSkill >= skill)
 		pts += diff;
 	endif

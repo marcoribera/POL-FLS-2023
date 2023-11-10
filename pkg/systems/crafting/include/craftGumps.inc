@@ -13,6 +13,7 @@ var recipe_skill;
 var skillitens := array;
 // Gump backgrounds - Used in various functions - easier to use globally.
 var BKGND_SILVERTRIM := GFCfgConst("Defaults", "BackGround");
+const EL_BUG := "ERROR 666";
 
 // This function is the main backbone for building the Crafting Menu.
 function sendCraftGump(who, skill_name)
@@ -239,25 +240,25 @@ function GFCraftNewPage(who, byref gump, skill_config, MenuName, skill_name)
       				endif
       			endif
 
-			if (craft_config[objtype].difficulty <= (AP_GetSkill(who, craft_skill) + 15))
+			if (craft_config[objtype].skill <= AP_GetSkill(who, craft_skill))
 				if(ItemY >= 243)
-        				ItemY := 63;
-        				GFAddButton(gump, 370, 260, 4005, 4006, GF_PAGE_BTN, (PageNum+1));
-        				GFHTMLArea(gump, 405, 263, 100, 18, "<basefont color=#ffffff>Proxima Pagina");
-        				PageNum := PageNum+1;
-        				GFPage(gump, PageNum);
-        				GFAddButton(gump, 220, 260, 4014, 4015, GF_PAGE_BTN, (PageNum-1));
-        				GFHTMLArea(gump, 255, 263, 100, 20, "<basefont color=#ffffff>Pagina Anterior");
-      				endif
-      				GFHTMLArea(gump, ItemX, ItemY, 220, 18, ("<basefont color=#ffffff>"+itemdesc));
-      				GFAddButton(gump, ButtonX, (ItemY-3), 4005, 4006, GF_CLOSE_BTN, objtype);
-      				if( menu_config["Setup"].Info == 1 )
-        				GFAddButton(gump, ButtonX2, (ItemY-3), 4011, 4012, GF_CLOSE_BTN, arcnt);
-        				arinfo.append(objtype);
-        				arcnt := arcnt + 1;
-      				endif
-      				ItemY := ItemY + 20;
-      				sleepms(1);
+					ItemY := 63;
+					GFAddButton(gump, 370, 260, 4005, 4006, GF_PAGE_BTN, (PageNum+1));
+					GFHTMLArea(gump, 405, 263, 100, 18, "<basefont color=#ffffff>Proxima Pagina");
+					PageNum := PageNum+1;
+					GFPage(gump, PageNum);
+					GFAddButton(gump, 220, 260, 4014, 4015, GF_PAGE_BTN, (PageNum-1));
+					GFHTMLArea(gump, 255, 263, 100, 20, "<basefont color=#ffffff>Pagina Anterior");
+				endif
+				GFHTMLArea(gump, ItemX, ItemY, 220, 18, ("<basefont color=#ffffff>"+itemdesc));
+				GFAddButton(gump, ButtonX, (ItemY-3), 4005, 4006, GF_CLOSE_BTN, objtype);
+				if( menu_config["Setup"].Info == 1 )
+					GFAddButton(gump, ButtonX2, (ItemY-3), 4011, 4012, GF_CLOSE_BTN, arcnt);
+					arinfo.append(objtype);
+					arcnt := arcnt + 1;
+				endif
+				ItemY := ItemY + 20;
+				sleepms(1);
 			endif
     		endforeach
 
@@ -300,8 +301,10 @@ function GFCraftInfoPage(who, objtype, skill_config)
 
 		// Set the variables for skill required levels
 		skillreq  := elem.skill;
-		diff      := elem.difficulty;
+		diff      := skillreq + 10;
 		skillreqb := elem.skill2;
+		PrintTextAbove(who, "DEBUG: SKILL ITEM: " +skillreq);
+		//PrintTextAbove(who, "DEBUG: DIFICULDADE: " +diff);
 		if(!skillreqb || skillreqb.errortext)
   			skillreqb  := 0;
 		endif
@@ -350,6 +353,13 @@ function GFCraftInfoPage(who, objtype, skill_config)
 		aid_skill := 0;
 	endif
 
+	PrintTextAbove(who, "DEBUG: CHANCE:" +schance);
+	PrintTextAbove(who, "DEBUG: " +TypeOf(schance));
+	if (TypeOf(schance) == "String")
+		PrintTextAbove(who, EL_BUG); //Hehehe
+		skillreq := 200; //Para nunca fazer
+	endif
+
 	// Below added for checking for parts. If parts are present, then create the part list
 	// instead.
 	var tmatname  := 0;
@@ -387,6 +397,9 @@ function GFCraftInfoPage(who, objtype, skill_config)
 	var echance   := 0;
 	if(elem.Exceptional == 1)
 		echance := ExceptionalCraftChance(who, craft_skill, temp1, skillreq, thisitem);
+	endif
+	if (schance == 0)
+		echance := EL_BUG;
 	endif
 
 	var gump := GFCreateGump(50, 25);
