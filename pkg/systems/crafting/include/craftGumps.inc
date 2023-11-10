@@ -303,7 +303,7 @@ function GFCraftInfoPage(who, objtype, skill_config)
 		skillreq  := elem.skill;
 		diff      := skillreq + 10;
 		skillreqb := elem.skill2;
-		PrintTextAbove(who, "DEBUG: SKILL ITEM: " +skillreq);
+		//PrintTextAbove(who, "DEBUG: SKILL ITEM: " +skillreq);
 		//PrintTextAbove(who, "DEBUG: DIFICULDADE: " +diff);
 		if(!skillreqb || skillreqb.errortext)
   			skillreqb  := 0;
@@ -353,8 +353,8 @@ function GFCraftInfoPage(who, objtype, skill_config)
 		aid_skill := 0;
 	endif
 
-	PrintTextAbove(who, "DEBUG: CHANCE:" +schance);
-	PrintTextAbove(who, "DEBUG: " +TypeOf(schance));
+	//PrintTextAbove(who, "DEBUG: CHANCE:" +schance);
+	//PrintTextAbove(who, "DEBUG: " +TypeOf(schance));
 	if (TypeOf(schance) == "String")
 		PrintTextAbove(who, EL_BUG); //Hehehe
 		skillreq := 200; //Para nunca fazer
