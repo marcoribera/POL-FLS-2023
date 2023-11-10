@@ -406,7 +406,8 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 			sendsysmessage(who,"Usou MetalWorking");
 			//Aplica velocidade extra em armas de metal
 			if(TemHabilidade(who,"Armas Velozes"))
-				theitem.speed_mod := CInt(elem.Speed*0.1);
+				SetObjProperty(theitem,"attackspeedbonus", CInt(elem.Speed*0.1));
+				//theitem.speed_mod := CInt(elem.Speed*0.1);
 			endif
 
 			if(TemHabilidade(who,"Amolador de Laminas") && (elem.TipoAtaque == "Cortante"))

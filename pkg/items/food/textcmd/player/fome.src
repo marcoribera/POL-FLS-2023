@@ -15,7 +15,7 @@ program fome(who)
 	4 : msg := "Voce esta com fome.";
 	3 : msg := "Voce esta satisfeito.";
 	2 : msg := "Voce esta cheio.";
-	1 : msg := "Voce esta muito bem alimentado.";
+	1 : msg := "Voce esta muito cheio.";
 	0 : msg := "Voce esta muito bem alimentado.";
    endcase
 

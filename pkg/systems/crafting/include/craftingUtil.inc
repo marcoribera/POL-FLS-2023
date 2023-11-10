@@ -92,7 +92,8 @@ function AddQualityDamageMod(who, craft_skill, byref theitem, quality )
 		if(craft_skill == "MetalWorking")
 			if(TemHabilidade(who,"Armas Velozes"))
 				//SendSysMessage(who,"bonus velocidade" + (quality-1)/2 + "qualidade: "+ quality);
-				theitem.speed_mod := CInt(elem.Speed * (0.1 + (quality-1)/4));
+				SetObjProperty(theitem,"attackspeedbonus", CInt(elem.Speed * (0.1 + (quality-1)/4)));
+				//theitem.speed_mod := CInt(elem.Speed * (0.1 + (quality-1)/4));
 			endif
 			//Acplica dano extra pra arma
 			if(TemHabilidade(who,"Amolador de Laminas") && (elem.TipoAtaque == "Cortante"))

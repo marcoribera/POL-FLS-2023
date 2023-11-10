@@ -526,7 +526,7 @@ function SetBoss(npc, boss)
 	SetName(npc, boss.name);
 	npc.color := boss.color;
 	npc.truecolor := boss.color;
-	SetObjProperty(npc, "descmod", Cstr(boss.descmod));
+	SetObjProperty(npc, "descmodboss", Cstr(boss.descmod));
 	SetObjProperty(npc, "dmgbonus", Cdbl(boss.dmg));
 
 	if (boss.trueboss)
