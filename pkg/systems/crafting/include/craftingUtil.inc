@@ -6,6 +6,7 @@ include ":tn:tngumps";
 const  EXCEP := 1;
 const  NORMAL := 2;
 const  POOR := 3;
+const STR_ERRORCHANCE := "ERROR 666";
 const STR_NULLCHANCE := "nula";
 const STR_VERYLOWCHANCE := "muito baixa";
 const STR_LOWCHANCE := "baixa";
@@ -165,11 +166,9 @@ endfunction
 endfunction
 
 function GetChanceString(value)
-	if (value == 0)
-		return "ERROR 666"; //Hehehe
-	endif
-
-	if (value < 1)
+	if (TypeOf(value) == "String")
+		return STR_ERRORCHANCE;
+	elseif (value < 1)
 		return STR_NULLCHANCE;
 	elseif (value <= 20)
 		return STR_VERYLOWCHANCE;
@@ -179,8 +178,7 @@ function GetChanceString(value)
 		return STR_INTERMEDIATECHANCE;
 	elseif (value <= 80)
 		return STR_GOODCHANCE;
-	elseif (value <= 100)
+	elseif (value > 80)
 		return STR_VERYHIGHCHANCE;
 	endif
-
 endfunction

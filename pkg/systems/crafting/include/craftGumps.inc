@@ -240,7 +240,7 @@ function GFCraftNewPage(who, byref gump, skill_config, MenuName, skill_name)
       				endif
       			endif
 
-			if (craft_config[objtype].skill <= AP_GetSkill(who, craft_skill))
+			if ((craft_config[objtype].skill) <= AP_GetSkill(who, craft_skill)) //PARA O ITEM APARECER NA LISTA DO MENU DE CRAFT
 				if(ItemY >= 243)
 					ItemY := 63;
 					GFAddButton(gump, 370, 260, 4005, 4006, GF_PAGE_BTN, (PageNum+1));
@@ -303,8 +303,10 @@ function GFCraftInfoPage(who, objtype, skill_config)
 		skillreq  := elem.skill;
 		diff      := skillreq + 10;
 		skillreqb := elem.skill2;
-		//PrintTextAbove(who, "DEBUG: SKILL ITEM: " +skillreq);
-		//PrintTextAbove(who, "DEBUG: DIFICULDADE: " +diff);
+		/* DEBUGS: 
+		PrintTextAbove(who, "DEBUG: SKILL ITEM: " +skillreq);
+		PrintTextAbove(who, "DEBUG: DIFICULDADE: " +diff);
+		*/
 		if(!skillreqb || skillreqb.errortext)
   			skillreqb  := 0;
 		endif
@@ -353,13 +355,17 @@ function GFCraftInfoPage(who, objtype, skill_config)
 		aid_skill := 0;
 	endif
 
-	//PrintTextAbove(who, "DEBUG: CHANCE:" +schance);
-	//PrintTextAbove(who, "DEBUG: " +TypeOf(schance));
-	if (TypeOf(schance) == "String")
+	if (TypeOf(elem.skill) == "String")
 		PrintTextAbove(who, EL_BUG); //Hehehe
+		schance := EL_BUG;
 		skillreq := 200; //Para nunca fazer
 	endif
+	/*	DEBUGS:
 
+	SendSysMessage(who, "DEBUG: CHANCE:" +schance);
+	SendSysMessage(who, "DEBUG: " +TypeOf(schance));
+	SendSysMessage(who, "DEBUG: REQUIRED:" +skillreq);
+	*/
 	// Below added for checking for parts. If parts are present, then create the part list
 	// instead.
 	var tmatname  := 0;
@@ -396,10 +402,7 @@ function GFCraftInfoPage(who, objtype, skill_config)
 	// Exception % chance wording.
 	var echance   := 0;
 	if(elem.Exceptional == 1)
-		echance := ExceptionalCraftChance(who, craft_skill, temp1, skillreq, thisitem);
-	endif
-	if (schance == 0)
-		echance := EL_BUG;
+		echance := ExceptionalCraftChance(who, craft_skill, temp1, diff, thisitem);
 	endif
 
 	var gump := GFCreateGump(50, 25);
