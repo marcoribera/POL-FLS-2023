@@ -753,7 +753,7 @@ function AddItem(npc, player, targ)
 		cost_type := item.objtype; //Salva o tipo de objeto a ser utilizado como pagamento
 
 		AI_Speak(npc, "Que quantidade de '"+cost_name+"' devo cobrar?");
-		cost_amt := RequestGump(player, "Que quantidade de '"+cost_name+"' devo cobrar?", "1 - "+cost_limit+limit_reason, 1, 1);
+		cost_amt := RequestGump(player, "Que quantidade de '"+cost_name+"' devo cobrar?", "1 - "+cost_limit+limit_reason, "", 1);
 		cost_amt := CInt(cost_amt);
 		if ( !cost_amt || cost_amt > cost_limit || cost_amt <= 0 ) //Cancela a operação se forem inseridos valores inválidos
 			SendSysMessage(player, "Cancelado");
@@ -776,7 +776,7 @@ function AddItem(npc, player, targ)
 		var limit_reason := "(item empilhavel)";
 		cost_type := MOEDAS_COBRE;
 
-		cost_amt := CInt(RequestGump(player, "Quantas moedas de cobre deseja cobrar por "+targ.desc+"?", "1 - "+cost_limit+limit_reason, 1, 1));
+		cost_amt := CInt(RequestGump(player, "Quantas moedas de cobre deseja cobrar por "+targ.desc+"?", "1 - "+cost_limit+limit_reason, "", 1));
 
 		if ( !cost_amt || cost_amt <= 0 ) //Valor inválido ou não positivo encerra a função
 			SendSysMessage(player, "Cancelado");
