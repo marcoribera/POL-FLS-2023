@@ -560,7 +560,7 @@ endfunction
 function WearDownWeapon(attacker, weapon)
 	if (weapon.IsA(POLCLASS_WEAPON))
 		//Se está desarmado não danifique a arma natural
-		if (weapon.objtype == 0xF020)
+		if (weapon.objtype == 0x1F020)
 			return 1;
 		//Calcula danos nas armas normais
 		else
