@@ -14,6 +14,8 @@ include "include/facings";
 */
 
 program fireweapons(who, item)
+    Set_Script_Option(SCRIPTOPT_NO_RUNAWAY, 1); //Adicionado para diminuir a quantidade de logs no arquivo script.log
+
 	var wet := GetObjProperty(who, "molhado");
     var pistol := Array{0xC5FD, 0xC5FE};
     var handcannon := 0xC5FF;

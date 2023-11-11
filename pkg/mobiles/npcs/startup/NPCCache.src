@@ -11,6 +11,7 @@ use cfgfile;
 use datafile;
 
 Program NPC_By_Taxonomy_Cache()
+    Set_Script_Option(SCRIPTOPT_NO_RUNAWAY, 1); //Adicionado para diminuir a quantidade de logs no arquivo script.log
 
 	var taxonomies := {};		// An array that holds the various NPC classifications
 	var Tax_NPC_list := {};		// A temp array that holds all NPCs in a certain classification.

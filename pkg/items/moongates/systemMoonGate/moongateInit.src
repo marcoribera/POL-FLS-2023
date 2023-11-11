@@ -13,6 +13,8 @@ include ":gumps:gumps";
 include ":gumps:gumps_ex";
 
 program CreateSystemMoonGates()
+    Set_Script_Option(SCRIPTOPT_NO_RUNAWAY, 1); //Adicionado para diminuir a quantidade de logs no arquivo script.log
+
 	MG_ReportText("---=[ MOONGATE INIT SCRIPT HAS STARTED UP ]=---", MG_REPORT_SYSLOG);
 	var config := ReadConfigFile(":moongates:moongate");
 	if ( config.errortext )
