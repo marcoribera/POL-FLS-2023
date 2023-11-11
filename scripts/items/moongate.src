@@ -5,6 +5,8 @@ include "include/client";
 include ":attributes:attributes";
 
 program walk_on_moongate(mobile, gate)
+  Set_Script_Option(SCRIPTOPT_NO_RUNAWAY, 1); //Adicionado para diminuir a quantidade de logs no arquivo script.log
+
   if((mobile.npctemplate) && (mobile.script != "employed") && (mobile.script != "tamed") && (mobile.script != "escortee"))
     return;
   endif

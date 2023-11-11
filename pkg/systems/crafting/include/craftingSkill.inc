@@ -18,17 +18,27 @@ function CraftCheckSkill(who, craft_skill, difficulty, points, report:=0)
   
   var chance;
   var effective := CDbl(AP_GetSkill(who, craft_skill));
+  /*
   if(effective < 0)
     effective := 0.0;
   endif
-  chance :=  35.0 + (effective - difficulty);
-
+  */
+  //chance :=  35.0 + (effective - difficulty); //antigo craft
+  if ((difficulty - effective) <= -20 ) //PREVENÇÃO DA PARÁBOLA
+    chance := 100;
+  elseif ((difficulty - effective) <= -10 ) //PREVENÇÃO DA PARÁBOLA
+    chance := 50;
+  else
+    chance := ((difficulty-10)-effective)*(-(difficulty/10));
+  endif
+  //SendSysMessage(who, "DEBUG: VALORES: DIFFI" +difficulty+ "- EFFEC: " +effective+ "- CHANCE: " +chance);
+/*
   if(chance < 0)
     chance := 0;
   elseif(chance > 100)
     chance := 100;
   endif
-
+*/
   if(report)
     return Cdbl(chance);
   endif
