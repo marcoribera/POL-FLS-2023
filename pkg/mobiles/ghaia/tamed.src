@@ -910,7 +910,7 @@ var hit := npccfgfile[me.npctemplate].attackhitsound;
   var happiness := GetObjProperty(me, "happiness");
   var happybonus := happiness/10;
   checkvalue := checkvalue + happybonus;
-  var defiance :=(orneriness * 20)-25; era -30
+  var defiance :=(orneriness * 20)-25; //era -30
   //print("valor checkvalue eh "+checkvalue);
   //print("valor happiness eh "+happybonus);
   if(defiance < 1)
