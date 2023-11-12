@@ -154,6 +154,10 @@ program MainHitScript( params )
 			lastHitInfo.+hitscript :=  weapon_scripts;
 		endif
 		SetObjProperty(defender, "lastHit", lastHitInfo);
+		if ( (GetObjProperty(defender, "NeverRelease") == 1) )
+			var teste := AP_GetVital(defender, "DP");
+			SetObjPRoperty(defender, "LastDP", teste);
+		endif
 		if (!defender.npctemplate)
 			if (attacker.npctemplate)
 				SetObjProperty(defender, "lastNpcDmg", attacker.npctemplate);
