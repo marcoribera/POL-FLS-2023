@@ -186,6 +186,12 @@ function CheckSkillAdvance(mobile, skill_name, award_diff, pass_chance)
 		endif
 	endif
 
+    if (!GetObjProperty(mobile, "fichaRP"))
+		SkillDbgMsg(mobile,"nao tem ficharp!");
+		SendSysMessage(mobile, "FACA sua ficharp para poder upar!");
+		return;
+	endif
+
 	if ( GetObjProperty(mobile, "NoGains") ) //se tiver sem upar skill
 		SkillDbgMsg(mobile, "Flag NoGains setada.");
 		return 0;
