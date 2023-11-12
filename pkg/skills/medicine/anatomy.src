@@ -140,8 +140,14 @@ program skill_Anatomy(who)
 				SendSysMessageEx(who, strMsg + " parece " + fort + ", " + refl + " e "+ vont + ".", SSM_INFO);
 			endif
             if (who.serial == subject.serial)
-			    SendSysMessageEx(who, "O alvo esta " + DPMsg(subject,who), SSM_INFO);
-            endif
+			   SendSysMessageEx(who, "O alvo esta " + DPMsg(subject,who), SSM_INFO);
+			elseif (GetObjProperty(subject, "bond") == "fiel")
+			   if (AP_Getvital(subject, "DP") == 20)
+				SendSysMessageEx(who, "O alvo esta bastante disposto", SSM_INFO);
+			   else
+				SendSysMessageEx(who, "O alvo esta quse morto", SSM_INFO);
+				endif
+			endif
             return 1;
 		else
 			SendSysMessageEx(who, "Voce nao faz ideia " + strFail, SSM_FAIL);
