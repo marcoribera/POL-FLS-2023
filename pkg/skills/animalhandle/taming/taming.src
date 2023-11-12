@@ -4,6 +4,7 @@ use os;
 use util;
 
 include ":attributes:attributes";
+include ":attributes:stats";
 include ":brainAI:include/npcCommands";
 include ":gumps:gumps_ex";
 include ":gumps:gumps"; //add
@@ -644,10 +645,10 @@ function TeachNow(who, tamed, ins)
 		elseif(info_cfg[ins].Nome == "Flexibilidade")
 			AP_SetTrueStat(tamed, DEXTERITY, AP_GetStat(tamed, DEXTERITY) + 15);
 		elseif(info_cfg[ins].Nome == "Fortaleza")
-			var mudar := GetObjProperty(tamed, "%NPC_Vitals%").HITS;
-			var Variavel := GetObjProperty(tamed, "%NPC_Vitals%");
-			Variavel["HITS"] := mudar + 40;
-			SetObjProperty(tamed, "%NPC_Vitals%", Variavel);
+			var hits := CInt(AP_GetVitalMaximumValue(tamed, "Hits"));
+			var variavel := Cint(hits / 3);
+			var variavel2 := Cint(variavel /2); //não sei pq ele duplica por isso a divisão pela metade
+			setObjProperty(tamed, "hitsmod", variavel2);
 			RecalcVitals(tamed);
 		elseif(info_cfg[ins].Nome == "Sentidos Aguçados")
 			var teste := GetAttribute(tamed, AWARENESS);

@@ -171,8 +171,9 @@ program TamedAI()
 
 		endcase
 var summoned := GetObjProperty(me, "summoned");
-		if ( CInt(GetObjProperty(me, "happiness")) < 10 && !GetCooldown(me,"aviso") && !summoned )
-
+var fideliz := (GetObjProperty(me, "NeverRelease") == 1);
+		if ( CInt(GetObjProperty(me, "happiness")) < 10 && !GetCooldown(me,"aviso") && !summoned && !fideliz )
+				
 			//var skill := AP_GetSkill(owner,ANIMAL_TAMING);
 
 			//skill := skill - 0.1;
@@ -433,11 +434,6 @@ endif
 
  //if ( cfgeat[(ev.item).objtype].script["eat"]) //evento comida checando tds os itemdesc para ver se são comíveis
 	if (Cstr(ev.item.objtype) in foodarray)
-		if (ev.item.amount >1)
-			SendSysMessage(ev.source, "Quer engasgar o animal? Pegue um de cada vez!", 0, 1255);
-			MoveItemToContainer(ev.item, (ev.source).backpack);
-			return;
-		endif
 		if (happy >= 100)
 			PrintTextAbovePrivate(me,"O animal já está satisfeito", ev.source);
 			return;
@@ -465,6 +461,8 @@ endif
 					PrintTextAbovePrivate(me, "*O animal se esfrega em voce*", owner);
 					PlaySoundEffect(me, npccfg[me.npctemplate].idlesound);
 					SendSysMessage(owner, +me.name+ " criou um vinculo de fidelidade com voce!", 0, 61);
+					SetObjProperty(me, "dpmod", -20);
+					RecalcVitals(me);
 				endif
 			elseif ((startbond == "fiel") || (check_bond == 1) || (fidelizar == "nao") ) //se já é fiel/se já tem animal fidelizado/marcado como nao fidelizar só vai comer
 			else //para iniciar o bond
@@ -473,7 +471,11 @@ endif
 			endif
 		endif
 		PlaySoundEffect(me, CInt(0x3b)+ RandomInt(3));
-		DestroyItem(ev.item);
+		if (ev.item.amount >1)
+			SubtractAmount(ev.item, 1);
+		else
+			DestroyItem(ev.item);
+		endif
 		SetObjProperty(me,"happiness", happy +35);
 			if ( CInt(GetObjProperty(me, "happiness") > 100) ) // se passar de 100 o happiness volta pra 100
 				SetObjProperty(me, "happiness", 100);
@@ -904,11 +906,11 @@ var hit := npccfgfile[me.npctemplate].attackhitsound;
 
   var maslore    := AP_GetSkill(owner, HANDLEANIMAL)/2;
   var mastaming  := CInt(AP_GetSkill(owner, HANDLEANIMAL)+ maslore);
-  var checkvalue := CInt(mastaming - 20);
+  var checkvalue := CInt(mastaming - 25);//era 20
   var happiness := GetObjProperty(me, "happiness");
   var happybonus := happiness/10;
   checkvalue := checkvalue + happybonus;
-  var defiance :=(orneriness * 20)-30;
+  var defiance :=(orneriness * 20)-25; era -30
   //print("valor checkvalue eh "+checkvalue);
   //print("valor happiness eh "+happybonus);
   if(defiance < 1)
@@ -919,9 +921,12 @@ var hit := npccfgfile[me.npctemplate].attackhitsound;
   defiance := defiance + petcount;
   var finaldefiance := CInt(defiance + RandomInt(40) );
   	if(happiness < 10)
+		if ((GetObjProperty(me, "NeverRelease") == 1))
+		else
 		SendSysMessage(owner, "*Seu pet "+me.name+" decidiu que eh melhor ficar sozinho*");
 		UnTame();
 		return 0;
+		endif
 	endif
   if( (GetObjProperty(me, "summoned")== 1) || (GetObjProperty(me, "NeverRelease") == 1) )// se for summon ou fiel/bond não destama não desobedece
 	return 1;
@@ -1004,7 +1009,6 @@ function Go(forma, todos)
 	data.+y := tloc.y;
 	data.+type := forma;
 	following := 0;
-	print("todos eh "+todos);
 
 	if( todos == 1 )
 		AllCommand(GO_LOC_CMD, data);
