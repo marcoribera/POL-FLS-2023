@@ -69,7 +69,7 @@ program HitScript(params)
 			if ( !(defender in attacker.party.members ) )
 				if (defender.serial != attacker.serial)
 					PlayObjectCenteredEffectEx( defender, 0x22c6, 1, 9);
-					ApplyDamageEX(defender, (rawdamage*0.5)+1, DMG_FIRE);
+					ApplyDamageEX(defender, (rawdamage*1.5)+1, DMG_PHYSICAL);
 				endif
 			endif
 		endforeach		

@@ -700,6 +700,14 @@ function WeaponHitScripts(attacker, defender, weapon, armor, basedamage, rawdama
 		endif
 	endif
 
+    if (TemHabilidade(attacker, "Golpes Amplos"))
+            var dmg  := AP_GetSkill(attacker, TACTICS)/10;
+			if(dmg < 3)
+				dmg := 3;
+			endif
+        start_script(":combat:weaponHitScripts/areadmg", array{attacker, defender, weapon, armor, basedamage, dmg*2, DMG_PHYSICAL});
+    endif
+
 	if (GetCooldown(weapon, "habelemental") )
 		EraseObjProperty(weapon, "#habelemental");
 		var elemental := GetObjProperty(weapon, "#elementalweapon");
