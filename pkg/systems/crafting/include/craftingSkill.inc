@@ -39,15 +39,15 @@ function CraftCheckSkill(who, craft_skill, difficulty, points, report:=0)
   var itemskill := difficulty - 10; //QUANDO APARECE NO MENU
   //var diffmod = 40 - itemskill; //inserido direto na fórmula (teste)
   
-  chance := ((itemskill)-effective)*(-((difficulty+(40-itemskill))/10));
+  chance := ((itemskill)-effective)*(-((difficulty+(40-itemskill))/10))+1;
   /* EVILLINK CRAFT END */
 
-  //SendSysMessage(who, "DEBUG: VALORES: DIFFI" +difficulty+ "- EFFEC: " +effective+ "- CHANCE: " +chance);
   if(chance < 0)
     chance := 0;
   elseif(chance > 100)
     chance := 100;
   endif
+  //SendSysMessage(who, "DEBUG: VALORES: DIFFI" +difficulty+ "- EFFEC: " +effective+ "- CHANCE: " +chance);
 
   if(report)
     return Cdbl(chance);

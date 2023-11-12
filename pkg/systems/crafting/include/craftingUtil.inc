@@ -168,7 +168,7 @@ endfunction
 function GetChanceString(value)
 	if (TypeOf(value) == "String")
 		return STR_ERRORCHANCE;
-	elseif (value < 1)
+	elseif (value == 0)
 		return STR_NULLCHANCE;
 	elseif (value <= 20)
 		return STR_VERYLOWCHANCE;
