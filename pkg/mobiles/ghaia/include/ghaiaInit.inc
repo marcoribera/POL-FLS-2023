@@ -1,9 +1,12 @@
 use uo;
 use cfgfile;
 
+include ":mounts:mounts";
+
 var couleurs;
 var vetements;
 var templt;
+
 
 function SetupAmmo(mobile)
 
@@ -138,7 +141,12 @@ function SetupEquip(who)
   var montaria := Getobjproperty(who, "Montaria");
   if (!montaria)
   else
-    Equipitem (who, montaria);
+	var graphic := MP_GetMountGraphic(montaria);
+	print("graphic eh" +graphic);
+	var item := CreateItemAtLocation(who.x, who.y, who.z, MOUNT_OBJTYPE, 1);
+	item.graphic := graphic;
+	print("item eh "+item.graphic);
+	Equipitem (who, item);
   endif
 
   if (!mobile_taxonomy)
