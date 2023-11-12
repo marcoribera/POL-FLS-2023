@@ -14,34 +14,28 @@ program on_insert(who, book, movetype, inserttype, item, existing_stack, amt);
 	movetype       := movetype;
 	inserttype     := inserttype;
 
-	//se for projetil ok
-	if ( item.graphic == 0x1bfb || item.graphic == 0xf3f  )
+    var hunt_arrows := Array{0xf3f, 0x1bfb};
+    var war_arrows := Array{0x909E, 0x908E, 0x909D, 0x908D, 0x909C, 0x90A0, 0x908f, 0x908C, 0x909B, 0x908B, 0x909A, 0x908A, 0x9099, 0x9089, 0x9098, 0x9088};
+    var aljava_de_guerra := 0x791c;
+    var aljava_de_caca := 0x2fb7;
 
-	else //se nao for projetil
-
-		if (book.objtype == 0x3bd7 ) //mas for uma aljava com bainha
-			if ( item.usescript == ":combat:useScript/bladed" ) // pode por uma espada
-				var items := enumerateitemsincontainer(book);
-				foreach weap in (items)
-					if (weap.isa(POLCLASS_WEAPON))
-						SendSysMessageEx(who, "Ja existe uma arma nesta bainha.", SSM_FAIL);
-						return 0;
-					endif
-				endforeach
-				return 1;
-			endif			
-		else // se nao retorna
+    if (book.objtype == aljava_de_guerra)
+	    if ( item.graphic == 0x1bfb || item.graphic == 0xf3f  )
+        endif
+    elseif (book.objtype == aljava_de_caca)
+        if (item.objtype in hunt_arrows)
+        elseif (item.objtype in war_arrows)
+            SendSysMessageEx(who, "Use uma aljava de guerra para esse tipo de municao", SSM_FAIL);
+            MoveItemToContainer(item, who.backpack);
+            return 0;
+        else
 			SendSysMessageEx(who, "Voce nao pode guardar isto na aljava.", SSM_FAIL);
 			MoveItemToContainer(item, who.backpack);
 			return 0;
 		endif
-
 	endif
 
 //	var items := EnumerateItemsInContainer( book );
-
-	
-
 	if( book.movable == 0 )
 		SendSysMessage(who, "Cancelado.");
 		MoveItemToContainer(item, who.backpack);
@@ -51,11 +45,8 @@ program on_insert(who, book, movetype, inserttype, item, existing_stack, amt);
 		SendSysMessage(who, "A Aljava esta em uso.");
 		return 0;
 	else
-			return 1;
+        return 1;
 	endif
 
 	return 1;
 endprogram
-
-
-
