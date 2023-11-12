@@ -2,8 +2,9 @@ use uo;
 use npc;
 use cfgfile;
 
-include ":ghaia:generic";
-include ":ghaia:ghaia";
+include ":ghaia:genericspecial";
+include ":ghaia:ghaiaspecial";
+include ":ghaia:ghaiaspecial";
 
 var npccfgfile := ReadConfigFile( ":brainai:npcdesc" );
 var me := self();
