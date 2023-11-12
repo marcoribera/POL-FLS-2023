@@ -143,10 +143,11 @@ program arremesso(params)
             var poisonInfo := GetObjProperty(targ, "poisonInfo");
             var poison_amt := poisonInfo.dosage;
             var poisonLvl := poisonInfo.level;
+            var poisonDuration := Cint(AP_GetSkill(who, ALCHEMY) / 10);
             if (poisonInfo)
                 poison_amt--;
                 if (!CheckResist(alvo, REFLEXOS, 30,-20*poisonLvl))
-                    TS_StartTimer(alvo, poisonInfo.name, 60, poisonInfo.level, targ);
+                    TS_StartTimer(alvo, poisonInfo.name, poisonDuration, poisonInfo.level, targ);
                 else
                     SendSysMessage(alvo, "Voce resistiu ao veneno", SSM_INFO);
                     SendSysMessage(who, "O alvo resistiu ao veneno", SSM_INFO);
