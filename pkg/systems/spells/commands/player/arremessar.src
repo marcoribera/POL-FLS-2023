@@ -146,7 +146,7 @@ program arremesso(params)
             var poisonDuration := Cint(AP_GetSkill(who, ALCHEMY) / 10);
             if (poisonInfo)
                 poison_amt--;
-                if (!CheckResist(alvo, REFLEXOS, 30,-20*poisonLvl))
+                if (!CheckResist(alvo, FORTITUDE, 15,-20*poisonLvl))
                     TS_StartTimer(alvo, poisonInfo.name, poisonDuration, poisonInfo.level, targ);
                 else
                     SendSysMessage(alvo, "Voce resistiu ao veneno", SSM_INFO);
