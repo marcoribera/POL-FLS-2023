@@ -121,6 +121,8 @@ function ConstructGump(item)
 endfunction
 
 program lever(who, item)
+    Set_Script_Option(SCRIPTOPT_NO_RUNAWAY, 1); //Adicionado para diminuir a quantidade de logs no arquivo script.log
+
 	var cfg := GetObjProperty(item,"configboss");
 		sendsysmessage(who, ""+cfg);
 		if  (cfg == error)

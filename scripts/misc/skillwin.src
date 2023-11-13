@@ -26,6 +26,8 @@ include ":gumps:requestGump";
 var skillList := array{"Alchemy", "MagicLore", "Magery", "Survival", "HandleAnimal", "Awareness", "Medicine", "DomesticWork", "Sneak", "MechanicalApitude", "Pickpocketing", "WoodWorking", "MetalWorking", "RangedCombat", "MeleeCombat2H", "MeleeCombat1H", "Parry", "Tactics", "Gathering"};
 
 program core_skillWin(who)
+    Set_Script_Option(SCRIPTOPT_NO_RUNAWAY, 1); //Adicionado para diminuir a quantidade de logs no arquivo script.log
+
 	if (who.dead)
 		SendSysMessage(who, "Você está morto e não pode fazer isto.");
 		return;
