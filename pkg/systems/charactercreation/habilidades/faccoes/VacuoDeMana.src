@@ -31,7 +31,6 @@ program vacuodemana(params)
 	var basedamage	:= params[5];
 	var rawdamage	:= params[6];
 	params := 0; // Not needed anymore.
-	print("Entrou vacuo");
     SetObjProperty(attacker, "#justicaderothen", 1);
     sleep(5);
     EraseObjProperty(attacker, "#justicaderothen");
