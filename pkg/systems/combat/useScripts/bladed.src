@@ -38,9 +38,56 @@ program use_Bladed(who, tool)
 endprogram
 
 function CarveItems(who, tool, item)
-
+	var quebravel := GetObjProperty(item, "quebravel");
 	if ( item.IsA(POLCLASS_CORPSE) ) //Escalpela e esquarteja corpo
 		return start_script(":survival:skinning", {who, item, tool});
+
+	elseif (quebravel == "survival")
+				var mex := who.x;
+				var mey := who.y;
+				var hp;
+				var itens:=array;
+				var i := 3 ;
+
+				hp := GetObjProperty(item, "durabilidade");
+				var gatherer:= AP_GetSkill(who, SURVIVAL);
+				
+				PrintTextAbove(who, "*Rasgando Intensamente*");
+
+				while((i <= 9) && (who.x == mex) && (who.y == mey))
+
+					if((who.x != mex) && (who.y != mey))
+						break;
+					endif
+
+					PerformAction(who, 0x0b);
+					PlaySoundEffect(who, 0x126);
+
+					sleep(1);
+
+					if((who.x != mex) || (who.y != mey))
+						SendSysMessageEx(who,"Voce deve ficar parado enquanto trabalha", SSM_FAIL);
+						return;
+					endif
+					i := i + 1;
+				endwhile
+
+				if (hp <= 0)
+					var itens := GetObjProperty(item,"itens");
+					foreach itemarray in itens
+						var itemcriado:=CreateItemAtLocation(item.x, item.y, item.z,itemarray , itemarray.amount, realm := _DEFAULT_REALM);
+						SetName(itemcriado, itemarray.name);
+					endforeach
+					DestroyItem(item);
+				endif
+
+				hp := hp - gatherer;
+
+				SetObjProperty(item, "durabilidade", hp);
+
+	elseif ((quebravel == "gathering") || (quebravel == "domesticwork"))
+			SendSysMessageEx(who, "Voce deve usar outra ferramenta para este servico", SSM_FAIL);
+			return;
 	else
 		case (item.objtype)
 			0x97E:
@@ -93,6 +140,7 @@ function CarveItems(who, tool, item)
 				break;
 		endcase
 	endif
+
 endfunction
 
 function CortaComida(who,item,id_item_resultante,numero_pedacos,mesagem_sucesso);
@@ -220,11 +268,10 @@ function FazPergaminhoEmBranco(who, item)
 		return 0;
 	else
 		var RequiredSkill := 10;
-		var SurvivalSkill := AP_GetSkill (who, SURVIVAL); 
-		var DomesticWorkSkill :=  AP_GetSkill (who, DomesticWork);
+		var SurvivalSkill := AP_GetSkill (who, SURVIVAL);
 		//sendsysmessage(who, "gmdebug: skinning " + myskill);
 
-		if (SurvivalSkill < RequiredSkill && DomesticWorkSkill < RequiredSkill)
+		if (SurvivalSkill < RequiredSkill)
 			SendSysMessage(who, "Voce nao sabe como fazer este item.");
 			return 0;
 		endif
@@ -245,13 +292,6 @@ function FazPergaminhoEmBranco(who, item)
 					PerformAction(who, ANIM_SALUTE);
 					sleep(1);
 				endfor
-				var skill;
-				if (DomesticWorkSkill > SurvivalSkill)
-					skill := 1;
-				else
-					skill := 2;
-				endif
-				if (skill == 2)
 				if (SkillCheck(who, SURVIVAL, RequiredSkill));
 					if (!CreateItemInContainer(who.backpack, UOBJ_BLANK_SCROLL, 1))
 						PrintTextAbovePrivate (who, "*Sua mochila esta cheia!*", who);
@@ -263,20 +303,6 @@ function FazPergaminhoEmBranco(who, item)
 				else
 					SendSysMessage (who, "Voce arruinou os materiais.");
 					return 0;
-				endif
-				elseif(skill == 1)
-				if (SkillCheck(who, DomesticWork, RequiredSkill));
-					if (!CreateItemInContainer(who.backpack, UOBJ_BLANK_SCROLL, 1))
-						PrintTextAbovePrivate (who, "*Sua mochila esta cheia!*", who);
-						return 0;
-					else
-						SendSysMessage (who, "Voce fez um pergaminho em branco.");
-						return 1;
-					endif
-				else
-					SendSysMessage (who, "Voce arruinou os materiais.");
-					return 0;
-				endif
 				endif
 			endif
 		until(who.x != xInicial || who.y != yInicial);
@@ -319,8 +345,6 @@ function CarveObject(who, tool, objtype, targ)
 		else
 			var kindling;
 			case (objtype)
-		        default:
-		        	CreateItemInBackpack(who, UOBJ_KINDLING, 1);
 		        0xcd8:
 		        	kindling := CreateItemInBackpack(who, 0xee25, 1);
 		        	kindling.color := 2109; //cedar tree
@@ -351,8 +375,8 @@ function CarveObject(who, tool, objtype, targ)
 		        0xd01:
 		        	kindling := CreateItemInBackpack(who, 0xee28, 1);
 		        	kindling.color := 2129; //cypress
-                0x309C:
-					kindling := CreateItemInBackpack(who, array{0xee25, 0xee29, 0xee2a, 0xee2b, 0xee2c, 0xee2d, 0xee2e}.randomentry(), 1);
+		        default:
+		        	CreateItemInBackpack(who, UOBJ_KINDLING, 1);
 			endcase
 			SendSysMessage(who, "Voce colocou alguns gravetos na sua mochila.");
 			return 1;
