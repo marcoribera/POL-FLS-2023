@@ -42,6 +42,46 @@ program core_skillWin(who)
 	GFTextLine(charGump, 40, 60, 300, "Perícias em Treinamento");
 	GFAddButton(charGump, 20, 64, 2103, 2104, 1, 900 );
 
+	//PRIMÁRIAS - START
+	var primarias := getPrimarias(who);
+	var pri := primarias[1];
+	var cappri := limiteportempo(who) + valorinicial(who, pri);
+	var capprimax := 100;
+
+	/*
+	if (pri1 > pri2)
+		cappri := limiteportempo(who) + valorinicial(who, pri1);
+		capprimax := AP_CheckClassSkillCap(who, pri1);
+	else
+		cappri := limiteportempo(who) + valorinicial(who, pri2);
+		capprimax := AP_CheckClassSkillCap(who, pri2);
+	endif
+	*/
+
+	//SECUNDÁRIAS - START
+	var secundarias := getSecundarias(who);
+	var capsec := cappri - 20;
+	var capsecmax := capprimax - 30;
+
+	//TERCIÁRIAS - START
+	var terciarias := getTerciarias(who);
+	var capter := capsec - 20;
+	var captermax;
+	if (GetObjProperty(who, "chardata").vantagemracial == "Sabedoria dos Antigos")
+		captermax := 50;
+	else
+		captermax := 40;
+	endif
+
+	GFTextMid(charGump, 190, 345, 0, 300, "Cap/MaxCap:");
+	///GFTextMid(charGump, 200, 350, 0, 300, "Pri.: " +cappri+ "/" +capprimax+ " Sec.: " +capsec+ "/" +capsecmax+ " Ter.: " +capter+ "/" +captermax);
+	GFTextLine(charGump, 25, 365, 300, "Pri.:");
+	GFTextLine(charGump, 55, 365, 300, cappri+ "/" +capprimax);
+	GFTextLine(charGump, 135, 365, 300, "Sec.:");
+	GFTextLine(charGump, 165, 365, 300, capsec+ "/" +capsecmax);
+	GFTextLine(charGump, 245, 365, 300, "Ter.:");
+	GFTextLine(charGump, 275, 365, 300, capter+ "/" +captermax);
+	
 	var habs := GetObjProperty(who, "buyhab");
 	if (!habs)
 		habs := dictionary;
