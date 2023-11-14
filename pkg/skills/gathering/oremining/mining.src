@@ -74,9 +74,10 @@ program OreMining(who, tool)
 					break;
 				endif
 				AP_ConsumeVital(who, "Stamina", 3);
-			elseif (!CheckLoop(who, tool, my_x, my_y, my_facing))
+			else
+				if (!CheckLoop(who, tool, my_x, my_y, my_facing))
 					break;
-				if (AP_GetVital(who, "Stamina") < 5)
+				elseif (AP_GetVital(who, "Stamina") < 5)
 					SendSysMessage(who, "Voce esta muito cansado para minerar.");
 					break;
 				endif
