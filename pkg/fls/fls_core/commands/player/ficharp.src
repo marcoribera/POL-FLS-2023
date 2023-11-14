@@ -64,29 +64,36 @@ program fichaRP(who, text)
 	if (text == "criar")
 	var anotacoes := array;
 
-		if ( GetObjProperty(who, "fichaRP") )
-			var continua := yesno(who, "Voce deseja realmente recriar sua ficha de RP? Isto fará perder tudo.", "Sim", "Nao");
-			if (!continua)
-				return 0;
-			else
-				var ficharp_data_file := DFOpenDataFile("ficharp", DF_CREATE);
-				var ficharp_elem := DFFindElement(ficharp_data_file, Hex(who.serial), DF_NO_CREATE);
-				if ( ficharp_elem ) //checa se já tem ficharp
-					anotacoes := ficharp_elem.GetProp("Anotacoes"); //guarda as anotações
-				endif
-				ficharp_data_file.DeleteElement(Hex(who.serial));
+    if ( GetObjProperty(who, "fichaRP") )
+        var continua := yesno(who, "Voce deseja realmente recriar sua ficha de RP? Isto fará perder tudo.", "Sim", "Nao");
+        if (!continua)
+            return 0;
+        else
+            var ficharp_data_file := DFOpenDataFile("ficharp", DF_CREATE);
+            var ficharp_elem := DFFindElement(ficharp_data_file, Hex(who.serial), DF_NO_CREATE);
+            if ( ficharp_elem ) //checa se já tem ficharp
+                anotacoes := ficharp_elem.GetProp("Anotacoes"); //guarda as anotações
+            endif
+            ficharp_data_file.DeleteElement(Hex(who.serial));
 
-				//EraseObjProperty(who, "nota");
-				EraseObjProperty(who, "fichaRP");
-				RecalcVitals(who);
-			endif
-		elseif (FindAccount(who.acctname).getprop("mortelog") > 3888000) //Ao criar a primeira ficharp, considera finalizada a criacao de personagem com +20 em todas as skills
-			FindAccount(who.acctname).setprop("mortelog",3888000);
-        elseif(FindAccount(who.acctname).getprop("herdado"))
-            FindAccount(who.acctname).eraseprop("herdeiro");
+            //EraseObjProperty(who, "nota");
+            EraseObjProperty(who, "fichaRP");
+            RecalcVitals(who);
+        endif
+    else
+        if (FindAccount(who.acctname).getprop("mortelog") > 3888000) //Ao criar a primeira ficharp, considera finalizada a criacao de personagem com +20 em todas as skills
+            FindAccount(who.acctname).setprop("mortelog",3888000);
+        endif
+        if(FindAccount(who.acctname).getprop("herdado"))
             FindAccount(who.acctname).eraseprop("herdado");
+        endif
+        if (FindAccount(who.acctname).getprop("herdeiro"))
+            FindAccount(who.acctname).eraseprop("herdeiro");
+        endif
+        if (FindAccount(who.acctname).getprop("heir_days"))
             FindAccount(who.acctname).eraseprop("heir_days");
-		endif
+        endif
+    endif
 
 		var comp := Array;
 		var obj := Array;
