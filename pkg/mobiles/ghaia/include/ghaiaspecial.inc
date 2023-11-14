@@ -311,8 +311,8 @@ function InitializeNpc(mobile)
       if (!range)
         range := 6;
       endif
-      SetObjProperty(mobile, "anchor", array{ spawnpoint.x , spawnpoint.y });
-	  SetObjProperty(mobile, "range", range);
+      SetObjProperty(mobile, "anchor", array{ spawnpoint.x , spawnpoint.y , spawnpoint.z + 1 });
+	    SetObjProperty(mobile, "range", range);
       var e := SetAnchor(spawnpoint.x, spawnpoint.y, range, 90);
       //print("drop anchor " + e);
     endif
@@ -347,7 +347,7 @@ endfunction
 
 //substitui o antigo wander() basicamente checa se tem anchor
 function MoveAround()
-      var anchor := GetObjProperty(me, "anchor");
+    var anchor := GetObjProperty(me, "anchor");
 	  var range := GetObjProperty(me, "range");
 	  if (GetObjProperty(me, "owner"))
 		anchor := 0;
@@ -367,7 +367,7 @@ function MoveAround()
 		  if (CoordinateDistance(me.x, me.y, anchor[1], anchor[2]) > 35 && !GetObjProperty(me, "#peacemode"))
 			PrintText(me, "*Retorna correndo* [Sistema Anti-Exploits]");
 			sleep(3);
-			MoveObjectToLocation(me, anchor[1], anchor[2], me.z, me.realm, MOVEOBJECT_FORCELOCATION);
+			MoveObjectToLocation(me, anchor[1], anchor[2], anchor[3], me.realm, MOVEOBJECT_FORCELOCATION);
 		  endif
         else
           wander();

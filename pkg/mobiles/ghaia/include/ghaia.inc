@@ -366,8 +366,8 @@ function InitializeNpc(mobile)
       if (!range)
         range := 6;
       endif
-      SetObjProperty(mobile, "anchor", array{ spawnpoint.x , spawnpoint.y });
-    SetObjProperty(mobile, "range", range);
+      SetObjProperty(mobile, "anchor", array{ spawnpoint.x , spawnpoint.y , spawnpoint.z + 2 });
+      SetObjProperty(mobile, "range", range);
       var e := SetAnchor(spawnpoint.x, spawnpoint.y, range, 90);
       //print("drop anchor " + e);
     endif
@@ -425,7 +425,7 @@ function MoveAround()
       if (CoordinateDistance(me.x, me.y, anchor[1], anchor[2]) > 35 && !GetObjProperty(me, "#peacemode"))
       PrintText(me, "*Retorna correndo* [Sistema Anti-Exploits]");
       sleep(3);
-      MoveObjectToLocation(me, anchor[1], anchor[2], me.z, me.realm, MOVEOBJECT_FORCELOCATION);
+      MoveObjectToLocation(me, anchor[1], anchor[2], anchor[3], me.realm, MOVEOBJECT_FORCELOCATION);
       endif
         else
           wander();
