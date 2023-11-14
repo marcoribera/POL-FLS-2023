@@ -135,7 +135,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 	//SendSysMessage(who, "DEBUG: SKILL PLAYER:" +mainSkill);
 	//SendSysMessage(who, "DEBUG: REQUER:" +skillreq);
 	if (TypeOf(skillreq) == "String")
-		PrintTextAbovePrivate(who, "Item " +objtype+ "/" +Hex(objtype)+ " fora dos padroes de dificuldade. Favor comunicar a staff!");
+		PrintTextAbovePrivate(who, "Item " +objtype+ "/" +Hex(objtype)+ " fora dos padroes de dificuldade. Favor comunicar a staff!", who);
 		return 0;
 	endif
 	var diff := skillreq + 10; //Dificuldade para craftar o item

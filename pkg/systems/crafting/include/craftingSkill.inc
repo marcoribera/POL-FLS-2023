@@ -23,21 +23,10 @@ function CraftCheckSkill(who, craft_skill, difficulty, points, report:=0)
   */
   //chance :=  35.0 + (effective - difficulty); //antigo craft
   
-  /* EVILLINK CRAFT START 1.0
-  if ((difficulty - effective) <= -20 ) //PREVENÇÃO DA PARÁBOLA
-    chance := 100;
-  elseif ((difficulty - effective) <= -10 ) //PREVENÇÃO DA PARÁBOLA
-    chance := 50;
-  else
-    chance := ((difficulty-10)-effective)*(-(difficulty/10));
-  endif
-  EVILLINK CRAFT END */
-
   /* EVILLINK CRAFT START 1.1 */
   var chance;
   var effective := CDbl(AP_GetSkill(who, craft_skill));
   var itemskill := difficulty - 10; //QUANDO APARECE NO MENU
-  //var diffmod = 40 - itemskill; //inserido direto na fórmula (teste)
   
   chance := ((itemskill)-effective)*(-((difficulty+(40-itemskill))/10))+1;
   /* EVILLINK CRAFT END */
