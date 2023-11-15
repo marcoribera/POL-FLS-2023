@@ -258,8 +258,8 @@ program fireweapons(who, item)
 	    SetObjProperty(item, "balas", balas);
 		return;
 	endif
-    var random := randomint(10);
-    if (random <= 1)
+    var random := randomint(100);
+    if (random <= 10)
         SendSysMessageEx(who, "O tiro saiu pela culatra!", SSM_FAIL);
         targ := who;
         DestroyItem(item);
@@ -268,5 +268,5 @@ program fireweapons(who, item)
     PlayObjectCenteredEffect(who, GFX_FIZZLE, 5, 50);
     PlayMovingEffect(who, targ, FX_EXPLODE_1, 5, 1, 1);
 	PlaySoundEffect(who, shot_sound);
-	DamageFLS(targ, dmg,  DMG_FORCED, who);
+	DamageFLS(targ, dmg, DMG_FORCED, who);
 endprogram
