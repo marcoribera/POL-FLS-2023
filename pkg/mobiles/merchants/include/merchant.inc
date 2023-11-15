@@ -333,7 +333,7 @@ endfunction
 function GetPlayerNameBySerial(serial)
    var player := SystemFindObjectBySerial(serial, SYSFIND_SEARCH_OFFLINE_MOBILES);
    if (!player) return 0; endif
-   var player_name := GetObjProperty(who, "nome_inicial"); //player.name;
+   var player_name := GetObjProperty(player, "nome_inicial"); //player.name;
    if (GetObjProperty(player, "realname"))
       player_name := GetObjProperty(player, "realname");
    endif
