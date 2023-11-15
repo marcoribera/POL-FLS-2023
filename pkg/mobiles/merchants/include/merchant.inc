@@ -342,13 +342,13 @@ endfunction
 
 function GetMerchantConfiscadosLog(merchant)
 	var data_elem := GetPaymentsDataElem(Hex(merchant.serial));
-	var my_sellings := data_elem.GetProp("itemsconfisc");
+	var my_sellings := data_elem.GetProp("ItensRevogados");
    return my_sellings;
 endfunction
 
 function SetMerchantConfiscadosLog(merchant, confiscador, item_name, cost)
 	var data_elem := GetPaymentsDataElem(Hex(merchant.serial));
-	var my_sellings := data_elem.GetProp("itemsconfisc");
+	var my_sellings := data_elem.GetProp("ItensRevogados");
    if (!my_sellings) my_sellings := array{}; endif
    my_sellings.Insert(1, "{} Confiscou {} no valor de {} moedas".format(confiscador, item_name, cost));
 
@@ -356,7 +356,7 @@ function SetMerchantConfiscadosLog(merchant, confiscador, item_name, cost)
       my_sellings.Erase(my_sellings.size());
    endif
 
-   data_elem.SetProp("itemsconfisc", my_sellings);
+   data_elem.SetProp("ItensRevogados", my_sellings);
 endfunction
 
 function GetItemSoldInfo(merchant, item_num)
@@ -655,9 +655,10 @@ function ShowForSaleItemsInfo(byref gump, npc, player, input, special := 0)
 
 	GFAddButton(gump, 200, 430, 2151, 2154, 1, input);
 	if(!special)
-		if ( (player.cmdlevel < 3) && (GetObjProperty(npc, "faccao") != GetObjProperty(player, "faccao")) )
+		//if ( (player.cmdlevel < 3) && (GetObjProperty(npc, "faccao") != GetObjProperty(player, "faccao")) )
+		if ( (player.cmdlevel < 3) && ( (GetObjProperty(player, "faccao") == error) || (GetObjProperty(npc, "faccao") != GetObjProperty(player, "faccao"))) )
 			GFTextLine(gump, 235, 433, GF_STDCOLOR, "Adquirir");
-		elseif (GetObjProperty(npc, "faccao") == GetObjProperty(player, "faccao"))
+		elseif ( (player.cmdlevel < 3) && (GetObjProperty(npc, "faccao") == GetObjProperty(player, "faccao")))
 			GFTextLine(gump, 235, 433, GF_STDCOLOR, "Adquirir ou Confiscar");
 		else
 			GFTextLine(gump, 235, 433, GF_STDCOLOR, "Adquirir ou Confiscar (GM)");

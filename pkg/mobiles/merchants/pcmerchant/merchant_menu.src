@@ -161,7 +161,7 @@ program MerchantMenu(params)
 				DoWithdraw(npc, player); //Executa a função de retirar item
 				cur_menu := MENU_INTRO;
             BOTAO_HISTORICO:
-			if ( player.cmdlevel >= 3 || (GetObjProperty(npc, "guild") == player.guildid))
+			if ( player.cmdlevel >= 3 || (GetObjProperty(npc, "faccao") == GetObjProperty(player, "faccao")))
 				if (!player.concealed) PrintText(npc, "Aqui esta o historico de vendas, Sr."); endif
 				var historico := GetMerchantLog(npc);
 				historico := "<br> - {}".format("<br> -".join(historico));
@@ -205,11 +205,11 @@ program MerchantMenu(params)
 				cur_menu := MENU_INTRO;
 			endif
 			BOTAO_CONFISCADOS:
-			if ( player.cmdlevel >= 3 || (GetObjProperty(npc, "guild") == player.guildid))
+			if ( player.cmdlevel >= 3 || (GetObjProperty(npc, "faccao") == GetObjProperty(player, "faccao")))
 				if (!player.concealed) PrintText(npc, "Aqui esta o historico de itens confiscados, Sr."); endif
 				var confisc := GetMerchantConfiscadosLog(npc);
 				confisc := "<br> - {}".format("<br> -".join(confisc));
-				SendHTMLGump(player, "Historico de Conficações", confisc);
+				SendHTMLGump(player, "Historico de Confisco", confisc);
 				cur_menu := MENU_INTRO;
 			elseif (TemHabilidade(player, "Espionar"))
 					var prot := RadioGump(player, 200, 260, "Talvez possamos conversar", {"Pagar Mil Cobres", "Cancelar"});
@@ -329,7 +329,7 @@ function DoPurchase(npc, player, input)
 //		SendSysMessage(player, _i_iter+" -> "+i);
 //	endforeach
 
-	if ( player.cmdlevel >= 3 || (GetObjProperty(npc, "guild") == player.guildid))
+	if ( player.cmdlevel >= 3 || (GetObjProperty(npc, "faccao") == player.faccaoid))
 		if ( YesNo(player, "Deseja CONFISCAR este objeto?"))
 			confiscar := 1;
 		endif
@@ -1264,7 +1264,7 @@ function Setup(npc)
       //SetupSpecials(me);
    endif
 
-   var guildid := GetObjProperty(npc, "guild");
+   var guildid := GetObjProperty(npc, "faccao");
 
    if (guildid)
       guild := FindGuild(guildid);
