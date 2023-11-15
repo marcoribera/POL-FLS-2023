@@ -108,6 +108,7 @@ function CanFight(me, mobile, align)
           if ( (mytemplate == "MercenarioRecruta") || (mytemplate == "MercenarioBesteiro") || (mytemplate == "Roguearcher") || (mytemplate == "Mercenario") || (mytemplate == "Rogue") || (mytemplate == "MercenarioLider") || (mytemplate == "MercenarioExperiente") )
             return 0;
           endif
+	endif
 
       //printtextabove(me, "mytemplate " + mytemplate + " " + cint(GetObjProperty(mobile, "empatiacomanimais")));
       if ( (GetObjProperty(mobile, "kit") == "criado por lobos") || (cint(GetObjProperty(mobile, "empatiacomanimais")) == 1) || TemHabilidade(mobile, "Senso da Natureza" ) || TemHabilidade(mobile, "Campestre" ) )//verifica se tem empatia por animais
