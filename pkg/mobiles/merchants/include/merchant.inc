@@ -622,11 +622,11 @@ function ShowForSaleItemsInfo(byref gump, npc, player, input, special := 0)
 		color := temp-1;
 	endif
 	var cost_name;
-	if (cost_info.objtype == MOEDAS_COBRE)
+	if (hex(cost_info.objtype) == MOEDAS_COBRE)
 		cost_name := "moedas de cobre";
-	elseif (cost_info.objtype == MOEDAS_PRATA)
+	elseif (hex(cost_info.objtype) == MOEDAS_PRATA)
 		cost_name := "moedas de prata";
-	elseif (cost_info.objtype == MOEDAS_OURO || cost_info.objtype == GOLD_COIN)
+	elseif (hex(cost_info.objtype) == MOEDAS_OURO || hex(cost_info.objtype) == GOLD_COIN)
 		cost_name := "moedas de ouro";
 	else
 		if (cost_info.cost_name)
@@ -973,11 +973,11 @@ function ShowForSaleItems(byref gump, npc, player, special := 0)
 				color := item.color-1;
 			endif
 
-			if (cost_info.objtype == MOEDAS_COBRE)
+			if (hex(cost_info.objtype) == MOEDAS_COBRE)
 				cost_name := "moedas de cobre";
-			elseif (cost_info.objtype == MOEDAS_PRATA)
+			elseif (hex(cost_info.objtype) == MOEDAS_PRATA)
 				cost_name := "moedas de prata";
-			elseif (cost_info.objtype == MOEDAS_OURO || cost_info.objtype == GOLD_COIN)
+			elseif (hex(cost_info.objtype) == MOEDAS_OURO || hex(cost_info.objtype) == GOLD_COIN)
 				cost_name := "moedas de ouro";
 			else
 				if (cost_info.cost_name)
