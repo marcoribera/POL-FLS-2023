@@ -3,6 +3,7 @@ use util;
 use file;
 include "include/client";
 include "include/say";
+include ":charactercreation:createchar";
 include ":gumps:gumps";
 include ":gumps:gumps_ex";
 include ":gumps:htmlGump";
@@ -132,7 +133,11 @@ function SendCheckRP(who, conta)
 			elseif(chardata.Skills[skill] == 40 && AP_GetTrueSkill(who, skill) >= 100)
 				SendSysMessageEx(who, "Voce nao pode mais aumentar esta skill.", SSM_FAIL);
 				return;
+			elseif(AP_GetTrueSkill(who, skill) + 0.4 > 40)
+                SendSysMessageEx(who, "Voce nao pode aumentar esta skill acima do cap.", SSM_FAIL);
+                return;
 			endif
+
 			var true_skill := AP_GetTrueSkill(who, skill);
 			var temp := true_skill+0.4;
 			AP_SetTrueSkill(who, skill, temp);
@@ -156,7 +161,10 @@ function SendCheckRP(who, conta)
 			elseif(chardata.Skills[skill] == 40 && AP_GetTrueSkill(who, skill) >= 100)
 				SendSysMessageEx(who, "Voce nao pode mais aumentar esta skill.", SSM_FAIL);
 				return;
-			endif
+			elseif(AP_GetTrueSkill(who, skill) + 0.4 > 70)
+                SendSysMessageEx(who, "Voce nao pode aumentar esta skill acima do cap.", SSM_FAIL);
+                return;
+            endif
 			var true_skill := AP_GetTrueSkill(who, skill);
 			var temp := true_skill+0.4;
 			while ( CInt(temp*10.0) == CInt(GetAttributeBaseValue(who, skill)) )
@@ -186,7 +194,10 @@ function SendCheckRP(who, conta)
 			elseif(chardata.Skills[skill] == 40 && AP_GetTrueSkill(who, skill) >= 100)
 				SendSysMessageEx(who, "Voce nao pode mais aumentar esta skill.", SSM_FAIL);
 				return;
-			endif
+			elseif(AP_GetTrueSkill(who, skill) + 0.4 > 100)
+                SendSysMessageEx(who, "Voce nao pode aumentar esta skill acima do cap.", SSM_FAIL);
+                return;
+            endif
 			var true_skill := AP_GetTrueSkill(who, skill);
 			var temp := true_skill+0.4;
 			while ( CInt(temp*10.0) == CInt(GetAttributeBaseValue(who, skill)) )
