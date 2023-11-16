@@ -65,10 +65,10 @@ program do_poisoning(who)
 		0xbf02: poisonType:="staminaPoison"; difficulty := 60; points := 70;
 		0xbf03: poisonType:="paralyzePoison"; difficulty := 80; points := 100;
 		0xef54: poisonType :="manaPoison"; difficulty := 40; points := 70;
-		0xbf04: level := 3; difficulty := 80; points := 60; poisonType := "defaultPoison";
+		0xbf04: level := 4; difficulty := 80; points := 60; poisonType := "defaultPoison";
         0x6072: level := 3; difficulty := 70; points := 50; poisonType := "defaultPoison";
 		0xdc04: level := 2; difficulty := 60; points := 40; poisonType := "defaultPoison";
-		0xbf05: level := 4; difficulty := 100; points := 100; poisonType := "defaultPoison";
+		0xbf05: level := 5; difficulty := 100; points := 100; poisonType := "defaultPoison";
 		default: difficulty := 0; points := 0; poisonType := "invalid";
 	endcase
 
