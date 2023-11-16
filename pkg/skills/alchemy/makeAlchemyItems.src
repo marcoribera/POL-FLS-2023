@@ -59,16 +59,17 @@ function makeAlchemyItems(who, what, amt, tool )
 	endif
 
 	var loop := 0;
-	while(loop < 3)
-		PlaySoundEffect(who, SOUND_EFFECT_GRIND);
-		PrintText(who, "*preparando um extrato*");
-		sleep(1);
-		loop := loop + 1;
-	endwhile
 
 	var item := CraftItem(who, "Alchemy", tool, what, amt, 0, 0);
 
 	if(!item)
+		while(loop < 3)
+			PlaySoundEffect(who, SOUND_EFFECT_GRIND);
+			PrintText(who, "*preparando um extrato*");
+			sleep(1);
+			loop := loop + 1;
+		endwhile
+
 		if (RandomInt(100) <= 25)
 			FalhaCritica(who, item);
 		else
