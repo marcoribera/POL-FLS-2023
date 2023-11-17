@@ -62,7 +62,6 @@ function makeAlchemyItems(who, what, amt, tool )
 
 	var item := CraftItem(who, "Alchemy", tool, what, amt, 0, 0);
 	
-	SendSysMessageEx(who, "DEBUG: " +item);
 	if(item.size() == 0)
 		if (RandomInt(100) <= 25)
 			FalhaCritica(who, item);
@@ -138,7 +137,7 @@ function FalhaCritica(who, item)
 	endif
 endfunction
 
-function alchEmoteSound(byref who, tipoemote)
+function alchEmoteSound(byref who, tipoemote, saiemote:=1)
 	var whosound, whoemote;
 	
 	case (tipoemote)
@@ -204,5 +203,5 @@ function alchEmoteSound(byref who, tipoemote)
 	endcase
 
 	PlaySoundEffect(who, whosound);
-	PrintTextAbove(who, whoemote);
+	if (saiemote == 0) PrintTextAbove(who, whoemote); endif
 endfunction
