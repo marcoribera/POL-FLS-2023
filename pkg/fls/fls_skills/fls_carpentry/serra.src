@@ -116,6 +116,8 @@ function MakeBoardSerra(who, item, nova_tabua)
 	var characterx := who.x;
 	var charactery := who.y;
     var toras;
+    
+    PrintTextAbove(who, "*comeca a serrar madeira*");
 	repeat
         if ((item.amount) <= 0)
             break;
@@ -176,6 +178,8 @@ function MakeCaboSerra(who, item)
     var cabo := 0xee71;
 	var characterx := who.x;
 	var charactery := who.y;
+
+    PrintTextAbove(who, "*comeca a serrar madeira*");
 	repeat
         if ((item.amount) <= 0)
             return 0;
