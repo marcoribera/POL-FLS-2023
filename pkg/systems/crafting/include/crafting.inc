@@ -260,6 +260,11 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 			MoveObjectToLocation(anvil.x, anvil.y, (anvil.z+7), anvil.realm);
 		endif
 
+		//adicionado emote para mesa de alchemy
+		if (craft_skill == "Alchemy")
+			PrintText(who, "*preparando um extrato*");
+		endif
+		
 		//Caso saia do lugar durante o trabalho, para;
 		if(!playCraftWork(who, craft_sound, craft_loops, craft_delay, craft_action))
 			if (item)
