@@ -12,25 +12,28 @@ include "include/say";
 include "include/damage";
 
 program aura_of_hate(params)
-	var mobile := params[1];
-	var attacker := params[2];
+	var attacker := params[1];
+	var mobile := params[2];
 	params := 0; // Not needed anymore.
 	
 	if ( GetObjProperty(mobile, "#ClumsyMod") )
 		// Condition is met if the mobile logs out and back in.
 		// Prevents mod from being applied twice.
+		SendSysMessageEx(attacker, "O alvo ja esta sofrendo por seu odio!", SSM_FAIL);
 		return 0;
 	endif
 
 	if ( GetObjProperty(mobile, "#FeebleMindMod") )
 		// Condition is met if the mobile logs out and back in.
 		// Prevents mod from being applied twice.
+		SendSysMessageEx(attacker, "O alvo ja esta sofrendo por seu odio!", SSM_FAIL);
 		return 0;
 	endif
 
 	if ( GetObjProperty(mobile, "#WeakenMod") )
 		// Condition is met if the mobile logs out and back in.
 		// Prevents mod from being applied twice.
+		SendSysMessageEx(attacker, "O alvo ja esta sofrendo por seu odio!", SSM_FAIL);
 		return 0;
 	endif	
     
@@ -39,7 +42,7 @@ program aura_of_hate(params)
         corrupcao := 1;
     endif
 	var cast_points := CInt(AP_GetSkill(attacker, MAGICLORE)) + corrupcao;
-	cast_points := cast_points/4;
+	cast_points := cast_points / 4.0;
 //	var defense := CInt(AP_GetSkill(mobile, RESISTING_SPELLS))/4;
 	var final := cast_points;// - defense;
 	if (final < 10)
@@ -70,7 +73,7 @@ program aura_of_hate(params)
 
     PlayAttackAnimation(attacker);
 	PlayHitSounds(attacker, mobile);
-	SendSysMessageEx(attacker, "Não te falta ódio!", SSM_INFO);
+	SendSysMessageEx(attacker, "Nao te falta odio!", SSM_INFO);
 	var hate_dmg := cast_points * 1.5;
 
 	DamageFLS(mobile, hate_dmg, DMG_FORCED, attacker);
