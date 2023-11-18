@@ -35,7 +35,7 @@ program exploder(parms)
 			//56328: dmg :=  dmg + 20; ExplosionEffect(who, potion, dmg);
 			0xef60: dmg:=  dmg + 30; ExplosionEffect(who, potion, dmg);
 			0xef61: dmg:=  dmg + 40; ExplosionEffect(who, potion, dmg);
-			0xef61: dmg:=  dmg + 50; ExplosionEffect(who, potion, dmg);
+			0xef62: dmg:=  dmg + 50; ExplosionEffect(who, potion, dmg);
 			0xbf0e: GlueEffect(who, potion);
 			0xbf0f: PoisonEffect(who, potion, 1);
 			0xbf10: PoisonEffect(who, potion, 2);
