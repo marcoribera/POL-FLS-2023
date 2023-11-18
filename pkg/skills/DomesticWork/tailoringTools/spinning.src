@@ -30,7 +30,7 @@ program use_wool(who, wool)
   endif
   var obj := use_on.objtype;
   if (((obj >= uobj_wheel_start) && (obj <= uobj_wheel_end)) || ((obj >= 0x10a4) && (obj <= 0x10a6)))
-    PrintText(who, "*comecou a fiar um tecido");
+    PrintText(who, "*comecou a fiar algo*");
   	var gfx;
   	case(obj)
     		4117:   gfx := 0x1016;
@@ -61,7 +61,7 @@ program use_wool(who, wool)
     		break;
     	endif
     endwhile
-    SendSysMessageEx(who, "parou de fiar.", SSM_INFO);
+    SendSysMessageEx(who, "Voce parou de fiar.", SSM_INFO);
   else
     SendSysMessageEx(who, "Voce precisa usar isto na roda de fiar.", SSM_FAIL);
   endif
