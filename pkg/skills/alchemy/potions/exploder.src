@@ -46,6 +46,7 @@ program exploder(parms)
 			0xbf16: HalluEffect(who, potion, 3);
 			0xbf1c: Acideffetct(who, potion);
 			0xbf1d: Sleepeffect(who, potion);
+			0xbf1e: FlameEffect(who, potion, 1);
 			0xdc08: Minaterrestre(who, potion);
 			default: PrintTextAbove(potion, "SOCORRO! ESTOU BUGADA!" +hex(potion.objtype));
 		endcase
