@@ -622,11 +622,11 @@ function ShowForSaleItemsInfo(byref gump, npc, player, input, special := 0)
 		color := temp-1;
 	endif
 	var cost_name;
-	if (hex(cost_info.objtype) == MOEDAS_COBRE)
+	if (cost_info.objtype == MOEDAS_COBRE)
 		cost_name := "moedas de cobre";
-	elseif (hex(cost_info.objtype) == MOEDAS_PRATA)
+	elseif (cost_info.objtype == MOEDAS_PRATA)
 		cost_name := "moedas de prata";
-	elseif (hex(cost_info.objtype) == MOEDAS_OURO || hex(cost_info.objtype) == GOLD_COIN)
+	elseif (cost_info.objtype == MOEDAS_OURO || cost_info.objtype == GOLD_COIN)
 		cost_name := "moedas de ouro";
 	else
 		if (cost_info.cost_name)
@@ -655,7 +655,6 @@ function ShowForSaleItemsInfo(byref gump, npc, player, input, special := 0)
 
 	GFAddButton(gump, 200, 430, 2151, 2154, 1, input);
 	if(!special)
-		//if ( (player.cmdlevel < 3) && (GetObjProperty(npc, "faccao") != GetObjProperty(player, "faccao")) )
 		if ( (player.cmdlevel < 3) && ( (GetObjProperty(player, "faccao") == error) || (GetObjProperty(npc, "faccao") != GetObjProperty(player, "faccao"))) )
 			GFTextLine(gump, 235, 433, GF_STDCOLOR, "Adquirir");
 		elseif ( (player.cmdlevel < 3) && (GetObjProperty(npc, "faccao") == GetObjProperty(player, "faccao")))
@@ -974,11 +973,11 @@ function ShowForSaleItems(byref gump, npc, player, special := 0)
 				color := item.color-1;
 			endif
 
-			if (hex(cost_info.objtype) == MOEDAS_COBRE)
+			if (cost_info.objtype == MOEDAS_COBRE)
 				cost_name := "moedas de cobre";
-			elseif (hex(cost_info.objtype) == MOEDAS_PRATA)
+			elseif (cost_info.objtype == MOEDAS_PRATA)
 				cost_name := "moedas de prata";
-			elseif (hex(cost_info.objtype) == MOEDAS_OURO || hex(cost_info.objtype) == GOLD_COIN)
+			elseif (cost_info.objtype == MOEDAS_OURO || cost_info.objtype == GOLD_COIN)
 				cost_name := "moedas de ouro";
 			else
 				if (cost_info.cost_name)
