@@ -289,10 +289,10 @@ program MainHitScript( params )
 						DamageFLS(inimigo, cint(total/3), DMG_PHYSICAL, attacker);
 					endforeach
 				else
-					var pets := ListPetsNear(attacker, 2);
+					var pets := ListPetsNear(attacker, 4);
 					var petspt := array;
 					foreach member in pt
-						petspt.append(ListPetsNear(member, 3));
+						petspt.append(ListPetsNear(member, 5));
 					endforeach
 					var inimigos2 := ListMobilesNearLocation(attacker.x, attacker.y, attacker.z, 1, attacker.realm);
 					foreach inimigo in inimigos2
