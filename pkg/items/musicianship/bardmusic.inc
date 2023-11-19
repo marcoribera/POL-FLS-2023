@@ -1829,7 +1829,7 @@ function musicaEfeitos(byref who, byref magica, byref tempo) //DOING
 
 	//Verifica os tipos de alvo selecionados pelo comando .bardo para Buffs e Debuffs
 	var alvos;
-	if (TemHabilidade(who, "Dominio Musical"))
+	if (TemHabilidade(who, "Compositor Talentoso"))
 		alvos := GetObjProperty(who, "BardTargets");
 	endif
 	if(!alvos)	//caso nao esteja definico o tipo de algo, inicializa com o padrao
