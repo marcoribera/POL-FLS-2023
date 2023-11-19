@@ -512,6 +512,10 @@ function CalculateHitChance(attacker, defender)
 		hit_chance := hit_chance + 5;
 	endif
 
+    if ( GetObjProperty(attacker, "#aterrorizar") )
+		hit_chance := hit_chance + 20;
+	endif
+
 	if ( cint(GetObjProperty(attacker, "#attackbonus")) != 0 )
 		EraseObjProperty(attacker, "#attackbonus");
 	endif
