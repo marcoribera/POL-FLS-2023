@@ -51,7 +51,10 @@ program InitScript(params)
 			setglobalproperty("InnKeeper",innkeepers);
 		endif
 	endif
-	
+
+	if (npc.npctemplate == ":merchants:merchant")
+		SetObjProperty(npc, "faccao", "A.C.");
+	endif
 	
 	if ( result.errortext )
 		return result;
