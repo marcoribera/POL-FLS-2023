@@ -98,7 +98,7 @@ program eat_food(who, food)
 	endif
 	
 	if(subtract)
-
+		printtext(who, "*morde um pedaço de comida*");
 		if (surprisemsg != "")
 			SendSysMessageEx(who, ""+ surprisemsg, SSM_INFO);
 		endif
