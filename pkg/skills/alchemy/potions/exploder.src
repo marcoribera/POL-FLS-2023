@@ -33,20 +33,21 @@ program exploder(parms)
 	if (cint(GetObjProperty(potion, "nodmg")) != 1)
 		case (potion.objtype)
 			//56328: dmg :=  dmg + 20; ExplosionEffect(who, potion, dmg);
-			61280: dmg:=  dmg + 30; ExplosionEffect(who, potion, dmg);
-			61281: dmg:=  dmg + 40; ExplosionEffect(who, potion, dmg);
-			61282: dmg:=  dmg + 50; ExplosionEffect(who, potion, dmg);
-			48910: GlueEffect(who, potion);
-			48911: PoisonEffect(who, potion, 1);
-			48912: PoisonEffect(who, potion, 2);
-			48913: PoisonEffect(who, potion, 3);
-			48915: FlameEffect(who, potion, 1);
-			48916: FlameEffect(who, potion, 2);
-			48917:FlameEffect(who, potion, 3);
-			48918:HalluEffect(who, potion, 3);
-			0x6073:Acideffetct(who, potion);
-			0xBD13:Sleepeffect(who, potion);
-			56328:Minaterrestre(who, potion);
+			0xef60: dmg:=  dmg + 30; ExplosionEffect(who, potion, dmg);
+			0xef61: dmg:=  dmg + 40; ExplosionEffect(who, potion, dmg);
+			0xef62: dmg:=  dmg + 50; ExplosionEffect(who, potion, dmg);
+			0xbf0e: GlueEffect(who, potion);
+			0xbf0f: PoisonEffect(who, potion, 1);
+			0xbf10: PoisonEffect(who, potion, 2);
+			0xbf11: PoisonEffect(who, potion, 3);
+			0xbf13: FlameEffect(who, potion, 1);
+			0xbf14: FlameEffect(who, potion, 2);
+			0xbf15: FlameEffect(who, potion, 3);
+			0xbf16: HalluEffect(who, potion, 3);
+			0xbf1c: Acideffetct(who, potion);
+			0xbf1d: Sleepeffect(who, potion);
+			0xbf1e: FlameEffect(who, potion, 1);
+			0xdc08: Minaterrestre(who, potion);
 		endcase
 	endif
 
