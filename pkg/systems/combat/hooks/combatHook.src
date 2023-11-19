@@ -739,9 +739,9 @@ function FacingChecks(attacker, defender)
 			endif
 		endif
 	elseif ( !IsFacing(defender, attacker.x, attacker.y) )
-		if ( defender.npctemplate )
-			TurnObjectToward(defender, attacker.x, attacker.y);
-		endif
+		//if ( defender.npctemplate )
+		//	TurnObjectToward(defender, attacker.x, attacker.y);
+		//endif
 	endif
 
 	return retval;
