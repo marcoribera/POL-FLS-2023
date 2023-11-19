@@ -60,39 +60,39 @@ program MerchantMenu(params)
          PrintText(player, "O que tem a venda?", SSM_FAIL);
          PrintText(npc, array{"Olhe so este produto...", "Bem-vindo, vamos ver...", "Esta procurando algo especifico?"}.randomentry(), SSM_INFO);
       endif
-		gump := MainLayout(player); //Gera o Layout padrão do gump do mercador
+		gump := MainLayout(player); //Gera o Layout padrï¿½o do gump do mercador
 
 		case ( cur_menu )
-			MENU_INTRO: //Se nenhuma opção do menu foi selecionada
-				IntroGump(gump); //Exibe instruções no gump
+			MENU_INTRO: //Se nenhuma opï¿½ï¿½o do menu foi selecionada
+				IntroGump(gump); //Exibe instruï¿½ï¿½es no gump
 				break;
-			MENU_ITENS_A_VENDA: //Se menu que está dendo utilizado é o de TODOS os itens a venda
-				if ( input == BOTAO_ITENS_TODOS_A_VENDA ) //Se o ultimo botão clicado é o que abre a lista de TODOS itens a venda
+			MENU_ITENS_A_VENDA: //Se menu que estï¿½ dendo utilizado ï¿½ o de TODOS os itens a venda
+				if ( input == BOTAO_ITENS_TODOS_A_VENDA ) //Se o ultimo botï¿½o clicado ï¿½ o que abre a lista de TODOS itens a venda
 					ShowForSaleItems(gump, npc, player); //Exiba os itens a venda
-				else //Caso contrário, foi clicado no botão de mostrar detalhes de algum item
+				else //Caso contrï¿½rio, foi clicado no botï¿½o de mostrar detalhes de algum item
 					cur_menu := MENU_ITENS_COMPRAR_CONFISCAR;
-					ShowForSaleItemsInfo(gump, npc, player, input); //Exiba as informações do item selecionado
+					ShowForSaleItemsInfo(gump, npc, player, input); //Exiba as informaï¿½ï¿½es do item selecionado
 				endif
 				break;
 			MENU_ITENS_COMPRAR_CONFISCAR:
 				DoPurchase(npc, player, input); //Inicia o processo de compra ou confisco
-				break MAIN_LOOP; //Ao concluir operação, encerra o loop para dar chance de outros acessarem o vendor também
-			MENU_ITENS_MEUS_A_VENDA: //Se menu que está dendo utilizado é o de MEUS itens a venda
-				if ( input == BOTAO_ITENS_MEUS_A_VENDA ) //Se o ultimo botão clicado é o que abre a lista de MEUS itens a venda
-					ShowForSaleItems(gump, npc, player, 1); //Exiba os MEUS itens a venda, com permissões especiais
-				else //Caso contrário, foi clicado no botão de mostrar detalhes de algum item
+				break MAIN_LOOP; //Ao concluir operaï¿½ï¿½o, encerra o loop para dar chance de outros acessarem o vendor tambï¿½m
+			MENU_ITENS_MEUS_A_VENDA: //Se menu que estï¿½ dendo utilizado ï¿½ o de MEUS itens a venda
+				if ( input == BOTAO_ITENS_MEUS_A_VENDA ) //Se o ultimo botï¿½o clicado ï¿½ o que abre a lista de MEUS itens a venda
+					ShowForSaleItems(gump, npc, player, 1); //Exiba os MEUS itens a venda, com permissï¿½es especiais
+				else //Caso contrï¿½rio, foi clicado no botï¿½o de mostrar detalhes de algum item
 					cur_menu := MENU_ITENS_RETIRAR_DA_VENDA;
-					ShowForSaleItemsInfo(gump, npc, player, input, 1);//Exiba as informações do item selecionado
+					ShowForSaleItemsInfo(gump, npc, player, input, 1);//Exiba as informaï¿½ï¿½es do item selecionado
 				endif
 				break;
 			MENU_ITENS_RETIRAR_DA_VENDA:
-				RetrieveMyItem(npc, player, input); //Remove um item que coloquei anteriormente à venda
-				break MAIN_LOOP; //Ao concluir operação, encerra o loop para dar chance de outros acessarem o vendor também
+				RetrieveMyItem(npc, player, input); //Remove um item que coloquei anteriormente ï¿½ venda
+				break MAIN_LOOP; //Ao concluir operaï¿½ï¿½o, encerra o loop para dar chance de outros acessarem o vendor tambï¿½m
 			MENU_ITENS_MEUS_GANHOS:
-				ShowMyProfit(gump, npc, player); //Exibes os ganho com as vendas que foram feitas e ainda não foi coletado o lucro
+				ShowMyProfit(gump, npc, player); //Exibes os ganho com as vendas que foram feitas e ainda nï¿½o foi coletado o lucro
 				break;
-			default: //se tentarem por script forçar um valor diferente, abra a tela de instrções
-				IntroGump(gump); //Exibe instruções no gump
+			default: //se tentarem por script forï¿½ar um valor diferente, abra a tela de instrï¿½ï¿½es
+				IntroGump(gump); //Exibe instruï¿½ï¿½es no gump
 				break;
 		endcase
 
@@ -101,14 +101,14 @@ program MerchantMenu(params)
 		if (!player.connected || player.hidden)
 			break MAIN_LOOP; //Encerra o loop se o char tiver offline para liberar o npc
 		else
-			input := input[0]; //Caso contrário, armazena a ultima seleção
+			input := input[0]; //Caso contrï¿½rio, armazena a ultima seleï¿½ï¿½o
 		endif
 
 		case ( input )
-			0: //Quando o gump é fechado
-				break MAIN_LOOP; //Encerra o loop para dar chance de outros acessarem o vendor também
+			0: //Quando o gump ï¿½ fechado
+				break MAIN_LOOP; //Encerra o loop para dar chance de outros acessarem o vendor tambï¿½m
 			BOTAO_ITENS_COLOCAR_A_VENDA:
-				AddMyItemForSale(npc, player); //Executa a função de adicionar itens à venda
+				AddMyItemForSale(npc, player); //Executa a funï¿½ï¿½o de adicionar itens ï¿½ venda
 				cur_menu := MENU_INTRO;
 			BOTAO_ITENS_TODOS_A_VENDA:
 				cur_menu := MENU_ITENS_A_VENDA;
@@ -117,10 +117,10 @@ program MerchantMenu(params)
 			BOTAO_ITENS_MINHA_CONTA:
 				cur_menu := MENU_ITENS_MEUS_GANHOS;
 			BOTAO_ITENS_RETIRAR:
-				DoWithdraw(npc, player); //Executa a função de retirar item
+				DoWithdraw(npc, player); //Executa a funï¿½ï¿½o de retirar item
 				cur_menu := MENU_INTRO;
          BOTAO_HISTORICO:
-            if (!player.concealed) PrintText(npc, "Aqui esta o histprico de vendas, Sr."); endif
+            if (!player.concealed) PrintText(npc, "Aqui esta o historico de vendas, Sr."); endif
             var historico := GetMerchantLog(npc);
             historico := "<br> - {}".format("<br> -".join(historico));
             SendHTMLGump(player, "Historico de Vendas", historico);

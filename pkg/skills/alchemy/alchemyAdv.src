@@ -197,13 +197,6 @@ function MakePotion ( pot, item, who, magic, strength := 0)
 
 	var difficulty := recipes[pot].skill;
 	var loop := 0;
-	while(loop < 3)
-		PlaySoundEffect(who, SOUND_EFFECT_GRIND);
-		PrintText(who, "*preparando um extrato*");
-		sleep(1);
-		loop := loop + 1;
-	endwhile
-      
     
 	if(SkillCheck(who, ALCHEMY, difficulty) > 0) 
 		//if (GetObjProperty(who, "classe") == "sabio")
@@ -227,6 +220,12 @@ function MakePotion ( pot, item, who, magic, strength := 0)
 		set_critical(0);
 
 		if(hasbottle)
+			while(loop < 3)
+				PlaySoundEffect(who, SOUND_EFFECT_GRIND);
+				PrintText(who, "*preparando um extrato*");
+				sleep(1);
+				loop := loop + 1;
+			endwhile
 			var thing;
 			if (!magic)//se nao tiver o flag magic como as tintas, cria o item
 				thing := CreateItemInBackpack(who, pot, 1);
