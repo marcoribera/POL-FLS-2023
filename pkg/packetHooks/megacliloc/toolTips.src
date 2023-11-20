@@ -52,6 +52,22 @@ function GetDmgStringDesc(elem, item)
 
 endfunction
 
+function GetDmgStringSpecialDmg(elem, item)
+	var dmg_mod := CInt(item.dmg_mod);
+	var minmod := elem.MinDam + dmg_mod;
+	var maxmod := elem.MaxDam + dmg_mod;
+	var mindmg := minmod*0.5 + 1;
+	var maxdmg := maxmod*0.5 +1;
+	print("min e max sao "+mindmg+" "+maxdmg);
+	var resultado := (CInt(mindmg) + "-" + Cint(maxdmg));
+	if (dmg_mod>0)
+		resultado := resultado;
+	elseif (dmg_mod<0)
+		resultado := resultado;
+	endif
+	return resultado;
+endfunction
+
 function getQuality(num)
 	var rank;
 	if(num>3.0)
@@ -460,21 +476,23 @@ exported function MegaCliloc( who, byref packet )
 					endforeach
 				endif
 				if (item.dmg_mod > 0 )
-					xDesc := xDesc + roxo + "Bônus Dano";
+					xDesc := xDesc + roxo + "Bônus Dano "+item.dmg_mod+ " <br>";
+					print("valor eh +"+item.dmg_mod);
 				endif
 				if (item.hp_mod > 0)
-					xDesc := xDesc + roxo + "Bônus Item PVs";
+					xDesc := xDesc + roxo + "Bônus Item PVs "+item.hp_mod;
 				endif
 
 				var hitsscripts := GetObjProperty(item, "HitScripts");
 				if (hitsscripts != error)
 					foreach hits in hitsscripts
+					var dano_esp := GetDmgStringSpecialDmg(elem, item);
 						if (hits == ":combat:weaponHitScripts/FireHit")
-							xDesc := xDesc + roxo + "Dano de Fogo<br>";
+							xDesc := xDesc + roxo + "Dano de Fogo "+dano_esp+"<br>";
 						elseif ( hits == ":combat:weaponHitScripts/IceHit")
-							xDesc := xDesc + roxo + "Dano de Gelo<br>";
+							xDesc := xDesc + roxo + "Dano de Gelo "+dano_esp +"<br>";
 						elseif ( hits == ":combat:weaponHitScripts/LightningHit")
-							xDesc := xDesc + roxo + "Dano de Energia<br>";
+							xDesc := xDesc + roxo + "Dano de Energia "+dano_esp+"<br>";
 						endif
 					endforeach
 				endif
@@ -522,29 +540,34 @@ exported function MegaCliloc( who, byref packet )
 				if (mods != error)
 					foreach mod in (mods.keys())
 						if (mod == "strmod")
-							xDesc := xDesc + white + "Bônus For <br>";
+							xDesc := xDesc + roxo + "Bônus For "+mods[mod]+"<br>";
 						elseif (mod == "dexmod")
-							xDesc := xDesc + white + "Bônus Des <br>";
+							xDesc := xDesc + roxo + "Bônus Des "+mods[mod]+"<br>";
 						elseif (mod == "intmod")
-							xDesc := xDesc + white + "Bônus Int <br>";
+							xDesc := xDesc + roxo + "Bônus Int "+mods[mod]+"<br>";
 						elseif (mod == "hitsmod")
-							xDesc := xDesc + white + "Bônus PVs<br>";
+							xDesc := xDesc + roxo + "Bônus PVs "+mods[mod]+"<br>";
 						elseif (mod == "manamod")
-							xDesc := xDesc + white + "Bônus Mana <br>";
+							xDesc := xDesc + roxo + "Bônus Mana "+mods[mod]+"<br>";
 						elseif (mod == "stammod")
-							xDesc := xDesc + white + "Bônus Stam <br>";
+							xDesc := xDesc + roxo + "Bônus Stam "+mods[mod]+"<br>";
+						elseif (mod == "chancetocritic")
+							xDesc := xDesc + roxo + "Chande de Crítico +"+mods[mod]+"%<br>";
 						elseif (mod == "PhysicalResistMod")
-							xDesc := xDesc + white + "Resistencia Fisica <br>";
+							xDesc := xDesc + roxo + "Resistência Física +"+mods[mod]+"<br>";
 						elseif (mod == "ColdResistMod")
-							xDesc := xDesc + blueice  + "Resistencia Frio <br>";
+							xDesc := xDesc + roxo  + "Resistência Frio +"+mods[mod]+"<br>";
 						elseif (mod == "FireResistMod")
-							xDesc := xDesc + redfire + "Resistencia Fogo <br>";
+							xDesc := xDesc + roxo + "Resistência Fogo +"+mods[mod]+"<br>";
 						elseif (mod == "EnergyResistMod")
-							xDesc := xDesc + lilas  + "Resistencia Energia <br>";
+							xDesc := xDesc + roxo  + "Resistência Energia +"+mods[mod]+"<br>";
 						elseif (mod == "PoisonResistMod")
-							xDesc := xDesc + softgreen  + "Resistencia Veneno <br>";
+							xDesc := xDesc + roxo  + "Resistência Veneno +"+mods[mod]+"<br>";
 						else
+							if ((mod != "dmg_mod") && (mod != "hitscript"))
 							xDesc := xDesc + roxo + "Bonus " + mod + "<br>";
+							print("valor eh "+mod);
+							endif
 						endif
 					endforeach
 				endif
