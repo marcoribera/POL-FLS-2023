@@ -16,7 +16,7 @@ function Garimpeiro(who)
 		var keys := GetConfigStringKeys( cfg );
 		var gema := keys[RandomInt(keys.size())];
 		while (gema == 0)
-			var gema := keys[RandomInt(keys.size())];
+			gema := keys[RandomInt(keys.size())];
 		endwhile
 		SendSysMessageEx(who, "Voce achou uma pedra preciosa!", SSM_INFO);
 		CreateItemInBackPack(who, gema, 1);
@@ -27,7 +27,7 @@ function Garimpeiro(who)
 		var keys := GetConfigStringKeys( cfg );
 		var gema := keys[RandomInt(keys.size())];
 		while (gema == 0)
-			var gema := keys[RandomInt(keys.size())];
+			gema := keys[RandomInt(keys.size())];
 		endwhile
 		SendSysMessageEx(who, "So alguem talentoso acharia essa pedra preciosa!", SSM_INFO);
 		CreateItemInBackPack(who, gema, 1);
