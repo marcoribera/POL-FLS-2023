@@ -72,7 +72,7 @@ function FlameEffect(who, potion, lvl)
 		sleepms(5);
 	endforeach
 
-	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 1+lvl, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+	foreach critter in (ListMobilesNearLocation( potion.x, potion.y, potion.z, 1+lvl, potion.realm ));
 		if (CheckLineOfSight(potion, critter))
 			if ( critter.hidden  )
 				critter.hidden := 0;
@@ -100,7 +100,7 @@ function FlameEffect(who, potion, lvl)
 endfunction
 
 function HalluEffect(who, potion, lvl)
-	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 6, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+	foreach critter in (ListMobilesNearLocation( potion.x, potion.y, potion.z, 6, potion.realm ));
 		if ( CheckLineOfSight(potion, critter) )
 			PlayStationaryEffect(critter.x, critter.y, critter.z, GFX_POISON_GAS, 10,10, 0, critter.realm);
 			TS_StartTimer(critter, "hallucination", 120, lvl);
@@ -111,7 +111,7 @@ function HalluEffect(who, potion, lvl)
 endfunction
 
 function PoisonEffect(who, potion, lvl)
-	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 3, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+	foreach critter in (ListMobilesNearLocation( potion.x, potion.y, potion.z, 3, potion.realm ));
 		if ( CheckLineOfSight(potion, critter))
 			PlayStationaryEffect(critter.x, critter.y, critter.z, GFX_POISON_GAS, 10,10, 0, critter.realm);
 			if (CheckResist(critter, FORTITUDE, 15,-20*lvl))
@@ -139,7 +139,7 @@ function GlueEffect(who, potion)
 		sleepms(5);
 	endforeach
 
-	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 4, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+	foreach critter in (ListMobilesNearLocation( potion.x, potion.y, potion.z, 4, potion.realm ));
 		if (CheckLineOfSight(potion, critter))
 			if ( critter.hidden && critter.acct )
 				critter.hidden := 0;
@@ -172,7 +172,7 @@ function Acideffetct(who, potion)
 		sleepms(5);
 	endforeach
 
-	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 4, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+	foreach critter in (ListMobilesNearLocation( potion.x, potion.y, potion.z, 4, potion.realm ));
 		if (CheckLineOfSight(potion, critter))
 			if ( critter.hidden && critter.acct )
 				critter.hidden := 0;
@@ -188,7 +188,7 @@ function ExplosionEffect(who, potion, dmg)
 	PlayStationaryEffect( potion.x, potion.y, potion.z, 0x36b0, 7, 10, 1);
 	PlaySoundEffect(potion, 0x208);
 	potion.graphic := 1;
-	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 6, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+	foreach critter in (ListMobilesNearLocation( potion.x, potion.y, potion.z, 6, potion.realm ));
 		if (checkLineOfSight(potion, critter))
 
 			if ( critter.hidden)
@@ -242,7 +242,7 @@ function Sleepeffect(who, potion)
 
 	PlaySoundEffect(potion, 0x03F);
 	potion.graphic := 1;
-	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 6, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+	foreach critter in (ListMobilesNearLocation( potion.x, potion.y, potion.z, 6, potion.realm ));
 		if (checkLineOfSight(potion, critter))
 			if (CheckResist(critter, FORTITUDE, 80, 0))
 				SendSysMessage(critter, "Voce resiste ao sono.");
