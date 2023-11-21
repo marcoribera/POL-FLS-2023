@@ -58,7 +58,6 @@ function GetDmgStringSpecialDmg(elem, item)
 	var maxmod := elem.MaxDam + dmg_mod;
 	var mindmg := minmod*0.5 + 1;
 	var maxdmg := maxmod*0.5 +1;
-	print("min e max sao "+mindmg+" "+maxdmg);
 	var resultado := (CInt(mindmg) + "-" + Cint(maxdmg));
 	if (dmg_mod>0)
 		resultado := resultado;
@@ -477,7 +476,6 @@ exported function MegaCliloc( who, byref packet )
 				endif
 				if (item.dmg_mod > 0 )
 					xDesc := xDesc + roxo + "Bônus Dano "+item.dmg_mod+ " <br>";
-					print("valor eh +"+item.dmg_mod);
 				endif
 				if (item.hp_mod > 0)
 					xDesc := xDesc + roxo + "Bônus Item PVs "+item.hp_mod;
@@ -566,7 +564,6 @@ exported function MegaCliloc( who, byref packet )
 						else
 							if ((mod != "dmg_mod") && (mod != "hitscript"))
 							xDesc := xDesc + roxo + "Bonus " + mod + "<br>";
-							print("valor eh "+mod);
 							endif
 						endif
 					endforeach
