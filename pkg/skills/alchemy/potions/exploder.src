@@ -326,16 +326,24 @@ function destroycraft(potion, who)
 
 
 	var potions := {61282, 48915, 48916, 48917 };
+	var quebraveis := {0xec24, 0xFF04, 0xec27, 0xec28, 0xec25, 0xec26};
 	var counter := 1;
 	foreach item in (ListItemsNearLocation(potion.x, potion.y, potion.z, 8, potion.realm))
-		if (GetObjProperty(item, "crafteracc"))
-			var roll := RandomInt(100)+1;
+		//if (GetObjProperty(item, "crafteracc"))
+		if (item.objtype in quebraveis)
+			var roll := RandomFloat(100.0);
 			if (roll > 75)
-				if (!GetObjProperty(item, "LockId"))
+				//if (!GetObjProperty(item, "LockId"))
+					PrintText(item, "*sofre dano e quebra*");
+					sleepms(50);
+
 					createitematlocation(item.x, item.y, item.z, 3119, 1, item.realm);
-					sleepms(10);
+					sleepms(50);
 					DestroyItem(item);
-				endif
+				//endif
+			else
+				PrintText(item, "*sofre dano mas nao quebra*");
+				sleepms(50);
 			endif
 		endif
 	endforeach
