@@ -208,7 +208,6 @@ function GetRandomResistance()
 endfunction
 
 function SetMagicWeaponArmor(item, parsed, parsed_elem)
-print("entrou"+item+" "+parsed);
 	var cfg := ReadConfigFile(":loot:config/templates");
 	var elem := FindConfigElem(cfg, parsed_elem);
 
@@ -407,7 +406,6 @@ endfunction
 
 //está SEM uso por enquanto, script antigo
 function SetMagicBonus(item, parsed)
-print("setmagicBONUS");
 	//armas podem ter:
 	// 1- dmgmod
 	// 2- aumento na chance de acerto
