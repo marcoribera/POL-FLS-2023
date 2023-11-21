@@ -21,6 +21,10 @@ program on_insert(who, book, movetype, inserttype, item, existing_stack, amt);
 
     if (book.objtype == aljava_de_guerra)
 	    if ( item.graphic == 0x1bfb || item.graphic == 0xf3f  )
+        else
+            SendSysMessageEx(who, "Voce nao pode guardar isto na aljava.", SSM_FAIL);
+			MoveItemToContainer(item, who.backpack);
+			return 0;
         endif
     elseif (book.objtype == aljava_de_caca)
         if (item.objtype in hunt_arrows)

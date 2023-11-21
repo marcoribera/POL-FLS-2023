@@ -13,72 +13,64 @@ include "include/damage";
 
 program aura_of_hate(params)
 	var attacker := params[1];
-	var mobile := params[2];
+	var defender := params[2];
 	params := 0; // Not needed anymore.
-	
-	if ( GetObjProperty(mobile, "#ClumsyMod") )
-		// Condition is met if the mobile logs out and back in.
-		// Prevents mod from being applied twice.
-		SendSysMessageEx(attacker, "O alvo ja esta sofrendo por seu odio!", SSM_FAIL);
-		return 0;
-	endif
-
-	if ( GetObjProperty(mobile, "#FeebleMindMod") )
-		// Condition is met if the mobile logs out and back in.
-		// Prevents mod from being applied twice.
-		SendSysMessageEx(attacker, "O alvo ja esta sofrendo por seu odio!", SSM_FAIL);
-		return 0;
-	endif
-
-	if ( GetObjProperty(mobile, "#WeakenMod") )
-		// Condition is met if the mobile logs out and back in.
-		// Prevents mod from being applied twice.
-		SendSysMessageEx(attacker, "O alvo ja esta sofrendo por seu odio!", SSM_FAIL);
-		return 0;
-	endif	
     
     var corrupcao := Cint(GetObjProperty(attacker, "corruption")/1000);
     if (corrupcao < 1)
         corrupcao := 1;
     endif
 	var cast_points := CInt(AP_GetSkill(attacker, MAGICLORE)) + corrupcao;
-	cast_points := cast_points / 4.0;
-//	var defense := CInt(AP_GetSkill(mobile, RESISTING_SPELLS))/4;
-	var final := cast_points;// - defense;
+	cast_points := cast_points / 2.0;
+	var final := cast_points;
 	if (final < 10)
 		final := 10;
 	endif
-	var stat := AP_GetStat(mobile, DEXTERITY);
+    // Dex Debuff
+	var stat := AP_GetStat(defender, DEXTERITY);
 	stat := Cint((stat*final)/100);
 	var points := stat * -1;
+	var dex_points := points;
 	
-	
-	SetObjProperty(mobile, "#ClumsyMod", points);
-	AP_ModifyStatMod(mobile, DEXTERITY, points);
+    SetObjProperty(defender, "#ClumsyMod", points);
+	AP_ModifyStatMod(defender, DEXTERITY, points);
 
-	stat := AP_GetStat(mobile, STRENGTH);
+    // Str Debuff
+	stat := AP_GetStat(defender, STRENGTH);
 	stat := Cint((stat*final)/100);
 	points := stat * -1;
-	
-	
-	SetObjProperty(mobile, "#WeakenMod", points);
-	AP_ModifyStatMod(mobile, STRENGTH, points);
+    var str_points := points;
+	SetObjProperty(defender, "#WeakenMod", points);
+	AP_ModifyStatMod(defender, STRENGTH, points);
 
-	stat := AP_GetStat(mobile, INTELLIGENCE);
+    // Int Debuff
+	stat := AP_GetStat(defender, INTELLIGENCE);
 	stat := Cint((stat*final)/100);
 	points := stat * -1;
-	
-	SetObjProperty(mobile, "#FeebleMindMod", points);
-	AP_ModifyStatMod(mobile, INTELLIGENCE, points);
+    var int_points := points;
+
+	SetObjProperty(defender, "#FeebleMindMod", points);
+	AP_ModifyStatMod(defender, INTELLIGENCE, points);
 
     PlayAttackAnimation(attacker);
-	PlayHitSounds(attacker, mobile);
+	//PlayHitSounds(attacker, defender);  0x3789
+    PlayObjectCenteredEffectEx(defender, 0x3789, 7, 32, 2485, 1);
+	PlaySoundEffect(defender, 0x58E);
 	SendSysMessageEx(attacker, "Nao te falta odio!", SSM_INFO);
 	var hate_dmg := cast_points * 1.5;
 
-	DamageFLS(mobile, hate_dmg, DMG_FORCED, attacker);
+	DamageFLS(defender, hate_dmg, DMG_FORCED, attacker);
+    var curse_time := CInt(AP_GetSkill(attacker, MAGICLORE) / 3);
 
-	
+	Sleep(curse_time);
+    EraseObjProperty(defender, "#ClumsyMod");
+    EraseObjProperty(defender, "#WeakenMod");
+    EraseObjProperty(defender, "#FeebleMindMod");
+    
+    AP_ModifyStatMod(defender, DEXTERITY, dex_points * -1);
+    AP_ModifyStatMod(defender, INTELLIGENCE, int_points * -1);
+    AP_ModifyStatMod(defender, STRENGTH, str_points * -1);
+
 	return 1;
 endprogram
 

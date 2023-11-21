@@ -33,20 +33,21 @@ program exploder(parms)
 	if (cint(GetObjProperty(potion, "nodmg")) != 1)
 		case (potion.objtype)
 			//56328: dmg :=  dmg + 20; ExplosionEffect(who, potion, dmg);
-			61280: dmg:=  dmg + 30; ExplosionEffect(who, potion, dmg);
-			61281: dmg:=  dmg + 40; ExplosionEffect(who, potion, dmg);
-			61282: dmg:=  dmg + 50; ExplosionEffect(who, potion, dmg);
-			48910: GlueEffect(who, potion);
-			48911: PoisonEffect(who, potion, 1);
-			48912: PoisonEffect(who, potion, 2);
-			48913: PoisonEffect(who, potion, 3);
-			48915: FlameEffect(who, potion, 1);
-			48916: FlameEffect(who, potion, 2);
-			48917:FlameEffect(who, potion, 3);
-			48918:HalluEffect(who, potion, 3);
-			0x6073:Acideffetct(who, potion);
-			0xBD13:Sleepeffect(who, potion);
-			56328:Minaterrestre(who, potion);
+			0xef60: dmg:=  dmg + 30; ExplosionEffect(who, potion, dmg);
+			0xef61: dmg:=  dmg + 40; ExplosionEffect(who, potion, dmg);
+			0xef62: dmg:=  dmg + 50; ExplosionEffect(who, potion, dmg);
+			0xbf0e: GlueEffect(who, potion);
+			0xbf0f: PoisonEffect(who, potion, 1);
+			0xbf10: PoisonEffect(who, potion, 2);
+			0xbf11: PoisonEffect(who, potion, 3);
+			0xbf13: FlameEffect(who, potion, 1);
+			0xbf14: FlameEffect(who, potion, 2);
+			0xbf15: FlameEffect(who, potion, 3);
+			0xbf16: HalluEffect(who, potion, 3);
+			0xbf1c: Acideffetct(who, potion);
+			0xbf1d: Sleepeffect(who, potion);
+			0xbf1e: FlameEffect(who, potion, 1);
+			0xdc08: Minaterrestre(who, potion);
 		endcase
 	endif
 
@@ -71,7 +72,7 @@ function FlameEffect(who, potion, lvl)
 		sleepms(5);
 	endforeach
 
-	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 1+lvl, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+	foreach critter in (ListMobilesNearLocation( potion.x, potion.y, potion.z, 1+lvl, potion.realm ));
 		if (CheckLineOfSight(potion, critter))
 			if ( critter.hidden  )
 				critter.hidden := 0;
@@ -99,7 +100,7 @@ function FlameEffect(who, potion, lvl)
 endfunction
 
 function HalluEffect(who, potion, lvl)
-	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 6, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+	foreach critter in (ListMobilesNearLocation( potion.x, potion.y, potion.z, 6, potion.realm ));
 		if ( CheckLineOfSight(potion, critter) )
 			PlayStationaryEffect(critter.x, critter.y, critter.z, GFX_POISON_GAS, 10,10, 0, critter.realm);
 			TS_StartTimer(critter, "hallucination", 120, lvl);
@@ -110,7 +111,7 @@ function HalluEffect(who, potion, lvl)
 endfunction
 
 function PoisonEffect(who, potion, lvl)
-	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 3, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+	foreach critter in (ListMobilesNearLocation( potion.x, potion.y, potion.z, 3, potion.realm ));
 		if ( CheckLineOfSight(potion, critter))
 			PlayStationaryEffect(critter.x, critter.y, critter.z, GFX_POISON_GAS, 10,10, 0, critter.realm);
 			if (CheckResist(critter, FORTITUDE, 15,-20*lvl))
@@ -138,7 +139,7 @@ function GlueEffect(who, potion)
 		sleepms(5);
 	endforeach
 
-	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 4, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+	foreach critter in (ListMobilesNearLocation( potion.x, potion.y, potion.z, 4, potion.realm ));
 		if (CheckLineOfSight(potion, critter))
 			if ( critter.hidden && critter.acct )
 				critter.hidden := 0;
@@ -171,7 +172,7 @@ function Acideffetct(who, potion)
 		sleepms(5);
 	endforeach
 
-	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 4, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+	foreach critter in (ListMobilesNearLocation( potion.x, potion.y, potion.z, 4, potion.realm ));
 		if (CheckLineOfSight(potion, critter))
 			if ( critter.hidden && critter.acct )
 				critter.hidden := 0;
@@ -187,7 +188,7 @@ function ExplosionEffect(who, potion, dmg)
 	PlayStationaryEffect( potion.x, potion.y, potion.z, 0x36b0, 7, 10, 1);
 	PlaySoundEffect(potion, 0x208);
 	potion.graphic := 1;
-	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 6, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+	foreach critter in (ListMobilesNearLocation( potion.x, potion.y, potion.z, 6, potion.realm ));
 		if (checkLineOfSight(potion, critter))
 
 			if ( critter.hidden)
@@ -241,7 +242,7 @@ function Sleepeffect(who, potion)
 
 	PlaySoundEffect(potion, 0x03F);
 	potion.graphic := 1;
-	foreach critter in (ListMobilesNearLocationEx( potion.x, potion.y, potion.z, 6, LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN, potion.realm ));
+	foreach critter in (ListMobilesNearLocation( potion.x, potion.y, potion.z, 6, potion.realm ));
 		if (checkLineOfSight(potion, critter))
 			if (CheckResist(critter, FORTITUDE, 80, 0))
 				SendSysMessage(critter, "Voce resiste ao sono.");
@@ -325,16 +326,24 @@ function destroycraft(potion, who)
 
 
 	var potions := {61282, 48915, 48916, 48917 };
+	var quebraveis := {0xec24, 0xFF04, 0xec27, 0xec28, 0xec25, 0xec26};
 	var counter := 1;
 	foreach item in (ListItemsNearLocation(potion.x, potion.y, potion.z, 8, potion.realm))
-		if (GetObjProperty(item, "crafteracc"))
-			var roll := RandomInt(100)+1;
+		//if (GetObjProperty(item, "crafteracc"))
+		if (item.objtype in quebraveis)
+			var roll := RandomFloat(100.0);
 			if (roll > 75)
-				if (!GetObjProperty(item, "LockId"))
+				//if (!GetObjProperty(item, "LockId"))
+					PrintText(item, "*sofre dano e quebra*");
+					sleepms(50);
+
 					createitematlocation(item.x, item.y, item.z, 3119, 1, item.realm);
-					sleepms(10);
+					sleepms(50);
 					DestroyItem(item);
-				endif
+				//endif
+			else
+				PrintText(item, "*sofre dano mas nao quebra*");
+				sleepms(50);
 			endif
 		endif
 	endforeach

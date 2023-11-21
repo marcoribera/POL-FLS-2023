@@ -1,0 +1,24 @@
+use uo;
+use os;
+use util;
+
+include ":fls_core:packets";
+include ":combat:combat";
+include ":blood:blood";
+include "include/damage";
+include "include/say";
+
+program doubleattack(who)
+
+    PrintText(who, "*Emana uma aura de medo*", SSM_INFO);
+    if (who.graphic == 401)
+		PlaySoundEffect( who, 0x339 );
+	else
+		PlaySoundEffect( who, 0x44B );
+	endif
+
+    SetObjProperty(who, "#aterrorizar", 1);
+
+    sleep(30);
+    EraseObjProperty(who, "#aterrorizar");
+endprogram

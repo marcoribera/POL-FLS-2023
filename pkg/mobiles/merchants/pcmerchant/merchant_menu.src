@@ -161,7 +161,7 @@ program MerchantMenu(params)
 				DoWithdraw(npc, player); //Executa a função de retirar item
 				cur_menu := MENU_INTRO;
             BOTAO_HISTORICO:
-			if ( player.cmdlevel >= 3 || (GetObjProperty(npc, "faccao") == GetObjProperty(player, "faccao")))
+			if ( player.cmdlevel >= 3 || (GetObjProperty(npc, "faccao") != error) && (GetObjProperty(npc, "faccao") == GetObjProperty(player, "faccao")))
 				if (!player.concealed) PrintText(npc, "Aqui esta o historico de vendas, Sr."); endif
 				var historico := GetMerchantLog(npc);
 				historico := "<br> - {}".format("<br> -".join(historico));
@@ -205,7 +205,7 @@ program MerchantMenu(params)
 				cur_menu := MENU_INTRO;
 			endif
 			BOTAO_CONFISCADOS:
-			if ( player.cmdlevel >= 3 || (GetObjProperty(npc, "faccao") == GetObjProperty(player, "faccao")))
+			if ( player.cmdlevel >= 3 || (GetObjProperty(npc, "faccao") != error) && (GetObjProperty(npc, "faccao") == GetObjProperty(player, "faccao")))
 				if (!player.concealed) PrintText(npc, "Aqui esta o historico de itens confiscados, Sr."); endif
 				var confisc := GetMerchantConfiscadosLog(npc);
 				confisc := "<br> - {}".format("<br> -".join(confisc));

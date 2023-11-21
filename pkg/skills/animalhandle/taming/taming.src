@@ -642,17 +642,23 @@ function TeachNow(who, tamed, ins)
 	if(!critic) //adiciona os criticos ou modificações nos stats
 		if(info_cfg[ins].Nome == "Ferocidade")
 			AP_SetTrueStat(tamed, STRENGTH, AP_GetStat(tamed, STRENGTH) + 15);
+			tamed.resist_physical_mod  := tamed.resist_physical_mod + 20;
+			RecalcVitals(tamed);
 		elseif(info_cfg[ins].Nome == "Flexibilidade")
 			AP_SetTrueStat(tamed, DEXTERITY, AP_GetStat(tamed, DEXTERITY) + 15);
+			tamed.resist_physical_mod  := tamed.resist_physical_mod + 20;
+			RecalcVitals(tamed);
 		elseif(info_cfg[ins].Nome == "Fortaleza")
 			var hits := CInt(AP_GetVitalMaximumValue(tamed, "Hits"));
-			var variavel := Cint(hits / 3);
+			var variavel := Cint(hits / 2);
 			var variavel2 := Cint(variavel /2); //não sei pq ele duplica por isso a divisão pela metade
 			setObjProperty(tamed, "hitsmod", variavel2);
 			RecalcVitals(tamed);
 		elseif(info_cfg[ins].Nome == "Sentidos Aguçados")
 			var teste := GetAttribute(tamed, AWARENESS);
 			AP_SetTrueSkill(tamed, AWARENESS, teste + 40);
+			tamed.resist_physical_mod  := tamed.resist_physical_mod + 20;
+			RecalcVitals(tamed);
 		//elseif(info_cfg[ins].Nome == "Animal de Carga") //DECICIDIR SE VAI TER OU NÃO, HJ O CARA SÓ BOTA A BACKPACK E JÁ CRIA ANIMAL DE CARGA
 			//if (tamed.objtype == 0xdc) //para lhamas
 				//tamed.graphic := 292;

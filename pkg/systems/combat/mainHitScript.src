@@ -289,10 +289,10 @@ program MainHitScript( params )
 						DamageFLS(inimigo, cint(total/3), DMG_PHYSICAL, attacker);
 					endforeach
 				else
-					var pets := ListPetsNear(attacker, 2);
+					var pets := ListPetsNear(attacker, 4);
 					var petspt := array;
 					foreach member in pt
-						petspt.append(ListPetsNear(member, 3));
+						petspt.append(ListPetsNear(member, 5));
 					endforeach
 					var inimigos2 := ListMobilesNearLocation(attacker.x, attacker.y, attacker.z, 1, attacker.realm);
 					foreach inimigo in inimigos2
@@ -689,12 +689,12 @@ function WeaponHitScripts(attacker, defender, weapon, armor, basedamage, rawdama
 		start_script(":combat:weaponHitScripts/bleedingstrike", array{attacker, defender, weapon, armor, basedamage, dmg*2});
 	endif
 
-    if (GetObjProperty(attacker, "#justicaderothen"))
-		var dmg := 1;
-        dmg := basedamage + CInt(rawdamage*(AP_GetSkill(attacker, MAGICLORE)/100));
+    //if (GetObjProperty(attacker, "#justicaderothen"))
+	//	var dmg := 1;
+    //    dmg := basedamage + CInt(rawdamage*(AP_GetSkill(attacker, MAGICLORE)/100));
         
-        start_script(":combat:weaponHitScripts/smiteEvil", array{attacker, defender, weapon, armor, basedamage, dmg*2});
-	endif
+    //    Run_Script_To_Completion(":combat:weaponHitScripts/smiteEvil", array{attacker, defender, weapon, armor, basedamage, dmg*2});
+	//endif
 
 	if ( GetCooldown(weapon, "circulodevas") )
 		var elemental := GetObjProperty(weapon, "#elementalweapon");

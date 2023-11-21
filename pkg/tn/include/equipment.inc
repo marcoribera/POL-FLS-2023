@@ -95,7 +95,11 @@ function SetEquipmentMods(who, item)
         			RecalcVitals(who);
      			elseif ((mod == "stammod")&&(GetObjProperty(item,"magic")!=1))
         			SetObjProperty(who, "#stammod", Cint(GetObjProperty(who, "#stammod")) + Cint( mods["stammod"] ) );
-        			RecalcVitals(who);
+        			RecalcVitals(who);				
+      			elseif ( ((mod == "ColdResistMod")&&(GetObjProperty(item,"magic")!=1)) || ((mod == "FireResistMod")&&(GetObjProperty(item,"magic")!=1)) || ((mod == "PhysicalResistMod")&&(GetObjProperty(item,"magic")!=1)) || ((mod == "EnergyResistMod")&&(GetObjProperty(item,"magic")!=1)) || ((mod == "PoisonResistMod")&&(GetObjProperty(item,"magic")!=1)) )
+        			//var mod_cold := Cint(mods["ColdResistMod"]);
+					//who.resist_cold_mod := who.resist_cold_mod - Cint(mods["ColdResistMod"]);
+        			RecalcVitals(who);				
       		else // se nao eh nada acima eh skillmod ou error :p
 				if (GetObjProperty(item,"magic")!=1)
 					//sendsysmessage(who, "mod: "+mod+" "+ Cint(mods[mod]));
@@ -209,6 +213,10 @@ function RemoveEquipmentMods(who, item)
         			RecalcVitals(who);
       			elseif ((mod == "stammod")&& (GetObjProperty(item,"magic") !=1))
         			SetObjProperty(who, "#stammod", Cint(GetObjProperty(who, "#stammod")) - Cint( mods["stammod"] ));
+        			RecalcVitals(who);
+      			elseif ( ((mod == "ColdResistMod")&&(GetObjProperty(item,"magic")!=1)) || ((mod == "FireResistMod")&&(GetObjProperty(item,"magic")!=1)) || ((mod == "PhysicalResistMod")&&(GetObjProperty(item,"magic")!=1)) || ((mod == "EnergyResistMod")&&(GetObjProperty(item,"magic")!=1)) || ((mod == "PoisonResistMod")&&(GetObjProperty(item,"magic")!=1)) )
+        			//var mod_cold := Cint(mods["ColdResistMod"]);
+					//who.resist_cold_mod := who.resist_cold_mod - Cint(mods["ColdResistMod"]);
         			RecalcVitals(who);
       			else
 				if (GetObjProperty(item,"magic") !=1)
