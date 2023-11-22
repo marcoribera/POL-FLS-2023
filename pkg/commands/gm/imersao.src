@@ -1,0 +1,22 @@
+use uo;
+
+include "include/imersao";
+
+program textcmd_imersao(who, params)
+    var targ, tipoemote, saisom, saiemote, saianim;
+    params := SplitWords(params);
+
+    targ := Target(who); //target
+    
+    if (params[1])
+        tipoemote := params[1];
+    else
+        SendSysMessageEx(who, "E necessario digitar o tipo da acao!", SSM_FAIL);
+        return;
+    endif
+    if (params[2]) saisom := CInt(params[2]); else saisom := 1; endif
+    if (params[3]) saiemote := CInt(params[3]); else saiemote := 0; endif
+    if (params[4]) saianim := CInt(params[4]); else saianim := 0; endif
+    
+    EmoteSound(targ, tipoemote, saisom, saiemote, saianim, who);
+endprogram

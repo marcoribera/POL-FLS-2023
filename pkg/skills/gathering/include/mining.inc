@@ -12,29 +12,26 @@ const MAX_RESOURCE_AMOUNT := 10;
 function Garimpeiro(who)
 	var rand := randomint(200);
 	if(rand < 2)
-		var cfg := ReadConfigFile(":gems:itemdesc");
-		var keys := GetConfigStringKeys( cfg );
-		var gema := keys[RandomInt(keys.size())];
-		while (gema == 0)
-			gema := keys[RandomInt(keys.size())];
-		endwhile
-		SendSysMessageEx(who, "Voce achou uma pedra preciosa!", SSM_INFO);
-		CreateItemInBackPack(who, gema, 1);
-		PrinttextAbove(who, "*encontra algo reluzente*");
-		SkillCheck(who, GATHERING, -1);
+		EncontraGema(who);
 	elseif(TemHabilidade(who, "Minerador Talentoso") && rand < 10)
-		var cfg := ReadConfigFile(":gems:itemdesc");
-		var keys := GetConfigStringKeys( cfg );
-		var gema := keys[RandomInt(keys.size())];
-		while (gema == 0)
-			gema := keys[RandomInt(keys.size())];
-		endwhile
-		SendSysMessageEx(who, "So alguem talentoso acharia essa pedra preciosa!", SSM_INFO);
-		CreateItemInBackPack(who, gema, 1);
-		PrinttextAbove(who, "*encontra algo reluzente*");
-		SkillCheck(who, GATHERING, -1);
+		EncontraGema(who);
+		SendSysMessageEx(who, "So um minerador talentoso acharia essa pedra preciosa!", SSM_INFO);
 	endif
 	return 1;
+endfunction
+
+function EncontraGema(who)
+	var cfg := ReadConfigFile(":gems:itemdesc");
+	var keys := GetConfigStringKeys( cfg );
+	var gema := keys[RandomInt(keys.size())];
+	while (!gema)
+		gema := keys[RandomInt(keys.size())];
+	endwhile
+	SendSysMessageEx(who, "Voce achou uma pedra preciosa!", SSM_INFO);
+	CreateItemInBackPack(who, gema, 1);
+	PrintTextAbove(who, "*encontra algo reluzente*");
+	SkillCheck(who, GATHERING, -1);
+	return;
 endfunction
 
 function GetMapsInBackpack(who)
