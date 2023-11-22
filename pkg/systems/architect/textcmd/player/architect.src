@@ -14,8 +14,6 @@ use os;
 use uo;
 use util;
 
-//include "include/findCity";
-//include "include/www";
 include ":containers:containers";
 include "include/say";
 include ":gumps:yesNo";
@@ -1595,8 +1593,38 @@ function clear_site(who)
 endfunction
 
 function get_objtype(type)
-    var madeira_ranges := {{6, 25}, {166, 196}, {541, 559}, {144, 165}, {527, 538}}; //Todas paredes do tipo madeira
-    var pedra_ranges := {{26, 50}, {87, 143}, {197, 231}, {463, 495}, {711, 729}, {958, 1005}}; //Todas paredes do tipo pedra
+    var madeira_ranges := {
+    {6, 25},
+    {166, 196},
+    {541, 559},
+    {144, 165},
+    {527, 538},
+    {1685, 1732},
+    {1749, 1780},
+    {2105, 2139},
+    {2150, 2168},
+    {820, 835},
+    {947, 950},
+    {2140, 2149},
+    {2186, 2187},
+    {1291, 1292},
+    {1217, 1249},
+    {1189, 1216},
+    {1185, 1188},
+    {1824, 1871},
+    {1981, 1992},
+    {1993, 2001},
+    {2170, 2173}
+    }; //Todas itens do tipo madeira
+
+    var pedra_ranges := {
+    {26, 50},
+    {87, 143},
+    {197, 231},
+    {463, 495},
+    {711, 729},
+    {958, 1005}
+    }; //Todas itens do tipo pedra
 
     // Verifique se o valor está em algum dos intervalos de madeira
     foreach range in madeira_ranges
