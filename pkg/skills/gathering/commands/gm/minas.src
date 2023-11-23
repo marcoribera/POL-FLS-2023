@@ -10,7 +10,7 @@ program configmining(who)
 	GFDisposable(gump, 0);
 	GFResizePic(gump, 0, 25, 3600, 250, 430);
 	GFResizePic(gump, 15, 40, 0x13BE, 220, 400);
-	GFTextMid(gump, 20, 50, 250, 1153, "Contole  das minas");
+	GFTextMid(gump, 20, 50, 250, 1153, "Controle das minas");
 
 	var y := 60;
 	GFTextLine(gump, 35, y, 1153, "Adicionar Nova");

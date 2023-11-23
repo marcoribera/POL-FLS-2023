@@ -34,11 +34,6 @@ program OreMining(who, tool)
 		return;
 	elseif (targ.item)
 		Quebraitem(who, tool, targ.item);
-	elseif (CanMine(targ, "Stone"))
-	    if(!TemHabilidade(who, "Arquiteto")) //Habilidade de construcao necessaria para extrair pedras
-            SendSysMessageEx(who, "Voce nao tem habilidade de arquiteto.", SSM_INFO);
-            return;
-        endif
 	elseif ( !CanMine(targ, "Stone") )
 		var maps := GetMapsInBackpack(who);
 		//sendsysmessage(who, " " + maps);
@@ -135,7 +130,7 @@ function MiningLoop(who, tool, my_x, my_y, targx, targy, my_facing)
 	if ( ore_amount > 0 )
 		if (ore_type != 999) //999 eh quando nao passou na chance de raridade do minerio
 
-			if ( SkillCheck(who, GATHERING, difficulty) > 0 || TemHabilidade(who, "Arquiteto"))
+			if ( SkillCheck(who, GATHERING, difficulty) > 0)
 				var amt := Cint(AP_GetSkill(who, GATHERING)/20);
 				if(TemHabilidade(who, "Minerador Talentoso"))
 					amt := amt + 2;

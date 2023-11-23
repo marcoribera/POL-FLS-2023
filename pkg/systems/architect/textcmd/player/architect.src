@@ -131,9 +131,6 @@ program architect_gump(who)
     dummy.saveonexit:= 0;
     dummy:= CreateItemAtLocation (startloc[1] + SITESIZE, startloc[2] + SITESIZE, GetWorldHeight (startloc[1], startloc[2] + SITESIZE, who.realm), 51, 1);
     dummy.saveonexit:= 0;
-
-    // teleport player
-    var jogador := MoveObjectToLocation(who, startloc[1] + 1, startloc[2] + 1, GetWorldHeight(startloc[1] + 1, startloc[2] + 1, who.realm), who.realm, MOVEOBJECT_FORCELOCATION);
   endif
 
   // check for sub groups too large to fit in the gump
@@ -1448,9 +1445,9 @@ endfunction
 */
 function check_coords(who, coords)
 
-  if (staffmode)
+  //if (staffmode)
     return 1;
-  endif
+  //endif
 
   if ((coords.x <= startloc[1]) ||
       (coords.x >= startloc[1] + SITESIZE))
@@ -1636,9 +1633,9 @@ function get_objtype(type)
     // Verifique se o valor está em algum dos intervalos de pedra
     foreach range in pedra_ranges
         if (type >= range[0] && type <= range[1])
-            return GetObjTypeByName("rock");
+            return GetObjTypeByName("Stone");
         endif
     endforeach
 
-    return GetObjTypeByName("rock");
+    return GetObjTypeByName("Stone");
 endfunction
