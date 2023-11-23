@@ -614,7 +614,7 @@ function ShowForSaleItemsInfo(byref gump, npc, player, input, special := 0)
 					nome := GetObjProperty(vendor, "realname");
 				endif
 			else
-				nome := "Desconhecido";
+				nome := "SEM AUTORIZACAO";
 			endif
 			GFTextLine(gump, 205, 115, GF_STDCOLOR, nome);
 		endif
