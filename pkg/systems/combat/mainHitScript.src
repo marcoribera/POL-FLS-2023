@@ -199,13 +199,14 @@ program MainHitScript( params )
 				var copmobs := getobjproperty(defender, "#chainserials");
 				var mage := SystemFindObjectBySerial( GetObjProperty(defender, "#mageserial"));
 				var copdefenders := array;
+				var lvl := cdbl(AP_GetSkill(mage, MAGICLORE)/100);
 				foreach serial in copmobs
 					copdefenders.append(SystemFindObjectBySerial(serial));
 				endforeach
 				//basedamage := Cint(basedamage / copnumber);
 				foreach targ in copdefenders
 					defender := targ;
-					total := CalculateTotalDamage(defender, basedamage/5, attacker, dmgList);
+					total := CalculateTotalDamage(defender, basedamage * lvl, attacker, dmgList);
 					//total := ApplyDamageWra(defender, basedamage, dmgList, attacker);
 					if (total < 1)
 						total := 1;
