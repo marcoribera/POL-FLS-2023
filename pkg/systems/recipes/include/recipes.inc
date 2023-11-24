@@ -46,9 +46,9 @@ function CreateItemFromRecipe(who, index)
 	item.dmg_mod := dmg_mod;
 
 	var hp_mod := GetConfigInt(elem, "hp_mod");
-	item.hp_mod := hp_mod;	
+	item.hp_mod := hp_mod;
 
-	return item;	
+	return item;
 
 endfunction
 
@@ -90,8 +90,8 @@ function CraftRecipe(who, index)
 		//sendsysmessage(who,  " " + materials);
 	foreach thing in (materials.keys())
 	//	sendsysmessage(who, " " + thing);
-		if (thing == "metal" || thing == "wood" || thing == "glass" 
-			|| thing == "cloth" || thing == "leather" || thing == "stone" || thing == "ossos" ||)
+		if (thing == "metal" || thing == "wood" || thing == "glass"
+			|| thing == "cloth" || thing == "leather" || thing == "stone" || thing == "ossos")
 			var ret := MaterialSelection(who, craft_skill, thing, 0);
 			if (!ret)
 				return 0;
@@ -102,7 +102,7 @@ function CraftRecipe(who, index)
 				else
 					targMaterials[ret[1].objtype] := materials[thing];
 					if (thing == principalMaterial)
-						chosenPrincipalMaterial := ret[1].objtype;	
+						chosenPrincipalMaterial := ret[1].objtype;
 					endif
 				endif
 			endif
@@ -177,7 +177,7 @@ function CraftRecipe(who, index)
       			DmgMods := SplitWords(DmgMods);
       			var ResistMods := GetConfigString(elem, "AoSResistMod");
       			ResistMods := SplitWords(ResistMods);
-     	 		var hpmod := GetConfigInt(elem, "hpmod");   
+     	 		var hpmod := GetConfigInt(elem, "hpmod");
 			if(theitem.isA(POLCLASS_WEAPON))
 				var finaldmg := dictionary;
 				finaldmg[DMG_PHYSICAL] := Cdbl(DmgMods[1]);
@@ -207,7 +207,7 @@ function GetRecipeList(who, skill)
 
     var itens := GetObjProperty(who,  "recipes"); //pega a lista de recipes
     var df := ReadConfigFile(":recipes:craft-recipes");
-    
+
     var recipelist := array; //lista temp pra veriicar se os itens sao da skill do menu
     foreach x in itens
       var elem := FindConfigElem(df, x);
@@ -218,7 +218,7 @@ function GetRecipeList(who, skill)
         endif
       endif
     endforeach
-    
+
     return recipelist;
-    
+
 endfunction
