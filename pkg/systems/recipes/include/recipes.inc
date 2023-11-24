@@ -91,7 +91,7 @@ function CraftRecipe(who, index)
 	foreach thing in (materials.keys())
 	//	sendsysmessage(who, " " + thing);
 		if (thing == "metal" || thing == "wood" || thing == "glass" 
-			|| thing == "cloth" || thing == "leather" || thing == "stone")
+			|| thing == "cloth" || thing == "leather" || thing == "stone" || thing == "ossos" ||)
 			var ret := MaterialSelection(who, craft_skill, thing, 0);
 			if (!ret)
 				return 0;

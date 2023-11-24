@@ -277,7 +277,8 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 			DestroyItem(item);
 		endif
 
-		check := SkillCheck(who, craft_skill, diff, pts);
+		//check := SkillCheck(who, craft_skill, diff, pts);
+		check := CraftCheckSkill(who, craft_skill, diff, pts);
 
 		if(check > 0)
 			if (!SubtractMaterial(who, targMaterials, 1+more))

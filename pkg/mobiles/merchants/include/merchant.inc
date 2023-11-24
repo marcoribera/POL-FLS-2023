@@ -606,11 +606,15 @@ function ShowForSaleItemsInfo(byref gump, npc, player, input, special := 0)
 			GFTextLine(gump, 205, 115, GF_STDCOLOR, "Desconhecido");
 		else
 			var nome := vendor.name;
-			if (GetObjProperty(vendor, "nome_inicial"))
-				nome := GetObjProperty(vendor, "nome_inicial");
-			endif
-			if (GetObjProperty(vendor, "realname"))
-				nome := GetObjProperty(vendor, "realname");
+			if (GetObjProperty(vendor, "faccao") && (GetObjProperty(npc, "faccao") == GetObjProperty(vendor, "faccao")))
+				if (GetObjProperty(vendor, "nome_inicial"))
+					nome := GetObjProperty(vendor, "nome_inicial");
+				endif
+				if (GetObjProperty(vendor, "realname"))
+					nome := GetObjProperty(vendor, "realname");
+				endif
+			else
+				nome := "SEM AUTORIZACAO";
 			endif
 			GFTextLine(gump, 205, 115, GF_STDCOLOR, nome);
 		endif
