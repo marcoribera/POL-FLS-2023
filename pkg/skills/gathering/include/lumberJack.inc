@@ -127,7 +127,7 @@ function LJ_GetWoodType(tree)
          0xce6:
                 return 0xee39; //salgueiro
          0xcf8:
-                return 0xee3a; //sipestre
+                return 0xee3a; //cipestre
          0xcfb:
                 return 0xee3a;
          0xcfe:
