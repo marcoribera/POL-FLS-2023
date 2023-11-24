@@ -103,11 +103,11 @@ endfunction
  *
  */
 function IsRelativeFacing( mobile, x, y, vision_dist:=2 )
-
+	
 	var obj_facing := GetFacing( mobile.x, mobile.y, x, y );
 	var d := (mobile.facing-obj_facing)%8;
 
-	if( d>3 )
+	if( d>=3 )
 		d := d - 8;
 	elseif( d < -3 )
 		d := d + 8;
