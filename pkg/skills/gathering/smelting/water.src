@@ -175,7 +175,7 @@ function DeterminaLiga(metals, who)
     elseif (("litan" in metais) && ("estanho" in metais)  && ("ferro" in metais))
       return 0x6602; //acielith
     elseif (("cobre" in metais) && ("prata" in metais)  && ("golden" in metais))
-      return 0x6604; //platinum
+      return 0x6604; //platina
     endif
   elseif (metais.size() == 5)
     if(("mithril" in metais) && ("helce" in metais) && ("sinque" in metais) && ("figin" in metais) && ("argonil" in metais))

@@ -52,7 +52,7 @@ endfunction
 
 function GetMaterialName(obj);
 
-  if ( (obj == "wood") || (obj == "leather") || (obj == "cloth") || (obj == "metal") || (obj == "glass") || (obj == "stone") || obj == "arrowhead")
+  if ( (obj == "wood") || (obj == "leather") || (obj == "cloth") || (obj == "metal") || (obj == "glass") || (obj == "ossos") || (obj == "stone") || obj == "arrowhead")
     return obj;
   else
     var items := ReadconfigFile("::itemdesc");
