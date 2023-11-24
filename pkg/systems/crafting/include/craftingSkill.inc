@@ -29,6 +29,9 @@ function CraftCheckSkill(who, craft_skill, difficulty, points, report:=0)
   var itemskill := difficulty - 10; //QUANDO APARECE NO MENU
   
   chance := ((itemskill)-effective)*(-((difficulty+(40-itemskill))/10))+1;
+  var rolagem := RandomFloat(100);
+  //SendSysMessage(who, "DEBUG CHANCE: "+chance);
+  //SendSysMessage(who, "DEBUG ROLOU: "+rolagem);
   /* EVILLINK CRAFT END */
 
   if(chance < 0)
@@ -48,10 +51,11 @@ function CraftCheckSkill(who, craft_skill, difficulty, points, report:=0)
   if(points > 0)
 //	CheckSkillAdvance(who, craft_skill, points, chance);
 	SkillCheck(who, craft_skill, difficulty, points);
+  //SendSysMessage(who, "DEBUG CHANCEUP: "+SkillCheck(who, craft_skill, difficulty, points));  
   endif
-  if(RandomInt(100) < chance)
+  if(rolagem < chance)
     if (report)
-	return 100;
+	    return 100;
     endif
     return 1;
   else
