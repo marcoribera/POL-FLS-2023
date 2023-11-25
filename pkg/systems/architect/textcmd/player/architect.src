@@ -1614,26 +1614,10 @@ function get_objtype(type)
     {2170, 2173}
     }; //Todas itens do tipo madeira
 
-    var pedra_ranges := {
-    {26, 50},
-    {87, 143},
-    {197, 231},
-    {463, 495},
-    {711, 729},
-    {958, 1005}
-    }; //Todas itens do tipo pedra
-
     // Verifique se o valor está em algum dos intervalos de madeira
     foreach range in madeira_ranges
-        if (type >= range[0] && type <= range[1])
+        if (type >= range[1] && type <= range[2])
             return GetObjTypeByName("logs");
-        endif
-    endforeach
-
-    // Verifique se o valor está em algum dos intervalos de pedra
-    foreach range in pedra_ranges
-        if (type >= range[0] && type <= range[1])
-            return GetObjTypeByName("Stone");
         endif
     endforeach
 
