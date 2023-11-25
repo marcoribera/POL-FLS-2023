@@ -466,7 +466,7 @@ function iteminfogump(who, item)
 		var mats := array;
 		var dict := dictionary;
 		while(mais)
-			var mattype := RadioGump(who, 260, 280, "Escolha o material que o item vai ser feito.", array{"wood", "metal", "leather", "glass", "cloth", "outro"});
+			var mattype := RadioGump(who, 260, 280, "Escolha o material que o item vai ser feito.", array{"wood", "metal", "ossos", "leather", "glass", "cloth", "outro"});
 			//SendSysMessage(who, "Selecione o material que sera utilizado. Aperte esc para cancelar");
 			var val := Cint(RequestGump(who, "Qual a quantidade desse item?"));
 			if (mattype == "outro")

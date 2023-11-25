@@ -112,7 +112,9 @@ function Loot_CreateRandom(container, line)
 endfunction
 
 function Loot_ChanceCheck(chance)
-	if ( RandomInt(1000)+1 <= CInt(CDbl(chance)*10.0) )
+var rolado := Cint(RandomFloat(1000)); 
+var rolado2 := rolado+1;
+	if ( rolado2 <= CInt(CDbl(chance)*10.0) )
 		return 1;
 	else
 		return 0;

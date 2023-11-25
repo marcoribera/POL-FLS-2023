@@ -198,7 +198,7 @@ function DetermineLumberDifficulty(logtype)
         0xee39:
         	return 40; //salgueiro
         0xee3a:
-        	return 50; //sipreste
+        	return 50; //cipreste
         0xee3b:
         	return 60; //angelim
         0xee3c:
