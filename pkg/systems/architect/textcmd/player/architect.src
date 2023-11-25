@@ -1447,18 +1447,21 @@ endfunction
 */
 function check_coords(who, coords)
 
-  //if (staffmode)
+  if (staffmode)
     return 1;
-  //endif
-
-  if ((coords.x <= startloc[1]) ||
-      (coords.x >= startloc[1] + SITESIZE))
-    SendSysMessage (who, lang["outofbounds"]);
-    return 0;
   endif
 
-  if ((coords.y <= startloc[2]) ||
-      (coords.y >= startloc[2] + SITESIZE))
+  //Retorna a localizacao de onde esta a pessoa
+  var where := GetResidenciasRegion(who.x, who.y);
+
+  var df := opendatafile(":architect:areas");
+  if (df == error)
+      df :=  createdatafile(":architect:areas");
+  endif
+
+  var elem := df.FindElement(where);
+  //Se nao tiver a prop Name, ele da um erro para nao conseguir construir fora do contexto da area
+  if(!elem.GetProp("Name"))
     SendSysMessage (who, lang["outofbounds"]);
     return 0;
   endif
