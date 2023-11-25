@@ -14,8 +14,6 @@ use os;
 use uo;
 use util;
 
-//include "include/findCity";
-//include "include/www";
 include ":containers:containers";
 include "include/say";
 include ":gumps:yesNo";
@@ -24,6 +22,7 @@ include ":architect:include/systemclock";
 include ":charactercreation:habilidades";
 
 const SIGENA:= 0;
+const BLOCK_OF_STONE := 0x5001;
 
 /*if (SIGENA)
   include ":mrhousing:include/housing";
@@ -133,9 +132,6 @@ program architect_gump(who)
     dummy.saveonexit:= 0;
     dummy:= CreateItemAtLocation (startloc[1] + SITESIZE, startloc[2] + SITESIZE, GetWorldHeight (startloc[1], startloc[2] + SITESIZE, who.realm), 51, 1);
     dummy.saveonexit:= 0;
-
-    // teleport player
-    var jogador := MoveObjectToLocation(who, startloc[1] + 1, startloc[2] + 1, GetWorldHeight(startloc[1] + 1, startloc[2] + 1, who.realm), who.realm, MOVEOBJECT_FORCELOCATION);
   endif
 
   // check for sub groups too large to fit in the gump
@@ -967,6 +963,7 @@ program architect_gump(who)
                 if (GetObjProperty (tbd, "#built_by_architect") == who.serial)
                   DestroyItem (tbd);
                   undone:= 1;
+                  CreateItemInBackPack(who, BLOCK_OF_STONE, 10); //Caso seja desfeita a criacao, ele recriar as pedras
                 endif
 
                 Sleepms (2);
@@ -1228,11 +1225,11 @@ program architect_gump(who)
           if (!staffmode)
             SendSysMessage (who, lang["end_confirm"]);
 
-            if (!yesNo(who, array{"Quit Architect", "without saving?"}))
+            if (!yesNo(who, array{"Sair do sistema de arquitetura", "sem salvar?"}))
               choice[1]:= 0;
               break;
             endif
-
+            //Ele sempre move o player e nao entendi, deixei assim
             MoveObjectToLocation (who, playerloc[1], playerloc[2], playerloc[3], who.realm, MOVEOBJECT_FORCELOCATION);
             EraseGlobalProperty ("#architect");
 
@@ -1454,14 +1451,17 @@ function check_coords(who, coords)
     return 1;
   endif
 
-  if ((coords.x <= startloc[1]) ||
-      (coords.x >= startloc[1] + SITESIZE))
-    SendSysMessage (who, lang["outofbounds"]);
-    return 0;
+  //Retorna a localizacao de onde esta a pessoa
+  var where := GetResidenciasRegion(who.x, who.y);
+
+  var df := opendatafile(":architect:areas");
+  if (df == error)
+      df :=  createdatafile(":architect:areas");
   endif
 
-  if ((coords.y <= startloc[2]) ||
-      (coords.y >= startloc[2] + SITESIZE))
+  var elem := df.FindElement(where);
+  //Se nao tiver a prop Name, ele da um erro para nao conseguir construir fora do contexto da area
+  if(!elem.GetProp("Name"))
     SendSysMessage (who, lang["outofbounds"]);
     return 0;
   endif
@@ -1496,13 +1496,9 @@ function create_marked(who, x, y, z, type)
         return;
     else
         foreach item in EnumerateItemsInContainer(who.backpack)
-            if(item.objtype == objtype)
-                DestroyItem(item);
-                custo := custo - 1;
-
-                if(custo == 0)
-                    break;
-                endif
+            if(item.objtype == prop["objtype"])
+                SubtractAmount(item, custo);
+                break;
             endif
         endforeach
 
@@ -1595,22 +1591,36 @@ function clear_site(who)
 endfunction
 
 function get_objtype(type)
-    var madeira_ranges := {{6, 25}, {166, 196}, {541, 559}, {144, 165}, {527, 538}}; //Todas paredes do tipo madeira
-    var pedra_ranges := {{26, 50}, {87, 143}, {197, 231}, {463, 495}, {711, 729}, {958, 1005}}; //Todas paredes do tipo pedra
+    var madeira_ranges := {
+    {6, 25},
+    {166, 196},
+    {541, 559},
+    {144, 165},
+    {527, 538},
+    {1685, 1732},
+    {1749, 1780},
+    {2105, 2139},
+    {2150, 2168},
+    {820, 835},
+    {947, 950},
+    {2140, 2149},
+    {2186, 2187},
+    {1291, 1292},
+    {1217, 1249},
+    {1189, 1216},
+    {1185, 1188},
+    {1824, 1871},
+    {1981, 1992},
+    {1993, 2001},
+    {2170, 2173}
+    }; //Todas itens do tipo madeira
 
     // Verifique se o valor está em algum dos intervalos de madeira
     foreach range in madeira_ranges
-        if (type >= range[0] && type <= range[1])
+        if (type >= range[1] && type <= range[2])
             return GetObjTypeByName("logs");
         endif
     endforeach
 
-    // Verifique se o valor está em algum dos intervalos de pedra
-    foreach range in pedra_ranges
-        if (type >= range[0] && type <= range[1])
-            return GetObjTypeByName("rock");
-        endif
-    endforeach
-
-    return GetObjTypeByName("rock");
+    return GetObjTypeByName("Stone");
 endfunction

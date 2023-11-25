@@ -130,7 +130,7 @@ function MiningLoop(who, tool, my_x, my_y, targx, targy, my_facing)
 	if ( ore_amount > 0 )
 		if (ore_type != 999) //999 eh quando nao passou na chance de raridade do minerio
 
-			if ( SkillCheck(who, GATHERING, difficulty) > 0 )
+			if ( SkillCheck(who, GATHERING, difficulty) > 0)
 				var amt := Cint(AP_GetSkill(who, GATHERING)/20);
 				if(TemHabilidade(who, "Minerador Talentoso"))
 					amt := amt + 2;
