@@ -22,6 +22,7 @@ include ":architect:include/systemclock";
 include ":charactercreation:habilidades";
 
 const SIGENA:= 0;
+const BLOCK_OF_STONE := 0x5001;
 
 /*if (SIGENA)
   include ":mrhousing:include/housing";
@@ -962,6 +963,7 @@ program architect_gump(who)
                 if (GetObjProperty (tbd, "#built_by_architect") == who.serial)
                   DestroyItem (tbd);
                   undone:= 1;
+                  CreateItemInBackPack(who, BLOCK_OF_STONE, 1); //Caso seja desfeita a criacao, ele recriar as pedras
                 endif
 
                 Sleepms (2);
@@ -1223,7 +1225,7 @@ program architect_gump(who)
           if (!staffmode)
             SendSysMessage (who, lang["end_confirm"]);
 
-            if (!yesNo(who, array{"Quit Architect", "without saving?"}))
+            if (!yesNo(who, array{"Sair do sistema de arquitetura", "sem salvar?"}))
               choice[1]:= 0;
               break;
             endif
