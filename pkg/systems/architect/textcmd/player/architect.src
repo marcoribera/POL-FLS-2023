@@ -963,7 +963,7 @@ program architect_gump(who)
                 if (GetObjProperty (tbd, "#built_by_architect") == who.serial)
                   DestroyItem (tbd);
                   undone:= 1;
-                  CreateItemInBackPack(who, BLOCK_OF_STONE, 1); //Caso seja desfeita a criacao, ele recriar as pedras
+                  CreateItemInBackPack(who, BLOCK_OF_STONE, 10); //Caso seja desfeita a criacao, ele recriar as pedras
                 endif
 
                 Sleepms (2);
@@ -1229,7 +1229,7 @@ program architect_gump(who)
               choice[1]:= 0;
               break;
             endif
-
+            //Ele sempre move o player e nao entendi, deixei assim
             MoveObjectToLocation (who, playerloc[1], playerloc[2], playerloc[3], who.realm, MOVEOBJECT_FORCELOCATION);
             EraseGlobalProperty ("#architect");
 
@@ -1497,12 +1497,8 @@ function create_marked(who, x, y, z, type)
     else
         foreach item in EnumerateItemsInContainer(who.backpack)
             if(item.objtype == prop["objtype"])
-                DestroyItem(item);
-                custo := custo - 1;
-
-                if(custo == 0)
-                    break;
-                endif
+                SubtractAmount(item, custo);
+                break;
             endif
         endforeach
 
