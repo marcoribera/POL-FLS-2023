@@ -1,4 +1,4 @@
-    use uo;
+use uo;
 use os;
 
 include ":spells:tnmagery";
@@ -79,13 +79,21 @@ program SpellScript(params)
 			break;
 		endif
 
-		var mydmg := cint(AP_GetVital(who, HITS)/10);
-		var targdmg := cint(AP_GetVital(targ, HITS)/10);
-//		ApplyRawDamage( targ, targdmg, 0, DAMAGE_SHOW );
-//		ApplyRawDamage( who, mydmg, 0, DAMAGE_SHOW );
+		var mydmg := cint(AP_GetVital(who, HITS)/10); //O calculo eh baseado somente no hp do caster
 
-		ApplyRawDamage( targ, targdmg );
-		ApplyRawDamage( who, mydmg);
+        if((AP_GetVital(who, HITS) - mydmg) <= 1)
+            mydmg := AP_GetVital(who, HITS) - (AP_GetVital(who, HITS)-1);
+
+            //Da o ultimo dano antes de parar o spell
+            ApplyDamageEX(targ, mydmg, DMG_POISON);
+            ApplyDamageEX(who, mydmg, DMG_POISON);
+
+            SendSysMessageEx(who, "Voce usou toda sua forca vital.", SSM_FAIL);
+            break;
+        endif
+
+		ApplyDamageEX(targ, mydmg, DMG_POISON);
+        ApplyDamageEX(who, mydmg, DMG_POISON);
 
 		if(targ.dead)
 			break;
