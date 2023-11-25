@@ -13,19 +13,19 @@ program Logon(who)
 	// SendSysMessage(who, "Login");
 	// NormaliseGamePlayer(who);
 	
-	if(who.cmdlevel < 1)	
-		foreach mobile in ListMobilesNearLocation(who.x, who.y, who.z, 24, who.realm)
+	// if(who.cmdlevel < 1)	
+	// 	foreach mobile in ListMobilesNearLocation(who.x, who.y, who.z, 24, who.realm)
 
-			if (mobile.serial != who.serial && !who.npctemplate)
-				if (!CheckLineOfSight(who,mobile) || !IsRelativeFacing(who, mobile.X, mobile.Y,2))
-					UpdatePlayerGraphic(mobile, who, 16000, mobile.color);
-				//Who está vendo mobile
-				else
-					UpdatePlayerGraphic(mobile, who, mobile.graphic, mobile.color);
-				endif
-			endif
-		endforeach
-	endif
+	// 		if (mobile.serial != who.serial && !who.npctemplate)
+	// 			if (!CheckLineOfSight(who,mobile) || !IsRelativeFacing(who, mobile.X, mobile.Y,2))
+	// 				UpdatePlayerGraphic(mobile, who, 16000, mobile.color);
+	// 			//Who está vendo mobile
+	// 			else
+	// 				UpdatePlayerGraphic(mobile, who, mobile.graphic, mobile.color);
+	// 			endif
+	// 		endif
+	// 	endforeach
+	// endif
 	return 1;
 endprogram
 
