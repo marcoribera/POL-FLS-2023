@@ -1491,7 +1491,7 @@ function create_marked(who, x, y, z, type)
         return;
     else
         foreach item in EnumerateItemsInContainer(who.backpack)
-            if(item.objtype == objtype)
+            if(item.objtype == prop["objtype"])
                 DestroyItem(item);
                 custo := custo - 1;
 
