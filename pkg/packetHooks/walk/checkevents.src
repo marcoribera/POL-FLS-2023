@@ -21,17 +21,17 @@ exported function CheckEventsWalk( who, byref packet )
 		endif
 	endif
 
-	foreach mobile in ListMobilesNearLocation(who.x, who.y, who.z, 12, who.realm)
+	// foreach mobile in ListMobilesNearLocation(who.x, who.y, who.z, 12, who.realm)
 
-		if (mobile.serial != who.serial && !who.npctemplate)
-			if (!CheckLineOfSight(who,mobile))
-				UpdatePlayerGraphic(mobile, who, 16000, mobile.color);
-			//Who está vendo mobile
-			else
-				UpdatePlayerGraphic(mobile, who, mobile.graphic, mobile.color);
-			endif
-		endif
-	endforeach
+	// 	if (mobile.serial != who.serial && !who.npctemplate)
+	// 		if (!CheckLineOfSight(who,mobile))
+	// 			UpdatePlayerGraphic(mobile, who, 16000, mobile.color);
+	// 		//Who está vendo mobile
+	// 		else
+	// 			UpdatePlayerGraphic(mobile, who, mobile.graphic, mobile.color);
+	// 		endif
+	// 	endif
+	// endforeach
 
 	if (GetObjProperty(who, "neve") && who.concealed == 0 && !GetObjProperty(who, "noprints") && TemHabilidade(who, "Movimento Livre") == 0)
 		if (who.facing == 0 || who.facing == 7);
