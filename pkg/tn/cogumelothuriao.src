@@ -1,0 +1,77 @@
+use uo;
+use os;
+use util;
+
+include ":timedScripts:timedScripts";
+include ":attributes:attributes";
+include "include/damage";
+
+program cogumelo(who, item)
+
+	var type := GetObjProperty(item, "type");
+	
+	if (type == error)
+		type := "comestivel";
+	endif
+	
+	DestroyItem(item);
+	case(RandomInt(3) + 1)
+		1: PlaySoundEffect(who, 0x3b);
+		2: PlaySoundEffect(who, 0x3c);
+		3: PlaySoundEffect(who, 0x3d);
+	endcase
+
+	var chardata := GetObjProperty(who, "chardata");
+	var povo := chardata.povo;
+    var originalColor := who.color;
+
+    if (IsRaging(who))
+        SendSysMessage(who, "Voce ja esta em furia");
+        return;
+    else
+        var dmg := AP_GetVital(who, HITS) - GetHP(who) - 1;
+        if (povo != "Thuriao")
+            dmg := AP_GetVital(who, HITS);
+        endif
+        DamageFLS(who, dmg);
+        AP_ModifyStatMod(who, STRENGTH, 10);
+        RecalcVitals(who);
+        PrintTextAbove(who, "*Pupilas dilatam, a pele fica enrubrecida*");
+        who.color := 2841;
+
+        var i := 0;
+        while (i < 3)
+            if (who.graphic == 401)
+                PlaySoundEffect( who, 0x339 );
+            else
+                PlaySoundEffect( who, 0x44B );
+	        endif
+            i++;
+            sleep(i);
+        endwhile
+    endif
+    
+    var i;
+    for(i:=0; i< 4; i:=i+1)
+        berserkerHallucination(who);
+        Sleep(10);
+    endfor
+    PrintTextAbove(who, "*Parece recobrar a sanidade*");
+    AP_ModifyStatMod(who, STRENGTH, -10);
+    RecalcVitals(who);
+
+    who.color := originalColor;
+endprogram
+
+function berserkerHallucination(who)
+	if(who.npctemplate)
+		return 0;
+	endif
+	foreach mobile in ListMobilesNearLocation(who.x, who.y, who.z, 20)
+        if (mobile == who)
+        else
+            PrintTextAbovePrivate(mobile, "DESTRUIR!!", who, _DEFAULT_UCFONT, 2117);
+            sleepms(500);
+        endif
+	endforeach
+endfunction
