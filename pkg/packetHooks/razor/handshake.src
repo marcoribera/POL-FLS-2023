@@ -5,7 +5,8 @@ use os;
 program Razor_Handshake(who)
 	SysLog("Sending Razor Handshake for "+who.name+" from account "+who.acctname);
 	
-	SendPacket(who, "F0000CFEFFFFFFFFFFFFFFFF");
+	// SendPacket(who, "F0000CFEFFFFFFFFFFFFFFFF");
+	SendPacket(who, "F0000CFE0000000000030003");
 	
 	who.SetProp("#Shake", GetPid()); // reset the shake.
 	
