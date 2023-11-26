@@ -278,35 +278,40 @@ function FazPergaminhoEmBranco(who, item)
 
 		var xInicial := who.x;
 		var yInicial := who.y;
+		PrintText(who, "*cortando couro*");
 
-		repeat
-			if (!item)
-				SendSysMessage (who, "Voce nao tem mais couros nessa pilha.");
-				return 0;
-			elseif (!SubtractAmount (item, 1))
-				SendSysMessage(who, "Nao consegue utilizar o couro.");
+		while(item)
+			if (who.x != xInicial || who.y != yInicial)
+				SendSysMessageEx(who, "Voce se moveu do local e parou de fazer os pergaminhos!", SSM_FAIL);
 				return 0;
 			else
-				for i := 1 to 3
-					PlaySoundEffect(who, 0x5A);
-					PerformAction(who, ANIM_SALUTE);
-					sleep(1);
-				endfor
-				if (SkillCheck(who, SURVIVAL, RequiredSkill));
-					if (!CreateItemInContainer(who.backpack, UOBJ_BLANK_SCROLL, 1))
-						PrintTextAbovePrivate (who, "*Sua mochila esta cheia!*", who);
-						return 0;
-					else
-						SendSysMessage (who, "Voce fez um pergaminho em branco.");
-						return 1;
-					endif
+				if (!SubtractAmount(item, 1))
+					SendSysMessageEx(who, "Nao consegue utilizar o couro.", SSM_FAIL);
+					//return 0;
 				else
-					SendSysMessage (who, "Voce arruinou os materiais.");
-					return 0;
+					for i := 1 to 3
+						PlaySoundEffect(who, 0x5A);
+						PerformAction(who, ANIM_SALUTE);
+						sleep(1);
+					endfor
+					if (SkillCheck(who, SURVIVAL, RequiredSkill));
+						if (!CreateItemInContainer(who.backpack, UOBJ_BLANK_SCROLL, 1))
+							PrintTextAbovePrivate (who, "*Sua mochila esta cheia!*", who);
+							return 0;
+						else
+							SendSysMessage(who, "Voce fez um pergaminho em branco.");
+						endif
+					else
+						SendSysMessageEx(who, "Voce arruinou os materiais.", SSM_FAIL);
+					endif
+				endif
+				if (!item)
+					SendSysMessageEx(who, "Voce nao tem mais couros nessa pilha.", SSM_FAIL);
+					//return 0;
 				endif
 			endif
-		until(who.x != xInicial || who.y != yInicial);
-		SendSysMessage (who, "Voce parou de fazer os pergaminhos.");
+		endwhile;
+		SendSysMessage(who, "Voce parou de fazer os pergaminhos.");
 	endif
 endfunction
 
