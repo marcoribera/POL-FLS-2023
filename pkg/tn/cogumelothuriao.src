@@ -32,6 +32,9 @@ program cogumelo(who, item)
         var dmg := AP_GetVital(who, HITS) - GetHP(who) - 1;
         if (povo != "Thuriao")
             dmg := AP_GetVital(who, HITS);
+            SendSysMessageEx(who, "Voce nao eh digno", SSM_FAIL);
+            DamageFLS(who, dmg);
+            return;
         endif
         DamageFLS(who, dmg);
         AP_ModifyStatMod(who, STRENGTH, 10);
