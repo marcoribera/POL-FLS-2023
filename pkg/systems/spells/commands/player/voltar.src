@@ -17,12 +17,12 @@ program voltar(params)
 		return;
 	endif
 
-	if(TS_GetCooldown(who, "voltar") > 0)
+	if(TS_GetCooldown(who, "voltarcd") > 0)
 		SendSysMessageEx(who, "Voce deve aguardar.", SSM_FAIL);
 		return;
 	endif
 	
-    TS_StartCoolDown(who, "voltar", 300);
+    TS_StartCoolDown(who, "voltarcd", 300);
 	
 	SendSysMessageEx(who, "Voce volta ao normal.", SSM_FAIL);
 
