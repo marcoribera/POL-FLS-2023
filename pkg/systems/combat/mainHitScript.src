@@ -315,7 +315,9 @@ program MainHitScript( params )
 	endif
 
 	if ((TemHabilidade(defender, "Furia Imortal") || TemHabilidade(defender, "Trapacear a Morte" )) && (AP_GetVital(defender, HITS) < total))
-		start_script(":charactercreation:habilidades/trapacearmorte", array{defender, total});
+		if ( !GetCooldown(defender, "trapacearmorte_rodando") > 0 )
+			start_script(":charactercreation:habilidades/trapacearmorte", array{defender, total});
+		endif
 	else
 		//printtextabove(attacker, "causa dano");
 		var finalizar := 0;
