@@ -34,7 +34,9 @@ program equipweapon(who, item)
 		endif
 	endif
 	if(aux.size() == 0)
-		EraseObjProperty(who,"descmod");
+		if(!GetObjProperty(who, "descmod"))
+			EraseObjProperty(who,"descmod");
+		endif
 	else
 		SetObjProperty(who,"descmod",aux);
 	endif
