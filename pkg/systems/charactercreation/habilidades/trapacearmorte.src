@@ -3,11 +3,13 @@ use uo;
 use vitals;
 use os;
 
+include ":tn:cooldown";
+
 program cheatdeath(parms)
 
 	var who := parms[1];
 	var dmg := parms[2];
-
+Setcooldown(who, "trapacearmorte_rodando",12);
 	detach();
 
 	var i := 1;
@@ -15,6 +17,9 @@ program cheatdeath(parms)
 		PrintTextAbovePrivate(who, "" + i, who);
 		sleep(1);
 		i := i + 1;
+	if(who.dead)
+	break;
+	endif
 	endwhile
 
 	ApplyRawDamage(who, dmg);
