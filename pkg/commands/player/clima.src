@@ -94,14 +94,14 @@ var climamodtemp;
 	
 
 	//Mensagens para o Usuario
-	SendSysMessage(who, "Estacao do Ano: " + estacaonow,FONT_NORMAL,colore);
+	SendSysMessage(who, "Estacao do Ano: " + estacaonow, FONT_NORMAL, colore);
        if(diaounoite == "noite")
-	SendSysMessage(who, "Fase da Lua: " + fase,FONT_NORMAL,0);
+	SendSysMessageEx(who, "Fase da Lua: " + fase, SSM_INFO);
        endif
        if(diaounoite == "dia")
-	SendSysMessage(who, "Posicao do Sol: " + solpos,FONT_NORMAL,0);
+	SendSysMessageEx(who, "Posicao do Sol: " + solpos, SSM_INFO);
        endif
-	SendSysMessage(who, "Sensacao Termica: " + sensacao,FONT_NORMAL,color);
+	SendSysMessage(who, "Sensacao Termica: " + sensacao, FONT_NORMAL, color);
 
 
 endprogram

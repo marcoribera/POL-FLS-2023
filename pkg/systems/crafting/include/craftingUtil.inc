@@ -81,7 +81,7 @@ function AddQualityDamageMod(who, craft_skill, byref theitem, quality )
 			if(qtd < maxBonus)
 				qtd := maxBonus;
 			endif
-			randomDmg := RandomInt(5) + 1;
+			randomDmg := RandomIntMinMax(1, 6);
 			case(randomDmg)
 				1: theitem.damage_physical_mod := theitem.damage_physical_mod + qtd; break;
 				2: theitem.damage_fire_mod     := theitem.damage_fire_mod + qtd; break;
