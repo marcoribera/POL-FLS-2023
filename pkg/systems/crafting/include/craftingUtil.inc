@@ -92,7 +92,7 @@ function AddQualityDamageMod(who, craft_skill, byref theitem, quality )
 			maxBonus := maxBonus - qtd;
 			sleepms(3);
 		endwhile
-		var modadc := (0.1 + ((quality-1)/4));
+		var modadc := (0.1 + ((quality-1)/4)); 
 		if(craft_skill == "MetalWorking")
 			if(TemHabilidade(who,"Armas Velozes"))
 				//SendSysMessage(who,"bonus velocidade" + (quality-1)/2 + "qualidade: "+ quality);
