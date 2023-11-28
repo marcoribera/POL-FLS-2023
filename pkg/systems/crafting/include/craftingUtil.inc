@@ -92,29 +92,30 @@ function AddQualityDamageMod(who, craft_skill, byref theitem, quality )
 			maxBonus := maxBonus - qtd;
 			sleepms(3);
 		endwhile
+		var modadc := (0.1 + ((quality-1)/4));
 		if(craft_skill == "MetalWorking")
 			if(TemHabilidade(who,"Armas Velozes"))
 				//SendSysMessage(who,"bonus velocidade" + (quality-1)/2 + "qualidade: "+ quality);
-				SetObjProperty(theitem,"attackspeedbonus", CInt(elem.Speed * (0.1 + (quality-1)/4)));
+				SetObjProperty(theitem,"attackspeedbonus", CInt(elem.Speed * modadc));
 				//theitem.speed_mod := CInt(elem.Speed * (0.1 + (quality-1)/4));
 			endif
 			//Acplica dano extra pra arma
 			if(TemHabilidade(who,"Amolador de Laminas") && (elem.TipoAtaque == "Cortante"))
 				//SendSysMessage(who,"bonus dano" + theitem.quality-1);
-				theitem.dmg_mod := CInt(elem.MaxDam * (0.1 + (quality-1)/4));
+				theitem.dmg_mod := CInt(elem.MaxDam * modadc);
 			endif
 			if(TemHabilidade(who,"Ponta Temperada") && (elem.TipoAtaque == "Perfurante"))
-				theitem.dmg_mod := CInt(elem.MaxDam * (0.1 + (quality-1)/4));
+				theitem.dmg_mod := CInt(elem.MaxDam * modadc);
 			endif
 			if(TemHabilidade(who,"Densidade Esmagadora") && (elem.TipoAtaque == "Contusivo"))
-				theitem.dmg_mod := CInt(elem.MaxDam * (0.1 + (quality-1)/4));
+				theitem.dmg_mod := CInt(elem.MaxDam * modadc);
 			endif
 		elseif(craft_skill == "WoodWorking")
 			if(TemHabilidade(who,"Entalhe para Combate"))
-				theitem.speed_mod := CInt(elem.Speed * (0.1 + (quality-1)/4));
+				theitem.speed_mod := CInt(elem.Speed * modadc);
 			endif
 			if(TemHabilidade(who,"Flexao da Madeira")) //&& (Cint(elem.maxrange) > 2))
-				theitem.dmg_mod := CInt(elem.MaxDam * (0.1 + (quality-1)/4));
+				theitem.dmg_mod := CInt(elem.MaxDam * modadc);
 			endif
 		endif
 	endif
