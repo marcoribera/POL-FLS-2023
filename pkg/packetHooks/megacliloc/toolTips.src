@@ -267,7 +267,7 @@ exported function MegaCliloc( who, byref packet )
 	var laranja :=  "<BASEFONT COLOR=#FFA500>";
 	var roxo := "<BASEFONT COLOR=#d98cd9>";
 	var softgreen := "<BASEFONT COLOR=#a1eca7>";
-	var blueice := "<BASEFONT COLOR=#79b6c9 >";
+	var blueice := "<BASEFONT COLOR=#00BFFF>";
 	var redfire := "<BASEFONT COLOR=#e95c4b>";
 	var lilas := "<BASEFONT COLOR=#d998a0>";
 	var fisico := "<BASEFONT COLOR=#FFFFFF>";
