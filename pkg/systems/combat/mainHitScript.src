@@ -243,23 +243,27 @@ program MainHitScript( params )
 
 		CriticalHitScripts(attacker, defender, weapon, armor, basedamage, total);
 
-		if ( GetCooldown(attacker, "golpesamplos") )
+		if ( temHabilidade(attacker, "Golpes Amplos"))
 			var pt := attacker.party.members;
 			if (!pt)
-				var inimigos := ListHostiles(attacker, 1, LH_FLAG_LOS);
-				foreach inimigo in inimigos
-					DamageFLS(inimigo, cint(total/3), DMG_PHYSICAL, attacker);
+				var inimigosx := ListHostiles(attacker, 1, LH_FLAG_LOS);
+				foreach inimigox in inimigosx
+					DamageFLS(inimigox, cint(total/3), DMG_PHYSICAL, attacker);
 				endforeach
 			else
-				var pets := ListPetsNear(attacker, 2);
-				var petspt := array;
+				var pets := ListPetsNear(attacker, 5);
+				var tamed;
+				var summoned;
 				foreach member in pt
-					petspt.append(ListPetsNear(member, 3));
+					if (member.serial != attacker.serial)
+						tamed := GetObjProperty(member, "TamedPets");
+						summoned := GetObjProperty(member, "SummonedPets");
+					endif
 				endforeach
-				var inimigos2 := ListMobilesNearLocation(attacker.x, attacker.y, attacker.z, 1, attacker.realm);
-				foreach inimigo in inimigos2
-					if( !(inimigo in petspt) && !(inimigo in pets) && !(inimigo in attacker.party.members))
-						DamageFLS(inimigo, cint(total/3), DMG_PHYSICAL, attacker);
+				var inimigos2x := ListMobilesNearLocation(attacker.x, attacker.y, attacker.z, 1, attacker.realm);
+				foreach inimigox in inimigos2x
+					if( !(inimigox.serial in tamed) && !(inimigox in pets) && !(inimigox.serial in summoned) && !(inimigox in attacker.party.members))
+						DamageFLS(inimigox, cint(total/3), DMG_PHYSICAL, attacker);
 					endif
 				endforeach
 			endif
@@ -282,27 +286,28 @@ program MainHitScript( params )
 				defender.attack_once(attacker);
 				//EraseObjProperty(defender, "#CriticalChance");
 			endif
-			if ( temHabilidade(attacker, "Golpes Amplos"))
+			/*if ( temHabilidade(attacker, "Golpes Amplos"))
 				var pt := attacker.party.members;
 				if (!pt)
-					var inimigos := ListHostiles(attacker, 1, LH_FLAG_LOS);
-					foreach inimigo in inimigos
-						DamageFLS(inimigo, cint(total/3), DMG_PHYSICAL, attacker);
+				print("NÃO PODE");
+					var inimigosx := ListHostiles(attacker, 1, LH_FLAG_LOS);
+					foreach inimigox in inimigosx
+						DamageFLS(inimigox, cint(total/3), DMG_PHYSICAL, attacker);
 					endforeach
 				else
-					var pets := ListPetsNear(attacker, 4);
-					var petspt := array;
+					var pets := ListPetsNear(attacker, 5);
+					var petspt := struct;
 					foreach member in pt
-						petspt.append(ListPetsNear(member, 5));
+						petspt.append(ListPetsNear(member, 4));
 					endforeach
-					var inimigos2 := ListMobilesNearLocation(attacker.x, attacker.y, attacker.z, 1, attacker.realm);
-					foreach inimigo in inimigos2
-						if( !(inimigo in petspt) && !(inimigo in pets) && !(inimigo in attacker.party.members))
-							DamageFLS(inimigo, cint(total/3), DMG_PHYSICAL, attacker);
+					var inimigos2x := ListMobilesNearLocation(attacker.x, attacker.y, attacker.z, 1, attacker.realm);
+					foreach inimigox in inimigos2x
+						if( !(inimigox in petspt) && !(inimigox in pets) && !(inimigox in attacker.party.members))
+							DamageFLS(inimigox, cint(total/3), DMG_PHYSICAL, attacker);
 						endif
 					endforeach
 				endif
-			endif
+			endif*/
 		endif
 
 		//	if ( temHabilidade(attacker, "Assassinato Horrorizante") )
@@ -315,7 +320,9 @@ program MainHitScript( params )
 	endif
 
 	if ((TemHabilidade(defender, "Furia Imortal") || TemHabilidade(defender, "Trapacear a Morte" )) && (AP_GetVital(defender, HITS) < total))
-		start_script(":charactercreation:habilidades/trapacearmorte", array{defender, total});
+		if ( !GetCooldown(defender, "trapacearmorte_rodando") > 0 )
+			start_script(":charactercreation:habilidades/trapacearmorte", array{defender, total});
+		endif
 	else
 		//printtextabove(attacker, "causa dano");
 		var finalizar := 0;
@@ -708,13 +715,13 @@ function WeaponHitScripts(attacker, defender, weapon, armor, basedamage, rawdama
 		endif
 	endif
 
-    if (TemHabilidade(attacker, "Golpes Amplos"))
-            var dmg  := AP_GetSkill(attacker, TACTICS)/10;
-			if(dmg < 3)
-				dmg := 3;
-			endif
-        start_script(":combat:weaponHitScripts/areadmg", array{attacker, defender, weapon, armor, basedamage, dmg*2, DMG_PHYSICAL});
-    endif
+//    if (TemHabilidade(attacker, "Golpes Amplos"))
+ //           var dmg  := AP_GetSkill(attacker, TACTICS)/10;
+//			if(dmg < 3)
+	//			dmg := 3;
+		//	endif
+        //start_script(":combat:weaponHitScripts/areadmg", array{attacker, defender, weapon, armor, basedamage, dmg*2, DMG_PHYSICAL});
+    //endif
 
 	if (GetCooldown(weapon, "habelemental") )
 		EraseObjProperty(weapon, "#habelemental");

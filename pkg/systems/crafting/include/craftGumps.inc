@@ -406,40 +406,40 @@ function GFCraftInfoPage(who, objtype, skill_config)
 	endif
 
 	var gump := GFCreateGump(50, 25);
-	GFResizePic(gump, 2, 0, BKGND_SILVERTRIM, 521, 420);
+	GFResizePic(gump, 2, 0, BKGND_SILVERTRIM, 521, 470);
 	GFGumpPic(gump, 10, 10, 2624);
 	GFGumpPic(gump, 10, 205, 2624);
 	GFGumpPic(gump, 250, 10, 2624);
 	GFGumpPic(gump, 250, 205, 2624);
-	GFAddAlphaRegion(gump, 10, 10, 505, 400);
+	GFAddAlphaRegion(gump, 10, 10, 505, 450);
 	GFGumpPic(gump, 10, 30, 5055);
 	GFGumpPic(gump, 90, 30, 5055);
 	GFResizePic(gump, 160, 120, 5054, 356, 13);
 	GFGumpPic(gump, 10, 210, 5055);
 	GFGumpPic(gump, 90, 210, 5055);
-	GFGumpPic(gump, 10, 290, 5055);
-	GFGumpPic(gump, 90, 290, 5055);
-	GFGumpPic(gump, 10, 370, 5055);
-	GFGumpPic(gump, 90, 370, 5055);
+	GFGumpPic(gump, 10, 320, 5055);
+	GFGumpPic(gump, 90, 320, 5055);
+	GFGumpPic(gump, 10, 420, 5055);
+	GFGumpPic(gump, 90, 420, 5055);
 	GFHTMLArea(gump, 10, 27, 150, 18, "<basefont color=#ffffff>ITEM");
 	GFHTMLArea(gump, 170, 117, 150, 18, "<basefont color=#ffffff>SKILLS");
-	GFHTMLArea(gump, 10, 207, 150, 18, "<basefont color=#ffffff>MATERIAIS");
-	GFHTMLArea(gump, 10, 287, 150, 18, "<basefont color=#ffffff>DESCRICAO");
-	GFAddButton(gump, 15, 387, 4014, 4016, GF_CLOSE_BTN, 1);
-	GFHTMLArea(gump, 50, 390, 150, 18, "<basefont color=#ffffff>VOLTAR");
-	GFAddButton(gump, 270, 387, 4005, 4006, GF_CLOSE_BTN, CInt(objtype) );
-	GFHTMLArea(gump, 305, 390, 150, 18, "<basefont color=#ffffff>FAZER");
+	GFHTMLArea(gump, 10, 208, 150, 18, "<basefont color=#ffffff>MATERIAIS");
+	GFHTMLArea(gump, 10, 318, 150, 18, "<basefont color=#ffffff>DESCRICAO");
+	GFAddButton(gump, 15, 435, 4014, 4016, GF_CLOSE_BTN, 1);
+	GFHTMLArea(gump, 50, 438, 150, 18, "<basefont color=#ffffff>VOLTAR");
+	GFAddButton(gump, 270, 435, 4005, 4006, GF_CLOSE_BTN, CInt(objtype) );
+	GFHTMLArea(gump, 305, 438, 150, 18, "<basefont color=#ffffff>FAZER");
 	GFTilePic(gump, 20, 50, CInt(graphic), color);
 	//GFHTMLArea(gump, 430, 132, 150, 18, ("<basefont color=#ffffff>" + skillreq));
 
 	// Tooltip info from itemdesc.cfg appended in.
 	if(tooltip != "")
-		GFHTMLArea(gump, 170, 300, 340, 60, ("<basefont color=#ffffff>" + tooltip), 0, 1);
+		GFHTMLArea(gump, 170, 333, 340, 85, ("<basefont color=#ffffff>" + tooltip), 0, 1);
 	endif
 	// Material Required
-	GFHTMLArea(gump, 170, 219, 300, 80, ("<basefont color=#ffffff>" + matname));
+	GFHTMLArea(gump, 170, 205, 300, 90, ("<basefont color=#ffffff>" + matname));
 	if(material != 0)
-		GFHTMLArea(gump, 430, 219, 20, 80, ("<basefont color=#ffffff>" + material));
+		GFHTMLArea(gump, 430, 205, 20, 90, ("<basefont color=#ffffff>" + material));
 	endif
 	// Success Chance % text
 	GFTextLine(gump, 170, 80, 1153, "Chance de Sucesso:");

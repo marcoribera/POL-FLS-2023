@@ -2,10 +2,15 @@
 use os;
 
 include ":fls_core:fls_characters";
+include "include/packets";
 
 program logon(who)
 
-	start_script("seasonaleffects", {who});
+	// SetSeasonForPlayer(who, 2);
+	// SetSeasonForAll(2);
+	start_script("seasonaleffects", who);
+	// SendSysMessage(who, "Seasons");
+
 	sleep(1);
 
 	if (HaveReverseVision(who))
