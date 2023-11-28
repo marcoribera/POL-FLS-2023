@@ -56,8 +56,8 @@ program totem(who, wand)
 		var pet := SystemFindObjectBySerial(serial);
 			var pet_parse := pet.name[12, len(pet.name)-11];
 			var pets := GetObjProperty(who, "SummonedPets");
-		GFTextLine(gump, 30, 320, 1153, "<basefont color=#cc0000>Liberar Invocações:");
-		GFTextLine(gump, xx, 340, 1153, "<basefont color=#0000>" + pet_parse);
+		GFTextLine(gump, 30, 320, 0x84, "Liberar Invocações:"); //v"<basefont color=#cc0000>
+		GFTextLine(gump, xx, 340, 3171, pet_parse); //"<basefont color=#0000>"
 		if (GetObjProperty(pet, "summoned"))
 			GFAddButton(gump, xx-4, 343, 0x938, 0x938, GF_CLOSE_BTN, (100+i));
 		endif
