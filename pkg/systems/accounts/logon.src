@@ -10,22 +10,21 @@ include ":accounts:accounts";
 
 program Logon(who)
 	ACCT_SetLastLogin(who.acct);
-	// SendSysMessage(who, "Login");
-	// NormaliseGamePlayer(who);
-	
-	// if(who.cmdlevel < 1)	
-	// 	foreach mobile in ListMobilesNearLocation(who.x, who.y, who.z, 18, who.realm)
 
-	// 		if (mobile.serial != who.serial && !who.npctemplate)
-	// 			if (!CheckLineOfSight(who,mobile))
-	// 				UpdatePlayerGraphic(mobile, who, 16000, mobile.color);
-	// 			//Who está vendo mobile
-	// 			else
-	// 				UpdatePlayerGraphic(mobile, who, mobile.graphic, mobile.color);
-	// 			endif
-	// 		endif
-	// 	endforeach
-	// endif
+	foreach mobile in ListMobilesNearLocation(who.x, who.y, who.z, 24, who.realm)
+
+		if (mobile.serial != who.serial && !who.npctemplate)
+			//Who não está vendo mobile
+			if (!CheckLineOfSight(who,mobile))
+				DrawObject(who, mobile, 16000, mobile.color);
+			//Who está vendo mobile
+			else
+				DrawObject(who, mobile, mobile.graphic, mobile.color);
+			endif
+		endif
+	
+	endforeach
+
 	return 1;
 endprogram
 
@@ -77,7 +76,7 @@ function ConvertIntToHex(astring, alength)
 	return astring;
 endfunction
 
-function DrawObject(ktowhom, kobj, kgraphic, kcolor, keqitrandcolor := 0)
+function DrawObject(ktowhom, kobj, kgraphic, kcolor)
 	var PacketHexStringPart1 := "78";
 	var PacketHexStringPart2 := ConvertIntToHex(kobj.serial, 4) + ConvertIntToHex(kgraphic, 2);
 	PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(kobj.x, 2);
@@ -86,28 +85,12 @@ function DrawObject(ktowhom, kobj, kgraphic, kcolor, keqitrandcolor := 0)
 	PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(kobj.facing, 1);
 	PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(kcolor, 2);
 	PacketHexStringPart2 := PacketHexStringPart2 +"0000";
-	if ((kobj.isa(POLCLASS_MOBILE)) && ((kobj.graphic == 400) || (kobj.graphic == 401)))
-		var color;
-		var graphic;
-		foreach item in ListEquippedItems(kobj)
-			PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(item.serial, 4);
-			if (keqitrandcolor == 1)
-				color := RandomInt(99) + 2;
-			else
-				color := item.color;
-			endif
-			if (color == 0)
-				graphic := item.graphic;
-			else
-				graphic := item.graphic + 32768;
-			endif
-			PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(graphic, 2);
-			PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(item.layer, 1);
-			if (color != 0)
-				PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(color, 2);
-			endif
-		endforeach
-	endif
+	foreach item in ListEquippedItems(kobj)
+		PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(item.serial, 4);
+		PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(item.graphic, 2);
+		PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(item.layer, 1);
+		PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(item.color, 2);
+	endforeach
 	PacketHexStringPart2 := PacketHexStringPart2 +"00000000";
 	var FullPacketHexStringLength := (len(PacketHexStringPart1) + len(PacketHexStringPart2)) / 2 + 2;
 	var FullPacketHexString := PacketHexStringPart1 + ConvertIntToHex(FullPacketHexStringLength, 2) + PacketHexStringPart2;
