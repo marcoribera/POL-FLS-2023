@@ -80,7 +80,6 @@ function EsfriarLiga(user, item)
         var amt := CINT(GetObjProperty(item, "amt1"));
         var ingot := DeterminaLiga(metals, user);
 
-
         if (ingot == "noIngot")
           deleteProp(item);
           item.color := 951;
@@ -162,6 +161,8 @@ function DeterminaLiga(metals, who)
       return 0x699A; //icelum
     elseif (("prata" in metais) && ("helce" in metais))
       return 0x6609; //lunium
+    else
+      return "noIngot";
     endif
   elseif (metais.size() == 3)
     if (("litan" in metais) && ("estanho" in metais)  && ("figin" in metais))
@@ -176,10 +177,14 @@ function DeterminaLiga(metals, who)
       return 0x6602; //acielith
     elseif (("cobre" in metais) && ("prata" in metais)  && ("golden" in metais))
       return 0x6604; //platina
+    else
+      return "noIngot";
     endif
   elseif (metais.size() == 5)
     if(("mithril" in metais) && ("helce" in metais) && ("sinque" in metais) && ("figin" in metais) && ("argonil" in metais))
       return 0x699B; //oricalcum
+    else
+      return "noIngot";
     endif
   else
     return "noIngot";
