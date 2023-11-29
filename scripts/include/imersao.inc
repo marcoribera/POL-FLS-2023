@@ -53,11 +53,12 @@ const EL_GOLPEAR_ANIM := 0x09;
 
 
 /////INÍCIO IMERSÃO/////
-function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, byref user)
+function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, saiefeito:=0, byref user)
 	var whosound, whoemote, whoanim;
+	tipoemote := Lower(tipoemote);
 	
-	case (tipoemote)
-		"Gritar":
+	case (tipoemote) //Humanoide
+		"gritar":
 			whoemote := EL_GRITAR_EMOTE;
 			case (who.graphic)
 				400:
@@ -67,7 +68,7 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, by
 			endcase
 			break;
 
-		"Huh":
+		"huh":
 			whoemote := EL_HUH_EMOTE;
 			case (who.graphic)
 				400:
@@ -77,7 +78,7 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, by
 			endcase
 			break;
 
-		"Tossir1":
+		"tossir1":
 			whoemote := EL_TOSSIR_EMOTE;
 			case (who.graphic)
 				400:
@@ -87,7 +88,7 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, by
 			endcase
 			break;
 
-		"Tossir2":
+		"tossir2":
 			whoemote := EL_TOSSIR_EMOTE;
 			case (who.graphic)
 				400:
@@ -97,7 +98,7 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, by
 			endcase
 			break;
 
-		"Arfar":
+		"arfar":
 			whoemote := EL_ARFAR_EMOTE;
 			case (who.graphic)
 				400:
@@ -107,7 +108,7 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, by
 			endcase
 			break;
 
-		"Gemer":
+		"gemer":
 			whoemote := EL_GEMER_EMOTE;
 			case (who.graphic)
 				400:
@@ -117,7 +118,7 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, by
 			endcase
 			break;
 		
-		"Cair":
+		"cair":
 			whoemote := EL_CAIR_EMOTE;
 			whoanim := EL_CAIR_ANIM;
 			case (who.graphic)
@@ -128,7 +129,7 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, by
 			endcase
 			break;
 
-		"Cair2":
+		"cair2":
 			whoemote := EL_CAIR_EMOTE;
 			whoanim := EL_CAIR_ANIMB;
 			case (who.graphic)
@@ -139,7 +140,7 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, by
 			endcase
 			break;
 
-		"Golpear":
+		"golpear":
 			whoemote := EL_GOLPEAR_EMOTE;
 			whoanim := EL_GOLPEAR_ANIM;
 			case (who.graphic)
@@ -149,6 +150,12 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, by
 					whosound := EL_GOLPEAR_SOM_FEMALE[2];
 			endcase
 			break;
+	endcase
+
+	case (tipoemote) //Objetos
+		"explodir":
+
+		"quebrar":
 	endcase
 
 	if (saisom == 1)
@@ -166,6 +173,19 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, by
 	if (saianim == 1)
 		if (whoanim) PerformAction(who, whoanim);
 		elseif (user.cmdlevel > 1) SendSysMessageEx(user, "GM: Imersao sem ANIMACAO!", SSM_FAIL);
+		endif
+	endif
+
+	if (saiefeito == 1)
+		if (whoanim) 
+			case (tipoemote)
+				"vomitar":
+					//vômito no pé do targ
+				
+				"explodir":
+					//efeito de explosão
+			endcase
+		elseif (user.cmdlevel > 1) SendSysMessageEx(user, "GM: Imersao sem EFEITO!", SSM_FAIL);
 		endif
 	endif
 endfunction

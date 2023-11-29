@@ -3,7 +3,7 @@ use uo;
 include "include/imersao";
 
 program textcmd_imersao(who, params)
-    var targ, tipoemote, saisom, saiemote, saianim;
+    var targ, tipoemote, saisom, saiemote, saianim, saiefeito;
     params := SplitWords(params);
 
     targ := Target(who); //target
@@ -17,6 +17,7 @@ program textcmd_imersao(who, params)
     if (params[2]) saisom := CInt(params[2]); else saisom := 1; endif
     if (params[3]) saiemote := CInt(params[3]); else saiemote := 0; endif
     if (params[4]) saianim := CInt(params[4]); else saianim := 0; endif
+    if (params[5]) saianim := CInt(params[5]); else saiefeito := 0; endif
     
-    EmoteSound(targ, tipoemote, saisom, saiemote, saianim, who);
+    EmoteSound(targ, tipoemote, saisom, saiemote, saianim, saiefeito, who);
 endprogram
