@@ -259,7 +259,7 @@ program fireweapons(who, item)
 		return;
 	endif
     var random := randomfloat(100);
-    if (random <= 10)
+    if (random <= 5)
         SendSysMessageEx(who, "O tiro saiu pela culatra!", SSM_FAIL);
         targ := who;
         DestroyItem(item);
