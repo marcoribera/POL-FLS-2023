@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //include "include/OLD/sound";
+include "include/imersao";
 
 function repair_item(character, what, craft_skill)
 
@@ -73,12 +74,16 @@ if (cint(hisskill)>=cint(item_skill))
 
   if((what.hp <= 0) || (what.quality <= 0.1) || (!what.quality))
     SendSysMessage(character, "O fragil material quebrou quando voce manipulou ele.");
+    Imersao(character, "susto");
+    Imersao(what, "vidro");
     DestroyItem(what);
     return;
   endif
 
   if(what.quality <= damageamount)
     SendSysMessage(character, "O fragil material quebrou quando voce manipulou ele.");
+    Imersao(character, "susto");
+    Imersao(what, "vidro");
     DestroyItem(what);
     return;
   endif
@@ -86,6 +91,8 @@ if (cint(hisskill)>=cint(item_skill))
 
   if((what.hp <= 0) || (what.quality <= 0.1) || (!what.quality))
     SendSysMessage(character, "O fragil material quebrou quando voce manipulou ele.");
+    Imersao(character, "susto");
+    Imersao(what, "vidro");
     DestroyItem(what);
     return;
   endif
@@ -103,15 +110,19 @@ if (cint(hisskill)>=cint(item_skill))
       what.hp := what.maxhp;
       EraseObjProperty(what, "swings");
       SendSysMessage(character, "Voce consertou o item completamente.");
+      Imersao(character, "mw");
     else
       what.hp := thehp + repaired_amount;
       SendSysMessage(character, "Voce consertou o item.");
+      Imersao(character, "mw");
     endif
 
     if ((what.hp <= 0) || (what.quality <= 0.1) || (!what.quality))
       SendSysMessage(character, "O fragil material quebrou quando voce manipulou ele.");
       DestroyItem(what);
-      return;
+      Imersao(character, "susto", 1,0,1);
+      Imersao(character, "vidro");
+    return;
     endif
 
   else
@@ -120,6 +131,8 @@ if (cint(hisskill)>=cint(item_skill))
     if (thehp <= damage_amount)
       DestroyItem(what);
       SendSysMessage(character, "Voce falhou e destruiu o item.");
+      Imersao(character, "susto", 1,0,1);
+      Imersao(character, "vidro");
     endif
 
     thehp := thehp - damage_amount;
@@ -132,6 +145,8 @@ if (cint(hisskill)>=cint(item_skill))
     if(thehp <= 0)
       DestroyItem(what);
       SendSysMessage(character, "Voce falhou e destruiu o item.");
+      Imersao(character, "susto", 1,0,1);
+      Imersao(character, "vidro");
     else
       SendSysMessage(character, "Voce falhou e danificou o item.");
     endif
@@ -139,6 +154,8 @@ if (cint(hisskill)>=cint(item_skill))
     if ((what.hp <= 0) || (what.quality <= 0.1) || (!what.quality))
       SendSysMessage(character, "O fragil material quebrou quando voce manipulou ele.");
       DestroyItem(what);
+      Imersao(character, "susto", 1,0,1);
+      Imersao(character, "vidro");
       return;
     endif
 endif
