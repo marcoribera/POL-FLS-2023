@@ -177,28 +177,28 @@ function SeasonRotate()
 	daynumber := daynumber+1;
 	if (daynumber > 360)
 		daynumber := 1;
-    current_year := current_year + 1;
+                current_year := current_year + 1;
 	endif
 	
 	setglobalproperty("daynumber", daynumber);
-  SetGlobalProperty("current_year", current_year);
+        SetGlobalProperty("current_year", current_year);
 	
-	if (daynumber >= 1 <= 91)
+	if (daynumber == 1)
 		Broadcast("E verao.");
 		setglobalproperty("season", 1);
-		start_script("seasonaleffects");
-	elseif (daynumber > 91 <= 180)
+		//start_script("seasonaleffects");
+	elseif (daynumber == 91)
 		Broadcast("As folhas das arvores comecam a cair.");
 		setglobalproperty("season", 2);
-		start_script("seasonaleffects");
-	elseif (daynumber > 180 <= 272)
+		//start_script("seasonaleffects");
+	elseif (daynumber == 180)
 		Broadcast("O vento sopra gelado e a neve comeca a cair..");
 		setglobalproperty("season", 3);
-		start_script("seasonaleffects");
-	elseif (daynumber > 272)
+		//start_script("seasonaleffects");
+	elseif (daynumber == 272)
 		Broadcast("Os passaros cantam felizes e a vida selvagem e ambudante.");
 		setglobalproperty("season", 5);
-		start_script("seasonaleffects");
+		//start_script("seasonaleffects");
 	endif
 endfunction
 

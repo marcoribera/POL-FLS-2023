@@ -15,19 +15,15 @@ program weathercontrol()
     var depth;
     var fromedge;
     if (season != 1)	// sem clima no verao
-    	start_script("seasonaleffects");
       if (daynumber <= 180)	//2 Outono
          depth := daynumber - 180;
          fromedge := abs(depth - 46);
-      	start_script("seasonaleffects");   
       elseif (daynumber <= 272)	//3 inverno
          depth := daynumber - 272;
          fromedge := abs(depth - 58);
-        start_script("seasonaleffects");
       else 		//5 primavera
          depth := daynumber - 360;
          fromedge := abs(depth - 42);
-         	start_script("seasonaleffects");
       endif
 			// Below we need to first see if we get weather.
 			// Then pick which weather type to use.
