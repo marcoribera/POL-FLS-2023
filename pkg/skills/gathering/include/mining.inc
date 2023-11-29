@@ -10,7 +10,7 @@ include ":timedScripts:timedScripts";
 const MAX_RESOURCE_AMOUNT := 10;
 
 function Garimpeiro(who)
-	var rand := randomint(200);
+	var rand := RandomFloat(200);
 	if(rand < 2)
 		EncontraGema(who);
 	elseif(TemHabilidade(who, "Minerador Talentoso") && rand < 10)
