@@ -1,7 +1,7 @@
 /* By EvilLink
 Biblioteca para imersão com Sons e/ou Emotes
-Exemplo de uso: EmoteSound(who, "Gritar", 1, 0, 0) - Grita; sai som; não sai emote; não sai animação relacionada
-Exemplo2 de uso: EmoteSound(who, "Gritar") - Grita; sai som; sai emote; sai animação relacionada
+Exemplo de uso: Imersao(who, "Gritar", 1, 0, 0) - Grita; sai som; não sai emote; não sai animação relacionada
+Exemplo2 de uso: Imersao(who, "Gritar") - Grita; sai som; sai emote; sai animação relacionada
 who = alvo (player/item)
 "Gritar" = Emote/Som a ser emitido
 1 = EMITE som
@@ -51,20 +51,34 @@ const EL_GOLPEAR_SOM_FEMALE := EL_GRITARB_SOM_FEMALE;
 const EL_GOLPEAR_EMOTE := "*Golpeando*";
 const EL_GOLPEAR_ANIM := 0x09;
 
+const EL_VIDRO_SOM := 0x03F;
+const EL_VIDRO_EMOTE := "*Quebrou*";
+
+const EL_SUSTO_SOM_MALE := 0x434;
+const EL_SUSTO_SOM_FEMALE := 0x324;
+const EL_SUSTO_EMOTE := "*Oh*";
+const EL_SUSTO_ANIM := 0x14;
+
+const EL_METAL_SOM := 0x002b;
+const EL_CRAFT_MW_SOM := EL_METAL_SOM;
+const EL_CRAFT_MW_ANIM := 0x0b;
+
+
 
 /////INÍCIO IMERSÃO/////
-function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, saiefeito:=0, byref user)
-	var whosound, whoemote, whoanim;
+function Imersao(byref who, tipoemote, saisom:=1, saiemote:=1, saianim:=1, saiefeito:=1, byref user:=0)
+	var whosound, whoemote, whoanim, noexist;
 	tipoemote := Lower(tipoemote);
 	
-	case (tipoemote) //Humanoide
+	case (tipoemote)
+		//HUMANOIDE
 		"gritar":
 			whoemote := EL_GRITAR_EMOTE;
 			case (who.graphic)
 				400:
-					whosound := EL_GRITAR_SOM_MALE[1];
+					whosound := EL_GRITAR_SOM_MALE;
 				401:
-					whosound := EL_GRITAR_SOM_FEMALE[2];
+					whosound := EL_GRITAR_SOM_FEMALE;
 			endcase
 			break;
 
@@ -72,9 +86,9 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, sa
 			whoemote := EL_HUH_EMOTE;
 			case (who.graphic)
 				400:
-					whosound := EL_HUH_SOM_MALE[1];
+					whosound := EL_HUH_SOM_MALE;
 				401:
-					whosound := EL_HUH_SOM_FEMALE[2];
+					whosound := EL_HUH_SOM_FEMALE;
 			endcase
 			break;
 
@@ -82,9 +96,9 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, sa
 			whoemote := EL_TOSSIR_EMOTE;
 			case (who.graphic)
 				400:
-					whosound := EL_TOSSIRA_SOM_MALE[1];
+					whosound := EL_TOSSIRA_SOM_MALE;
 				401:
-					whosound := EL_TOSSIRA_SOM_FEMALE[2];
+					whosound := EL_TOSSIRA_SOM_FEMALE;
 			endcase
 			break;
 
@@ -92,9 +106,9 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, sa
 			whoemote := EL_TOSSIR_EMOTE;
 			case (who.graphic)
 				400:
-					whosound := EL_TOSSIRB_SOM_MALE[1];
+					whosound := EL_TOSSIRB_SOM_MALE;
 				401:
-					whosound := EL_TOSSIRB_SOM_FEMALE[2];
+					whosound := EL_TOSSIRB_SOM_FEMALE;
 			endcase
 			break;
 
@@ -102,9 +116,9 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, sa
 			whoemote := EL_ARFAR_EMOTE;
 			case (who.graphic)
 				400:
-					whosound := EL_ARFAR_SOM_MALE[1];
+					whosound := EL_ARFAR_SOM_MALE;
 				401:
-					whosound := EL_ARFAR_SOM_FEMALE[2];
+					whosound := EL_ARFAR_SOM_FEMALE;
 			endcase
 			break;
 
@@ -112,9 +126,9 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, sa
 			whoemote := EL_GEMER_EMOTE;
 			case (who.graphic)
 				400:
-					whosound := EL_GEMER_SOM_MALE[1];
+					whosound := EL_GEMER_SOM_MALE;
 				401:
-					whosound := EL_GEMER_SOM_FEMALE[2];
+					whosound := EL_GEMER_SOM_FEMALE;
 			endcase
 			break;
 		
@@ -123,9 +137,9 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, sa
 			whoanim := EL_CAIR_ANIM;
 			case (who.graphic)
 				400:
-					//whosound := EL_CAIR_SOM_MALE[1];
+					//whosound := EL_CAIR_SOM_MALE;
 				401:
-					//whosound := EL_CAIR_SOM_FEMALE[2];
+					//whosound := EL_CAIR_SOM_FEMALE;
 			endcase
 			break;
 
@@ -134,9 +148,9 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, sa
 			whoanim := EL_CAIR_ANIMB;
 			case (who.graphic)
 				400:
-					//whosound := EL_CAIR_SOM_MALE[1];
+					//whosound := EL_CAIR_SOM_MALE;
 				401:
-					//whosound := EL_CAIR_SOM_FEMALE[2];
+					//whosound := EL_CAIR_SOM_FEMALE;
 			endcase
 			break;
 
@@ -145,18 +159,52 @@ function EmoteSound(byref who, tipoemote, saisom:=1, saiemote:=0, saianim:=0, sa
 			whoanim := EL_GOLPEAR_ANIM;
 			case (who.graphic)
 				400:
-					whosound := EL_GOLPEAR_SOM_MALE[1];
+					whosound := EL_GOLPEAR_SOM_MALE;
 				401:
-					whosound := EL_GOLPEAR_SOM_FEMALE[2];
+					whosound := EL_GOLPEAR_SOM_FEMALE;
 			endcase
 			break;
-	endcase
+		
+		"susto":
+			whoemote := EL_SUSTO_EMOTE;
+			whoanim := EL_SUSTO_ANIM;
+			case (who.graphic)
+				400:
+					whosound := EL_SUSTO_SOM_MALE;
+				401:
+					whosound := EL_SUSTO_SOM_FEMALE;
+			endcase
+			break;
+		
+		"MW":
+			//whoemote := ;
+			whoanim := EL_CRAFT_MW_ANIM;
+			whosound := EL_CRAFT_MW_SOM;
+			break;
 
-	case (tipoemote) //Objetos
+		//OBJETOS
 		"explodir":
-
+			break;
+		
 		"quebrar":
+			break;
+		
+		"metal":
+			whosound := EL_METAL_SOM;
+			break;
+
+		"vidro":
+			whoemote := EL_VIDRO_EMOTE;
+			whosound := EL_VIDRO_SOM;
+			break;
+
+		default: noexist := 1;
 	endcase
+
+	if (noexist)
+		SendSysMessageEx(user, "Acao inexistente no banco de dados.", SSM_FAIL);
+		return;
+	endif
 
 	if (saisom == 1)
 		if (whosound) PlaySoundEffect(who, whosound);
