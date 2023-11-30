@@ -171,8 +171,7 @@ var anim := wpn_a_elem.Anim;
 
 	var random := RandomInt(100)+1;
 
-	//PlayAttackAnimation(attacker);
-    PerformAction(attacker, anim); //substituida a função que tem no include. corrigir lá depois
+	PlayAttackAnimation(attacker);
 
 	EraseObjProperty(attacker, "insistencia");
 
