@@ -77,13 +77,17 @@ function PlayMissSound(attacker)
 endfunction
 
 function PlayAttackAnimation(attacker)
-	var attack_anim := 0x0c; // Look around for npcs?
+	var attack_anim := 0x0c;
 	var wpn_a_elem2 := GetWpnCfgInfo(attacker, attacker.weapon);
 	if ( wpn_a_elem2.Anim )
 		var anim_list := GetConfigStringArray(wpn_a_elem2, "Anim");
-		attack_anim := anim_list[RandomInt(anim_list.size())+1];
+		if (anim_list.size() > 1)
+			attack_anim := anim_list[RandomIntMinMax(1, anim_list.size())+1];
+		else
+			attack_anim := anim_list[1];
+		endif
 	endif
-	if ( attacker.graphic != 400 || attacker.graphic != 401)
+	if ( attacker.graphic != 400 && attacker.graphic != 401)
 		attack_anim := 0x0c;
 	endif
 
