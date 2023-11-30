@@ -97,7 +97,7 @@ function fBreak(who,item)
 		PlaySoundEffect(who, FLS_SFX_SKILL_LUMBERJACK);
 		PlayStationaryEffect(item.x, item.y, item.z, FX_SMOKE, 2, 4);
 		//ConsumeVital( who, STAMINA, 2000 );
-		if (TemHabilidade(who, "Cortador de Madeira"))
+		if (TemHabilidade(who, "Lenhador Eficaz"))
 			ConsumeVital( who, STAMINA, 1000 );
 			PrintText(item, "*Destroi " +item.desc+ " com um golpe*");
 			SetObjProperty(item,"hits",0);
