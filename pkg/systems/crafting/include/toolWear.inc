@@ -30,7 +30,7 @@ function CheckToolWear (who, tool, craft_skill)
     if((RandomInt(100)+1) > skill)
       if(tool.isa(POLCLASS_WEAPON))
         if(tool.hp > 1)
-	        if (TemHabilidade(who, "Preservar Ferramentas") || TemHabilidade(who, "Cortador de Madeira"))
+	        if (TemHabilidade(who, "Preservar Ferramentas") || TemHabilidade(who, "Lenhador Eficaz"))
 		        if (randomint(2) == 0)
 			        return;
 		        endif

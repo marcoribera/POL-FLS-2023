@@ -132,7 +132,6 @@ program death(params)
 				SetObjProperty(corpse, "deathtimer", polcore().systime);
 				//var dias := GetObjProperty(ghost, "createdate");			
                 var dias := idadeCharInDays(ghost);
-                print("dias: " + dias);
                 if (dias < 2 || dias == error || dias > 1000) // byte hell, char recriado muitas vzes tava vindo com 19k+ dias 
                     dias := 2;
                 endif
@@ -149,6 +148,7 @@ program death(params)
 				endif
 				FindAccount(ghost.acctname).setprop("mortelog", logs);
                 FindAccount(ghost.acctname).setprop("heir_days", dias);
+
                 var skill_heir := get_heir_skills(ghost);
                 FindAccount(ghost.acctname).setprop("herdeiro", skill_heir);
                 

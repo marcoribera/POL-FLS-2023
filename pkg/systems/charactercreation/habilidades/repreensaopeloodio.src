@@ -60,7 +60,7 @@ program aura_of_hate(params)
 
 	SendSysMessageEx(attacker, "Nao te falta odio!", SSM_INFO);
 	var hate_dmg := cast_points * 1.5;
-
+    SetObjProperty(attacker, "repreensao", 1);
 	DamageFLS(defender, hate_dmg, DMG_FORCED, attacker);
     var curse_time := CInt(AP_GetSkill(attacker, MAGICLORE) / 3);
 
