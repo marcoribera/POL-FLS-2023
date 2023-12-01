@@ -9,10 +9,14 @@ who = alvo (player/item)
 */
 
 use uo;
+use os;
 
 include "include/say";
 
 //REFERÊNCIAS
+//HUMANOIDE
+const EL_BOW_ANIM := 0x20;
+
 const EL_GRITAR_SOM_MALE := 0x441;
 const EL_GRITAR_SOM_FEMALE := 0x32F;
 const EL_GRITAR_EMOTE := "*Gritando*";
@@ -24,7 +28,7 @@ const EL_GRITARB_EMOTE := EL_GRITAR_EMOTE;
 const EL_HUH_SOM_MALE := 0x430;
 const EL_HUH_SOM_FEMALE := 0x320;
 const EL_HUH_EMOTE := "*Huh?*";
-//const EL_HUH_ANIM := ; //olhar para os lados
+const EL_HUH_ANIM := 0x05; //olhar para os lados
 
 const EL_TOSSIRA_SOM_MALE := 0x421;
 const EL_TOSSIRA_SOM_FEMALE := 0x312;
@@ -51,23 +55,37 @@ const EL_GOLPEAR_SOM_FEMALE := EL_GRITARB_SOM_FEMALE;
 const EL_GOLPEAR_EMOTE := "*Golpeando*";
 const EL_GOLPEAR_ANIM := 0x09;
 
-const EL_VIDRO_SOM := 0x03F;
-const EL_VIDRO_EMOTE := "*Quebrou*";
-
 const EL_SUSTO_SOM_MALE := 0x434;
 const EL_SUSTO_SOM_FEMALE := 0x324;
 const EL_SUSTO_EMOTE := "*Oh*";
 const EL_SUSTO_ANIM := 0x14;
 
+const EL_VOMITAR_SOM_MALE := 0;
+const EL_VOMITAR_SOM_FEMALE := 0;
+const EL_VOMITAR_EMOTE := "*Vomita*";
+const EL_VOMITAR_ANIM := EL_BOW_ANIM;
+
+//CRAFT
 const EL_METAL_SOM := 0x002b;
+const EL_MADEIRA_SOM := 0x23e;
+const EL_FLECHA_SOM := 0x5a;
+const EL_TESOURA_SOM := 0x249;
 const EL_CRAFT_MW_SOM := EL_METAL_SOM;
 const EL_CRAFT_MW_ANIM := 0x0b;
+const EL_CRAFT_WW_SOM := EL_MADEIRA_SOM;
+const EL_CRAFT_BC_SOM := EL_FLECHA_SOM;
+const EL_CRAFT_DW_SOM := EL_TESOURA_SOM;
 
+//OBJETOS
+const EL_VIDRO_SOM := 0x03F;
+const EL_VIDRO_EMOTE := "*Quebrou*";
+
+//alchemy 0x243
 
 
 /////INÍCIO IMERSÃO/////
 function Imersao(byref who, tipoemote, saisom:=1, saiemote:=1, saianim:=1, saiefeito:=1, byref user:=0)
-	var whosound, whoemote, whoanim, noexist;
+	var whosound, whoemote, whoanim, whoefeito, noexist;
 	tipoemote := Lower(tipoemote);
 	
 	case (tipoemote)
@@ -84,6 +102,7 @@ function Imersao(byref who, tipoemote, saisom:=1, saiemote:=1, saianim:=1, saief
 
 		"huh":
 			whoemote := EL_HUH_EMOTE;
+			whoanim := EL_HUH_ANIM;
 			case (who.graphic)
 				400:
 					whosound := EL_HUH_SOM_MALE;
@@ -176,10 +195,26 @@ function Imersao(byref who, tipoemote, saisom:=1, saiemote:=1, saianim:=1, saief
 			endcase
 			break;
 		
-		"MW":
+		"vomitar":
+			break;
+		
+		//PROFISSÕES
+		"mw":
 			//whoemote := ;
 			whoanim := EL_CRAFT_MW_ANIM;
 			whosound := EL_CRAFT_MW_SOM;
+			break;
+
+		"ww":
+			//whoemote := ;
+			//whoanim := EL_CRAFT_WW_ANIM;
+			whosound := EL_CRAFT_WW_SOM;
+			break;
+
+		"dw":
+			//whoemote := ;
+			//whoanim := EL_CRAFT_DW_ANIM;
+			whosound := EL_CRAFT_DW_SOM;
 			break;
 
 		//OBJETOS
@@ -196,6 +231,7 @@ function Imersao(byref who, tipoemote, saisom:=1, saiemote:=1, saianim:=1, saief
 		"vidro":
 			whoemote := EL_VIDRO_EMOTE;
 			whosound := EL_VIDRO_SOM;
+			whoefeito := 1;
 			break;
 
 		default: noexist := 1;
@@ -225,13 +261,20 @@ function Imersao(byref who, tipoemote, saisom:=1, saiemote:=1, saianim:=1, saief
 	endif
 
 	if (saiefeito == 1)
-		if (whoanim) 
+		if (whoefeito)
 			case (tipoemote)
 				"vomitar":
-					//vômito no pé do targ
+					//vômito no pé do who
+					break;
 				
 				"explodir":
 					//efeito de explosão
+					break;
+				
+				"vidro":
+					sleep(1);
+					DestroyItem(who);
+					break;
 			endcase
 		elseif (user.cmdlevel > 1) SendSysMessageEx(user, "GM: Imersao sem EFEITO!", SSM_FAIL);
 		endif
