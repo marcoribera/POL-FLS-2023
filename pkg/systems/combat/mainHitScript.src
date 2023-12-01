@@ -25,7 +25,7 @@ include "include/sounds";
 include ":spells:swordmage";
 include ":taming:taming";
 include ":charactercreation:resists";
-
+//include ":combat:include/mainHitScript";
 
 var item_cfg := ReadConfigFile(":*:itemdesc");
 var taming_cfg := ReadConfigFile(":taming:taming");
@@ -86,7 +86,7 @@ program MainHitScript( params )
 	PlayHitSounds(defender);
 
 	//Processa o aumento ou não de skill de combate
-	SkillChecks(attacker, defender, weapon, rawdamage);
+	//SkillChecks(attacker, defender, weapon, rawdamage); //jogado pro combatHook.src para upar até quase errar o golpe
 
 	//Verifica se o ataque foi realizado de uma posição onde bloquear é possível e, sendo, processa o teste de bloaqueio
 	if ( (!Cint(GetObjProperty(attacker, "backstab"))) && !IsBehind(defender, attacker.x, attacker.y))
@@ -396,7 +396,8 @@ function PlayWeaponSounds(attacker)
 	endif
 endfunction
 
-
+/*
+//jogado pra ..\include\mainHitScript.inc pra poder chamar em outros scripts
 function SkillChecks(attacker, defender, weapon, rawdamage)
 
 	var skillUsedForCritical := TACTICS;
@@ -406,9 +407,10 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 		skillUsedForCritical := MEDICINE;
 	endif
 	//Testa se é possivel ganhar skill com o NPC alvo
+	var skillAttacker, skillDefender;
 	if (defender.npctemplate && attacker.connected)
-		var skillAttacker := cint(AP_GetSkill(attacker, attacker.weapon.attribute));
-		var skillDefender := cint(AP_GetSkill(defender, WRESTLING));
+		skillAttacker := cint(AP_GetSkill(attacker, attacker.weapon.attribute));
+		skillDefender := cint(AP_GetSkill(defender, WRESTLING));
         if (attacker.weapon.objtype == 0x13b9 && !attacker.shield) // bastarda
             skillAttacker := cint(AP_GetSkill(attacker, MELEECOMBAT2H));
         endif
@@ -425,10 +427,14 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 			skillDefender := cint(AP_GetSkill(defender,MELEECOMBAT1H));
 			endif
 		endif
-		//se a skill do atacante for maior que a do defender +10, nao sobe
-		if ((skillDefender + 10)  < skillAttacker )
-			return 0;
-		endif
+	endif
+
+	//se a skill do atacante for maior 10 pontos a mais que a do defesor, não upa
+	if (skillAttacker > (skillDefender+10))
+		PrintText(attacker, "DEBUG: SEM UP!!!");
+		return 0;
+	else
+		PrintText(attacker, "DEBUG: COM UP!!!");
 	endif
 
 	//Sendo o alvo um personagem jogador ou NPC com combate melhor que o atacante, permite o up de skill de combate
@@ -447,11 +453,12 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 		SetObjProperty(attacker, "#CS_GainTime", ReadGameClock()+gain_wait);
 		if ( rawdamage > 0 )
 			SkillCheck(attacker, weapon.attribute, -1);
-			sleepms(20);
+			sleepms(50);
 			SkillCheck(attacker, skillUsedForCritical, -1);
 		endif
 	endif
 endfunction
+*/
 
 function ArrowRecovery(attacker, defender, weapon)
 	if ( defender.IsA(POLCLASS_NPC) && defender.backpack )

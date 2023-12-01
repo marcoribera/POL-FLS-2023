@@ -97,7 +97,7 @@ function CheckStatAdvancement(mobile, stat_name, stat_mult)
 	if ( chance < 1.0 )
 		chance := 1.0;
 	endif
-	SkillDbgMsg(mobile, "Chance: "+chance);
+	SkillDbgMsg(mobile, "Chance Stat: "+chance);
 	SkillDbgMsg(mobile, "---");
 	var random := RandomFloat(100.0);
 	SkillDbgMsg(mobile, "Check %age: "+random);

@@ -38,6 +38,7 @@ include ":tn:combat";
 include ":timedscripts:timedScripts";
 include ":fls_core:packets";
 include ":faccao:faccao";
+include ":combat:include/mainHitScript";
 
 var item_cfg	:= ReadConfigFile(":combat:itemdesc");
 var strat_cfg	:= ReadConfigFile("combatlevel");
@@ -81,11 +82,11 @@ exported function Attack(attacker, defender)
 	wpn_a_elem := GetWpnCfgInfo(attacker, wpn_a);
 	wpn_d_elem := GetWpnCfgInfo(defender, wpn_d);
 
-var anim := wpn_a_elem.Anim;
+	var anim := wpn_a_elem.Anim;
 
-	if ( attacker.graphic != 400 || attacker.graphic != 401)
-       		anim := 0x0c;
-    	endif
+	if ( attacker.graphic != 400 && attacker.graphic != 401)
+       	anim := 0x0c;
+    endif
 
 
 	if ( (attacker.paralyzed) || (attacker.frozen) )
@@ -188,6 +189,7 @@ var anim := wpn_a_elem.Anim;
 	endif
 
 	//ACERTOU
+	var dmg := 1;
 	if ( random < hit_chance )
 
 
@@ -229,6 +231,7 @@ var anim := wpn_a_elem.Anim;
 						var time := ReadGameClock();
 						var dmg := CalculateRawDamage(defender, defender.weapon);
 						var result := Run_Script_To_Completion(":combat:mainHitScript", array{defender, attacker, defender.weapon, armor, dmg, dmg});
+						SkillChecks(attacker, defender, wpn_a, dmg);
 					endif
 
 				EraseObjProperty(defender, "#atacandooportunidade");
@@ -252,6 +255,7 @@ var anim := wpn_a_elem.Anim;
 						var time := ReadGameClock();
 						var dmg := CalculateRawDamage(defender, defender.weapon);
 						var result := Run_Script_To_Completion(":combat:mainHitScript", array{defender, attacker, defender.weapon, armor, dmg, dmg});
+						SkillChecks(attacker, defender, wpn_a, dmg);
 					endif
 					EraseObjProperty(defender, "#atacandooportunidade");
 				endif
@@ -321,6 +325,7 @@ var anim := wpn_a_elem.Anim;
 					var time := ReadGameClock();
 					var dmg := CalculateRawDamage(defender, defender.weapon);
 					var result := Run_Script_To_Completion(":combat:mainHitScript", array{defender, attacker, defender.weapon, armor, dmg, dmg});
+					SkillChecks(attacker, defender, wpn_a, dmg);
 				endif
 				EraseObjProperty(defender, "#contraatacando");
 			endif
@@ -332,9 +337,10 @@ var anim := wpn_a_elem.Anim;
 		PlayHitSounds(attacker, defender);
 		var dmg := CalculateRawDamage(attacker, attacker.weapon);
 		var result := Run_Script_To_Completion(":combat:mainHitScript", array{attacker, defender, wpn_a, armor, dmg, dmg});
+		SkillChecks(attacker, defender, wpn_a, dmg);
 
 	else //ERROU O ATAQUE
-
+		SkillChecks(attacker, defender, wpn_a, dmg);
 		if (GetObjProperty(defender, "#contraataquepoderoso"))
 			SetObjProperty(defender, "#contraataquepoderoso", (GetObjProperty(defender, "#contraataquepoderoso")+1) );
 		endif
@@ -370,6 +376,7 @@ var anim := wpn_a_elem.Anim;
 						var time := ReadGameClock();
 						var dmg := CalculateRawDamage(defender, defender.weapon);
 						var result := Run_Script_To_Completion(":combat:mainHitScript", array{defender, attacker, defender.weapon, armor, dmg, dmg});
+						SkillChecks(attacker, defender, wpn_a, dmg);
 						oportunidade := 0;
 					endif
 
@@ -391,6 +398,7 @@ var anim := wpn_a_elem.Anim;
 						var time := ReadGameClock();
 						var dmg := CalculateRawDamage(defender, defender.weapon);
 						var result := Run_Script_To_Completion(":combat:mainHitScript", array{defender, attacker, defender.weapon, armor, dmg, dmg});
+						SkillChecks(attacker, defender, wpn_a, dmg);
 					endif
 
 					EraseObjProperty(defender, "#atacandooportunidade");
@@ -401,6 +409,7 @@ var anim := wpn_a_elem.Anim;
 		if (GetCooldown(defender, "RespostaDesesperada") > 0)
 			PlayHitSounds(attacker, defender);
 			DamageFLS(attacker, 5, DMG_FORCED, defender);
+			SkillChecks(attacker, defender, wpn_a, dmg);
 		endif
 
 		if (GetCooldown(attacker, "ataqueinfalivel") > 0)
@@ -411,7 +420,7 @@ var anim := wpn_a_elem.Anim;
 			var dmg := CalculateRawDamage(attacker, attacker.weapon);
 			dmg := dmg*0.33;
 			var result := Run_Script_To_Completion(":combat:mainHitScript", array{attacker, defender, wpn_a, armor, dmg, dmg});
-
+			SkillChecks(attacker, defender, wpn_a, dmg);
 		endif
 
 		if ( wpn_a_elem.ProjectileType )
