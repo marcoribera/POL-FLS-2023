@@ -834,14 +834,6 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 		endif
 	endif
 
-    if (getObjProperty(attacker, "repreensao"))
-        eraseobjproperty(attacker, "repreensao");
-        SendSysMessage(attacker, "*Odio corre pelas suas veias*");
-		if (defender)
-			attacker.attack_once(defender);
-		endif
-    endif
-
 	var weapon_scripts := array;
 	var pet_instinto :=	GetObjProperty(attacker, "Group_savage");
 	var pet_critic := GetObjProperty(attacker, "Critic");
