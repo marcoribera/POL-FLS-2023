@@ -189,27 +189,36 @@ endfunction
 function DetermineLumberDifficulty(logtype)
 
 	case (logtype)
-        0x1bdd:
+           0x1bdd:
         	return 10; //madeira;
         0xee36:
         	return 20; //pinheiro
         0xee37:
-        	return 30; //carvalho
+        	return 50; //carvalho
         0xee39:
-        	return 40; //salgueiro
+        	return 60; //salgueiro
         0xee3a:
-        	return 50; //cipreste
+        	return 60; //cipreste
         0xee3b:
-        	return 60; //angelim
+        	return 70; //polar
         0xee3c:
-        	return 70; //ebano
+        	return 95; //ebano
         0xee38:
-        	return 75; //nogueira
+        	return 60; //nogueira
         0x309c:
-            return 85; //numaja
+            return 80; //mogno
+		0x612f:
+            return 70; //polar
+		0x6168:
+            return 70; //Teixo 
+		0xee74:
+            return 80; //Cogumelo   
+		0xee3c:
+            return 70; //Imbuia  
         default:
         	return 0;
     endcase
+
 
 endfunction
 

@@ -133,7 +133,7 @@ function LJ_GetWoodType(tree)
          0xcfe:
                 return 0xee3a;
          0x390c:
-                return 0x309c; //numaja
+                return 0x309c; //mogno
          0xd01:
                 return 0xee3a;
 		 0x222E:

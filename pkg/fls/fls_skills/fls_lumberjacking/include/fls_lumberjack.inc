@@ -24,29 +24,29 @@ function GetWoodType(tree)
          0xd01:
                 return UOBJ_CYPRESS_LOG;
         0x309c:
-                return 0x309c; // numaja
-	 0x3fef:
-	 0x3ff0:
-	 0x3ff1:
-	 0x3ff2:
-	 0x3ff3:
-	 0x3ff4:
-	 0x3ff5:
-	 0x3ff6:
-		return 0xee3b;
-	 0x2c0c:
-	 0x2c0d:
-	 0x2c10:
-	 0x2c11:
-	 0x2c12:
-	 0x2c13:
-	 0x2c14:
-	 0x2c15:
-	 0x2c17:
-	 0x2c1c:
-	 0x2c1f:
-	 0x2c23:
-		return 0xee3c;
+                return 0x309c; // mogno
+	 0x3fef: //naofunciona
+	 0x3ff0: //naofunciona
+	 0x3ff1: //naofunciona
+	 0x3ff2: //naofunciona
+	 0x3ff3: //naofunciona
+	 0x3ff4: //naofunciona
+	 0x3ff5: //naofunciona
+	 0x3ff6: //naofunciona
+		return 0xee3b; //ebano
+	 0x2c0c: //naofunciona
+	 0x2c0d: //naofunciona
+	 0x2c10: //naofunciona
+	 0x2c11: //naofunciona
+	 0x2c12: //naofunciona
+	 0x2c13: //naofunciona
+	 0x2c14: //naofunciona
+	 0x2c15: //naofunciona
+	 0x2c17: //naofunciona
+	 0x2c1c: //naofunciona
+	 0x2c1f: //naofunciona
+	 0x2c23: //naofunciona
+		return 0xee3c; //cogumelo
        default: 
               return UOBJ_DEFAULT_LOG;
     endcase
