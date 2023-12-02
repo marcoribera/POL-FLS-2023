@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //include "include/OLD/sound";
+use os;
 include "include/imersao";
 
 function repair_item(character, what, craft_skill)
@@ -26,6 +27,7 @@ function repair_item(character, what, craft_skill)
 var cfg;
 var reparos:=0;
 var ver_reparos:=0;
+var repairdelay:=3;
 
 
 if (craft_skill == METALWORKING)
@@ -109,12 +111,12 @@ if (cint(hisskill)>=cint(item_skill))
     if (thehp + repaired_amount > what.maxhp)
       what.hp := what.maxhp;
       EraseObjProperty(what, "swings");
+      AnimRepair(character, craft_skill, repairdelay);
       SendSysMessage(character, "Voce consertou o item completamente.");
-      Imersao(character, "mw");
     else
       what.hp := thehp + repaired_amount;
+      AnimRepair(character, craft_skill, repairdelay);
       SendSysMessage(character, "Voce consertou o item.");
-      Imersao(character, "mw");
     endif
 
     if ((what.hp <= 0) || (what.quality <= 0.1) || (!what.quality))
@@ -178,6 +180,17 @@ else
 	SendSysMessage(character, "Este item nao pode ser reparado: " + GetObjProperty(what,"reparos") + " ponto(s) de reparo restante(s).");
 endif
 
+endfunction
+
+function AnimRepair(who, skill, delay)
+  for i:=1 to delay
+    case (craft_skill)
+      METALWORKING: Imersao(who, "mw"); break;
+      DomesticWork: Imersao(who, "dw"); break;
+      WOODWORKING: Imersao(who, "ww"); break;
+    endcase
+    sleep(2);
+  endfor
 endfunction
 
 function CreateRepairDeed(who, scroll, craft_skill)
