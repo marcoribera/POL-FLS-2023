@@ -21,6 +21,7 @@ program fireweapons(who, item)
     var handcannon := 0xC5FF;
     var carabine := 0xC600;
     var musket := 0xc606;
+    var fireweapons := Array{pistol[1], pistol[2], handcannon, carabine, musket};
     
     var is_pistol := 0;
     var is_handcannon := 0;
@@ -38,8 +39,9 @@ program fireweapons(who, item)
     endif
 
     // Verifica se a arma está equipada
-    var weapon := GetEquipmentByLayer(who, LAYER_HAND2);
-    if (item.objtype == 0xC5FE) // pistola destra
+    var weapon1 := GetEquipmentByLayer(who, LAYER_HAND1);
+    var weapon2 := GetEquipmentByLayer(who, LAYER_HAND2);
+    /*if (item.objtype == 0xC5FE) // pistola destra
         weapon := GetEquipmentByLayer(who, LAYER_HAND1);
         if (weapon.serial != item.serial)
 		    SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
@@ -48,7 +50,12 @@ program fireweapons(who, item)
 	elseif (weapon.serial != item.serial)
 		SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
 		return;
-	endif
+	endif*/
+    if (item.objtype != weapon1.objtype && item.objtype != weapon2.objtype) //novo check de mão
+        SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
+        return;
+    endif
+
 
     // Verifica se a arma está municiada
 	var balas := cint(GetObjProperty(item, "balas"));
@@ -157,7 +164,7 @@ program fireweapons(who, item)
     endif
 
 	TurnObjectToward(who, targ.x, targ.y);
-	PrintText(who, "*mirando em *" + targ.name);
+	PrintText(who, "*mirando em {}*".format(targ.name));
     PlaySoundEffect(who, 0x667);
 	who.frozen := 1;
     var i := 0;
@@ -168,7 +175,12 @@ program fireweapons(who, item)
 	who.frozen := 0;
 
 	//testa 2x
-    if (item.objetype == 0xC5FE) // pistola destra
+    if (item.objtype != weapon1.objtype && item.objtype != weapon2.objtype) //novo check de mão
+        SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
+        return;
+    endif
+
+    /*if (item.objetype == 0xC5FE) // pistola destra
         weapon := GetEquipmentByLayer(who, LAYER_HAND1);
         if (weapon.serial != item.serial)
 		    SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
@@ -177,7 +189,7 @@ program fireweapons(who, item)
 	elseif (weapon.serial != item.serial)
 		SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
 		return;
-	endif
+	endif*/
 
 	if ( !CheckLosBetween(who.x, who.y, who.z, targ.x, targ.y, targ.z, who.realm))
 		SendSysMessageEx(who, "O alvo saiu do seu campo de visao.", SSM_FAIL);
