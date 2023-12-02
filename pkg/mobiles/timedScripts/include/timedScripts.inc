@@ -272,6 +272,8 @@ function GetMagicTimersSpellName(mobile)
 			t.+nome := "desviar projetil";
 		elseif (timer == "dmgreduction")
 			t.+nome := "pacifismo";
+        elseif (timer == "dmgreturn")
+			t.+nome := "Retribuicao Profana";
 		endif
 		if (t.nome != error)
 			names.append(t);

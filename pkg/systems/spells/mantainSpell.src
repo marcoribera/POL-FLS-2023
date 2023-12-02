@@ -7,8 +7,6 @@ include ":gumps:gumps";
 include ":charactercreation:habilidades";
 
 function SpellYesNo(who, nome, targname)
-
-
 	var gump := GfCreateGump(140, 100);
 	GfResizePic(gump, 0, 0, 0x53 ,200, 140);
 	GfAddAlphaRegion(gump, 0, 0, 200, 140);
@@ -69,12 +67,14 @@ program spell(params)
 		id := 21;
 	elseif (name == "dmgreduction")
 		id := 34;
+    elseif (name == "dmgreturn")
+		id := 49;
 	endif
 
 
 	elem := FindConfigElem(cfg, id);
 	mana := GetConfigInt(elem, "Mana");
-	mana := mana;
+	mana := mana*2;
 	var spellname := GetConfigString(elem, "Name");
 
 	if (temhabilidade(mage, "Manter Magias"))
