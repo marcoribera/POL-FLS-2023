@@ -87,22 +87,3 @@ function PushBackEX(who, dist, delay, invert := 0)
 
    return 1;
 endfunction
-
-function GetModByFacing(facing, mod := 0)
-	var xmod := 0, ymod := 0;
-	case ( facing ) // Should find a more sleek mathish way to do this!
-		0: xmod := 0+mod;  ymod := -1; break;
-		1: xmod := +1+mod; ymod := -1+mod; break;
-		2: xmod := +1; ymod := 0+mod;  break;
-		3: xmod := +1+mod; ymod := +1-mod; break;
-		4: xmod := 0+mod;  ymod := +1; break;
-		5: xmod := -1-mod; ymod := +1-mod; break;
-		6: xmod := -1; ymod := 0+mod;  break;
-		7: xmod := -1-mod; ymod := -1+mod; break;
-		default:
-			return error{"errortext":="Invalid facing."};
-			break;
-	endcase
-
-   return array{ xmod, ymod };
-endfunction
