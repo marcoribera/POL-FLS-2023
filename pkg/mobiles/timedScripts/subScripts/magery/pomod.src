@@ -11,10 +11,22 @@ program TimedScript_Clumsy(params)
 
 	var points := level;
 	
-	SetObjProperty(mobile, "poMod", points);
-	mobile.resist_poison_mod := mobile.resist_poison_mod + points;
+	if (GetObjProperty(mobile, "poMod") != error)
+		return;
+	endif
 
-	//SetObjProperty(mobile, "PoisonResistMod", (cint(GetObjProperty(mobile, "PoisonResistMod" )) + points));
+	if (GetObjProperty(mobile, "auraPoMod") != error)
+		mobile.resist_poison_mod := mobile.resist_poison_mod - GetObjProperty(mobile, "auraPoMod") + points;
+		SetObjProperty(mobile, "poMod", points);
+		EraseObjProperty(mobile, "auraPoMod");					
+	else
+		SetObjProperty(mobile, "poMod", points);
+		mobile.resist_poison_mod := mobile.resist_poison_mod + points;
+	endif
+	
+	//SetObjProperty(mobile, "poMod", points);
+	//mobile.resist_poison_mod := mobile.resist_poison_mod + points;	
+//	SetObjProperty(mobile, "PoisonResistMod", (cint(GetObjProperty(mobile, "PoisonResistMod" )) + points));
 	
 	return 1;
 endprogram
