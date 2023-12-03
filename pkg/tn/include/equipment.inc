@@ -42,8 +42,6 @@ function SetEquipmentMods(who, item)
 		if (shieldequipped["_equipped"] != 1) //Gambiarra pra evitar que o POL mude as resistência no logon
 			SetObjProperty(item, "allresists", allresists);
 			SetResists(who, item, mod_percentual);
-			SendSysMessageEx(who, "SETOU!");
-		else SendSysMessageEx(who, "NAO SETOU!");
 		endif
 	endif
 
