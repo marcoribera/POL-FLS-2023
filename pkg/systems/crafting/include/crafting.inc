@@ -177,9 +177,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 		counter := counter + 1;
 		//SendSysMessage(who, "Tentativa numero " + Cstr(counter) + " de fazer o item.", 0, 133);
 		foreach thing in (materials.keys())	//Comeca a verificar se os materiais tem tipos variados (Exemplo: Barra de Ferro, Barra de Aço, etc.)
-			if (thing == "metal" || thing == "wood" || thing == "glass"
-				 || thing == "ossos" 	||thing == "cloth" || thing == "leather" || thing == "stone"
-				|| thing == "arrowhead")	//os materiais que tem tipos variados
+			if (thing == "metal" || thing == "wood" || thing == "glass" || thing == "ossos"	|| thing == "cloth" || thing == "leather" || thing == "stone" || thing == "arrowhead" || thing == "graveto") //os materiais que tem tipos variados
 				if(counter == 1)	//na primeira iteração pergunta quais materiais de tipos variados serao usados.
 					ret[thing] := MaterialSelection(who, craft_skill, thing, 0); //seleciona os tipos de cada material de tipo variado, apenas na primeira iteracao.
 				endif
