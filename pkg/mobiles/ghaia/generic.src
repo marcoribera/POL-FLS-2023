@@ -9,6 +9,7 @@ include ":ghaia:objective";
 include "include/dungeons";
 include ":faccao:faccao";
 include ":ghaia:combatevents";
+include ":timedScripts:timedScripts";
 
 var npccfgfile := ReadConfigFile( ":brainai:npcdesc" );
 var me := self();
@@ -22,6 +23,9 @@ var align;
 var mytemplate;
 var throwinfo;
 var propallies;
+var following := 0;
+
+const FOLLOW_CMD	:= 0xA001;
 
 program KillPlayers()
     Set_Script_Option(SCRIPTOPT_NO_RUNAWAY, 1); //Adicionado para diminuir a quantidade de logs no arquivo script.log
@@ -43,15 +47,21 @@ program KillPlayers()
 
 
     	while(me)
-
+var timedes := TS_GetTimerNames(me);
 		//se tem objetivo, anda na direcao dele, se nao tem so wander
+		if ("encantar" in timedes) //se está seguindo o Pastor
+			wanders := 0;
+			PetFollow();
+		else
 		if (GetObjProperty(me, "objloc") != error)
 			wanders := 0;
 			DoObjective();
 		else
 			MoveAround();
 		endif
-
+		endif
+		
+		if (!("encantar" in timedes)) //Quando não está seguindo o pastor, feito pq a ação demorava quando wanders ativo
 		wanders := wanders +1;
 		if(wanders >= 30)
 			wanders := 0;
@@ -60,7 +70,7 @@ program KillPlayers()
 		else
 			ev := os::wait_for_event(10);
 		endif
-
+		endif
 
 		if(ev)
 			case(ev.type)
@@ -83,6 +93,10 @@ program KillPlayers()
 							if (ev.source)
 								flee(ev.source);
 							endif
+				FOLLOW_CMD:
+					following := ev.source;
+					PetFollow(ev.targ);
+            break;
 			endcase
 		endif
 
@@ -305,4 +319,55 @@ function look_around()
     endif
     sleepms(2);
   endforeach
+endfunction
+
+
+function PetFollow(character := 0)
+   if (character)
+      if ( character == me || !character.IsA(POLCLASS_MOBILE) )
+         return;
+      endif
+      following := character;
+      return;
+   endif
+
+var dist := Distance(me, following); 
+var life := AP_GetVitalMaximumValue(me, HITS);
+var lifeatual := AP_GetVital(me, HITS);
+
+var timedes := TS_GetTimerNames(me);
+
+var xs := "encantar" in timedes;
+if (life != lifeatual)
+following := 0;
+TS_LowerDuration(me, "encantar", -1);
+printtextabove(me, "O animal estah assustado demais!");
+return;
+endif
+
+
+if(!("encantar" in timedes) )
+return;
+else
+   if( dist <= 2 )
+	os::wait_for_event(1);
+   elseif( dist > 25 )
+      following := 0;
+	  os::wait_for_event(20);
+	  TS_LowerDuration(me, "encantar", -1);
+	  return;
+   elseif ( dist > 4 )
+	  RunToward( following );
+	  os::wait_for_event(0);
+   else
+	  WalkToward( following );
+      os::wait_for_event(0);
+   endif
+endif
+//endwhile
+
+//printtextabove(me, "O animal parou de te seguir");
+//TS_LowerDuration(me, "encantar", -1);
+return 1;
+
 endfunction
