@@ -57,7 +57,9 @@ function doSpecial(me)
           TS_StartTimer(m, effect[3], cint(effect[4]), cint(effect[5]), me);
           endif
         endforeach
-      else
+      elseif (effect[2] == "me")
+		TS_StartTimer(me, effect[3], cint(effect[4]), cint(effect[5]));
+	  else
         TS_StartTimer(me.opponent, effect[3], cint(effect[4]), cint(effect[5]), me);
       endif
     endif
