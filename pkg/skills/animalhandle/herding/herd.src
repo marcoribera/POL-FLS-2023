@@ -12,7 +12,8 @@ include ":charactercreation:habilidades";
 include ":timedScripts:timedScripts";
 
 var cfg := ReadConfigFile(":brainAI:npcdesc");
-
+const FOLLOW_CMD	:= 0xA001;
+var following := 0;
 program herd(who)
 
 	if (!TemHabilidade(who, "Pastor"))
@@ -60,9 +61,9 @@ program herd(who)
 	
 	var gender_alvo := GetObjProperty(npc, "Sexo");
 		if(gender_alvo == 1) //resposta dependendo do sexo do 1target
-			SendSysMessageEx(who, "Para onde voce deseja mover "+ npc.name +" ? Para acasalar selecione uma femea como destino", SSM_REQUEST);
+			SendSysMessageEx(who, "Para onde voce deseja mover "+ npc.name +" ? Para acasalar selecione uma femea como destino ou Selecione a si mesmo para segui-lo", SSM_REQUEST);
 		elseif(gender_alvo == 2)
-			SendSysMessageEx(who, "Para onde voce quer mover "+ npc.name +" (femea) ?", SSM_REQUEST);
+			SendSysMessageEx(who, "Para onde voce quer mover "+ npc.name +" (femea) ? ou Selecione a si mesmo para segui-lo", SSM_REQUEST);
 		endif
 		
 		
@@ -71,7 +72,6 @@ program herd(who)
 	var male_template := (npc.npctemplate);
 	var compatibles := (female_template == male_template);
 	var cows := array(":brainai:cow", ":brainai:cow2");
-	print("eh "+male_template);
 	if ( (female_template == ":brainai:cabra") && (male_template == ":brainai:goat") )
 	compatibles := 1;
 	elseif ( (female_template in cows) && (male_template == ":brainai:bull") )
@@ -84,9 +84,13 @@ program herd(who)
     if (!CheckLosAt(npc, location.x, location.y, location.z))
         SendSysMessageEx(who, npc.name + " nao ve o alvo!", SSM_FAIL);
         return;
-	elseif (location.mobile)
+	elseif (location.mobile && !(location.mobile == who) )
 		var newborn := splitwords(location.mobile.name) [1] == "Filhote";
 		var gender_destino := GetObjProperty(location.mobile, "Sexo");
+		var timedes := TS_GetTimerNames(npc);
+		if ("encantar" in timedes)
+			TS_LowerDuration(npc, "encantar", -1);
+		endif
 		if ((gender_destino == 2) && (gender_alvo == 1) && (!newborn) && (compatibles)) //O 1target tem q ser macho, o alvo femea e ambos mesmo template
 			Printtextabove(npc, "*" + npc.name + " corre com o membro ereto*"); //mensagem do bicho arrastando a peromba pra femea
 			Setobjproperty(location.mobile, "alvo", 1); //seta a femea como alvo para acasalar			
@@ -103,7 +107,23 @@ program herd(who)
 			if (GetObjProperty(npc,"owner") && (who.cmdlevel < 1) )
 				SendSysMessageEx(who, "Este animal nao pode ser pastoreado", SSM_FAIL);
                 return;
+			elseif (location.mobile == who)
+				SendSysMessage(who, "deu xero");
+				var time := AP_GetTrueSkill(who, HANDLEANIMAL)/15;
+				var time2 := time*60;
+				SendSysMessage(who, "O animal te seguira por "+time+" minutos");
+				TS_StartTimer(npc, "encantar", 100); //bonus de parry e de reduzir hit_chance
+				sleepms(10);
+				var event := struct{"type":=FOLLOW_CMD, "source":=who};
+                SendEvent(npc, event);
+
+				return;
+
 			else
+				var timedes := TS_GetTimerNames(npc);
+				if ("encantar" in timedes)
+					TS_LowerDuration(npc, "encantar", -1);
+				endif
 				IrNpc(npc, location);
 				return;
 			endif
