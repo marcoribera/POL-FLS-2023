@@ -331,12 +331,12 @@ function SetMerchantLog(merchant, buyer_name, item_name, seller_name, cost)
 endfunction
 
 function GetPlayerNameBySerial(serial)
-   var player := SystemFindObjectBySerial(serial, SYSFIND_SEARCH_OFFLINE_MOBILES);
-   if (!player) return 0; endif
-   var player_name := GetObjProperty(player, "nome_inicial"); //player.name;
-   if (GetObjProperty(player, "realname"))
-      player_name := GetObjProperty(player, "realname");
-   endif
+   	var player := SystemFindObjectBySerial(serial, SYSFIND_SEARCH_OFFLINE_MOBILES);
+   	if (!player) return 0; endif
+   	var player_name := GetObjProperty(player, "nome_inicial"); //player.name;
+   	if (GetObjProperty(player, "realname"))
+    	player_name := GetObjProperty(player, "realname");
+   	endif
 	return player_name;
 endfunction
 
@@ -538,6 +538,7 @@ function DoPurchase(npc, player, input)
 			endif
 			DestroyItem(itemPagamento);
 			AddPaymentForSeller(npc, cost.seller, template);
+			SetMerchantLog(npc, GetRealName(player), selling.desc, GetPlayerNameBySerial(cost.seller), cost_amt);
 
 			//Exibe quanto restou de recursos
 			recursosDisponiveis := CalculaRecursosDisponiveis(player, cost_type);
@@ -553,7 +554,7 @@ function DoPurchase(npc, player, input)
 		endif
 		Set_Critical(0);
 	else
-		var ItensRevogados := dictionary;
+		/*var ItensRevogados := dictionary;
 
 		var confiscado_info := ", {" + cost_name + " [" + cost_amt + " ";
 		if(cost_type == MOEDAS_COBRE || cost_type == CInt(MOEDAS_COBRE))
@@ -572,8 +573,9 @@ function DoPurchase(npc, player, input)
 		else
 			ItensRevogados.Insert(cost.seller, confiscado_info);
 		endif
-		SetObjProperty(npc, "ItensRevogados", ItensRevogados);
+		SetObjProperty(npc, "ItensRevogados", ItensRevogados);*/
 
+		SetMerchantConfiscadosLog(npc, GetRealName(player), selling.desc, cost_amt);
 		AI_Speak(npc, "Aqui esta o objeto confiscado, avisarei o dono assim que ele aparecer por aqui.");
 	endif
 
@@ -606,13 +608,11 @@ function ShowForSaleItemsInfo(byref gump, npc, player, input, special := 0)
 			GFTextLine(gump, 205, 115, GF_STDCOLOR, "Desconhecido");
 		else
 			var nome := vendor.name;
-			if (GetObjProperty(vendor, "faccao") && (GetObjProperty(npc, "faccao") == GetObjProperty(vendor, "faccao")))
-				if (GetObjProperty(vendor, "nome_inicial"))
-					nome := GetObjProperty(vendor, "nome_inicial");
-				endif
-				if (GetObjProperty(vendor, "realname"))
-					nome := GetObjProperty(vendor, "realname");
-				endif
+			var npcfac := GetObjProperty(npc, "faccao");
+			var playerfac := GetObjProperty(vendor, "faccao");
+			//if (GetObjProperty(vendor, "faccao") && (GetObjProperty(npc, "faccao") == GetObjProperty(vendor, "faccao")))
+			if ((playerfac != error) && (playerfac == npcfac))
+				nome := GetRealName(vendor);
 			else
 				nome := "SEM AUTORIZACAO";
 			endif
@@ -674,6 +674,16 @@ function ShowForSaleItemsInfo(byref gump, npc, player, input, special := 0)
 	endif
 endfunction
 
+function GetRealName(byref who)
+	var nome;
+	if (GetObjProperty(who, "nome_inicial"))
+		nome := GetObjProperty(who, "nome_inicial");
+	endif
+	if (GetObjProperty(who, "realname"))
+		nome := GetObjProperty(who, "realname");
+	endif
+	return nome;
+endfunction
 function AddMyItemForSale(npc, player)
 
 	var VendorProperty := GetObjProperty(npc, "onlygmsells");
