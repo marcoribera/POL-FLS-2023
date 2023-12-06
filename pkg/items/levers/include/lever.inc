@@ -255,7 +255,7 @@ function spawnBoss(item, opts)
  var creature;
 		if (GetObjProperty(item, "loc") ==1 )
 			creature := Createboss(cfg.boss, item.x, item.y, item.z, item.realm);
-			SetObjProperty(creature, "anchor", array{item.x, item.y});
+			SetObjProperty(creature, "anchor", array{item.x, item.y, item.z});
 			sleepms(20);
 			if (!text_above)
 			else
@@ -266,7 +266,7 @@ function spawnBoss(item, opts)
 			var y := GetObjProperty(item, "y");
 			var z := GetObjProperty(item, "z");
 			creature := Createboss(cfg.boss, cint(x), cint(y), cint(z), item.realm);
-			SetObjProperty(creature, "anchor", array{item.x, item.y});
+			SetObjProperty(creature, "anchor", array{item.x, item.y, item.z});
 			sleepms(20);
 			if (!text_above)
 			else
