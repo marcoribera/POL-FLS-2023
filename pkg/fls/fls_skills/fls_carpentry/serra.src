@@ -38,7 +38,7 @@ program usar_serra(who, item)
 		return;
 	endif
 
-	if((targetted.objtype != 0x1bdd) && (targetted.objtype != 0xee36) && (targetted.objtype != 0xee37) && (targetted.objtype != 0xee39)  && (targetted.objtype != 0xee38) && (targetted.objtype != 0xee3a) && (targetted.objtype != 0xee3b) && (targetted.objtype != 0xee3c) )
+	if((targetted.objtype != 0x1bdd) && (targetted.objtype != 0xee36) && (targetted.objtype != 0xee3f) && (targetted.objtype != 0xee40) && (targetted.objtype != 0xee37)  && (targetted.objtype != 0xee3d)  && (targetted.objtype != 0xee3e)  && (targetted.objtype != 0xee39)  && (targetted.objtype != 0xee38) && (targetted.objtype != 0xee3a) && (targetted.objtype != 0xee3b) && (targetted.objtype != 0xee3c) )
            SendSysMessage(who, "Voce deve usar a serra nas madeiras!");
            return;
         else
@@ -99,16 +99,32 @@ function maketabuas(who, item)
                 nova_tabua :=0xee70;
                 MakeBoardSerra(who, item, nova_tabua);
         0xee3b:
-                nova_tabua := 0xee73;
+                nova_tabua := 0xff05;
                 MakeBoardSerra(who, item, nova_tabua);
         0xee3c:
-                nova_tabua :=0xee74;
+                nova_tabua :=0xee65;
                 MakeBoardSerra(who, item, nova_tabua);
+        0xee3f:
+                nova_tabua :=0xee64;
+                MakeBoardSerra(who, item, nova_tabua);
+        0xee40:
+                nova_tabua :=0xef2a;
+                MakeBoardSerra(who, item, nova_tabua);
+        0xee3d:
+                nova_tabua :=0xee73;
+                MakeBoardSerra(who, item, nova_tabua);
+        0xee3e:
+                nova_tabua :=0x615b;
+                MakeBoardSerra(who, item, nova_tabua);
+                                             
         default:
                 nova_tabua :=0x1bd7;
                 MakeBoardSerra(who, item, nova_tabua);
    endcase
 
+   
+ 
+ 
 endfunction
 
 function MakeBoardSerra(who, item, nova_tabua)
@@ -168,9 +184,18 @@ function makecabos(who, item)
                 MakeCaboSerra(who, item);
         0xee3c:
                 MakeCaboSerra(who, item);
+        0xee3d:
+                MakeCaboSerra(who, item);
+        0xee3e:
+                MakeCaboSerra(who, item);
+        0xee3f:
+                MakeCaboSerra(who, item);
+        0xee40:
+                MakeCaboSerra(who, item);
         default:
                 MakeCaboSerra(who, item);
    endcase
+
 
 endfunction
 
