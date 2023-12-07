@@ -258,7 +258,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 		endif
 
 		//adicionado emote para mesa de alchemy
-		case (craft_skill.lower())
+		case (lower(craft_skill))
 			"alchemy":
 				PrintTextAbove(who, "*preparando um extrato*");
 				break;
@@ -270,6 +270,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 				break;
 			"woodworking":
 				PrintTextAbove(who, "*moldando*");
+				break;
 		endcase
 		
 		//Caso saia do lugar durante o trabalho, para;

@@ -86,7 +86,7 @@ program MainHitScript( params )
 	PlayHitSounds(defender);
 
 	//Processa o aumento ou não de skill de combate
-	//SkillChecks(attacker, defender, weapon, rawdamage); //jogado pro combatHook.src para upar até quase errar o golpe
+	//SkillChecks(attacker, defender, weapon, rawdamage); //jogado pro combatHook.src para upar até quando errar o golpe
 
 	//Verifica se o ataque foi realizado de uma posição onde bloquear é possível e, sendo, processa o teste de bloaqueio
 	if ( (!Cint(GetObjProperty(attacker, "backstab"))) && !IsBehind(defender, attacker.x, attacker.y))
