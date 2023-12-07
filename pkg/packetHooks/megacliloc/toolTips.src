@@ -386,7 +386,9 @@ exported function MegaCliloc( who, byref packet )
 		endif
 
 		//EXIBE SE TEM PROPRIEDADE MAGICA
-		if (GetObjProperty(item,"magic"))
+		if (GetObjProperty(item,"magic_excep"))
+			xDesc := xDesc + roxo + "Magico Excepcional<br>";
+		elseif (GetObjProperty(item,"magic"))
 			xDesc := xDesc + roxo + "Magico<br>";
 		endif
 
