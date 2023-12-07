@@ -74,7 +74,7 @@ program SpellScript(params)
 		if(targ.dead)
 			break;
 		endif
-		PerformAction(who, 17)
+		PerformAction(who, 17);
 		time := time + 1;
 		sleep(1);
 	endwhile
