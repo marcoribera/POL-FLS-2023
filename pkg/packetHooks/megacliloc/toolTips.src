@@ -392,6 +392,12 @@ exported function MegaCliloc( who, byref packet )
 			xDesc := xDesc + roxo + "Magico<br>";
 		endif
 
+		//EXIBE SE TEM DOSES DE VENENO
+		if (GetObjProperty(item,"poisonInfo") != error )
+			//xDesc := xDesc + softgreen + "Envenenado<br>";
+			xDesc := xDesc + softgreen + "Doses de Veneno: " + GetObjProperty(item,"poisonInfo").dosage +  "<br>";
+		endif
+
 		var descmods := GetObjProperty(item, "descmod");
 
 		//JUNTA AS DESCRIÇÕES DO DOS PROPS DO PERSONAGEM

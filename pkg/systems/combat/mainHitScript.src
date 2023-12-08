@@ -985,14 +985,26 @@ function PoisonChecks(attacker, defender, weapon, armor, basedamage, rawdamage)
 			var poisonInfo := GetObjProperty(weapon, "poisonInfo" );
 			if (poisonInfo == error)
 				return 0;
+				var nome := weapon.name; //Armengo pra atualizar tooltip?
+				SetName(weapon, nome + " -");
+				sleepms(30);
+				SetName(weapon, nome);
 			endif
 			poisonInfo.dosage := poisonInfo.dosage -1;
 			if (poisonInfo.dosage <= 0) //se nao tiver mais cargas de veneno, deleta
 				EraseObjProperty(weapon, "poisonInfo");
+				var nome := weapon.name; //Armengo pra atualizar tooltip?
+				SetName(weapon, nome + " -");
+				sleepms(30);
+				SetName(weapon, nome);
 				return 0;
 			else //se ainda tiver atualiza na arma
 				SetObjProperty(weapon, "poisonInfo", poisonInfo);
 			endif
+			var nome := weapon.name; //Armengo pra atualizar tooltip?
+			SetName(weapon, nome + " -");
+			sleepms(30);
+			SetName(weapon, nome);
 
 			if (IsPoisonImune(defender, poisonInfo.name) )
 				return 0;
