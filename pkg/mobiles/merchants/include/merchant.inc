@@ -609,7 +609,7 @@ function ShowForSaleItemsInfo(byref gump, npc, player, input, special := 0)
 		else
 			var nome := vendor.name;
 			var npcfac := GetObjProperty(npc, "faccao");
-			var playerfac := GetObjProperty(vendor, "faccao");
+			var playerfac := GetObjProperty(player, "faccao");
 			//if (GetObjProperty(vendor, "faccao") && (GetObjProperty(npc, "faccao") == GetObjProperty(vendor, "faccao")))
 			if ((playerfac != error) && (playerfac == npcfac))
 				nome := GetRealName(vendor);
