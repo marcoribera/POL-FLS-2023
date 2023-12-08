@@ -42,7 +42,7 @@ program manobra(who)
 	        //sendsysmessage(who, "manamod" + manamod);
 	        manamod := manamod + 25;
 	        SetObjProperty(who, "manamod",  manamod);
-            SetObjProperty(who, "description", "Emana uma aura magica");
+            SetObjProperty(who, "description", "Olhos Brancos");
 	        recalcvitals(who);
 			return;
 		endif
