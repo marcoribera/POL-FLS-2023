@@ -93,7 +93,7 @@ endif
 		endif	
 		var fuga;
 		var bolts := RandomInt(5);
-        var fire_weapons := Array{0xC5FD, 0xC5FE, 0xC5FF, 0xC600, 0xc606};
+        var fire_weapons := Array{0xC5FD, 0xC5FE, 0xC5FF, 0xC600, 0x89A7};
 		SetWeatherForPlayer(chars, type, 50 );
 		foreach char in chars
 			if (distance(char, item) > range+10)

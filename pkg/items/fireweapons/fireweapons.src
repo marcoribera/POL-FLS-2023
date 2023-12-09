@@ -20,7 +20,7 @@ program fireweapons(who, item)
     var pistol := Array{0xC5FD, 0xC5FE};
     var handcannon := 0xC5FF;
     var carabine := 0xC600;
-    var musket := 0xc606;
+    var musket := 0x89A7;
     var fireweapons := Array{pistol[1], pistol[2], handcannon, carabine, musket};
     
     var is_pistol := 0;
@@ -96,7 +96,7 @@ program fireweapons(who, item)
                     else 
                         SendSysMessageEx(who, "Selecione o socador de polvora.");
                         var powder_fixer := Target(who);
-                        if (powder_fixer.objtype != 0x9093)
+                        if (powder_fixer.objtype != 0xC611)
                             SendSysMessageEx(who, "Esse nao eh um socador de polvora valido.", SSM_FAIL);
                             return;
                         endif
