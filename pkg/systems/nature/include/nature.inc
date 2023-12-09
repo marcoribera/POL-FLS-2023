@@ -120,7 +120,7 @@ function weathereffects(type, duration, severity := 5)
 	 	
 	 	var packet := "65"+weatherid+"7000";
 	 
-        var fire_weapons := Array{0xC5FD, 0xC5FE, 0xC5FF, 0xC600, 0xc606};
+        var fire_weapons := Array{0xC5FD, 0xC5FE, 0xC5FF, 0xC600, 0x89A7};
 		foreach person in EnumerateOnlineCharacters()
             if (!GetObjProperty(person, "molhado"))
                 SetObjProperty(person, "molhado", 1);

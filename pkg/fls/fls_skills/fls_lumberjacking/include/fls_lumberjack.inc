@@ -10,7 +10,7 @@ function GetWoodType(tree)
        0xce6:
               return UOBJ_WILLOW_LOG; //salgueiro
        0xcf8: 0xcfb: 0xcfe: 0xd01:
-              return UOBJ_CYPRESS_LOG; //cipreste
+              return UOBJ_CYPRESS_LOG; //cipreste 
    	0x247d:
               return 0xee3d; //polar
        0x12b9:
