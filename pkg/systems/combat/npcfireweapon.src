@@ -15,7 +15,7 @@
 //    var pistol := Array{0xC5FD, 0xC5FE};
 //    var handcannon := 0xC5FF;
 //    var carabine := 0xC600;
-//    var musket := 0xc606;
+//    var musket := 0x89A7;
     
 //    var is_pistol := 0;
 //    var is_handcannon := 0;
