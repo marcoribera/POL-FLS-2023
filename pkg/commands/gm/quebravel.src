@@ -23,16 +23,59 @@ program quebrar(who)
 	var input := GFSendGump(who, gump);
 	input  := input[0];
 	if (input == 10)
-		quebragathering(who);
+		tornarquebravel(who, "gathering");
+		//quebragathering(who);
 	elseif (input == 20)
-		quebradomestic(who);
+		tornarquebravel(who, "domesticwork");
+		//quebradomestic(who);
 	elseif (input ==  30)
-		quebrasurvival(who);
+		tornarquebravel(who, "survival");
+		//quebrasurvival(who);
 	endif
     
 endprogram
 
-function quebragathering(who)
+function tornarquebravel(who, skill)
+	SendSysMessageEx(who, "O que deseja tornar quebravel?", SSM_REQUEST);
+    var alvo := Target(who);
+
+    if (alvo == who)
+		SendSysMessageEx(who, "Voce nao pode tornar isto quebravel!", SSM_FAIL);
+		return 0;
+	endif
+
+	if (alvo in EnumerateItemsInContainer(who.backpack)) 
+		SendSysMessageEx(who, "Voce nao pode tornar algo na sua bolsa quebravel!", SSM_FAIL);
+		return 0;
+	endif
+
+    if (!alvo.movable == 0)
+        SendSysMessageEx(who, "Voce nao pode tornar algo movel quebravel!", SSM_FAIL);
+		return 0;
+    endif
+
+	if (!alvo)
+        SendSysMessageEx(who, "Cancelado!", SSM_FAIL);
+		return 0;
+    endif
+
+	var durabilidade;
+	var hits;
+	hits := RequestGump(who, "Qual a quantidade de vida que o item tera?");
+	SendSysMessageEx(who,"O HP do item sera consumido igual ao valor da skill do player",SSM_INFO);
+	hits := CInt(hits);
+	if ( !hits || hits <= 0 )
+		SendSysMessage(who, "Cancelado");
+		return;
+	endif
+
+	SetObjProperty(alvo, "quebravel", CStr(skill));
+	SetObjProperty(alvo, "durabilidade", hits);
+
+endfunction
+
+
+/*function quebragathering(who) //SEM NECESSIDADE DE TANTAS REPETIÇÕES
 
 	SendSysMessageEx(who, "O que deseja tornar quebravel?", SSM_REQUEST);
     var alvo := Target(who);
@@ -108,8 +151,8 @@ function quebradomestic(who)
 		return;
 	endif
 
-	SetObjProperty(alvo, "durabilidade", "domesticwork");
-	//SetObjProperty(alvo, "domesticwork", 1);
+	SetObjProperty(alvo, "quebravel", "domesticwork");
+	SetObjProperty(alvo, "durabilidade", hits);
 	//opcoesdequebrar(who, alvo);
 
 endfunction
@@ -153,7 +196,7 @@ function quebrasurvival(who)
 	SetObjProperty(alvo, "durabilidade", hits);
 	//opcoesdequebrar(who, alvo);
 
-endfunction
+endfunction*/
 
 function opcoesdequebrar(who,item)
 

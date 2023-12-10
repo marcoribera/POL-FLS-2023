@@ -26,9 +26,13 @@ program skill_LumberJack(who,tool)
 		SendSysMessage(who, "Cancelado.");
 		return 0;
 	endif
+	var quebravel := GetObjProperty(targ.item, "quebravel");
 
 	if (targ.item)
-		Quebraitem(who, tool, targ.item);
+		if (quebravel)
+			Quebraitem(who, tool, targ.item);
+			return 0;
+		endif
 	endif
 
 	if ( CoordinateDistance(who.x, who.y, targ.x, targ.y) > 1 )
@@ -236,37 +240,38 @@ function Quebraitem(who, tool, item)
 		PrintTextAbove(who, "*Batendo com força*");
 		CheckToolWear(who, tool, GATHERING);
 
-				while((i <= 9) && (who.x == mex) && (who.y == mey))
+		while((i <= 9) && (who.x == mex) && (who.y == mey))
 
-					if((who.x != mex) && (who.y != mey))
-						break;
-					endif
+			if((who.x != mex) && (who.y != mey))
+				break;
+			endif
 
-					PerformAction(who, 0x0b);
-					PlaySoundEffect(who, 0x126);
+			PerformAction(who, 0x0b);
+			PlaySoundEffect(who, 0x126);
 
-					sleep(1);
+			sleep(1);
 
-					if((who.x != mex) || (who.y != mey))
-						SendSysMessageEx(who,"Voce deve ficar parado enquanto trabalha", SSM_FAIL);
-						return;
-					endif
-					i := i + 1;
-				endwhile
+			if((who.x != mex) || (who.y != mey))
+				SendSysMessageEx(who,"Voce deve ficar parado enquanto trabalha", SSM_FAIL);
+				return;
+			endif
+			i := i + 1;
+		endwhile
 
-				if (hp <= 0)
-					var itens := GetObjProperty(item,"itens");
-					foreach itemarray in itens
-						var itemcriado:=CreateItemAtLocation(item.x, item.y, item.z,itemarray , itemarray.amount, realm := _DEFAULT_REALM);
-						SetName(itemcriado, itemarray.name);
-					endforeach
-					DestroyItem(item);
-				endif
+		hp := hp - gatherer;
+		SetObjProperty(item, "durabilidade", hp);
 
-				hp := hp - gatherer;
+		if (hp <= 0)
+			PrintTextAbove(item, "*quebra*");
+			sleep(2);
 
-				SetObjProperty(item, "durabilidade", hp);
-
+			var itens := GetObjProperty(item,"itens");
+			foreach itemarray in itens
+				var itemcriado:=CreateItemAtLocation(item.x, item.y, item.z,itemarray , itemarray.amount, realm := _DEFAULT_REALM);
+				SetName(itemcriado, itemarray.name);
+			endforeach
+			DestroyItem(item);
+		endif
 	elseif ((quebravel == "survival") || (quebravel == "domesticwork"))
 			SendSysMessageEx(who, "Voce deve usar outra ferramenta para este servico", SSM_FAIL);
 			return;
