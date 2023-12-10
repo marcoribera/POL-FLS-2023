@@ -142,11 +142,11 @@ program death(params)
                 //    dias := polcore().systime;
                 //endif
 
-				var logs := FindAccount(ghost).getprop("mortelog");
-				if (logs == error || logs < dias)
-					logs := dias;
-				endif
-				FindAccount(ghost.acctname).setprop("mortelog", logs);
+				//var logs := FindAccount(ghost).getprop("mortelog");
+				//if (logs == error || logs < dias)
+				//	logs := dias;
+				//endif
+				//FindAccount(ghost.acctname).setprop("mortelog", logs);
                 FindAccount(ghost.acctname).setprop("heir_days", dias);
 
                 var skill_heir := get_heir_skills(ghost);
@@ -222,11 +222,11 @@ program death(params)
             dias := Cint((dias / 2)) * 86400; // 24h em segundos
             dias := (polcore().systime - dias);
 
-			var logs := FindAccount(ghost).getprop("mortelog");
-            if (logs == error || logs < dias)
-                logs := dias;
-            endif
-            FindAccount(ghost.acctname).setprop("mortelog", logs);
+			//var logs := FindAccount(ghost).getprop("mortelog");
+            //if (logs == error || logs < dias)
+            //    logs := dias;
+            //endif
+            //FindAccount(ghost.acctname).setprop("mortelog", logs);
             FindAccount(ghost.acctname).setprop("heir_days", dias);
             var skill_heir := get_heir_skills(ghost);
             FindAccount(ghost.acctname).setprop("herdeiro", skill_heir);

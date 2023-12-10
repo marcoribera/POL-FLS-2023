@@ -34,7 +34,7 @@ program Logon(who)
 	SetObjProperty(who, "ConnectTime", polcore().systime);
 
 	var createdat :=  getobjproperty(who, "createdate");
-	var obitodat := FindAccount(who.acctname).getprop("mortelog");
+	//var obitodat := FindAccount(who.acctname).getprop("mortelog");
     var heirdat := FindAccount(who.acctname).getprop("herdado");
 
     if (heirdat)
@@ -42,15 +42,15 @@ program Logon(who)
         SetObjProperty(who, "createdate", dias);
     endif
 
-	if (!obitodat)
-		if (createdat == error)
-		    SetObjProperty(who, "createdate", polcore().systime);
-		endif
-	else
-		if (createdat == error)
-		    SetObjProperty(who, "createdate", (polcore().systime));
-		endif
-	endif
+	//if (!obitodat)
+	//	if (createdat == error)
+	//	    SetObjProperty(who, "createdate", polcore().systime);
+	//	endif
+	//else
+	//	if (createdat == error)
+	//	    SetObjProperty(who, "createdate", (polcore().systime));
+	//	endif
+	//endif
 
 	if (HaveReverseVision(who))
 		ReverseLight(who);
