@@ -157,6 +157,7 @@ function CanFight(me, mobile, align)
           if ( (mytemplate == "spiritbear") || (mytemplate == "spiritpanther") || (mytemplate == "spiritserpent")
                 || (mytemplate == "spiritwolf") || (mytemplate == "spiritualbear") || (mytemplate == "phasespider")
                 || (mytemplate == "eruva") || (mytemplate == "luine")
+                || (mytemplate == "criafuria")
                 || (mytemplate == "centaur") || (mytemplate == "dryad")  || (mytemplate == "fadinha") || (mytemplate == "najassur") || (mytemplate == "pytnas") || (mytemplate == "carniceiro") || (mytemplate == "dragonete"))
              return 0;
           endif
