@@ -150,7 +150,7 @@ function LJ_GetWoodType(tree)
 		0x30bd:
 			return 0xee3b; / //ebano
 
-         default: 
+         default:
             return 0x1bdd;
     endcase
 endfunction
@@ -159,7 +159,7 @@ endfunction
  *
  * Purpose
  * Sets the wood type for an X Y coordinate on a realm.
- * 
+ *
  * Parameters
  * realm:	Name of the realm to set the wood type on.
  * x_pos:	X coordinate to set the wood type on.
@@ -172,9 +172,9 @@ endfunction
  */
 function LJ_SetWoodType(realm, x_pos, y_pos, wood_type)
 	var pos_string := CStr(realm+" "+x_pos+"x"+y_pos);
-	
+
 	var data_elem := LJ_GetDataElem(pos_string);
-	
+
 	return data_elem.SetProp("Type", wood_type);
 endfunction
 
@@ -183,7 +183,7 @@ endfunction
  *
  * Purpose
  * Sets the wood amount for an X Y coordinate on a realm.
- * 
+ *
  * Parameters
  * realm:	Name of the realm to set the wood amount on.
  * x_pos:	X coordinate to set the wood amount on.
@@ -196,9 +196,9 @@ endfunction
  */
 function LJ_SetWoodAmount(realm, x_pos, y_pos, amount)
 	var pos_string := CStr(realm+" "+x_pos+"x"+y_pos);
-	
+
 	var data_elem := LJ_GetDataElem(pos_string);
-	
+
 	data_elem.SetProp("Amount", CInt(amount));
 endfunction
 
@@ -219,16 +219,16 @@ endfunction
  */
 function LJ_GetWoodAmount(realm, x_pos, y_pos)
 	var pos_string := CStr(realm+" "+x_pos+"x"+y_pos);
-	
+
 	var data_elem := LJ_GetDataElem(pos_string);
-	
+
 	var amount := data_elem.GetProp("Amount");
 	if ( amount == error )
 		var settings := LJ_GetSettingsCfgElem("Settings");
 		amount := CInt(settings.MaxWood);
 		LJ_SetWoodAmount(realm, x_pos, y_pos, amount);
 	endif
-	
+
 	return CInt(amount);
 endfunction
 
@@ -249,7 +249,7 @@ endfunction
  *
  */
 function LJ_PickWoodType(realm, x_pos, y_pos)
-	var wood_cfg := ReadConfigFile(":lumberjacking:config/wood-"+realm);
+	var wood_cfg := ReadConfigFile(":lumberjacking:config\wood-" + Cstr(realm));
 	if ( !wood_cfg )
 		return GetObjTypeByName("Log");
 	endif
@@ -273,6 +273,6 @@ function LJ_PickWoodType(realm, x_pos, y_pos)
 	if ( !selected_wood )
 		return GetObjTypeByName("Log");
 	endif
-	
+
 endfunction
 
