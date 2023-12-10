@@ -352,22 +352,22 @@ function CarveObject(who, tool, objtype, targ)
 			case (objtype)
 		        0xcd8:
 		        	kindling := CreateItemInBackpack(who, 0xee25, 1);
-		        	kindling.color := 2109; //cedar tree
+		        	kindling.color := 2109; //pinheiro
 		        0xcd6:
 		        	kindling := CreateItemInBackpack(who, 0xee25, 1);
-		        	kindling.color := 2109; //cedar tree
+		        	kindling.color := 2109; //pinheiro
 		        0xcda:
 		        	kindling := CreateItemInBackpack(who, 0xee26, 1);
-		        	kindling.color := 1853; //oak
+		        	kindling.color := 1853; //carvalho
 		        0xcdd:
 		        	kindling := CreateItemInBackpack(who, 0xee26, 1);
-		        	kindling.color := 1853; //oak
+		        	kindling.color := 1853; //carvalho
 		        0xce0:
 		        	kindling := CreateItemInBackpack(who, 0xee27, 1);
-		        	kindling.color := 2117; //walnut
+		        	kindling.color := 2117; //nogueira
 		        0xce3:
 		        	kindling := CreateItemInBackpack(who, 0xee27, 1);
-		        	kindling.color := 2117; //walnut
+		        	kindling.color := 2117; //nogueira
 		        0xcf8:
 		        	kindling := CreateItemInBackpack(who, 0xee28, 1);
 		        	kindling.color := 2129; //cypress
@@ -380,6 +380,37 @@ function CarveObject(who, tool, objtype, targ)
 		        0xd01:
 		        	kindling := CreateItemInBackpack(who, 0xee28, 1);
 		        	kindling.color := 2129; //cypress
+				0x247d:
+		        	kindling := CreateItemInBackpack(who, 0xee28, 1);
+		        	kindling.color := 2512; //polar
+				0x12b9:
+		        	kindling := CreateItemInBackpack(who, 0xee28, 1);
+		        	kindling.color := 2355; //teixo
+				0xa5ce:
+		        	kindling := CreateItemInBackpack(who, 0xee28, 1);
+		        	kindling.color := 2354; //imbuia
+				0x309c:
+		        	kindling := CreateItemInBackpack(who, 0xee28, 1);
+		        	kindling.color := 2353; //mogno
+				0x222E:
+		        	kindling := CreateItemInBackpack(who, 0xee28, 1);
+		        	kindling.color := 2352; //cogumelo
+				0x222F:
+		        	kindling := CreateItemInBackpack(who, 0xee28, 1);
+		        	kindling.color := 2352; //cogumelo
+				0x2231:
+		        	kindling := CreateItemInBackpack(who, 0xee28, 1);
+		        	kindling.color := 2352; //cogumelo
+				0x2230:
+		        	kindling := CreateItemInBackpack(who, 0xee28, 1);
+		        	kindling.color := 2352; //cogumelo
+				0x30bd:
+		        	kindling := CreateItemInBackpack(who, 0xee28, 1);
+		        	kindling.color := 0455; //ebano
+
+
+
+
 		        default:
 		        	CreateItemInBackpack(who, UOBJ_KINDLING, 1);
 			endcase
