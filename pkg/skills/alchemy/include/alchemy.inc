@@ -214,6 +214,15 @@ function GetReagName(objtype)
     0xee2c: return "gravetos numaja azul metálico";
     0xee2d: return "gravetos numaja azul lunar";
     0xee2e: return "gravetos numaja azul penumbra";
+    
+    //pizza dentro do EvilLink
+    0xc020: return "graveto teixo";
+    0xc023: return "graveto imbuia";
+    0xc026: return "graveto mogno";
+    0xc02c: return "graveto cogumelo";
+    0xc02f: return "graveto ebano";
+
+ 
 
     ///// OTHERS /////
     0x1852: return "oleo exotico";

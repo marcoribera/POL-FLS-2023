@@ -115,32 +115,41 @@ function LJ_GetWoodType(tree)
          0xcd6:
                return 0xee36; //pinheiro
          0xcd8:
-                return 0xee36;
+                return 0xee36;//pinheiro
          0xcda:
                 return 0xee37; //carvalho
          0xcdd:
-                return 0xee37;
+                return 0xee37;//carvalho
          0xce0:
                 return 0xee38; //nogueira
          0xce3:
-                return 0xee38;
+                return 0xee38; //nogueira
          0xce6:
                 return 0xee39; //salgueiro
          0xcf8:
                 return 0xee3a; //cipreste
          0xcfb:
-                return 0xee3a;
+                return 0xee3a; //cipreste
          0xcfe:
-                return 0xee3a;
-         0x390c:
-                return 0x309c; //mogno
+                return 0xee3a; //cipreste
+         0x309c:
+                return 0xee40; //mogno
          0xd01:
-                return 0xee3a;
+                return 0xee3a;//cipreste
+		0x247d:
+				return 0xee3d; //polar
 		 0x222E:
 	 	 0x222F:
 	 	 0x2230:
        	 0x2231:
 			return 0xee3c; // cogumelo
+		0x12b9:
+			return 0xee3e; //teixo
+		0xa5ce:
+			return 0xee3f; //imbuia
+		0x30bd:
+			return 0xee3b; / //ebano
+
          default: 
             return 0x1bdd;
     endcase
