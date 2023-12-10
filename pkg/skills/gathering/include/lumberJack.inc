@@ -148,7 +148,7 @@ function LJ_GetWoodType(tree)
 		0xa5ce:
 			return 0xee3f; //imbuia
 		0x30bd:
-			return 0xee3b; / //ebano
+			return 0xee3b; //ebano
 
          default:
             return 0x1bdd;
@@ -249,7 +249,7 @@ endfunction
  *
  */
 function LJ_PickWoodType(realm, x_pos, y_pos)
-	var wood_cfg := ReadConfigFile(":lumberjacking:wood-"+realm);
+	var wood_cfg := ReadConfigFile(":lumberjacking:config/wood-"+realm);
 	if ( !wood_cfg )
 		return GetObjTypeByName("Log");
 	endif
