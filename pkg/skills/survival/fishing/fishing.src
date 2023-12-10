@@ -47,7 +47,7 @@ program use_FishingPole(who, fishingpole)
 
 
 	//Escolha da isca
-	SendSysMessage(who, "Qual isca sera usada na pescaria?",FONT_NORMAL,91);
+	SendSysMessageEx(who, "Qual isca sera usada na pescaria?");
 	var isca := Target(who);
 	var iscausada := isca.objtype;
 	var pretfish := FindPeixePretendido(who, isca);
@@ -56,9 +56,9 @@ program use_FishingPole(who, fishingpole)
 		return 0;
 	endif
 	if ((isca.objtype == 0x9980) || (isca.objtype == 0x9981) || (isca.objtype == 0x9982) || (isca.objtype == 0x9983) || (isca.objtype == 0x9984) || (isca.objtype == 0xdd7) || (isca.objtype == 0xdd6) || (isca.graphic == 0x0C82)  || (isca.graphic == 0x1CEF))
-		SendSysMessage(who, "Voce escolheu " + isca.desc + " para pescar.",FONT_NORMAL,400);
+		SendSysMessage(who, "Voce escolheu " + isca.desc + " para pescar.");
 	else
-		SendSysMessage(who, "Isso nao pode ser usado de Isca.",FONT_NORMAL,38);
+		SendSysMessageEx(who, "Isso nao pode ser usado de Isca.", SSM_FAIL);
 		return 1;
 	endif
 
@@ -67,7 +67,7 @@ program use_FishingPole(who, fishingpole)
 	EraseObjProperty(who, "IsMeditating");
 	EraseObjProperty(who, "HealTimer");
 
-	SendSysMessage(who, "Escolha o local aonde quer pescar:",FONT_NORMAL,91);
+	SendSysMessage(who, "Escolha o local aonde quer pescar:");
 
 	var targetsquare := TargetCoordinates(who);
 	if( !targetsquare )
@@ -76,7 +76,7 @@ program use_FishingPole(who, fishingpole)
 
 	var locinfo:= GetMapInfo( targetsquare.x, targetsquare.y, who.realm );
 	if(IsValidFishingSpot(who, targetsquare, locinfo))
-		PrintTextAbove(who, "*arremessando a isca*",FONT_NORMAL,0);
+		PrintTextAbove(who, "*arremessando a isca*");
 		SubtractAmount(isca, 1);
 		var px := who.x, py := who.y;
 		PerformAction(who, 0x9);
@@ -107,7 +107,7 @@ program use_FishingPole(who, fishingpole)
 		set_critical(0);
 		sleepms(2000);
 		if( (px != who.x) or (py != who.y) )
-			SendSysMessage(who,"Voce parou de pescar.");
+			SendSysMessageEx(who,"Voce parou de pescar.", SSM_FAIL);
 			return 0;
 		endif
 
@@ -116,7 +116,7 @@ program use_FishingPole(who, fishingpole)
 		
 		if (peixeexiste == 0)
 			CreateItemInBackpack(who, iscausada, 1);
-			SendSysMessage(who,"Nenhum peixe nessa regiao parece gostar da sua isca",FONT_NORMAL,60);
+			SendSysMessageEx(who,"Nenhum peixe nessa regiao parece gostar da sua isca", SSM_FAIL);
 			return 0;
 		endif
 
@@ -128,7 +128,7 @@ program use_FishingPole(who, fishingpole)
 				difficulty := GetHarvestDifficulty("fish", targetsquare.x, targetsquare.y, locinfo.landtile, who.realm);
 			endif
 			if( difficulty == error )
-				SendSysMessage(who, "Eles nao parecem estar mordendo a isca hoje.",FONT_NORMAL,0);
+				SendSysMessageEx(who, "Eles nao parecem estar mordendo a isca hoje.", SSM_FAIL);
 				CreateItemInBackpack(who, iscausada, 1);
 				return 0;
 			endif
@@ -141,8 +141,8 @@ program use_FishingPole(who, fishingpole)
 					return 1;
 				endif
 
-				SendSysMessage(who,"Alguma coisa fisgou a isca!!" ,FONT_NORMAL,66);
-			       PrintTextAbove(who, "*vara tremendo*",FONT_NORMAL,0);
+				SendSysMessageEx(who,"Alguma coisa fisgou a isca!!", SSM_INFO);
+			       PrintTextAbove(who, "*vara tremendo*");
 			       
 
 				var fishcatch := FishFight(who, fishingpole, pretfish, targetsquare, molinete);
@@ -150,12 +150,12 @@ program use_FishingPole(who, fishingpole)
 					var peixecriado := CreateItemAtLocation(who.x, who.y, who.z, peixepego, 1, who.realm);
 					var newname := pretfish + " [ Peso: " + fishcatch + " ]";
 					Setname(peixecriado, newname );
-					SendSysMessage(who,"Voce pescou um(a) belo(a) " + pretfish + " ." ,FONT_NORMAL,66);
+					SendSysMessageEx(who,"Voce pescou um(a) belo(a) " + pretfish + " .", SSM_INFO);
 					return 1;
 				endif
 				if (fishcatch == 0)
-					PrintTextAbove(who, "*linha estoura*",FONT_NORMAL,36);
-					SendSysMessage(who,"A linha nao aguentou toda a tensao e o peixe escapou." ,FONT_NORMAL,36);
+					PrintTextAbove(who, "*linha estoura*");
+					SendSysMessageEx(who,"A linha nao aguentou toda a tensao e o peixe escapou." , SSM_INFO);
 					return 1;
 				endif		
 				
@@ -164,7 +164,7 @@ program use_FishingPole(who, fishingpole)
 				if( RandomInt(100) == 0 )
 					CriticalFailure(who, targetsquare);
 				else
-					SendSysMessage(who, "Eles nao parecem estar mordendo a isca hoje.",FONT_NORMAL,0);
+					SendSysMessageEx(who, "Eles nao parecem estar mordendo a isca hoje.", SSM_FAIL);
 					CreateItemInBackpack(who, iscausada, 1);
 				endif
 			endif
@@ -187,21 +187,21 @@ function OtherChances(who, targetsquare, fishingpole)
 		if(currentskill >= 10)
 			var bootarray := array(0x170b, 0x1711, 0x170f, 0x170d);
 			fishtype := bootarray[RandomInt(4)+ 1];
-			SendSysMessage(who, "Voce achou um calcado velho!",FONT_NORMAL,0);
+			SendSysMessage(who, "Voce achou um calcado velho!");
 		else
 			return 0;
 		endif
 	elseif(thisone <= 99)
 		if(RandomInt(currentskill) >= 50)
 			fishtype := "level" +(RandomInt(2)+ 1)+ "map";
-			SendSysMessage(who, "Voce achou um mapa do tesouro!",FONT_NORMAL,0);
+			SendSysMessage(who, "Voce achou um mapa do tesouro!");
 		else
 			return 0;
 		endif
 	else
 		if(currentskill >= 95)
 			fishtype := "sosbottle";
-			SendSysMessage(who, "Voce achou uma garrafa!",FONT_NORMAL,0);
+			SendSysMessage(who, "Voce achou uma garrafa!");
 		else
 			return 0;
 		endif
@@ -321,20 +321,20 @@ function FishFight(who, fishingpole, pretfish, targetsquare, molinete);
 	while ((distancia > 0) && (tensao < tensaomax))
 		acao := GumpPescaria(who, fishingpole, pretfish, targetsquare, tensao, distancia, tensaomax);
 		if (acao == 1) 
-			PrintTextAbove(who, "*puxando a linha*",FONT_NORMAL,0);
+			PrintTextAbove(who, "*puxando a linha*");
 			PlaySoundEffect(who, cInt(0x5A5));
 			PerformAction( who, ANIM_ATTACK_2HAND_WIDE );
 			tensao := Cint(tensao + (peso * (RandomInt(2) + 1)) - (GetAttribute(who, STRENGTH) / 10) - (GetAttribute(who, DEXTERITY) / 10) - (AP_GetSkill(who, SURVIVAL) / 4));
 			tensao := Cint(tensao - (tensao * molinete * 0.2));
 			if (tensao <= 0) tensao := 0; endif
 			if (cint(distancia) == 15) 
-				SendSysMessage(who, "A linha ja esta solta o maximo possivel.",FONT_NORMAL,38);
+				SendSysMessageEx(who, "A linha ja esta solta o maximo possivel.", SSM_FAIL);
 			else
 				distancia := distancia - 2;
 			endif
 		endif
 		if (acao == 2) 
-			PrintTextAbove(who, "*soltando a linha*",FONT_NORMAL,0);
+			PrintTextAbove(who, "*soltando a linha*");
 			PerformAction( who, ANIM_ATTACK_2HAND_JAB );
 			tensao := Cint(tensao - (GetAttribute(who, DEXTERITY) / 10) - (AP_GetSkill(who, SURVIVAL) / 2));
 			distancia := distancia + 1;
@@ -359,7 +359,7 @@ function GumpPescaria(who, fishingpole, pretfish, targetsquare, tensao, distanci
 	GFResizePic(fishgump, 0, 25, 3600, 300, 155);
 	GFResizePic(fishgump, 15, 40, 0x13BE, 270, 125);
 
-	GFTextLine(fishgump, 30, 55, 1153,  "Puxar a Linha: ");
+	GFTextLine(fishgump, 30, 55, 1153, "Puxar a Linha: ");
 	GFTextLine(fishgump, 30, 80, 1153, "Soltar a linha: ");
 	GFTextLine(fishgump, 30, 105, 1153, "Tensao na Linha: " + tensao + " (Max: " + tensaomax + ")");
 	GFTextLine(fishgump, 30, 130, 1153, "Distancia Restante: " + distancia + " (Em Tile)");
