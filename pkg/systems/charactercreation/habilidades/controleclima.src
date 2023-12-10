@@ -76,7 +76,7 @@ program controleclima(who)
 		endif
 
 		var bolts := RandomInt(5);
-        var fire_weapons := Array{0xC5FD, 0xC5FE, 0xC5FF, 0xC600, 0xc606};
+        var fire_weapons := Array{0xC5FD, 0xC5FE, 0xC5FF, 0xC600, 0x89A7};
 		SetWeatherForPlayer(who, type, 50 );
 		foreach mob in enemies
            SetObjProperty(mob, "molhado", 1);
