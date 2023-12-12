@@ -431,6 +431,15 @@ function comprarHabilidade(who, item, nv:=-1)
 		elseif (escolhida == "Inimigo Predileto")
 			var inimigo := RadioGump(who, 300, 380, "Escolha seu Inimigo Predileto", array{"Dragon","Undead","Giants","GiantAnimal","EvilHuman","Goblin"});
 			SetObjProperty(who, "InimigoPredileto", inimigo);
+		elseif (escolhida == "Inventario Ferreiro")
+			var inventario := RadioGump(who, 300, 380, "Selecione a especialidade", array{"Armas","Escudos","Armaduras"});
+			Start_Script(":charactercreation:habilidades/inventario", {who, "ferreiro", inventario});
+		elseif (escolhida == "Inventario Carpinteiro")
+			var inventario := RadioGump(who, 300, 380, "Selecione a especialidade", array{"Equipamentos","Mobilia"});
+			Start_Script(":charactercreation:habilidades/inventario", {who, "carpinteiro", inventario});
+		elseif (escolhida == "Inventario Costureiro")
+			var inventario := RadioGump(who, 300, 380, "Selecione a especialidade", array{"Couro","Tecido"});
+			Start_Script(":charactercreation:habilidades/inventario", {who, "costureiro", inventario});
 		elseif (escolhida == "Senso da Natureza")
 			setObjProperty(who, "empatiacomanimais", 1);
 		elseif(escolhida == "Protecao Elemental Kitahne")
