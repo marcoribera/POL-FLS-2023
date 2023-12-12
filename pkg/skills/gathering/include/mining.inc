@@ -250,7 +250,6 @@ var chestz := who.z;
 		elseif (maplevel == 5)
 			CreateNpcFromTemplate(":brainai:Dracolich", who.x, who.y, who.z, 0, who.realm);
         endif
-
 		chest.movable := 0;
 			//SetObjProperty(item, "#DestroyAt", ReadGameClock() + 60); 
       		EraseObjProperty(map, "level");
@@ -258,9 +257,17 @@ var chestz := who.z;
       		EraseObjProperty(map, "chesty");
       		SetObjProperty(map, "Solved", 1);
       		map.name := "Mapa de tesouro [Completado por " + who.name + "]";
-			TS_StartTimer(chest, "treasure_chest_destroy", 600);
+			//TS_StartTimer(chest, "treasure_chest_destroy", 600);
+			detach();
+			ChestDestroy (chest);
     endif
 
+endfunction
+
+function ChestDestroy( chest )
+sleep(600);
+DestroyItem(chest);
+print("o chest foi destruido");
 endfunction
 
 function GetRange( who );
