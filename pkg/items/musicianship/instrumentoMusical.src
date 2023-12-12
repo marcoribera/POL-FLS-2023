@@ -3,12 +3,17 @@ use os; //funcoes do sistema
 
 //As constantes e funcoes auxiliares estao nesse arquivo
 include "bardmusic";
+include "include/client";
 
 //Programa para tocar instrumentos
 program instrumentoMusical(who, item)
 	//Se o item nao estiver na bolsa envia um aviso e encerra o script
-	if(item.container != who.backpack)
-		SendSysMessage(who, "Este instrumento nao esta na sua mochila.",BARD_FONT,BARD_FONT_COLOR_BAD);
+	var mao1 := GetEquipmentByLayer(who, LAYER_HAND1);
+    var mao2 := GetEquipmentByLayer(who, LAYER_HAND2);
+	if (item.objtype != mao1.objtype && item.objtype != mao2.objtype )
+	//if(item.container != who.backpack)
+	//	SendSysMessage(who, "Este instrumento nao esta na sua mochila.",BARD_FONT,BARD_FONT_COLOR_BAD);
+		SendSysMessageEx(who, "O instrumento precisa estar na sua mao.", SSM_FAIL);
 		return 0;
 	elseif(Cint(GetObjProperty(who, "#LastMusic")) > ReadGameClock())
 		//Avisa para esperar se ainda estiver tocando ou compondo e encerra o script
