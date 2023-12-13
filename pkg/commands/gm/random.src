@@ -22,4 +22,4 @@ program textcmd_random(character, params)
     
 
     SendSysMessage(character, "O valor deu: " +ELRandom(character, valmax, valmin, valseed));
-    endprogram
+endprogram
