@@ -458,6 +458,7 @@ function iteminfogump(who, item)
 			endif
 			//iteminfogump(who, item);
 		endforeach
+		setobjproperty(item, "magic", 1);
 		setobjproperty(item, "equip", mods);
 		iteminfogump(who, item);
 
