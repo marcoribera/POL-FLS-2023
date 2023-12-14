@@ -5,6 +5,7 @@ include ":attributes:attributes";
 include ":brainAI:npcUtil";
 include ":charactercreation:habilidades";
 include ":timedscripts:timedScripts";
+include ":food:include/hunger";
 
 program Install()
 	print("INSTALLING: Exported Vital - RegenRate and MaxValue functions ...");
@@ -46,11 +47,14 @@ exported function GetHitsMaximumValue(mobile)
 
     if (!mobile.npctemplate)
 		var hunger := CInt(AP_GetVital(mobile, "Hunger") / 60);
-		if (hunger == 5)
+		if (hunger >= FomeGetLimiar())
+			vital_points := vital_points - (FomeCalcDebuff(hunger)*100);
+		endif
+		/*if (hunger == 5)
 			vital_points := vital_points - 2000;
 		elseif (hunger == 4)
 			vital_points := vital_points - 1000;
-		endif
+		endif*/
 	endif
 
 	return vital_points;
@@ -92,11 +96,15 @@ exported function GetManaMaximumValue(mobile)
 
     if (!mobile.npctemplate)
 		var hunger := CInt(AP_GetVital(mobile, "Hunger") / 60);
-		if (hunger == 5)
+		if (hunger >= FomeGetLimiar())
+			vital_points := vital_points - (FomeCalcDebuff(hunger)*50);
+		endif
+
+		/*if (hunger == 5)
 			vital_points := vital_points - 2000;
 		elseif (hunger == 4)
 			vital_points := vital_points - 1000;
-		endif
+		endif*/
 	endif
 
 	vital_points := vital_points + ((Cint( GetObjProperty(mobile, "manamod") ) + Cint( GetObjProperty(mobile, "#manamod")))*100);
@@ -135,11 +143,15 @@ exported function GetStaminaMaximumValue(mobile)
 			mobile.carrying_capacity_mod := (mobile.carrying_capacity - mobile.carrying_capacity_mod) * 2;
 		endif
 		var hunger := CInt(AP_GetVital(mobile, "Hunger") / 60);
-		if (hunger == 5)
+		if (hunger >= FomeGetLimiar())
+			vital_points := vital_points - (FomeCalcDebuff(hunger)*50);
+		endif
+
+		/*if (hunger == 5)
 			vital_points := vital_points - 2000;
 		elseif (hunger == 4)
 			vital_points := vital_points - 1000;
-		endif
+		endif*/
 	endif
 
 	return vital_points;
