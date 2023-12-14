@@ -8,9 +8,9 @@ include "include/say";
 include ":food:include/hunger";
 
 program Hunger(chr)
-	//if( chr.cmdlevel >= 2 )
-	//	return 0;
-	//endif
+	if( chr.cmdlevel >= 2 )
+		return 0;
+	endif
 	Sleep(1); //pra evitar bug no start do server
 
 	var hunger, debuff;
@@ -61,7 +61,7 @@ program Hunger(chr)
 		RecalcVitals(chr);
 
 		//Sleep(60 * 10); //10 min [antigo]
-		//Sleep(60 * 5); //5 min
-		Sleep(10); //para testes
+		Sleep(60 * 5); //5 min
+		//Sleep(10); //para testes
 	endwhile
 endprogram
