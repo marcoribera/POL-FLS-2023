@@ -990,8 +990,10 @@ function PoisonChecks(attacker, defender, weapon, armor, basedamage, rawdamage)
 				sleepms(30);
 				SetName(weapon, nome);
 			endif
-			poisonInfo.dosage := poisonInfo.dosage -1;
-			if (poisonInfo.dosage <= 0) //se nao tiver mais cargas de veneno, deleta
+			if (poisonInfo.dosage != "infinito")
+				poisonInfo.dosage := poisonInfo.dosage -1;
+			endif
+			if (poisonInfo.dosage <= 0 && poisonInfo.dosage != "infinito") //se nao tiver mais cargas de veneno, deleta
 				EraseObjProperty(weapon, "poisonInfo");
 				var nome := weapon.name; //Armengo pra atualizar tooltip?
 				SetName(weapon, nome + " -");
