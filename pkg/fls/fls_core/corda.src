@@ -9,6 +9,21 @@ include ":charactercreation:habilidades";
 
 program rope(who, item)
 	var alvo := Target(who, TGTOPT_CHECK_LOS);
+
+    if (alvo.objtype == 0x14f8)
+		if (temHabilidade(who, "Armadilheiro"))
+			PrintText(who, "*Amarrando varios pontos da corda*");
+			sleep(4);
+			SendSysMessage(who, "Voce usou a corda para fazer uma rede");
+			DestroyItem(item);
+			var key := CreateItemInBackpack(who, 0x1EA3, 1);
+			DestroyItem(alvo);
+			return;
+		endif
+		SendSysMessageEx(who, "Voce nao tem a menor ideia de como fazer isso.", SSM_FAIL);
+        return 0;
+	endif
+
 	SendSysMessage(who, "Selecione um corpo.");
 	if (!alvo)
 		SendSysMessage(who, "Cancelado.");
