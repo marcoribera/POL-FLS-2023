@@ -3,25 +3,111 @@ use os;
 use util;
 
 include ":attributes:attributes";
+include ":charactercreation:resists";
 include "include/say";
 
 program Hunger(chr)
-	if( chr.cmdlevel >= 2 )
+	/*if( chr.cmdlevel >= 2 )
 		return 0;
-	endif
+	endif*/
 
 	var hunger;
 	while( chr )
 		hunger := CInt(AP_GetVital(chr, "Hunger") / 60);
+		var debuff := GetObjProperty(chr, "debufffome");
 
-		if (hunger == 5)
-			SendSysMessageEx(chr, "Voce esta faminto e totalmente sem forcas.",  SSM_INFO);
-		elseif (hunger == 4)
-			SendSysMessageEx(chr, "Voce esta faminto e fraco.",  SSM_INFO);
+		if (debuff) //recolocar debuff caso ele saia por algum motivo com reset do shard ou algo do tipo
+			if(AP_GetStatMod(chr, STRENGTH) == 0 || AP_GetStatMod(chr, DEXTERITY) == 0 || AP_GetStatMod(chr, INTELLIGENCE) == 0)
+				//SendSysMessageEx(chr, "DEBUG: SETOU DE NOVO", SSM_FAIL);
+				ApplyDebuff(chr, -(debuff."debufffome"));
+			endif
 		endif
+
+		case (hunger)
+			5:
+				SendSysMessageEx(chr, "Voce esta faminto e totalmente sem forcas.",  SSM_FAIL);
+				PrintTextAbove(chr, "*parece estar fraco e zonzo*");
+				ModStatFome(chr, hunger);
+			4:
+				SendSysMessageEx(chr, "Voce esta faminto e fraco.",  SSM_FAIL);
+				PrintTextAbove(chr, "*barriga roncando alto*");
+				ModStatFome(chr, hunger);
+			3:
+				SendSysMessageEx(chr, "Voce esta comecando a ficar com fome.",  SSM_INFO);
+				PrintTextAbove(chr, "*barriga roncando*");
+				ModStatFome(chr, hunger);
+			
+			default:
+				if (debuff)
+					SendSysMessageEx(chr, "Voce comeca a se sentir melhor.", SSM_INFO);
+					ModStatFome(chr, hunger);
+				else
+				endif
+		endcase
+		
+		/*if (hunger >= 5)
+			SendSysMessageEx(chr, "Voce esta faminto e totalmente sem forcas.",  SSM_INFO);
+		elseif (hunger >= 4)
+			SendSysMessageEx(chr, "Voce esta faminto e fraco.",  SSM_INFO);
+		endif*/
 
 		RecalcVitals(chr);
 
-		Sleep(60 * 10); //10 min
+		//Sleep(60 * 10); //10 min [antigo]
+		Sleep(60 * 5); //5 min
+		//Sleep(10); //para testes
 	endwhile
 endprogram
+
+function CalcDebuff(fome)
+	var mod := 0;
+	var formula := CInt((fome - mod) * 10);
+	
+	var result := formula;
+
+	return result;
+endfunction
+
+function ApplyDebuff(who, valor)
+	AP_ModifyStatMod(who, STRENGTH, valor);
+	AP_ModifyStatMod(who, INTELLIGENCE, valor);
+	AP_ModifyStatMod(who, DEXTERITY, valor);
+endfunction
+
+function ModStatFome(who, fome)
+	var limiar := 3;
+	var valdebuff := CalcDebuff(fome);
+	var debuff := GetObjProperty(who, "debufffome");
+	var debufffome := Dictionary;
+	var resist := GetResist(who, FORTITUDE);
+	var dado := RandomFloat(100);
+	
+	if (fome >= limiar)
+		if (resist >= dado)
+			SendSysMessageEx(who, "Voce resistiu aos efeitos da fome.", SSM_INFO);
+		else
+			SendSysMessageEx(who, "Voce sucumbiu aos efeitos da fome.", SSM_FAIL);
+			if (!debuff)
+				debufffome["#fome"] := fome;
+				debufffome["valdebuff"] := valdebuff;
+
+				ApplyDebuff(who, -(valdebuff));
+				who.SetProp("debufffome", debufffome);
+			else
+				var diff := debuff."debufffome" - valdebuff;
+				if (diff != 0)
+					debufffome["#fome"] := fome;
+					debufffome["debufffome"] := valdebuff;
+
+					ApplyDebuff(who, diff);
+					who.SetProp("debufffome", debufffome);
+				endif
+			endif
+		endif
+	else
+		if (debuff)
+			ApplyDebuff(who, debuff."debufffome");
+			who.EraseProp("debufffome");
+		endif
+	endif
+endfunction
