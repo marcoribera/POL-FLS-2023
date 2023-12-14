@@ -53,7 +53,7 @@ program Hunger(chr)
 
 		RecalcVitals(chr);
 
-		Sleep(60 * 10); //10 min [antigo]
+		//Sleep(60 * 10); //10 min [antigo]
 		Sleep(60 * 5); //5 min
 		//Sleep(10); //para testes
 	endwhile
