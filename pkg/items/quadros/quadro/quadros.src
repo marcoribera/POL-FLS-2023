@@ -163,6 +163,7 @@ function GumpSetDesc( who,item,quadro )
 	var linhas	:=	64;
 	var input;
 	var txt1,txt2;
+
 	var gflayout := {   "page 0",
 			    "resizepic 50 80 2620 400 180",
 			    "checkertrans 56 86 386 288",
