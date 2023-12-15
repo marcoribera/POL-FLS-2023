@@ -90,7 +90,6 @@ program jogarede(who, rede)
 		    mod := -20;
 	    endif
 
-        alvo.frozen := 0;
         alvo.frozen := 1;
 
         var preso1 := CreateItemAtLocation(alvo.x, alvo.y, alvo.z+1, 0x1EA4, 1);
@@ -103,6 +102,7 @@ program jogarede(who, rede)
         sleepms(50);
         sleep(2);
         DestroyItem(preso1);
+        alvo.frozen := 0;
         return 1;
     endif
 
