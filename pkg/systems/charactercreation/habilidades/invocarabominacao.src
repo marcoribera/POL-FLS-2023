@@ -20,11 +20,8 @@ program manobra(attacker)
 	elseif(lvl >= 60 && lvl < 80)
 		CreateNpcFromTemplate(":brainai:fleshgoleminvoked", targ.x, targ.y, targ.z, 0, targ.realm);
 	elseif(lvl >= 80)
-		CreateNpcFromTemplate(":brainai:fleshgoleminvoked", targ.x, targ.y, targ.z, 0, targ.realm);
-		CreateNpcFromTemplate(":brainai:fleshgoleminvoked", targ.x, targ.y, targ.z, 0, targ.realm);
+		CreateNpcFromTemplate(":brainai:esqueletotitan", targ.x, targ.y, targ.z, 0, targ.realm);
 	else
 		CreateNpcFromTemplate(":brainai:skeletoninvoked", targ.x, targ.y, targ.z, 0, targ.realm);
 	endif
-
-
 endprogram  

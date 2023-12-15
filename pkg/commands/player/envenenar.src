@@ -131,8 +131,8 @@ program do_poisoning(who)
 			poisonInfo.time := CInt(poisonInfo.time * 1.2);
 		endif
 		if ( the_item.graphic == 0x1bfb || the_item.graphic == 0xf3f  )
-			poisonInfo.dosage := 100;
-			poisonInfo.time := CInt(poisonInfo.dosage * 0.5);
+			poisonInfo.dosage := "infinito"; //Era 100 antes
+			poisonInfo.time := 50; //CInt(poisonInfo.dosage * 0.5);
 		endif
 		SetObjProperty(the_item, "poisonInfo", poisonInfo);
 		if (the_item.isA(POLCLASS_WEAPON))
@@ -175,6 +175,13 @@ program do_poisoning(who)
 			EraseObjProperty(the_poison, "doses");
 			CreateItemInBackpack(who, 0xf0e, 1);
 		endif
+	endif
+
+		var nome_antigo := the_item.name;
+	if ( the_item.graphic == 0xf3f ) 
+		the_item.name := nome_antigo+" envenenadas";
+	elseif( the_item.graphic == 0x1bfb )
+		the_item.name := nome_antigo+" envenenados";
 	endif
 
 endprogram

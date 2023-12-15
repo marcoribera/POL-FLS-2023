@@ -42,3 +42,6 @@ config/landtiles.cfg
 muls/
 realm/
 objtypes.txt
+pcs.txt
+uoconvert.bat
+objtypes.txt

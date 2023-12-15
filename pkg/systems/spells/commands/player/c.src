@@ -29,7 +29,7 @@ program magia(who, spellname)
 		SendSysMessageEx(who, "A runa " + spellname + " nao existe.", SSM_FAIL);
 		return;
 	endif
-    var is_rune := {0x612F, 0x6144, 0x6145, 0x6146, 0x6132, 0x6133, 0x6134, 0x6135, 0x6136, 0x6137, 0x6138, 0x6139, 0x613A, 0x613B, 0x613D, 0x613E, 0x613F, 0x6147, 0x6148, 0x6142, 0x615b, 0x613C, 0x6168, 0x790c};
+    var is_rune := {0xC000, 0xC001, 0xC005, 0xC003, 0xC004, 0xC002, 0xC007, 0xC006, 0xC009, 0xC008, 0xC00A, 0xC00B, 0xC00C, 0xC00D, 0xC00E, 0xC00F, 0xC010, 0xC011, 0xC012, 0xC013, 0xC014, 0xC015, 0xC016, 0xC017, 0xc018, 0xc019};
 	SendSysMessage(who, " " + id);
 	var spellbook := 0;
 	var booktype;
@@ -45,6 +45,24 @@ program magia(who, spellname)
             endif
 		endif
 	endforeach
+
+    foreach equip in (ListEquippedItems(who))
+        if (equip.objtype == 0xC892)
+            var runes := EnumerateItemsInContainer(equip);
+            foreach rune in runes
+                if ( rune.objtype in is_rune)
+                    var rune := GetObjProperty(rune, "runatype");
+                    print("rune: " + rune);
+                    print ("id: " + id);
+                    if ( rune == id)
+                        spellbook := 1;
+                        booktype := GetBookType(rune);
+                        break;
+                    endif
+                endif
+            endforeach
+        endif
+    endforeach
 
 	if ( !spellbook)
 		SendSysMessageEx(who, "Voce nao possui a runa " +spellname+ " na sua mochila." , SSM_FAIL);

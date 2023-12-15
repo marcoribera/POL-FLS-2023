@@ -40,7 +40,7 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
             skillAttacker := AP_GetSkill(attacker, MELEECOMBAT2H);
         endif
         if (defender.weapon.objtype == 0x13b9 && !defender.shield)
-		    skillDefender := AP_GetSkill(attacker, MELEECOMBAT2H);
+		    skillDefender := AP_GetSkill(defender, MELEECOMBAT2H);
         endif
 		if(TemHabilidade(attacker, "Maestria de Devastacao"))
 			if(GetObjProperty(attacker.weapon, "swordmage") == attacker.serial)

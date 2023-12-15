@@ -835,16 +835,14 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 	endif
 
 	var weapon_scripts := array;
-	var pet_instinto :=	GetObjProperty(attacker, "Group_savage");
+	var pet_instinto :=	GetObjProperty(attacker, "Group_savage");//animal tamado com a hab Instinto Selvagem para adicionad criticos diferentes
 	var pet_critic := GetObjProperty(attacker, "Critic");
 	var pet_txt := Cstr(GetConfigStringArray( taming_cfg[pet_critic], "Text" ));
 	var pet_selvagem := GetObjProperty(attacker, "Selvagem"); //verifica se é animal selvagem - nunca tamado, para dar dano critico
 	var npcelem := NPC_GetNPCConfig(attacker.npctemplate);
 	var tem_critico := GetConfigStringArray( npcelem, "CriticalHitScripts" ); //Se tem critico no npcdesc definido
-	//if ( weapon.objtype == 0xF020 && !pet_instinto && !pet_selvagem) // Intrinsic fist
-		//weapon_scripts := GetConfigString(npcelem, "CriticalHitScripts");
-	if ( weapon.IsA(POLCLASS_WEAPON) && !pet_instinto && !pet_selvagem )
-		if (!tem_critico)
+	if ( !attacker.ip && weapon.IsA(POLCLASS_WEAPON) && !pet_instinto && !pet_selvagem )
+		if (tem_critico == {})
 			weapon_scripts :=  GetConfigStringArray( item_cfg[weapon.objtype], "CriticalHitScripts" );
 		else
 			weapon_scripts :=  GetConfigStringArray( npcelem, "CriticalHitScripts" );
@@ -853,8 +851,10 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 		weapon_scripts :=  GetConfigStringArray( taming_cfg[pet_critic], "CriticalHitScripts" );
 		sleepms(5);
 		printtextabove(attacker, ""+pet_txt);
+	else
+		weapon_scripts :=  GetConfigStringArray( item_cfg[weapon.objtype], "CriticalHitScripts" );
 	endif
-	//Duttones: Possivel mudar o critico de npc's. Prioriza sempre o critico da arma.
+	//Possivel mudar o critico de npc's. Os npcs só tem uma arma, a Intrinsic Weapon, mesmo que alguma esteja equipada.
 
 
 	//printtextabove(attacker, "critical hit scripts " + weapon_scripts);
@@ -990,8 +990,10 @@ function PoisonChecks(attacker, defender, weapon, armor, basedamage, rawdamage)
 				sleepms(30);
 				SetName(weapon, nome);
 			endif
-			poisonInfo.dosage := poisonInfo.dosage -1;
-			if (poisonInfo.dosage <= 0) //se nao tiver mais cargas de veneno, deleta
+			if (poisonInfo.dosage != "infinito")
+				poisonInfo.dosage := poisonInfo.dosage -1;
+			endif
+			if (poisonInfo.dosage <= 0 && poisonInfo.dosage != "infinito") //se nao tiver mais cargas de veneno, deleta
 				EraseObjProperty(weapon, "poisonInfo");
 				var nome := weapon.name; //Armengo pra atualizar tooltip?
 				SetName(weapon, nome + " -");

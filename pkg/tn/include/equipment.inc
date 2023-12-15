@@ -80,7 +80,7 @@ function SetEquipmentMods(who, item)
 
 	//magery
 	penalty := CInt(itemdesc[item.objtype].MageryPenalty);
-	if (!(TemHabilidade(who, "Aura de Corrupcao") || TemHabilidade(who, "Devocao")))
+	if (!(TemHabilidade(who, "Senhor do Medo") || TemHabilidade(who, "Devocao")))
         AP_ModifySkillMod(who, MAGERY, penalty);
     endif
 
@@ -244,7 +244,7 @@ function RemoveEquipmentMods(who, item)
   	AP_ModifySkillMod(who, AWARENESS, (-1)*penalty);
 
 	penalty := CInt(itemdesc[item.objtype].MageryPenalty);
-	if (!(TemHabilidade(who, "Aura de Corrupcao") || TemHabilidade(who, "Devocao")))
+	if (!(TemHabilidade(who, "Senhor do Medo") || TemHabilidade(who, "Devocao")))
 	  	AP_ModifySkillMod(who, MAGERY, (-1)*penalty);
 	endif
 
