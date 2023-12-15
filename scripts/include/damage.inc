@@ -467,7 +467,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 			other := other + 0.15*inimigos; //15% de bonus - balanceamento depois da mudanca de calculo do dano
 		endif
 		if (GetCooldown(who, "furiamortal"))
-			var bonus := AP_GetVitalMaximumValue(who, HITS) / AP_GetVital(who, HITS)*1.5;
+			var bonus := AP_GetVitalMaximumValue(who, HITS) - AP_GetVital(who, HITS);
 			other := other + bonus;
 		endif
 	endif

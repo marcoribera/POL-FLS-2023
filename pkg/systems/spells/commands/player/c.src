@@ -46,6 +46,24 @@ program magia(who, spellname)
 		endif
 	endforeach
 
+    foreach equip in (ListEquippedItems(who))
+        if (equip.objtype == 0xC892)
+            var runes := EnumerateItemsInContainer(equip);
+            foreach rune in runes
+                if ( rune.objtype in is_rune)
+                    var rune := GetObjProperty(rune, "runatype");
+                    print("rune: " + rune);
+                    print ("id: " + id);
+                    if ( rune == id)
+                        spellbook := 1;
+                        booktype := GetBookType(rune);
+                        break;
+                    endif
+                endif
+            endforeach
+        endif
+    endforeach
+
 	if ( !spellbook)
 		SendSysMessageEx(who, "Voce nao possui a runa " +spellname+ " na sua mochila." , SSM_FAIL);
 		return;
