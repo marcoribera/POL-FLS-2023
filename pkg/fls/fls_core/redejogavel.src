@@ -75,6 +75,7 @@ program jogarede(who, rede)
         alvo.frozen := 0;
         DestroyItem(preso1);
         var redeleftovers := CreateItemAtLocation(alvo.x, alvo.y, alvo.z+1, 0x1EA3, 1);
+        redeleftovers.movable := 1;
         return 1;
     else
         var diff := GetObjProperty(rede, "diff");
