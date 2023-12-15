@@ -28,9 +28,10 @@ program Logon(who)
 			SetName(who, who.title_race);
 		endif
 	endif
-
+    
 	EraseObjProperty(who, "#pegueiesse"); // evitar bugs no stealing.
 	EraseObjProperty(who, "#torobando");
+    EraseObjProperty(who, "#Casting"); // Bugs de cast
 	SetObjProperty(who, "ConnectTime", polcore().systime);
 
 	var createdat :=  getobjproperty(who, "createdate");
