@@ -2,11 +2,11 @@
 
 Este projeto utiliza a engine POL v100 para criar um servidor de Ultima Online.
 
-## Instruções de Instalação
+## InstruÃ§Ãµes de InstalaÃ§Ã£o
 
-1. Baixe a versão do POL correspondente ao seu sistema operacional em [POL Server](https://github.com/polserver/polserver/releases).
+1. Baixe a versÃ£o do POL correspondente ao seu sistema operacional em [POL Server](https://github.com/polserver/polserver/releases).
 2. Extraia o arquivo em uma pasta separada.
-3. Copie as seguintes pastas e executáveis para a pasta do projeto:
+3. Copie as seguintes pastas e executÃ¡veis para a pasta do projeto:
    - pol
    - poltool
    - uoconvert
@@ -14,7 +14,7 @@ Este projeto utiliza a engine POL v100 para criar um servidor de Ultima Online.
    - scripts/ecompile
    - scripts/modules/
 
-   **Nota:** Não copie nenhum outro arquivo, pois são arquivos de configuração.
+   **Nota:** NÃ£o copie nenhum outro arquivo, pois sÃ£o arquivos de configuraÃ§Ã£o.
 
 4. Abra o arquivo pol.cfg e altere UoDataFileRoot para o caminho do seu Ultima Online com os arquivos do shard.
 5. Se estiver usando Linux, instale a libmysqlclient2 com o comando `apt-get install libmysqlclient2`.
@@ -23,7 +23,7 @@ Este projeto utiliza a engine POL v100 para criar um servidor de Ultima Online.
    - `./uoconvert statics realm=britannia`
    - `./uoconvert maptile realm=britannia`
 
-7. Crie uma cópia da pasta /data_dev/ e renomeie para /data. Altere as informações no arquivo /data/accounts.txt para criar sua conta.
+7. Crie uma cÃ³pia da pasta /data_dev/ e renomeie para /data. Altere as informaÃ§Ãµes no arquivo /data/accounts.txt para criar sua conta.
 8. Para compilar todos os scripts, abra o terminal na pasta do projeto e execute o comando `scripts/ecompile -a`.
 
-Agora você está pronto para iniciar seu servidor Ultima Online!
+Agora vocÃª estÃ¡ pronto para iniciar seu servidor Ultima Online!
