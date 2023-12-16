@@ -1461,10 +1461,9 @@ program createchar(who)
             if (ganheispell == 0)
                 chardata.magia := "Sacerdote";
                 var malhoecinzel := CreateItemInBackpack(who, 0xf40, 1);
-                var robe := CreateItemInBackpack(who, 0x9945, 1); //bodysash
-                SetObjProperty(robe, "description", "Robe com bordado do simbolo do clero de Zharkia");
-                SetObjProperty(robe, "cannotdye", 1);
-                SetObjProperty(robe, "descmod", "Acólito de Zhark");
+                var simbolo_sagrado := CreateItemInBackpack(who, 0xB888, 1); //Simbolo Sagrado
+				SetName(simbolo_sagrado, "Símbolo Sagrado");
+                SetObjProperty(simbolo_sagrado, "descmod", "Acólito de Zhark");
                 createiteminbackpack(who, "runaarmasagrada");
                 createiteminbackpack(who, "runacuraleve");
                 createiteminbackpack(who, "runadescanso");
