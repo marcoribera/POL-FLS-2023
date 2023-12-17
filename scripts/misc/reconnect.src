@@ -16,7 +16,8 @@ program core_reconnect(who)
 //	PrintTextAbove(who, "Reconnecting");
 //	who.setlightlevel(0, 2);
 //	return 1;
-
+	EraseObjProperty(who, "#Casting"); // Bugs de cast
+	
 	if (who.cmdlevel <= 1)
 		var acc := who.acct;
 		var count := ACCT_GetNumCharacters(acc);
