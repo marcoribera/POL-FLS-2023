@@ -68,7 +68,6 @@ endfunction
 
 function SummonOne(attacker, defender, enemy, miniontemplate)
 	var player_sort := enemy.randomentry();
-	print("o player sort eh "+player_sort);
 	var player_find := SystemFindObjectbySerial(player_sort);
 	minion := CreateNpcFromTemplate(miniontemplate, defender.x, defender.y, defender.z, 1, defender.realm);
 	Setobjproperty(minion, "source", attacker.serial);
@@ -78,7 +77,6 @@ function SummonOne(attacker, defender, enemy, miniontemplate)
 endfunction
 
 function SummonHalf(attacker, defender, enemy, miniontemplate)
-print("rolado 3, em metade deles");
 	var total_enemy := enemy.size();
 	var enemy_metade := total_enemy/2;
 	var i := 0;
