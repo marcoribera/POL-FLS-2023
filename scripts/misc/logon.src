@@ -28,7 +28,7 @@ program Logon(who)
 			SetName(who, who.title_race);
 		endif
 	endif
-    
+
 	EraseObjProperty(who, "#pegueiesse"); // evitar bugs no stealing.
 	EraseObjProperty(who, "#torobando");
     EraseObjProperty(who, "#Casting"); // Bugs de cast
@@ -36,14 +36,6 @@ program Logon(who)
 
 	var createdat :=  getobjproperty(who, "createdate");
 	//var obitodat := FindAccount(who.acctname).getprop("mortelog");
-    var heirdat := FindAccount(who.acctname).getprop("herdeiro");
-
-    if (heirdat)
-        var dias := FindAccount(who.acctname).getprop("heir_days");
-        SetObjProperty(who, "createdate", dias);
-    elseif (createdat == error)
-        SetObjProperty(who, "createdate", polcore().systime);
-    endif
 
 	//if (!obitodat)
 	//	if (createdat == error)
