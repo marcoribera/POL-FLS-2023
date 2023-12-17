@@ -108,7 +108,7 @@ program Logon(who)
 		SendSysMessage(who, "NotaRP 4: Calculando UP passivo...");
 		if ( ticks >= 1 ) //da +0.1 a cada 5h
 			var time := ticks * intervalo; // soma apenas o tempo que foi usado pra subir a skill
-
+			SendSysMessage(who, who.name + " tem tempo para subir 0.1 "+ ticks + "vezes.");
 			var i := 0;
 
 			var possiveis;
@@ -129,7 +129,8 @@ program Logon(who)
 					sleep(2);
 				endforeach
 
-				if(possiveis.size() == 0)
+				if(possiveis[1] == error)
+					SendSysMessage(who, who.name + " nao tem mais skills pra subir passivamente.");
 					SetObjProperty(who, "lastprize", polcore().systime);
 					SendSysMessage(who, who.name + " (" + who.acctname + ") nao tem como melhorar passivamente com o cap atual.");
 					return 0;
@@ -137,7 +138,7 @@ program Logon(who)
 
 				chosen := possiveis[ RandomInt(possiveis.size())+1 ];
 				//LogToFile(":tn:passiva.log", who.name + " " + who.acctname + " ganhou 0.1 em " + chosen);
-				SendSysMessage(who, who.name + " (" + who.acctname + ") ganhou 0.1 em " + chosen +" passivamente.");
+				//SendSysMessage(who, who.name + " (" + who.acctname + ") ganhou 0.1 em " + chosen +" passivamente.");
 				SetObjProperty(who, "skillpassiva", cint(GetObjProperty(who, "skillpassiva"))+1); //conta quantos ups teve
 				//AP_SetTrueSkill(who, chosen,   (AP_GetTrueSkill(who, chosen)+0.1));
 
