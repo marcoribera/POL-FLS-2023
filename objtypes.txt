@@ -361,24 +361,7 @@
 0x784 cavestairs stonework
 # 0x785 - 0x7bc unused
 0x7bd plataforma woodworking
-# 0x7be - 0x823 unused
-0x824 [n/a] doors
-0x825 [n/a] doors
-0x826 [n/a] doors
-0x827 [n/a] doors
-0x828 [n/a] doors
-0x829 [n/a] doors
-0x82a [n/a] doors
-0x82b [n/a] doors
-0x82c [n/a] doors
-0x82d [n/a] doors
-0x82e [n/a] doors
-0x82f [n/a] doors
-0x830 [n/a] doors
-0x831 [n/a] doors
-0x832 [n/a] doors
-0x833 [n/a] doors
-# 0x834 - 0x838 unused
+# 0x7be - 0x838 unused
 0x839 portaopequenos doors
 0x83a [n/a] doors
 0x83b [n/a] doors
@@ -395,12 +378,7 @@
 0x846 [n/a] doors
 0x847 [n/a] doors
 0x848 [n/a] doors
-# 0x849 - 0x84b unused
-0x84c [n/a] doors
-0x84d [n/a] doors
-0x84e [n/a] doors
-0x84f [n/a] doors
-0x850 [n/a] doors
+# 0x849 - 0x850 unused
 0x851 [n/a] doors
 0x852 [n/a] doors
 0x853 [n/a] doors
@@ -473,9 +451,7 @@
 0x97c wedgeOfCheese2 food
 0x97d wedgeOfCheese food
 0x97e WheelOfCheese food
-# 0x97f - 0x98b unused
-0x98c frenchbread food
-# 0x98d - 0x990 unused
+# 0x97f - 0x990 unused
 0x991 Tray cooking
 0x992 Tray2 cooking
 # 0x993 unused
@@ -530,8 +506,7 @@
 0x9e5 SmallPan2 cooking
 # 0x9e6 - 0x9e8 unused
 0x9e9 cake food
-0x9ea muffin food
-0x9eb triplemuffins food
+# 0x9ea - 0x9eb unused
 0x9ec Honey cooking
 0x9ed Kettle cooking
 0x9ee mugofale food
@@ -546,7 +521,7 @@
 0x9f7 knifew metalworking
 0x9f8 spoonn metalworking
 0x9f9 spoonw metalworking
-0x9fa doublemuffins food
+# 0x9fa unused
 0x9fb wallsconce3 lighting
 # 0x9fc unused
 0x9fd wallsconce4 lighting
@@ -803,9 +778,7 @@
 # 0xe22 - 0xe2c unused
 0xe2d Crystalball1 lighting
 0xe2e Crystalball2 lighting
-# 0xe2f - 0xe30 unused
-0xe31 brazier1 lighting
-# 0xe32 - 0xe33 unused
+# 0xe2f - 0xe33 unused
 0xe34 blankscroll
 # 0xe35 - 0xe3b unused
 0xe3c LargeCrate2 containers
@@ -1066,8 +1039,7 @@
 # 0x1036 - 0x1038 unused
 0x1039 Flour cooking
 0x103a OpenFlour cooking
-0x103b bread food
-0x103c bread2 food
+# 0x103b - 0x103c unused
 0x103d Dough cooking
 # 0x103e unused
 0x103f CookieMix cooking
@@ -3231,10 +3203,7 @@
 0xc804 piecrust cooking
 # 0xc805 - 0xc875 unused
 0xc876 garrafa de licor food
-0xc877 garrafa de cerveja food
-0xc878 garrafa de vinho food
-0xc879 garrafa de cidra food
-# 0xc87a - 0xc891 unused
+# 0xc877 - 0xc891 unused
 0xc892 Cinto do Sabio woodworking
 # 0xc893 - 0xc8ff unused
 0xc900 cheesepizza food
@@ -3259,12 +3228,7 @@
 # 0xc92d unused
 0xc92e silverleafpie food
 0xc92f uccheesepizza cooking
-# 0xc930 - 0xc95f unused
-0xc960 garrafa de licor de melancia food
-0xc961 garrafa de licor de pessego food
-0xc962 garrafa de conhaque food
-0xc963 garrafa de gemada food
-0xc964 garrafa de hidromel food
+# 0xc930 - 0xc964 unused
 0xc965 bottleofdwarfale food
 0xc966 jhinrae food
 0xc967 garrafa de vinho elfico food
