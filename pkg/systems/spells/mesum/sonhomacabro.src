@@ -61,6 +61,8 @@ program SpellScript(params)
 		PlayObjectCenteredEffect(targ, 0xB8FB, 3, 56);
 		sleep(3);
 	endwhile
+	printtextabove(targ, "*desperta*");
+	targ.paralyzed := 0;
 
     if (GetObjProperty(who, "#magiasilenciosa"))
         SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);

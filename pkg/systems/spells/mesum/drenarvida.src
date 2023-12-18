@@ -81,6 +81,9 @@ program SpellScript(params)
                 PerformAction(who, ANIM_CAST_AREA);
 			endif
 			ApplyRawDamage( targ, amt );
+			if(GetObjProperty(targ, "#sleep"))
+				EraseObjProperty(targ, "#sleep");
+			endif
 			PrintTextAbovePrivate(targ, "-"+amt + " Vida", who, 3, 38); // vermelho
 			HealDamage( who, amt);
 			PrintTextAbovePrivate(who, "+"+amt + " Vida", who, 3, 568); // verde
