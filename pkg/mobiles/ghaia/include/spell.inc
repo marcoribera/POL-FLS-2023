@@ -31,6 +31,7 @@ const MOVING_EFFECT_FLAMESTRIKE := 0x3709;
 const MOVING_EFFECT_EBOLT       := 0x379f;
 const EFFECT_SPARKLE  := 0x373a;
 const EFFECT_RED_SPARKLE  := 0x374a;
+const MOVING_EFFECT_TSUNAMI := 0x54ad;
 
 const SOUND_EFFECT_HEAL := 0x1f3;
 const SOUND_EFFECT_AGILITY := 0x1e8;
@@ -162,6 +163,16 @@ function SpellFight(opponent, spell_list ,alerted := 0)
     DoCombatSpecial(me); ////////////// SPECIALL
 
   endif
+
+ if (hasAttack(me)) //SPECIAL ATTACK
+        var chance := CInt(npccfgfile[mytemplate].SpecialAttackChance); //para mobs do npcdesc
+        if (!chance)
+          chance := 10;
+        endif
+        if ((RandomInt(500) <= chance) && (!TS_GetCooldown(me, "npc_special")) )// Acertou!
+          DoCombatSpecialNotBoss (me, opponent);
+        endif
+      endif
 
 	checkFlee(opponent);
 
@@ -693,6 +704,13 @@ elseif (spellname == "flamestryke")
       PlayObjectCenteredEffect( cast_on, EFFECT_SPARKLE, 10,10);
       PlaySoundEffect(cast_on, SOUND_EFFECT_POISON);
       TS_StartTimer(cast_on, "hallucination", 60, 2, caster);
+  elseif ( spellname == "tsunami")
+      SetCooldown(me, "npcspell", 6);
+      PlaySoundEffect( caster, 0x20e );
+      PlayMovingEffect(caster, cast_on, MOVING_EFFECT_TSUNAMI, 5, 10, 0);
+      PlayObjectCenteredEffect( cast_on, 0x377a, 10,10);
+	  //PlayMovingEffectXYZ( caster.x, caster.y, caster.z , cast_on.x, cast_on.y, cast_on.z, 0x54ad, 0x18, 0x10, 0);
+      DamageFLS(cast_on, dmg, "Cold", me);
   endif
 
 endfunction
@@ -791,6 +809,8 @@ function GetDirectSpells(spell_list)
     elseif (spell == "hallucination")
       direct.append(spell);
     elseif (spell == "flamestryke")
+      direct.append(spell);
+	elseif (spell == "tsunami")
       direct.append(spell);
     endif
   endforeach

@@ -81,9 +81,9 @@ program fichaRP(who, text)
             RecalcVitals(who);
         endif
     else
-        //if (FindAccount(who.acctname).getprop("mortelog") > 3888000) //Ao criar a primeira ficharp, considera finalizada a criacao de personagem com +20 em todas as skills
-        //    FindAccount(who.acctname).setprop("mortelog",3888000);
-        //endif
+        if (FindAccount(who.acctname).getprop("mortelog") > 3888000) //limita o mortelog inicial do char atual em 45 dias na primeira ficharp feita
+            FindAccount(who.acctname).setprop("mortelog",3888000);
+        endif
         if(FindAccount(who.acctname).getprop("herdado"))
             FindAccount(who.acctname).eraseprop("herdado");
         endif

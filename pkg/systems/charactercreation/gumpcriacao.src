@@ -298,17 +298,28 @@ function buyskillsgump(who, byref chardata)
 		repeatGump := GumpSkills(who, chardata, skillspoints);
 	endwhile
 
+	//APLICA BONUS DE HERANÇA NAS SKILLS
+	var pri_bonus := 0;
+	var sec_bonus := 0;
+	var ter_bonus := 0;
+
+	var heir_skills := FindAccount(who.acctname).getprop("herdeiro");
+	if (heir_skills != error)
+		pri_bonus := heir_skills.bonus_primarias;
+		sec_bonus := heir_skills.bonus_secundarias;
+		ter_bonus := heir_skills.bonus_terciarias;
+	endif
 	var value;
 	var skillsmap := chardata.Skills;
 	var skillsArray := skillsmap.keys();
 	foreach skill in skillsArray
 		value := 0;
 		if ( chardata.Skills[skill] == 3)
-			value := 40;
+			value := 40 + pri_bonus;
 		elseif (chardata.Skills[skill] == 2)
-			value := 20;
+			value := 20 + sec_bonus;
 		else
-			value := 0;
+			value := 0 + ter_bonus;
 		endif
 		if ( AP_GetTrueSkill(who, skill) == 0)
 			AP_SetTrueSkill(who, skill, value);
@@ -1318,14 +1329,24 @@ program createchar(who)
 		SetObjProperty(who, "bonus_tempo", 1);
 	endif
 	*/
+
+	//ADICIONA OS BONUS DA HERANÇA PARA CAP DAS SKILL
 	var heir_skills := FindAccount(who.acctname).getprop("herdeiro");
-	if (heir_skills)
-		privalue := heir_skills.bonus_primarias + 40.0;
-		secvalue := heir_skills.bonus_secundarias + 20;
-		tercvalue := heir_skills.bonus_terciarias;
-        FindAccount(who.acctname).setprop("herdado", 1);
+	if (heir_skills != error)
+        var dias_herdados := FindAccount(who.acctname).getprop("heir_days");
+		var tempo_agora := polcore().systime;
+	    if (dias_herdados != error)
+	    	SetObjProperty(who, "heir_days", dias_herdados); //24horas*60minutos*60segundos = 86400 segundos
+	    	SetObjProperty(who, "createdate", (tempo_agora-(dias_herdados*86400))); //24horas*60minutos*60segundos = 86400 segundos
+	    else
+	    	dias_herdados := 0;
+	        SetObjProperty(who, "createdate", polcore().systime);
+	    endif
+		FindAccount(who.acctname).setprop("herdado", dias_herdados);
 	endif
-    
+    //FIM DA APLICAÇÃO DE BENEFICIOS DA HERANÇA
+
+/*
 	foreach primaria in primarias
 		AP_setTrueSkill(who, primaria, privalue);
 	endforeach
@@ -1337,7 +1358,7 @@ program createchar(who)
 	foreach terciaria in terciarias
 		AP_setTrueSkill(who, terciaria, tercvalue);
 	endforeach
-
+*/
 	if (chardata.povo == "Asanita")
 		SetObjProperty(who, "dpmod", 10);
 	endif

@@ -144,7 +144,7 @@ function preenchePartituraMagica(byref item, mag:=0) //mag é um parametro a ser
 	//verifica se criacao personalizada ou aleatoria
 	var magica;
 	if (!mag)
-		magica := (Randomint(BARD_TOTAL_LENDARIAS) + 5); // Aleatoria entre as partituras lendarias, pulando as 4 musicas básicas
+		magica := (Randomint(BARD_TOTAL_LENDARIAS) + 4); // Aleatoria entre as partituras lendarias, pulando as 4 musicas básicas
 	else
 		magica := mag;
 	endif
