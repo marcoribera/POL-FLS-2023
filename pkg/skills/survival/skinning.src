@@ -73,12 +73,12 @@ program skinning(parms)
 				SetObjProperty(cadaver, "deathtime", polcore().systime);
 				SetName(cadaver, "Corpo Irreconhecivel");
 				SetObjProperty(cadaver, "morto",1);
-				
+
 				var region := GetRegionName(cadaver);
 				var tipo := "pk";
 				var coords := {cadaver.x, cadaver.y};
 				var nome := GetObjProperty(who, "nome_inicial");
-				var nome_ghost := GetObjProperty(cadaver, "nome_inicial"); 
+				var nome_ghost := GetObjProperty(cadaver, "nome_inicial");
 				//var serial_ghost := cadaver.serial;
 				var acct_ghost := GetObjProperty(cadaver, "account");
 				Start_script(":DiscordWebhook:discord", {tipo, nome, who.acctname, nome_ghost, region, coords, acct_ghost});
