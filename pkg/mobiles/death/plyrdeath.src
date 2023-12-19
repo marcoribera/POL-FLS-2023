@@ -43,6 +43,7 @@ program core_chrDeath(params)
 		endif
 	endif
 
+	SetObjProperty(corpse, "url", GetObjProperty(corpse, "old_url"));//Ajuste no portrait
 
 	var corpse_name := corpse.desc;
 	corpse_name["A corpse of"] := "corpo de";
