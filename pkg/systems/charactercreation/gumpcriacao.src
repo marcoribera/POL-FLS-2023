@@ -1331,18 +1331,21 @@ program createchar(who)
 	*/
 
 	//ADICIONA OS BONUS DA HERANÇA PARA CAP DAS SKILL
+	var tempo_agora := polcore().systime;
 	var heir_skills := FindAccount(who.acctname).getprop("herdeiro");
 	if (heir_skills != error)
         var dias_herdados := FindAccount(who.acctname).getprop("heir_days");
-		var tempo_agora := polcore().systime;
 	    if (dias_herdados != error)
 	    	SetObjProperty(who, "heir_days", dias_herdados); //24horas*60minutos*60segundos = 86400 segundos
 	    	SetObjProperty(who, "createdate", (tempo_agora-(dias_herdados*86400))); //24horas*60minutos*60segundos = 86400 segundos
 	    else
-	    	dias_herdados := 0;
-	        SetObjProperty(who, "createdate", polcore().systime);
+	    	SetObjProperty(who, "heir_days", 0); //24horas*60minutos*60segundos = 86400 segundos
+	        SetObjProperty(who, "createdate", tempo_agora);
 	    endif
 		FindAccount(who.acctname).setprop("herdado", dias_herdados);
+	else
+		SetObjProperty(who, "heir_days", 0); //24horas*60minutos*60segundos = 86400 segundos
+		SetObjProperty(who, "createdate", tempo_agora);
 	endif
     //FIM DA APLICAÇÃO DE BENEFICIOS DA HERANÇA
 
