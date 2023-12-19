@@ -22,6 +22,7 @@ program OnDestroy(item)
 		mobile.title_race := GetObjProperty(mobile, "realrace");
 		EraseObjProperty(mobile, "realname");
 		EraseObjProperty(mobile, "realrace");
+		SetObjProperty(mobile, "url", GetObjProperty(mobile, "old_url"));
 	endif
 
 	return 1;

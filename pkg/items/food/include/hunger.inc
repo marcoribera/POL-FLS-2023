@@ -6,6 +6,29 @@ include ":attributes:attributes";
 include ":charactercreation:resists";
 include "include/say";
 
+function MSGFome(fome, sendmsg:=1, sendcolor:=0)
+	var msg;
+
+	case (fome)
+		5: msg := "Voce esta faminto."; break;
+		4: msg := "Voce esta com muita fome"; break;
+		3: msg := "Voce esta com fome."; break;
+		2: msg := "Voce esta satisfeito."; break;
+		1: msg := "Voce esta cheio."; break;
+		0: msg := "Voce esta muito bem alimentado."; break;
+   	endcase
+
+	return msg;
+endfunction
+
+function MSGFomeColor(fome)
+	var msgcolor;
+
+	if (fome >= FomeGetLimiar()) return SSM_FAIL;
+	else return SSM_INFO;
+	endif
+endfunction
+
 function FomeGetLimiar()
     return 3; //Para referências. A partir desse valor aplicar debuff!
 endfunction

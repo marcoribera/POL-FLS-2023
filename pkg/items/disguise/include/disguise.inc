@@ -261,7 +261,7 @@ function BuildHairDyeGump(cur_color := 0, povo := 0)
 	var color_cfg := ReadConfigFile(":hair:config/hairColors");
 	var index_elem;
 	if (povo == "Zharkiano" || povo == "Asanita")
-	  index_elem := color_cfg["Index"]; // Controls order colors appear.
+	  index_elem := color_cfg["Humano"]; // Controls order colors appear.
 	elseif (povo == "Qualquer")
 	  index_elem := color_cfg["Index"]; // Controls order colors appear.
 	else

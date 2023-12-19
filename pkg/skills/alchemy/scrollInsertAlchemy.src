@@ -39,11 +39,26 @@ endprogram
 
 
 function addScroll(who, book, rune)
+	//carrega a lista de recipes do players
+	var list := GetObjProperty(who, "recipes");
+	if (list == error)
+		list := array;
+	endif
+
+	var recipe:= GetObjProperty(rune, "recipe");
+	if (recipe in list)
+		SendSysMessage(who, "Voce ja conhece como fazer este item.");
+		return 1;
+	endif
+
+	//carrega a lista de recipes do livro
 	var rune_list := GetObjProperty(book, "recipes");
 	if (rune_list == error)
 		rune_list := array;
 	endif
+
 	var newSpell := GetObjProperty(rune, "spellinfo");
+
 	foreach spell in rune_list
 		if (newspell.id == spell.id)
 			SendSysMessage(who, "Este livro ja contem esta receita.");
@@ -51,32 +66,36 @@ function addScroll(who, book, rune)
 			return 0;
 		endif
 	endforeach
-	//sendsysmessage(who, "oi2");
+
 	if( rune_list.Size() > 15 )
 		SendSysMessage(who,"Este livro ja esta cheio.");
 		MoveItemToContainer(rune, who.backpack);
 		return 0;
 	endif
+
 	if( !ReserveItem(rune) )
 		SendSysMessage(who,"Cancelado");
 		MoveItemToContainer(rune, who.backpack);
 		return 0;
 	endif
 
-
-
 	Set_Critical(1);
 
+	//Aprende no livro
 	rune_list.Append(GetObjProperty(rune, "spellinfo"));
-
 	SetObjProperty(book, "recipes", rune_list);
-
 	ReleaseItem(rune);
-	var e := DestroyItem(rune);
-	Set_Critical(0);
 
 	SendSysMessage(who, "Voce adicionou o pergaminho no livro. ");
 
+	//Aprende na lista para a bancada alquimica
+	list.append(rune);
+	SetObjProperty(who, "recipes", list);
+	SendSysMessage(who, "Voce aprendeu como fazer um item novo");
 
+	//destroi a receita utilizada
+	DestroyItem(rune);
+
+	Set_Critical(0);
 	return 1;
 endfunction

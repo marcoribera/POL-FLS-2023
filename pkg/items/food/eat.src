@@ -7,6 +7,7 @@ include ":attributes:attributes";
 include ":timedScripts:poisonUtil";
 include ":tn:cooldown";
 include "include/say";
+include ":food:include/hunger";
 
 program eat_food(who, food)
 	EraseObjProperty(who, "IsMeditating");
@@ -122,16 +123,21 @@ program eat_food(who, food)
 
 		AP_SetVital(who, "Hunger", hungerlvl*60);
 
-		case(hungerlvl)
+		var msg, msgcolor;
+		var fome := CInt(AP_GetVital(who, "Hunger") / 60);
+		msg := MSGFome(fome);
+		msgcolor := MSGFomeColor(fome);
+
+		/*case(hungerlvl)
 			0:  themsg := "Voce esta muito bem alimentado!";
 			1:  themsg := "Voce esta muito cheio!";
 			2:  themsg := "Voce esta cheio!";
 			3:  themsg := "Voce esta satisfeito!";
 			4:  themsg := "Voce ainda esta com fome!";
 			5:  themsg := "Voce ainda esta muito faminto!";
-		endcase
+		endcase*/
 
-		SendSysMessageEx(who, themsg, SSM_INFO);
+		SendSysMessageEx(who, msg, msgcolor);
 
 		if(poisonInfo)
 			poisonInfo.dosage := poisonInfo.dosage - 1;
