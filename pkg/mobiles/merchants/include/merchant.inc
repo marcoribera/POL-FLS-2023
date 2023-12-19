@@ -684,6 +684,7 @@ function GetRealName(byref who)
 	endif
 	return nome;
 endfunction
+
 function AddMyItemForSale(npc, player)
 
 	var VendorProperty := GetObjProperty(npc, "onlygmsells");
@@ -941,7 +942,8 @@ function AddItem(npc, player, targ)
 		AI_Speak(npc, "Tudo certo. Colocarei seu item a venda.");
 		SendSysMessage(player, "O item foi adicionado com sucesso.");
 	else
-		AI_Speak(npc, "Me desculpe, mas nao poderei vender isto para voce.");
+		DarTroco(player, npc, taxa); //A ideia é o npc devolva as moedas que cobrou
+		AI_Speak(npc, "Me desculpe, mas nao poderei vender isto para voce e estou devolvendo suas moedas.");
 	endif
 endfunction
 
