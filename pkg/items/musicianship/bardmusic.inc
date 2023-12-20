@@ -87,7 +87,7 @@ CONST BARD_FONT_COLOR_GOOD := 568; //um tipo de verde
 CONST BARD_FONT_COLOR_ITEM := 28; //um tipo de rosa
 CONST BARD_FONT_COLOR_TARGET := 300; //um tipo de azul claro
 CONST BARD_FONT_COLOR_BASICA := 186; //um azul claro esverdeado
-CONST BARD_FONT_COLOR_NEUTRA := 0; //cinza claro
+CONST BARD_FONT_COLOR_NEUTRA := 275; //Verde claro
 
 //Primeira oitava
 CONST NOTA_C := 11;      //C
@@ -142,7 +142,7 @@ function preenchePartituraMagica(byref item, mag:=0) //mag é um parametro a ser
 	//verifica se criacao personalizada ou aleatoria
 	var magica;
 	if (!mag)
-		magica := (Randomint(BARD_TOTAL_LENDARIAS) + 4); // Aleatoria entre as partituras lendarias, pulando as 4 musicas básicas
+		magica := (Randomint(BARD_TOTAL_LENDARIAS) + 5); // Aleatoria entre as partituras lendarias, pulando as 4 musicas básicas
 	else
 		magica := mag;
 	endif

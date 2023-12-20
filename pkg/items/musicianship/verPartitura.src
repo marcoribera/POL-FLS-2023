@@ -21,7 +21,7 @@ program verPartitura(who, item)
 
 	var titulo := array;
 	//armazena temporariamente o titulo e sua cor de fonte
-	if ((magica != error) && (magica > BARD_TOTAL_LENDARIAS))
+	if ((magica != error) && (magica > 5))
 	 	titulo[1] := name + " [Lendaria]";
 	 	titulo[2] := BARD_FONT_COLOR_LENDARIA;
 	else
