@@ -15,13 +15,13 @@ program verPartitura(who, item)
 	var letra := GetObjProperty(item, "letra");
 	var magica := GetObjProperty(item, "magica");
 
-	
+
 	//Prepara o nome da partitura para ser exibindo destacando se a partitura for magica
 	//Prepara tambem o nome do compositor
-	
-	var titulo := array; 
+
+	var titulo := array;
 	//armazena temporariamente o titulo e sua cor de fonte
-	if (magica != error)
+	if ((magica != error) && (magica > BARD_TOTAL_LENDARIAS))
 	 	titulo[1] := name + " [Lendaria]";
 	 	titulo[2] := BARD_FONT_COLOR_LENDARIA;
 	else
@@ -49,10 +49,10 @@ program verPartitura(who, item)
 		endif
 	endforeach
 
-	//Prepara as definições de layout do gump 
+	//Prepara as definições de layout do gump
 	var gflayout := {
 		//"noclose",   // close by right-click forbidden
-		"NoDispose", // you did not want to hit esc, did you? 
+		"NoDispose", // you did not want to hit esc, did you?
 		//"nomove",    // you musn't move the window around
 		"GumpPic 0 0 1249", // Plano de fundo (dimensões: 400x320)
 		"text 50 50 "+ titulo[2] +" 0",
@@ -60,9 +60,9 @@ program verPartitura(who, item)
 		"Text 50 100 "+ BARD_FONT_COLOR_BASICA +" 2",
 		"HtmlGump 50 120 300 150 3 0 1"
 		};
-		
-	//Prepara as definições dos dados a serem exibidor nos campos do gump 
-	//Mais a frente é necessário um Append do conteudo de "partituraTxt" em "gfdata" 
+
+	//Prepara as definições dos dados a serem exibidor nos campos do gump
+	//Mais a frente é necessário um Append do conteudo de "partituraTxt" em "gfdata"
 	var gfdata := {
 		titulo[1],	 // these are only textlines which are used
 		"Compositor: " + compositor, // in the layout-nameription above, namely
