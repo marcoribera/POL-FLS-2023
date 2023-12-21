@@ -124,7 +124,7 @@ function iteminfogump(who, item)
 	GFPage(gump, 2);
 
 	GFTextLine(gump, 40, 150, 1153, "Nome: " + lower(item.desc));
-	GFTextLine(gump, 40, 165, 1153, "Objtype: " + lower(item.objtype) + " / " + lower(hex(item.objtype))); //evillink teste
+	GFTextLine(gump, 40, 165, 1153, "Objtype: " + lower(item.objtype) + " / " + lower(hex(item.objtype)));
 	GFTextLine(gump, 40, 180, 1153, "Cor: " + item.color);
 	GFTextLine(gump, 40, 195, 1153, "Qualidade: " + item.quality);
 	GFTextLine(gump, 40, 210, 1153, "Hp: "  + item.hp);

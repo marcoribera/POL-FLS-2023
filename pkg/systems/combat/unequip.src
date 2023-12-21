@@ -4,7 +4,7 @@ use cfgfile;
 
 include ":attributes:attributes";
 include ":tn:equipment";
-
+include ":itemsys:propitens";
 
 program unequipweapon(who, item)
 	var descmod_item:=GetObjProperty(item,"descmod");
@@ -52,6 +52,7 @@ program unequipweapon(who, item)
 	endif
 
 	RemoveEquipmentMods(who, item);
+	//SetarValoresNoItem(who, item); //ATIVAR ESSE DEPOIS QUE FIZER A TROCA DE ATIVAÇÕES NO equip.src
 
 	set_critical(0);
 endprogram
