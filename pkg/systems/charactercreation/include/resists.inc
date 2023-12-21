@@ -113,7 +113,7 @@ function GetResist(who, resist)
 		valor := valor + CInt(GetObjProperty(who, "#VontadeMod"));
 
 		// Aplica modificadores de vantagens raciais
-		if (vantagem == "Vontade de Ferro" || who.npctemplate)
+		if (vantagem == "Vontade de Ferro")
 			valor := valor + 20; // +200% do VALOR_REFERENCIA
 		endif
 
