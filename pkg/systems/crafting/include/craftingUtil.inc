@@ -153,7 +153,7 @@ function AddQualityDamageMod(who, craft_skill, byref theitem, quality )
 				attr_excp["dmgmod"] := CInt(elem.MaxDam * modadc) - attr."hab_dmgmod";
 			endif
 		endif
-		SetarPropExcep(theitem, attr_excp);
+		//SetarPropExcep(theitem, attr_excp); //ATIVAR
 	endif
 	return;
 endfunction
@@ -200,7 +200,7 @@ function AddQualityResistMod(who, craft_skill, byref theitem, quality)
 		attr_excp["coldmod"] := bonuscold;
 		attr_excp["poisonmod"] := bonuspoison;
 		attr_excp["energymod"] := bonusenergy;
-		SetarPropExcep(theitem, attr_excp);
+		//SetarPropExcep(theitem, attr_excp); //ATIVAR
 	else
 		return;
 	endif

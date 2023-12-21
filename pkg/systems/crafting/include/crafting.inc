@@ -307,7 +307,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 
 			//passando a cor pra materiais coloridos que nao tem Id proprio (como madeira)
 			AddMaterialMod(who, craft_skill, theitem, chosenPrincipalMaterial, materialColor);
-			SetarPropBase(theitem);
+			//SetarPropBase(theitem); //ATIVAR
 			CraftExceptional(who, theitem, craft_skill, skillreq);
 			CraftLockable(who, theitem);
 
@@ -641,6 +641,7 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 
 	//Adiciona modificador do material
 	theitem.maxhp_mod := theitem.maxhp_mod + hpmod;
+	attr["base_hpmod"] := theitem.maxhp_mod;
 
 	if(craft_skill == "MetalWorking")
 		//Adiciona modificador de Habilidade de nível
@@ -667,7 +668,7 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 
 	endif
 
-	SetarProp(theitem, attr);
+	//SetarProp(theitem, attr); //ATIVAR
 
 	//Atualiza o HP
 	theitem.hp := theitem.maxhp;
@@ -682,7 +683,7 @@ function CraftExceptional(who, byref theitem, craft_skill, skillreq)
 		var qualidade := ExceptionalCraft(who, craft_skill, theitem, AP_GetSkill(who, craft_skill), skillreq);
 		theitem.quality := qualidade;
 		attr["Quality"] := qualidade;
-		SetarProp(theitem, attr);
+		//SetarProp(theitem, attr); //ATIVAR
 
 
 		if(qualidade >= 1.2)
