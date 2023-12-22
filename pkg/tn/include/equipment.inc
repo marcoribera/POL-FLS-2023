@@ -23,15 +23,15 @@ function SetEquipmentMods(who, item)
 		var mod_percentual := 0.0;
 		var parryskill := AP_GetSkill(who, PARRY);
 		var allresists := Dictionary;
-		allresists["physical"] := item.resist_physical;
+		allresists["physical"] := item.resist_physical-item.resist_physical_mod;
 		allresists["physicalmod"] := item.resist_physical_mod;
-		allresists["fire"] := item.resist_fire;
+		allresists["fire"] := item.resist_fire-item.resist_fire_mod;
 		allresists["firemod"] := item.resist_fire_mod;
-		allresists["cold"] := item.resist_cold;
+		allresists["cold"] := item.resist_cold-item.resist_cold_mod;
 		allresists["coldmod"] := item.resist_cold_mod;
-		allresists["poison"] := item.resist_poison;
+		allresists["poison"] := item.resist_poison-item.resist_poison_mod;
 		allresists["poisonmod"] := item.resist_poison_mod;
-		allresists["energy"] := item.resist_energy;
+		allresists["energy"] := item.resist_energy-item.resist_energy_mod;
 		allresists["energymod"] := item.resist_energy_mod;
 		allresists["_equipped"] := 1;
 
