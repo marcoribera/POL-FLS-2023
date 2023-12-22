@@ -81,7 +81,7 @@ function getQuality(num)
 		rank := "B";
 	elseif(num>1.9)
 		rank := "C";
-	elseif(num>1.3)
+	elseif(num>1.6)
 		rank := "D";
 	elseif(num>1.3)
 		rank := "E";
