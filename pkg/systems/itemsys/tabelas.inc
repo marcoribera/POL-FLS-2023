@@ -282,9 +282,8 @@ function TabelaValoresProtecao(item)
         "escudo de corpo forte": return {11,-16,14,6};
     endcase
 endfunction
-function TabelaValoresSlot(slot)
-    var valores := Array;
-    slot := Lower(slot);
+function TabelaValoresSlot(item)
+    var slot := Lower(PegarSlot(item));
 
     case(slot) //[1] = ResistBase; [2] = DexPenalty
         "head": return {1,-1};
@@ -295,8 +294,6 @@ function TabelaValoresSlot(slot)
         "legs/feet": return {3,-2};
         "shield": return {2,-1};
     endcase
-
-    return valores;
 endfunction
 ///////////////////////////
 ///// NOVO .CFG - END /////

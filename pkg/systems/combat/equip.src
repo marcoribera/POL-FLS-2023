@@ -131,8 +131,8 @@ program equipweapon(who, item)
 	set_critical(1);
 
 	//if (who.cmdlevel > 1) AtualizarItemAntigo(who, item); endif //USADO APENAS PARA ATUALIZAR ITENS ANTIGOS - DESATIVAR DEPOIS DE 2 SEMANAS
-	//AtualizarItemAntigo(who, item); //USADO APENAS PARA ATUALIZAR ITENS ANTIGOS - DESATIVAR DEPOIS DE 2 SEMANAS
-	//SetarValoresNoItem(who, item); //ATIVAR ESSE DEPOIS QUE DESATIVAR O ANTERIOR
+	AtualizarItemAntigo(who, item); //USADO APENAS PARA ATUALIZAR ITENS ANTIGOS - DESATIVAR DEPOIS DE 2 SEMANAS
+	SetarModsNoItem(who, item); //ATIVAR ESSE DEPOIS QUE DESATIVAR O ANTERIOR
 	var ret := SetEquipmentMods(who, item);
 
 	var cfg := readconfigfile(":combat:itemdesc");
