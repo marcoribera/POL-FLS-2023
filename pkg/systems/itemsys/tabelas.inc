@@ -148,7 +148,7 @@ function TabelaDamageMod(item) //objtype do material: return {FISICO, FIRE, COLD
 
         //TIER 4
         "0x6997": return {-40,80,0,0,0,40}; //SOLIUM
-        "0x699A": return {-40,0,80,0,0,40}; //ICELUM
+        "0x699a": return {-40,0,80,0,0,40}; //ICELUM
         "0x6999": return {-40,0,0,80,0,40}; //HISSIUM
         "0x6998": return {-40,0,0,0,80,40}; //TESLIUM
         "0x6311": return {-40,20,20,20,20,50}; //MITHRIL

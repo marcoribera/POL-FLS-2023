@@ -35,7 +35,7 @@ function SetarModsNoItem(who, item)
 
                 if (IsEscudo(item))
                     /*var newattr := PegarProp(item);
-                    var attr_escudo := BuscarValoresTipo(item);
+                    var attr_escudo := BuscarValoresProtecao(item);
                     
                     newattr["item_dexpen"] := attr_escudo[2];
                     newattr["item_parry"] := attr_escudo[3];
@@ -101,7 +101,7 @@ function SetarPropItem(item)
     //função para setar os valores base DO ITEM!
     //ADICIONAR VALORES DOS ITENS
     var attr := PegarProp(item);
-    var new_attr := BuscarValoresTipo(item);
+    var new_attr := BuscarValoresProtecao(item);
     var elem := BuscarValoresCfg(item);
     
     attr["item_hp"] := elem.MaxHP;
@@ -132,20 +132,21 @@ endfunction
 
 function SetarPropBase(item) //SETA AS PROPS DE MODIFICADORES DE (MATERIAL - ITEM) JÁ COM SEUS VALORES - OS MODIFICADORES DE EXCEPCIONAIS SÃO SETADOS NO CRAFTING
     var attr := PegarProp(item);
+    var attr_excp := PegarPropExcep(item);
     var newattr := Array;
     var newattr_escudo := Array;
     //var material := Hex(item.GetProp("material"));
     //var tipo := attr."TipoEquip";
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //ADICIONAR MODS DOS MATERIAIS
+    //ADICIONAR MODS BASE
     attr["Atualiza"] := 1;
     if (item.isA(POLCLASS_WEAPON))
         newattr := TabelaDamageMod(item);
 
-        attr["base_hpmod"] := (newattr[6] + attr["item_hp"]) - attr["item_hp"];
+        attr["base_hpmod"] := (newattr[6] + attr["item_hp"]) - (item.maxhp-item.maxhp_mod);
 
-		attr["base_physicalmod"] := (attr["item_physical"]+newattr[1])-100;
+		attr["base_physicalmod"] := (attr["item_physical"] + newattr[1])-(item.damage_physical-item.damage_physical_mod);
 		attr["base_firemod"] := (newattr[2] + attr["item_fire"])-(item.damage_fire-item.damage_fire_mod);
 		attr["base_coldmod"] := (newattr[3] + attr["item_cold"])-(item.damage_cold-item.damage_cold_mod);
 		attr["base_poisonmod"] := (newattr[4] + attr["item_poison"])-(item.damage_poison-item.damage_poison_mod);
@@ -155,24 +156,30 @@ function SetarPropBase(item) //SETA AS PROPS DE MODIFICADORES DE (MATERIAL - ITE
     elseif (item.isA(POLCLASS_ARMOR))
         newattr := TabelaResistMod(item);
 
-        attr["base_hpmod"] := (newattr[6] + attr["item_hp"]) - attr["item_hp"];
+        attr["base_hpmod"] := (CInt(newattr[6]) + CInt(attr["item_hp"]) + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"])) - (item.maxhp-item.maxhp_mod);
 
-		attr["base_physicalmod"] := (attr["item_physical"]+newattr[1])-100;
-		attr["base_firemod"] := (newattr[2] - attr["item_fire"])-(item.resist_fire-item.resist_fire_mod);
-		attr["base_coldmod"] := (newattr[3] - attr["item_cold"])-(item.resist_cold-item.resist_cold_mod);
-		attr["base_poisonmod"] := (newattr[4] - attr["item_poison"])-(item.resist_poison-item.resist_poison_mod);
-		attr["base_energymod"] := (newattr[5] - attr["item_energy"])-(item.resist_energy-item.resist_energy_mod);
-
-        if (IsEscudo(item)) //AS COMENTADAS JÁ EXISTEM EM OUTRA PROP EM OUTRO LUGAR. NÃO REMOVI PRA CASO DE PRECISAR REORGANIZAR FUTURAMENTE
-            newattr_escudo := TabelaValoresProtecao(item);
-            //print(newattr_escudo);
-
-            //attr["escudoResist"] := newattr_escudo[1]; 
-            attr["base_dexpenmod"] := newattr_escudo[2] - attr["item_dexpen"];
-            attr["base_parrymod"] := newattr_escudo[3] - attr["item_parry"];
-            attr["base_parrydelaymod"] := newattr_escudo[4] - attr["item_parrydelay"];
-        endif
+		attr["base_physicalmod"] := (attr["item_physical"] + newattr[1])-(item.resist_physical-item.resist_physical_mod);
+		attr["base_firemod"] := (newattr[2] + attr["item_fire"])-(item.resist_fire-item.resist_fire_mod);
+		attr["base_coldmod"] := (newattr[3] + attr["item_cold"])-(item.resist_cold-item.resist_cold_mod);
+		attr["base_poisonmod"] := (newattr[4] + attr["item_poison"])-(item.resist_poison-item.resist_poison_mod);
+		attr["base_energymod"] := (newattr[5] + attr["item_energy"])-(item.resist_energy-item.resist_energy_mod);
     endif
+    if (IsEscudo(item)) //AS COMENTADAS JÁ EXISTEM EM OUTRA PROP EM OUTRO LUGAR. NÃO REMOVI PRA CASO DE PRECISAR REORGANIZAR FUTURAMENTE
+        print("E ESCUDO!");
+        newattr := TabelaResistMod(item);
+        newattr_escudo := TabelaValoresProtecao(item);
+        print(newattr);
+        print(newattr_escudo);
+
+        attr["base_hpmod"] := (newattr[6] + attr["item_hp"]) - (item.maxhp-item.maxhp_mod);
+
+        //attr["escudoResist"] := newattr_escudo[1];
+        //attr["base_physicalmod"] := (attr["item_physical"]+newattr[1])-(item.resist_physical-item.resist_physical_mod);
+        attr["base_dexpenmod"] := (newattr_escudo[2] - attr["item_dexpen"]);
+        attr["base_parrymod"] := (newattr_escudo[3] - attr["item_parry"]);
+        attr["base_parrydelaymod"] := (newattr_escudo[4] - attr["item_parrydelay"]);
+    endif
+
     SetarProp(item, attr);
 endfunction
 
@@ -186,14 +193,15 @@ function BuscarValoresCfg(item) //RETORNA TODOS OS VALORES DO ITEM QUE AINDA EST
     return elem;
 endfunction
 
-function BuscarValoresTipo(item);
+function BuscarValoresProtecao(item);
     //var attr := PegarProp(item);
     var valores := Array;
     var valprot := Array;
     var valslot := Array;
 
-    if(IsEscudo(item)) valores := TabelaValoresProtecao(item); endif
-    if(item.IsA(POLCLASS_ARMOR)) //ARMA NÃO PRECISA. JÁ ATUALIZA AUTOMÁTICO NO START PELO .CFG MESMO
+    if(IsEscudo(item)) valores := TabelaValoresProtecao(item);
+    elseif(item.IsA(POLCLASS_WEAPON)) //ARMA NÃO PRECISA. JÁ ATUALIZA AUTOMÁTICO NO START PELO .CFG MESMO
+    elseif(item.IsA(POLCLASS_ARMOR)) //ARMADURA TEM SOMA BASEADO NO SLOT
         valprot := TabelaValoresProtecao(item);
         valslot := TabelaValoresSlot(item);
 
