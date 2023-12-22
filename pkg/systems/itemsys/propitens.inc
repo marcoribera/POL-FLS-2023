@@ -51,9 +51,9 @@ function SetarModsNoItem(who, item)
                 dmgmod := CalcPropMod(item, "dmgmod");
                 speedmod := CalcPropMod(item, "speedmod");
 
+                item.maxhp_mod := hpmod;
                 item.dmg_mod := dmgmod;
                 item.speed_mod := speedmod; item.SetProp("attackspeedbonus", speedmod); //DEPOIS CONFERIR PARA DEIXAR APENAS 1 DELES
-                item.maxhp_mod := hpmod;
 
                 item.damage_physical_mod := physicalmod;
                 item.damage_fire_mod := firemod;
@@ -144,9 +144,9 @@ function SetarPropBase(item) //SETA AS PROPS DE MODIFICADORES DE (MATERIAL - ITE
     if (item.isA(POLCLASS_WEAPON))
         newattr := TabelaDamageMod(item);
 
-        attr["base_hpmod"] := (newattr[6] + attr["item_hp"]) - (item.maxhp-item.maxhp_mod);
+        attr["base_hpmod"] := (newattr[6]);
 
-		attr["base_physicalmod"] := (attr["item_physical"] + newattr[1])-(item.damage_physical-item.damage_physical_mod);
+		attr["base_physicalmod"] := (newattr[1] + attr["item_physical"])-(item.damage_physical-item.damage_physical_mod);
 		attr["base_firemod"] := (newattr[2] + attr["item_fire"])-(item.damage_fire-item.damage_fire_mod);
 		attr["base_coldmod"] := (newattr[3] + attr["item_cold"])-(item.damage_cold-item.damage_cold_mod);
 		attr["base_poisonmod"] := (newattr[4] + attr["item_poison"])-(item.damage_poison-item.damage_poison_mod);
@@ -156,28 +156,26 @@ function SetarPropBase(item) //SETA AS PROPS DE MODIFICADORES DE (MATERIAL - ITE
     elseif (item.isA(POLCLASS_ARMOR))
         newattr := TabelaResistMod(item);
 
-        attr["base_hpmod"] := (CInt(newattr[6]) + CInt(attr["item_hp"]) + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"])) - (item.maxhp-item.maxhp_mod);
+        attr["base_hpmod"] := (newattr[6])-(item.hpmax-item.hpmax_mod);
 
-		attr["base_physicalmod"] := (attr["item_physical"] + newattr[1])-(item.resist_physical-item.resist_physical_mod);
-		attr["base_firemod"] := (newattr[2] + attr["item_fire"])-(item.resist_fire-item.resist_fire_mod);
-		attr["base_coldmod"] := (newattr[3] + attr["item_cold"])-(item.resist_cold-item.resist_cold_mod);
-		attr["base_poisonmod"] := (newattr[4] + attr["item_poison"])-(item.resist_poison-item.resist_poison_mod);
-		attr["base_energymod"] := (newattr[5] + attr["item_energy"])-(item.resist_energy-item.resist_energy_mod);
-    endif
-    if (IsEscudo(item)) //AS COMENTADAS JÁ EXISTEM EM OUTRA PROP EM OUTRO LUGAR. NÃO REMOVI PRA CASO DE PRECISAR REORGANIZAR FUTURAMENTE
-        print("E ESCUDO!");
-        newattr := TabelaResistMod(item);
-        newattr_escudo := TabelaValoresProtecao(item);
-        print(newattr);
-        print(newattr_escudo);
+		attr["base_physicalmod"] := (newattr[1])-(CInt(item.resist_physical_mod));
+		attr["base_firemod"] := (newattr[2])-(CInt(item.resist_fire_mod));
+		attr["base_coldmod"] := (newattr[3])-(CInt(item.resist_cold_mod));
+		attr["base_poisonmod"] := (newattr[4])-(CInt(item.resist_poison_mod));
+		attr["base_energymod"] := (newattr[5])-(CInt(item.resist_energy_mod));
 
-        attr["base_hpmod"] := (newattr[6] + attr["item_hp"]) - (item.maxhp-item.maxhp_mod);
+        if (IsEscudo(item)) //AS COMENTADAS JÁ EXISTEM EM OUTRA PROP EM OUTRO LUGAR. NÃO REMOVI PRA CASO DE PRECISAR REORGANIZAR FUTURAMENTE
+            newattr_escudo := TabelaValoresProtecao(item);
 
-        //attr["escudoResist"] := newattr_escudo[1];
-        //attr["base_physicalmod"] := (attr["item_physical"]+newattr[1])-(item.resist_physical-item.resist_physical_mod);
-        attr["base_dexpenmod"] := (newattr_escudo[2] - attr["item_dexpen"]);
-        attr["base_parrymod"] := (newattr_escudo[3] - attr["item_parry"]);
-        attr["base_parrydelaymod"] := (newattr_escudo[4] - attr["item_parrydelay"]);
+            attr["base_hpmod"] := (newattr[6]*5)-(item.hpmax-item.hpmax_mod);
+
+            //attr["escudoResist"] := newattr_escudo[1];
+            //attr["base_physicalmod"] := (attr["item_physical"]+newattr[1])-(item.resist_physical-item.resist_physical_mod);
+            attr["base_dexpenmod"] := (newattr_escudo[2] - attr["item_dexpen"]);
+            attr["base_parrymod"] := (newattr_escudo[3] - attr["item_parry"]);
+            attr["base_parrydelaymod"] := (newattr_escudo[4] - attr["item_parrydelay"]);
+
+        endif
     endif
 
     SetarProp(item, attr);
@@ -266,7 +264,7 @@ function CalcPropMod(item, mod) //CALCULA O VALOR REAL PARA DEFINIR NO ITEM
     case (Lower(mod))
         "quality": valor := attr["Quality"]; break;
 
-        "hpmod": valor := (CInt(attr."base_hpmod") + CInt(attr."hab_hpmod") + CInt(attr_excp."hpmod")); break;
+        "hpmod": valor := (CInt(attr["base_hpmod"]) + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"])); break;
 
         "dmgmod": valor := (CInt(attr."base_dmgmod") + CInt(attr."hab_dmgmod") + CInt(attr_excp."dmgmod")); break;
         "speedmod": valor := (CInt(attr."base_speedmod") + CInt(attr."hab_speedmod") + CInt(attr_excp."speedmod")); break;

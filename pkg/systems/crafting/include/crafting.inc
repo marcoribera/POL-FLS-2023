@@ -307,7 +307,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 
 			//passando a cor pra materiais coloridos que nao tem Id proprio (como madeira)
 			AddMaterialMod(who, craft_skill, theitem, chosenPrincipalMaterial, materialColor);
-			//SetarPropBase(theitem); //ATIVAR
+			//SetarAllProps(theitem); //ATIVAR
 			CraftExceptional(who, theitem, craft_skill, skillreq);
 			CraftLockable(who, theitem);
 
@@ -488,7 +488,7 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 	    endif
 
         if ((CInt(elem.parrybonus) != 0) || CInt(elem.parrydelay) != 0) //aplica o modificador de durabilidade do material nos escudos
-        	hpmod :=  hpmod*5;
+			hpmod := hpmod*5;
     	endif
 
 		if(craft_skill == "MetalWorking")
