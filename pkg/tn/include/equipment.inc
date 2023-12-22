@@ -22,25 +22,25 @@ function SetEquipmentMods(who, item)
 		EraseObjProperty(who, "twohanded");
 		var mod_percentual := 0.0;
 		var parryskill := AP_GetSkill(who, PARRY);
-		var allresists := Dictionary;
-		allresists["physical"] := item.resist_physical-item.resist_physical_mod;
-		allresists["physicalmod"] := item.resist_physical_mod;
-		allresists["fire"] := item.resist_fire-item.resist_fire_mod;
-		allresists["firemod"] := item.resist_fire_mod;
-		allresists["cold"] := item.resist_cold-item.resist_cold_mod;
-		allresists["coldmod"] := item.resist_cold_mod;
-		allresists["poison"] := item.resist_poison-item.resist_poison_mod;
-		allresists["poisonmod"] := item.resist_poison_mod;
-		allresists["energy"] := item.resist_energy-item.resist_energy_mod;
-		allresists["energymod"] := item.resist_energy_mod;
-		allresists["_equipped"] := 1;
+		var atributos_escudo := Dictionary;
+		atributos_escudo["physical"] := item.resist_physical-item.resist_physical_mod;
+		atributos_escudo["physicalmod"] := item.resist_physical_mod;
+		atributos_escudo["fire"] := item.resist_fire-item.resist_fire_mod;
+		atributos_escudo["firemod"] := item.resist_fire_mod;
+		atributos_escudo["cold"] := item.resist_cold-item.resist_cold_mod;
+		atributos_escudo["coldmod"] := item.resist_cold_mod;
+		atributos_escudo["poison"] := item.resist_poison-item.resist_poison_mod;
+		atributos_escudo["poisonmod"] := item.resist_poison_mod;
+		atributos_escudo["energy"] := item.resist_energy-item.resist_energy_mod;
+		atributos_escudo["energymod"] := item.resist_energy_mod;
+		atributos_escudo["_equipped"] := 1;
 
 
 		mod_percentual := (parryskill-80.0) /100.0; //Acima de 0 o cara consegue mais proteção que o item base oferece e abaixo, menos.
 		SendSysMessage(who, "Eficiencia do escudo: " + CStr((1.0 + mod_percentual)*100.0) +"%.");
-		var shieldequipped := item.GetProp("allresists");
+		var shieldequipped := item.GetProp("atributos_escudo");
 		if (shieldequipped["_equipped"] != 1) //Gambiarra pra evitar que o POL mude as resistência no logon
-			SetObjProperty(item, "allresists", allresists);
+			SetObjProperty(item, "atributos_escudo", atributos_escudo);
 			SetResists(who, item, mod_percentual);
 		endif
 	endif
@@ -126,36 +126,48 @@ endfunction;
 function SetResists(who, item, eff)
 	var result, resultmod, resultresist, resistmod, resistbase, resist;
 	var limit := 0;
+	var attr_escudo := item.GetProp("atributos_escudo");
+	print(eff);
 
 	resist := item.resist_physical;
-	resistbase := item.resist_physical - item.resist_physical_mod;
 	resistmod := item.resist_physical_mod;
+	resistbase := item.resist_physical - item.resist_physical_mod;
 	result := resist * (1 + eff);
 	resultmod := resistmod + (result - resist);
 	resultresist := resist + resultmod;
+
 	if (resultresist <= limit) item.resist_physical_mod := CInt(resist * -1);
 	else item.resist_physical_mod := CInt(resultmod);
 	endif
 
-	result := CInt(item.resist_fire * (1 + eff));
-	resultmod := CInt(result - item.resist_fire);
-	resultresist := CInt(item.resist_fire + resultmod);
-	if (resultresist <= limit) item.resist_fire_mod := item.resist_fire * -1;
-	else item.resist_fire_mod := resultmod;
+	resist := item.resist_fire;
+	resistmod := item.resist_fire_mod;
+	resistbase := item.resist_fire - item.resist_fire_mod;
+	result := resist * (1 + eff);
+	resultmod := resistmod + (result - resist);
+	resultresist := resist + resultmod;
+	if (resultresist <= limit) item.resist_fire_mod := CInt(resist * -1);
+	else item.resist_fire_mod := CInt(resultmod);
 	endif
 
-	result := CInt(item.resist_cold * (1 + eff));
-	resultmod := CInt(result - item.resist_cold);
-	resultresist := CInt(item.resist_cold + resultmod);
-	if (resultresist <= limit) item.resist_cold_mod := item.resist_cold * -1;
-	else item.resist_cold_mod := resultmod;
+	resist := item.resist_cold;
+	resistmod := item.resist_cold_mod;
+	resistbase := item.resist_cold - item.resist_cold_mod;
+	result := resist * (1 + eff);
+	resultmod := resistmod + (result - resist);
+	resultresist := resist + resultmod;
+	if (resultresist <= limit) item.resist_cold_mod := CInt(resist * -1);
+	else item.resist_cold_mod := CInt(resultmod);
 	endif
 
-	result := CInt(item.resist_poison * (1 + eff));
-	resultmod := CInt(result - item.resist_poison);
-	resultresist := CInt(item.resist_poison + resultmod);
-	if (resultresist <= limit) item.resist_poison_mod := item.resist_poison * -1;
-	else item.resist_poison_mod := resultmod;
+	resist := item.resist_poison;
+	resistmod := item.resist_poison_mod;
+	resistbase := item.resist_poison - item.resist_poison_mod;
+	result := resist * (1 + eff);
+	resultmod := resistmod + (result - resist);
+	resultresist := resist + resultmod;
+	if (resultresist <= limit) item.resist_poison_mod := CInt(resist * -1);
+	else item.resist_poison_mod := CInt(resultmod);
 	endif
 
 	resist := item.resist_energy;
@@ -204,16 +216,16 @@ function RemoveEquipmentMods(who, item)
 	endif
 
 	if (item.isa(POLCLASS_ARMOR) && (item.tile_layer == LAYER_HAND2))
-		var allresists := GetObjProperty(item, "allresists");
+		var atributos_escudo := GetObjProperty(item, "atributos_escudo");
 
-		item.resist_physical_mod := allresists["physicalmod"];
-		item.resist_fire_mod := allresists["firemod"];
-		item.resist_cold_mod := allresists["coldmod"];
-		item.resist_poison_mod := allresists["poisonmod"];
-		item.resist_energy_mod := allresists["energymod"];
+		item.resist_physical_mod := atributos_escudo["physicalmod"];
+		item.resist_fire_mod := atributos_escudo["firemod"];
+		item.resist_cold_mod := atributos_escudo["coldmod"];
+		item.resist_poison_mod := atributos_escudo["poisonmod"];
+		item.resist_energy_mod := atributos_escudo["energymod"];
 		
-		allresists["_equipped"] := 0;
-		SetObjProperty(item, "allresists", allresists);
+		atributos_escudo["_equipped"] := 0;
+		SetObjProperty(item, "atributos_escudo", atributos_escudo);
 	endif
 
 	if (item.isa(POLCLASS_WEAPON))
