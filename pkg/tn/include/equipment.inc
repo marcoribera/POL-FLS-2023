@@ -127,16 +127,14 @@ function SetResists(who, item, eff)
 	var result, resultmod, resultresist, resistmod, resistbase, resist;
 	var limit := 0;
 	var attr_escudo := item.GetProp("atributos_escudo");
-	print(eff);
 
 	resist := item.resist_physical;
 	resistmod := item.resist_physical_mod;
 	resistbase := item.resist_physical - item.resist_physical_mod;
 	result := resist * (1 + eff);
-	resultmod := resistmod + (result - resist);
+	resultmod := result - (resistbase);
 	resultresist := resist + resultmod;
-
-	if (resultresist <= limit) item.resist_physical_mod := CInt(resist * -1);
+	if (resultresist <= limit) item.resist_physical_mod := CInt(resist * -1) - resistbase;
 	else item.resist_physical_mod := CInt(resultmod);
 	endif
 
@@ -144,9 +142,9 @@ function SetResists(who, item, eff)
 	resistmod := item.resist_fire_mod;
 	resistbase := item.resist_fire - item.resist_fire_mod;
 	result := resist * (1 + eff);
-	resultmod := resistmod + (result - resist);
+	resultmod := result - (resistbase);
 	resultresist := resist + resultmod;
-	if (resultresist <= limit) item.resist_fire_mod := CInt(resist * -1);
+	if (resultresist <= limit) item.resist_fire_mod := CInt(resist * -1) - resistbase;
 	else item.resist_fire_mod := CInt(resultmod);
 	endif
 
@@ -154,9 +152,9 @@ function SetResists(who, item, eff)
 	resistmod := item.resist_cold_mod;
 	resistbase := item.resist_cold - item.resist_cold_mod;
 	result := resist * (1 + eff);
-	resultmod := resistmod + (result - resist);
+	resultmod := result - (resistbase);
 	resultresist := resist + resultmod;
-	if (resultresist <= limit) item.resist_cold_mod := CInt(resist * -1);
+	if (resultresist <= limit) item.resist_cold_mod := CInt(resist * -1) - resistbase;
 	else item.resist_cold_mod := CInt(resultmod);
 	endif
 
@@ -164,9 +162,9 @@ function SetResists(who, item, eff)
 	resistmod := item.resist_poison_mod;
 	resistbase := item.resist_poison - item.resist_poison_mod;
 	result := resist * (1 + eff);
-	resultmod := resistmod + (result - resist);
+	resultmod := result - (resistbase);
 	resultresist := resist + resultmod;
-	if (resultresist <= limit) item.resist_poison_mod := CInt(resist * -1);
+	if (resultresist <= limit) item.resist_poison_mod := CInt(resist * -1) - resistbase;
 	else item.resist_poison_mod := CInt(resultmod);
 	endif
 
@@ -174,9 +172,9 @@ function SetResists(who, item, eff)
 	resistbase := item.resist_energy - item.resist_energy_mod;
 	resistmod := item.resist_energy_mod;
 	result := resist * (1 + eff);
-	resultmod := resistmod + (result - resist);
+	resultmod := result - (resistbase);
 	resultresist := resist + resultmod;
-	if (resultresist <= limit) item.resist_energy_mod := CInt(resist * -1);
+	if (resultresist <= limit) item.resist_energy_mod := CInt(resist * -1) - resistbase;
 	else item.resist_energy_mod := CInt(resultmod);
 	endif
 endfunction
