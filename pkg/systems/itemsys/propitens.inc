@@ -6,12 +6,38 @@ ADICIONAR PARA SOMAR DEXPENALTY DAS ARMADURAS
 VER A QUESTÃO DOS ITENS MÁGICOS
 VER ITENS COM RECIPE
 */
+
+//TOGGLES PARA SEGURANÇA NA FASE DE IMPLEMENTAÇÃO
+//COLOCAR O NIVEL DO CMDLEVEL MÍNIMO NO TOGGLE PARA LIMITAR O USO EM FASE DE TESTES - PLAYER -> cmdlevel = 1; GM -> cmdlevel = 4; ADMIN -> cmdlevel = 5
+const TOGGLELVL_CRAFT := 100;
+const TOGGLELVL_EQUIP := 100;
+//proc = 1 -> AtualizarItemAntigo(who, item); 2 -> SetarModsNoItem(who, item);
+
+function NovoSistemaDeItens(who, item, TOGGLE, PROCEDIMENTO);
+    if (who.cmdlevel < TOGGLE) print("nao tem nivel"); return; endif
+
+    if (PROCEDIMENTO == 1)
+        print("atualiza");
+        AtualizarItemAntigo(who, item);
+    elseif (PROCEDIMENTO == 2)
+        print("seta");
+        SetarModsNoItem(who, item);
+    elseif (PROCEDIMENTO == 3)
+        print("tudo");
+        AtualizarItemAntigo(who, item);
+        SetarModsNoItem(who, item);
+    endif
+endfunction
+
 function SetarModsNoItem(who, item)
+    //TOOGLES PARA PROTEÇÃO NA FASE DE TESTES
+
     SetarAllProps(item);
     var attr := PegarProp(item);
     var attr_excp := PegarPropExcep(item);
     //var tipoequip := PegarTipo(item);
-
+    
+    attr["Atualiza"] := 1;
     if (attr)
         var hpmod := attr["base_hpmod"];
 
@@ -40,12 +66,12 @@ function SetarModsNoItem(who, item)
             endif
 
         elseif (item.IsA(POLCLASS_WEAPON))
-            dmgmod := attr["dmgmod"];
-            speedmod := attr["speedmod"];
+            dmgmod := attr["base_dmgmod"];
+            speedmod := attr["base_speedmod"];
 
             item.maxhp_mod := hpmod;
             item.dmg_mod := dmgmod;
-            item.speed_mod := speedmod; item.SetProp("attackspeedbonus", speedmod); //DEPOIS CONFERIR PARA DEIXAR APENAS 1 DELES
+            item.speed_mod := speedmod; item.SetProp("attackspeedbonus", speedmod); //DEPOIS CONFERIR NOS OUTRO SCRIPTS PRA USAR SÓ A NOVA
 
             item.damage_physical_mod := physicalmod;
             item.damage_fire_mod := firemod;
@@ -90,36 +116,38 @@ endfunction
 
 function SetarPropItem(item)
     //função para setar os valores base DO ITEM!
-    //ADICIONAR VALORES DOS ITENS
     var attr := PegarProp(item);
     var newattr := BuscarValoresSlot(item);
+    var newattrdebuff := BuscarDebuffSlot(item);
     var elem := BuscarValoresCfg(item);
 
+    attr["Atualiza"] := 1;
     attr["item_hp"] := elem.MaxHP;
      if (IsEscudo(item))
-        attr["item_dexpen"] := newattr[2];
-        attr["item_parry"] := newattr[3];
+        attr["item_dexpen"]     := newattr[2];
+        attr["item_parry"]      := newattr[3];
         attr["item_parrydelay"] := newattr[4];
 
-        attr["item_physical"] := newattr[1];
-        attr["item_fire"] := 0;
-        attr["item_cold"] := 0;
-        attr["item_poison"] := 0;
-        attr["item_energy"] := 0;
+        attr["item_physical"]   := newattr[1];
+        attr["item_fire"]       := 0;
+        attr["item_cold"]       := 0;
+        attr["item_poison"]     := 0;
+        attr["item_energy"]     := 0;
     elseif (item.isA(POLCLASS_WEAPON))
-        attr["item_physical"] := newattr[2];
-        attr["item_fire"] := newattr[3];
-        attr["item_cold"] := newattr[4];
-        attr["item_poison"] := newattr[5];
-        attr["item_energy"] := newattr[6];
+        attr["item_physical"]   := newattr[2];
+        attr["item_fire"]       := newattr[3];
+        attr["item_cold"]       := newattr[4];
+        attr["item_poison"]     := newattr[5];
+        attr["item_energy"]     := newattr[6];
     elseif (item.isA(POLCLASS_ARMOR))
-        attr["item_physical"] := newattr[1];
-        attr["item_fire"] := newattr[2];
-        attr["item_cold"] := newattr[3];
-        attr["item_poison"] := newattr[4];
-        attr["item_energy"] := newattr[5];
-    endif
+        //attr["item_dexpen"] := newattrdebuff[2]; //REVER PARA CONSERTAR DEPOIS
 
+        attr["item_physical"]   := newattr[1];
+        attr["item_fire"]       := newattr[2];
+        attr["item_cold"]       := newattr[3];
+        attr["item_poison"]     := newattr[4];
+        attr["item_energy"]     := newattr[5];
+    endif
 
     SetarProp(item, attr);
 endfunction
@@ -135,38 +163,47 @@ function SetarPropBase(item) //SETA AS PROPS DE MODIFICADORES DE (MATERIAL - ITE
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //ADICIONAR MODS BASE
     attr["Atualiza"] := 1;
-    if (item.isA(POLCLASS_WEAPON))
-        var slot := "weapon";
+    if (IsEscudo(item)) //AS COMENTADAS JÁ EXISTEM EM OUTRA PROP EM OUTRO LUGAR. NÃO REMOVI PRA CASO DE PRECISAR REORGANIZAR FUTURAMENTE
+        var slot := "shield";
 
-        attr["base_hpmod"] := CalcPropMod(item, "hpmod", slot);
+        attr["base_hpmod"]          := CalcPropBase(item, "hpmod", slot);
+        attr["base_dexpenmod"]      := CalcPropBase(item, "dexpenmod", slot);
+        attr["base_parrymod"]       := CalcPropBase(item, "parrymod", slot);
+        attr["base_parrydelaymod"]  := CalcPropBase(item, "parrydelaymod", slot);
 
-		attr["base_physicalmod"] := CalcPropMod(item, "physicalmod", slot); //(newattr[1] + attr["item_physical"])-(item.damage_physical-item.damage_physical_mod);
-		attr["base_firemod"] := CalcPropMod(item, "firemod", slot);
-		attr["base_coldmod"] := CalcPropMod(item, "coldmod", slot);
-		attr["base_poisonmod"] := CalcPropMod(item, "poisonmod", slot);
-		attr["base_energymod"] := CalcPropMod(item, "energymod", slot);
+        attr["base_physicalmod"]    := CalcPropBase(item, "physicalmod", slot);
+		attr["base_firemod"]        := CalcPropBase(item, "firemod", slot);
+		attr["base_coldmod"]        := CalcPropBase(item, "coldmod", slot);
+		attr["base_poisonmod"]      := CalcPropBase(item, "poisonmod", slot);
+		attr["base_energymod"]      := CalcPropBase(item, "energymod", slot);
 
-        //print(newattr[1]+" "+newattr[2]+" "+newattr[3]+" "+newattr[4]+" "+newattr[5]+" "+newattr[6]);
     elseif (item.isA(POLCLASS_ARMOR))
         var slot := "armor";
 
-        attr["base_hpmod"] := CalcPropMod(item, "hpmod", slot);
+        attr["base_hpmod"]          := CalcPropBase(item, "hpmod", slot);
+        attr["base_dexpenmod"]      := CalcPropBase(item, "dexpenmod", slot);
 
-		attr["base_physicalmod"] := CalcPropMod(item, "physicalmod", slot);
-		attr["base_firemod"] := CalcPropMod(item, "firemod", slot);
-		attr["base_coldmod"] := CalcPropMod(item, "coldmod", slot);
-		attr["base_poisonmod"] := CalcPropMod(item, "poisonmod", slot);
-		attr["base_energymod"] := CalcPropMod(item, "energymod", slot);
+		attr["base_physicalmod"]    := CalcPropBase(item, "physicalmod", slot);
+		attr["base_firemod"]        := CalcPropBase(item, "firemod", slot);
+		attr["base_coldmod"]        := CalcPropBase(item, "coldmod", slot);
+		attr["base_poisonmod"]      := CalcPropBase(item, "poisonmod", slot);
+		attr["base_energymod"]      := CalcPropBase(item, "energymod", slot);
 
-        if (IsEscudo(item)) //AS COMENTADAS JÁ EXISTEM EM OUTRA PROP EM OUTRO LUGAR. NÃO REMOVI PRA CASO DE PRECISAR REORGANIZAR FUTURAMENTE
-            var slot := "shield";
-            attr["base_hpmod"] := CalcPropMod(item, "hpmod", slot);
+    elseif (item.isA(POLCLASS_WEAPON))
+        var slot := "weapon";
 
-            attr["base_physicalmod"] := CalcPropMod(item, "physicalmod", slot);
-            attr["base_dexpenmod"] := CalcPropMod(item, "dexpenmod", slot);
-            attr["base_parrymod"] := CalcPropMod(item, "parrymod", slot);
-            attr["base_parrydelaymod"] := CalcPropMod(item, "parrydelaymod", slot);
-        endif
+        attr["base_hpmod"] := CalcPropBase(item, "hpmod", slot);
+
+        attr["base_dmgmod"] := CalcPropBase(item, "dmgmod", slot);
+        attr["base_speedmod"] := CalcPropBase(item, "speedmod", slot);
+
+		attr["base_physicalmod"] := CalcPropBase(item, "physicalmod", slot); //(newattr[1] + attr["item_physical"])-(item.damage_physical-item.damage_physical_mod);
+		attr["base_firemod"] := CalcPropBase(item, "firemod", slot);
+		attr["base_coldmod"] := CalcPropBase(item, "coldmod", slot);
+		attr["base_poisonmod"] := CalcPropBase(item, "poisonmod", slot);
+		attr["base_energymod"] := CalcPropBase(item, "energymod", slot);
+
+        //print(newattr[1]+" "+newattr[2]+" "+newattr[3]+" "+newattr[4]+" "+newattr[5]+" "+newattr[6]);
     endif
 
     SetarProp(item, attr);
@@ -182,7 +219,17 @@ function BuscarValoresCfg(item) //RETORNA TODOS OS VALORES DO ITEM QUE AINDA EST
     return elem;
 endfunction
 
-function BuscarValoresSlot(item);
+function BuscarValorMaterial(item)
+    var valor := 0;
+
+    if(item.IsA(POLCLASS_ARMOR)) valor := TabelaMaterialResistMod(item);
+    elseif(item.IsA(POLCLASS_WEAPON)) valor := TabelaMaterialDamageMod(item);
+    endif
+
+    return valor;
+endfunction
+
+function BuscarValoresSlot(item)
     //var attr := PegarProp(item);
     var valores := Array;
     var valprot := Array;
@@ -249,7 +296,9 @@ endfunction
 
 function PegarSlot(item) //PEGA O SLOT DO ITEM NO .CFG
     var elem := BuscarValoresCfg(item);
-    return Lower(elem.Coverage);
+    var slot := Lower(elem.Coverage);
+    if (IsEscudo(item)) slot := "Shield"; endif
+    return slot;
 endfunction
 
 function PegarProp(item) //PEGA A PROP DE MODIFICADORES BASE
@@ -275,66 +324,66 @@ endfunction
 
 
 //FUNCTIONS DE CÁLCULO
-function CalcPropMod(item, mod, slot) //CALCULA O VALOR REAL PARA DEFINIR NO ITEM
-    var valor, newattr, newattr_escudo, newattrdebuff;
+function CalcPropBase(item, mod, slot) //CALCULA O VALOR REAL PARA DEFINIR NO ITEM
+    var valor, newattr_escudo, newattrdebuff;
     var attr := PegarProp(item);
     var attr_excp := PegarPropExcep(item);
+    var newattr := BuscarValorMaterial(item);
     mod.Lower(); slot.Lower();
 
     case (mod) //COMUM A TODOS
         "quality":  valor := attr["Quality"]; break;
     endcase
-    if (slot == "weapon")
-        newattr := TabelaMaterialDamageMod(item);
-        
+    if (slot == "shield")
+        newattr_escudo := BuscarValoresSlot(item);
+
         case (mod)
-            "hpmod": valor := (newattr[6] + CInt(attr["item_hp"]) + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"]))-(item.MaxHP-item.MaxHP_Mod); break;
+            "hpmod":            valor := ((newattr[6]) + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"])); break;
+ 
+            "dexpenmod":        valor := (CInt(attr["item_dexpen"]) + CInt(attr."hab_dexpenmod") + CInt(attr_excp."dexpenmod")); break;
+            "parrymod":         valor := (CInt(attr["item_parry"]) + CInt(attr."hab_parrymod") + CInt(attr_excp."parrymod")); break;
+            "parrydelaymod":    valor := (CInt(attr["item_parrydelay"]) + CInt(attr."hab_parrydelaymod") + CInt(attr_excp."parrydelaymod")); break;
 
-            "dmgmod": valor := (CInt(attr."hab_dmgmod") + CInt(attr_excp."dmgmod")); break;
-            "speedmod": valor := (CInt(attr["item_speed"]) + CInt(attr["hab_speedmod"]) + CInt(attr_excp["speedmod"])); break;
-
-            "physicalmod": valor := (newattr[1] + CInt(attr["item_physical"]) + CInt(attr."hab_physicalmod") + CInt(attr_excp."physicalmod"))-(item.damage_physical-item.damage_physical_mod); break;
-            "firemod": valor := (newattr[2] + CInt(attr["item_fire"]) + CInt(attr."hab_firemod") + CInt(attr_excp."firemod"))-(item.damage_fire-item.damage_fire_mod); break;
-            "coldmod": valor := (newattr[3] + CInt(attr["item_cold"]) + CInt(attr."hab_coldmod") + CInt(attr_excp."coldmod"))-(item.damage_cold-item.damage_cold_mod); break;
-            "poisonmod": valor := (newattr[4] + CInt(attr["item_poison"]) + CInt(attr."hab_poisonmod") + CInt(attr_excp."poisonmod"))-(item.damage_poison-item.damage_poison_mod); break;
-            "energymod": valor := (newattr[5] + CInt(attr["item_energy"]) + CInt(attr."hab_energymod") + CInt(attr_excp."energymod"))-(item.damage_energy-item.damage_energy_mod); break;
+            "physicalmod":      valor := (newattr[1] + CInt(attr["item_physical"]) + CInt(attr."hab_physicalmod") + CInt(attr_excp."physicalmod"))-(item.resist_physical-item.resist_physical_mod); break;
+            "firemod":          valor := (newattr[2] + CInt(attr["item_fire"]) + CInt(attr."hab_firemod") + CInt(attr_excp."firemod"))-(item.resist_fire-item.resist_fire_mod); break;
+            "coldmod":          valor := (newattr[3] + CInt(attr["item_cold"]) + CInt(attr."hab_coldmod") + CInt(attr_excp."coldmod"))-(item.resist_cold-item.resist_cold_mod); break;
+            "poisonmod":        valor := (newattr[4] + CInt(attr["item_poison"]) + CInt(attr."hab_poisonmod") + CInt(attr_excp."poisonmod"))-(item.resist_poison-item.resist_poison_mod); break;
+            "energymod":        valor := (newattr[5] + CInt(attr["item_energy"]) + CInt(attr."hab_energymod") + CInt(attr_excp."energymod"))-(item.resist_energy-item.resist_energy_mod); break;
+        
+            default:            valor := 0;
         endcase
     elseif (slot == "armor")
-        newattr := TabelaMaterialResistMod(item);
         newattrdebuff := BuscarDebuffSlot(item);
 
         case (mod)
-            "hpmod": valor := (newattr[6] + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"]));//-(item.MaxHP-item.MaxHP_Mod);
-            print("calculando hp!"); print(newattr[6]); print(item.MaxHP); print(item.MaxHP_Mod); print((item.MaxHP-item.MaxHP_Mod)); print(valor);
-            break;
+            "hpmod":            valor := (newattr[6] + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"])); break;
             
-            "dexpenmod": valor := (newattrdebuff[2] + CInt(attr["item_dexpen"]) + CInt(attr."hab_dexpenmod") + CInt(attr_excp."dexpenmod")); break;
+            "dexpenmod":        valor := (newattrdebuff[2] + CInt(attr["item_dexpen"]) + CInt(attr."hab_dexpenmod") + CInt(attr_excp."dexpenmod")); break;
 
-            "physicalmod": valor := (newattr[1] + CInt(attr["item_physical"]) + CInt(attr."hab_physicalmod") + CInt(attr_excp."physicalmod"))-(item.resist_physical-item.resist_physical_mod); break;
-            "firemod": valor := (newattr[2] + CInt(attr["item_fire"]) + CInt(attr."hab_firemod") + CInt(attr_excp."firemod"))-(item.resist_fire-item.resist_fire_mod); break;
-            "coldmod": valor := (newattr[3] + CInt(attr["item_cold"]) + CInt(attr."hab_coldmod") + CInt(attr_excp."coldmod"))-(item.resist_cold-item.resist_cold_mod); break;
-            "poisonmod": valor := (newattr[4] + CInt(attr["item_poison"]) + CInt(attr."hab_poisonmod") + CInt(attr_excp."poisonmod"))-(item.resist_poison-item.resist_poison_mod); break;
-            "energymod": valor := (newattr[5] + CInt(attr["item_energy"]) + CInt(attr."hab_energymod") + CInt(attr_excp."energymod"))-(item.resist_energy-item.resist_energy_mod); break;
+            "physicalmod":      valor := (newattr[1] + CInt(attr["item_physical"]) + CInt(attr."hab_physicalmod") + CInt(attr_excp."physicalmod"))-(item.resist_physical-item.resist_physical_mod); break;
+            "firemod":          valor := (newattr[2] + CInt(attr["item_fire"]) + CInt(attr."hab_firemod") + CInt(attr_excp."firemod"))-(item.resist_fire-item.resist_fire_mod); break;
+            "coldmod":          valor := (newattr[3] + CInt(attr["item_cold"]) + CInt(attr."hab_coldmod") + CInt(attr_excp."coldmod"))-(item.resist_cold-item.resist_cold_mod); break;
+            "poisonmod":        valor := (newattr[4] + CInt(attr["item_poison"]) + CInt(attr."hab_poisonmod") + CInt(attr_excp."poisonmod"))-(item.resist_poison-item.resist_poison_mod); break;
+            "energymod":        valor := (newattr[5] + CInt(attr["item_energy"]) + CInt(attr."hab_energymod") + CInt(attr_excp."energymod"))-(item.resist_energy-item.resist_energy_mod); break;
+        
+            default:            valor := 0;
         endcase
 
-    elseif (slot == "shield")
-        newattr := TabelaMaterialResistMod(item);
-        newattr_escudo := TabelaProtecao(item);
-        newattrdebuff := BuscarDebuffSlot(item);
-        //print("{} {} {}".Format(newattr[1], newattr[2], newattr[3]));
-
+    elseif (slot == "weapon")
+        
         case (mod)
-            "hpmod": valor := ((newattr[6]*5) + CInt(attr["item_hp"]) + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"]))-(item.MaxHP-item.MaxHP_Mod); break;
- 
-            "dexpenmod": valor := (newattrdebuff[2] + CInt(attr["item_dexpen"]) + CInt(attr."hab_dexpenmod") + CInt(attr_excp."dexpenmod")); break;
-            "parrymod": valor := (CInt(attr["item_parry"]) + CInt(attr."hab_parrymod") + CInt(attr_excp."parrymod")); break;
-            "parrydelaymod": valor := (CInt(attr["item_parrydelay"]) + CInt(attr."hab_parrydelaymod") + CInt(attr_excp."parrydelaymod")); break;
+            "hpmod":            valor := (newattr[6] + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"])); break;
 
-            "physicalmod": valor := (newattr[1] + CInt(attr["item_physical"]) + CInt(attr."hab_physicalmod") + CInt(attr_excp."physicalmod"))-(item.resist_physical-item.resist_physical_mod); break;
-            "firemod": valor := (newattr[2] + CInt(attr["item_fire"]) + CInt(attr."hab_firemod") + CInt(attr_excp."firemod"))-(item.resist_fire-item.resist_fire_mod); break;
-            "coldmod": valor := (newattr[3] + CInt(attr["item_cold"]) + CInt(attr."hab_coldmod") + CInt(attr_excp."coldmod"))-(item.resist_cold-item.resist_cold_mod); break;
-            "poisonmod": valor := (newattr[4] + CInt(attr["item_poison"]) + CInt(attr."hab_poisonmod") + CInt(attr_excp."poisonmod"))-(item.resist_poison-item.resist_poison_mod); break;
-            "energymod": valor := (newattr[5] + CInt(attr["item_energy"]) + CInt(attr."hab_energymod") + CInt(attr_excp."energymod"))-(item.resist_energy-item.resist_energy_mod); break;
+            "dmgmod":           valor := (CInt(attr."hab_dmgmod") + CInt(attr_excp."dmgmod")); break;
+            "speedmod":         valor := (CInt(attr["item_speed"]) + CInt(attr["hab_speedmod"]) + CInt(attr_excp["speedmod"])); break;
+
+            "physicalmod":      valor := (newattr[1] + CInt(attr["item_physical"]) + CInt(attr."hab_physicalmod") + CInt(attr_excp."physicalmod"))-(item.damage_physical-item.damage_physical_mod); break;
+            "firemod":          valor := (newattr[2] + CInt(attr["item_fire"]) + CInt(attr."hab_firemod") + CInt(attr_excp."firemod"))-(item.damage_fire-item.damage_fire_mod); break;
+            "coldmod":          valor := (newattr[3] + CInt(attr["item_cold"]) + CInt(attr."hab_coldmod") + CInt(attr_excp."coldmod"))-(item.damage_cold-item.damage_cold_mod); break;
+            "poisonmod":        valor := (newattr[4] + CInt(attr["item_poison"]) + CInt(attr."hab_poisonmod") + CInt(attr_excp."poisonmod"))-(item.damage_poison-item.damage_poison_mod); break;
+            "energymod":        valor := (newattr[5] + CInt(attr["item_energy"]) + CInt(attr."hab_energymod") + CInt(attr_excp."energymod"))-(item.damage_energy-item.damage_energy_mod); break;
+        
+            default:            valor := 0;
         endcase
     endif
 
@@ -346,78 +395,106 @@ endfunction
 
 
 //APENAS PARA ATUALIZAR ITENS ANTES DA IMPLEMENTAÇÃO
-function AtualizarItemAntigo(who, item) 
+function AtualizarItemAntigo(who, item)
+    var tipoequip;
+    var propsenc := "";
     var attr := PegarProp(item);
+    var material := BuscarValorMaterial(item);
+    var propexcpantiga := item.GetProp("Exceptional");
 
     if (attr["Atualiza"] != 0 && attr["Atualiza"] != 1)
         SendSysMessageEx(who, "Item {} com base de dados antiga, atualizando para novo modelo...".Format(Hex(item.objtype)), SSM_FAIL);
+        SendSysMessageEx(who, "----------");
 
-        SetarPropBase(item);
         SetarPropTipo(item);
+        SetarPropItem(item);
         attr := PegarProp(item);
-        var tipoequip := PegarTipo(item);
-        //var isescudo := IsEscudo(item);
-        var propexcpantiga := item.GetProp("Exceptional");
+        tipoequip := PegarTipo(item);
 
         attr["Quality"] := item.quality; SetarProp(item, attr);
 
         if (propexcpantiga == 1)
-            SendSysMessageEx(who, "Item Excepcional detectado! Adicionando valores...", SSM_INFO);
+            SendSysMessageEx(who, "Item EXCEPCIONAL detectado! Adicionando valores...", FONTCOLOR_YELLOW);
             var attr_excp := PegarPropExcep(item);
 
-            //attr_excp["hpmod"] := item.maxhp_mod - (CInt(attr."hab_hpmod") + CInt(attr."base_hpmod")); //DESATIVADO POR QUE O SHARD JÁ MULTIPLICA O HP PELA QUALIDADE DO ITEM EM ALGUM OUTRO LUGAR
+            attr_excp["hpmod"]  := item.maxhp_mod; //REVER A FORMULA DISSO AQUI
 
-            if (item.IsA(POLCLASS_WEAPON))
-                attr_excp["dmgmod"] := item.dmg_mod - (CInt(attr."hab_dmgmod") + CInt(attr."base_dmgmod"));
-                attr_excp["speedmod"] := CInt(item.GetProp("attackspeedbonus")) - (CInt(attr."hab_speedmod") + CInt(attr."base_speedmod"));
-                attr_excp["physicalmod"] := item.damage_physical_mod - (CInt(attr."hab_physicalmod") + CInt(attr."base_physicalmod"));
-                attr_excp["firemod"] := item.damage_fire_mod - (CInt(attr."hab_firemod") + CInt(attr."base_firemod"));
-                attr_excp["coldmod"] := item.damage_cold_mod - (CInt(attr."hab_coldmod") + CInt(attr."base_coldmod"));
-                attr_excp["poisonmod"] := item.damage_poison_mod - (CInt(attr."hab_poisonmod") + CInt(attr."base_poisonmod"));
-                attr_excp["energymod"] := item.damage_energy_mod - (CInt(attr."hab_energymod") + CInt(attr."base_energymod"));
-            elseif(item.IsA(POLCLASS_ARMOR))
-                attr_excp["physicalmod"] := item.resist_physical_mod - (CInt(attr."hab_physicalmod") + CInt(attr."base_physicalmod"));
-                attr_excp["firemod"] := item.resist_fire_mod - (CInt(attr."hab_firemod") + CInt(attr."base_firemod"));
-                attr_excp["coldmod"] := item.resist_cold_mod - (CInt(attr."hab_coldmod") + CInt(attr."base_coldmod"));
-                attr_excp["poisonmod"] := item.resist_poison_mod - (CInt(attr."hab_poisonmod") + CInt(attr."base_poisonmod"));
-                attr_excp["energymod"] := item.resist_energy_mod - (CInt(attr."hab_energymod") + CInt(attr."base_energymod"));
+
+            if(item.IsA(POLCLASS_ARMOR))
+                attr_excp["physicalmod"]    := CInt(item.resist_physical_mod - CInt(material[1]));
+                attr_excp["firemod"]        := CInt(item.resist_fire_mod - CInt(material[2]));
+                attr_excp["coldmod"]        := CInt(item.resist_cold_mod - CInt(material[3]));
+                attr_excp["poisonmod"]      := CInt(item.resist_poison_mod - CInt(material[4]));
+                attr_excp["energymod"]      := CInt(item.resist_energy_mod - CInt(material[5]));
+
+                if (IsEscudo(item))
+                    attr_excp["dexpenmod"]      := CInt(item.GetProp("penaltybonus"));
+                    attr_excp["parrymod"]       := CInt(item.GetProp("parrybonus"));
+                    attr_excp["parrydelaymod"]  := CInt(item.GetProp("parrydelay_mod"));
+                endif
+
+            elseif (item.IsA(POLCLASS_WEAPON))
+                attr_excp["dmgmod"]         := item.dmg_mod; //REVER A FORMULA DISSO AQUI
+                attr_excp["speedmod"]       := CInt(item.GetProp("attackspeedbonus"));
+
+                attr_excp["physicalmod"]    := CInt(item.damage_physical_mod - CInt(material[1]));
+                attr_excp["firemod"]        := CInt(item.damage_fire_mod - CInt(material[2]));
+                attr_excp["coldmod"]        := CInt(item.damage_cold_mod - CInt(material[3]));
+                attr_excp["poisonmod"]      := CInt(item.damage_poison_mod - CInt(material[4]));
+                attr_excp["energymod"]      := CInt(item.damage_energy_mod - CInt(material[5]));
+
             endif
+            SendSysMessageEx(who, "Propriedades EXCEPCIONAIS encontradas: "+attr_excp);
             SetarPropExcep(item, attr_excp);
 
         else
             attr := PegarProp(item);
             var valor, itemhab;
-            valor := item.maxhp_mod - CInt(attr."base_hpmod"); if(valor > 0) attr["hab_hpmod"] := valor; itemhab := 1; endif
 
-            if (item.IsA(POLCLASS_WEAPON))
-                valor := item.dmg_mod - CInt(attr."base_dmgmod"); if(valor > 0) attr["hab_dmgmod"] := valor; itemhab := 1; endif
-                valor := CInt(item.GetProp("attackspeedbonus")) - CInt(attr."base_speedmod"); if(valor > 0) attr["hab_speedmod"] := valor; itemhab := 1; endif
-                valor := item.damage_physical_mod - CInt(attr."base_physicalmod"); if(valor > 0) attr["hab_physicalmod"] := valor; itemhab := 1; endif
-                valor := item.damage_fire_mod - CInt(attr."base_firemod"); if(valor > 0) attr["hab_firemod"] := valor; itemhab := 1; endif
-                valor := item.damage_cold_mod - CInt(attr."base_coldmod"); if(valor > 0) attr["hab_coldmod"] := valor; itemhab := 1; endif
-                valor := item.damage_poison_mod - CInt(attr."base_poisonmod"); if(valor > 0) attr["hab_poisonmod"] := valor; itemhab := 1; endif
-                valor := item.damage_energy_mod - CInt(attr."base_energymod"); if(valor > 0) attr["hab_energymod"] := valor; itemhab := 1; endif
+            valor := CInt(attr["item_hp"]) - (item.maxhp-item.maxhp_mod); if(valor > 0) attr["hab_hpmod"] := valor; itemhab := 1; propsenc := propsenc+"hpmod, "; endif
+
+            if (IsEscudo(item))
+                var valor;
+                valor := CInt(attr["item_physical"]) - (item.resist_physical-item.resist_physical_mod);     if(valor > 0) attr["hab_physicalmod"] := valor; itemhab := 1; propsenc := propsenc+"physicalmod, "; endif
+                valor := CInt(attr["item_fire"]) - (item.resist_fire-item.resist_fire_mod);                 if(valor > 0) attr["hab_firemod"] := valor; itemhab := 1; propsenc := propsenc+"firemod, "; endif
+                valor := CInt(attr["item_cold"]) - (item.resist_cold-item.resist_cold_mod);                 if(valor > 0) attr["hab_coldmod"] := valor; itemhab := 1; propsenc := propsenc+"coldmod, "; endif
+                valor := CInt(attr["item_poison"]) - (item.resist_poison-item.resist_poison_mod);           if(valor > 0) attr["hab_poisonmod"] := valor; itemhab := 1; propsenc := propsenc+"poisonmod, "; endif
+                valor := CInt(attr["item_energy"]) - (item.resist_energy-item.resist_energy_mod);           if(valor > 0) attr["hab_energymod"] := valor; itemhab := 1; propsenc := propsenc+"energymod, "; endif
+                valor := CInt(item.GetProp("penaltybonus"));                                                if(valor > 0) attr["hab_dexpenmod"] := valor; itemhab := 1; propsenc := propsenc+"dexpenmod, "; endif
+                valor := CInt(item.GetProp("parrybonus"));                                                  if(valor > 0) attr["hab_parrymod"] := valor; itemhab := 1; propsenc := propsenc+"parrymod, "; endif
+                valor := CInt(item.GetProp("parrydelay_mod"));                                              if(valor > 0) attr["hab_parrydelaymod"] := valor; itemhab := 1; propsenc := propsenc+"parrydelaymod, "; endif
+
             elseif(item.IsA(POLCLASS_ARMOR))
-                valor := item.resist_physical_mod - CInt(attr."base_physicalmod"); if(valor > 0) attr["hab_base_physicalmod"] := valor; itemhab := 1; endif
-                valor := item.resist_fire_mod - CInt(attr."base_firemod"); if(valor > 0) attr["hab_firemod"] := valor; itemhab := 1; endif
-                valor := item.resist_cold_mod - CInt(attr."base_coldmod"); if(valor > 0) attr["hab_coldmod"] := valor; itemhab := 1; endif
-                valor := item.resist_poison_mod - CInt(attr."base_poisonmod"); if(valor > 0) attr["hab_poisonmod"] := valor; itemhab := 1; endif
-                valor := item.resist_energy_mod - CInt(attr."base_energymod"); if(valor > 0) attr["hab_energymod"] := valor; itemhab := 1; endif
+                //DEXPEN
+
+                valor := CInt(item.resist_physical_mod - material[1]);                                      if(valor > 0) attr["hab_physicalmod"] := valor; itemhab := 1; propsenc := propsenc+"physicalmod, "; endif
+                valor := CInt(attr["item_fire"]) - (item.resist_fire-item.resist_fire_mod);                 if(valor > 0) attr["hab_firemod"] := valor; itemhab := 1; propsenc := propsenc+"firemod, "; endif
+                valor := CInt(attr["item_cold"]) - (item.resist_cold-item.resist_cold_mod);                 if(valor > 0) attr["hab_coldmod"] := valor; itemhab := 1; propsenc := propsenc+"coldmod, "; endif
+                valor := CInt(attr["item_poison"]) - (item.resist_poison-item.resist_poison_mod);           if(valor > 0) attr["hab_poisonmod"] := valor; itemhab := 1; propsenc := propsenc+"poisonmod, "; endif
+                valor := CInt(attr["item_energy"]) - (item.resist_energy-item.resist_energy_mod);           if(valor > 0) attr["hab_energymod"] := valor; itemhab := 1; propsenc := propsenc+"energymod, "; endif
+
+            elseif (item.IsA(POLCLASS_WEAPON))
+                valor := item.dmg_mod;                                                                      if(valor > 0) attr["hab_dmgmod"] := valor; itemhab := 1; propsenc := propsenc+"dmgmod, "; endif //CONFERIR FORMULA
+                valor := CInt(item.GetProp("attackspeedbonus"));                                            if(valor > 0) attr["hab_speedmod"] := valor; itemhab := 1; propsenc := propsenc+"physicalmod, "; endif
+
+                valor := CInt(attr["item_physical"]) - (item.damage_physical-item.damage_physical_mod);     if(valor > 0) attr["hab_physicalmod"] := valor; itemhab := 1; propsenc := propsenc+"physicalmod, "; endif
+                valor := CInt(attr["item_fire"]) - (item.damage_fire-item.damage_fire_mod);                 if(valor > 0) attr["hab_firemod"] := valor; itemhab := 1; propsenc := propsenc+"firemod, "; endif
+                valor := CInt(attr["item_cold"]) - (item.damage_cold-item.damage_cold_mod);                 if(valor > 0) attr["hab_coldmod"] := valor; itemhab := 1; propsenc := propsenc+"coldmod, "; endif
+                valor := CInt(attr["item_poison"]) - (item.damage_poison-item.damage_poison_mod);           if(valor > 0) attr["hab_poisonmod"] := valor; itemhab := 1; propsenc := propsenc+"poisonmod, "; endif
+                valor := CInt(attr["item_energy"]) - (item.damage_energy-item.damage_energy_mod);           if(valor > 0) attr["hab_energymod"] := valor; itemhab := 1; propsenc := propsenc+"energymod, "; endif
+
             endif
-            if (itemhab) SendSysMessageEx(who, "Item com Propriedade de Habilidade detectado! Adicionando valores...", SSM_INFO);
-            else SendSysMessageEx(who, "Item sem Propriedade de Habilidade ou Excepcional! Adicionando valores...", SSM_INFO);
+            if (itemhab)
+                SendSysMessageEx(who, "Item com propriedade de HABILIDADE detectado! Adicionando valores...", FONTCOLOR_YELLOW);
+                SendSysMessageEx(who, "Propriedades encontradas: "+attr);
+            else SendSysMessageEx(who, "Item SEM PROPRIEDADE de Habilidade ou Excepcional! Adicionando valores...", FONTCOLOR_YELLOW);
             endif
-        endif
-        if (IsEscudo(item))
-            var valor;
-            SendSysMessageEx(who, "Escudo detectado! Adicionando valores...", SSM_INFO);
-            valor := CInt(item.GetProp("penaltybonus")) - CInt(attr."base_dexpenmod"); if(valor > 0) attr["hab_dexpenmod"] := valor; endif
-            valor := CInt(item.GetProp("parrybonus")) - CInt(attr."base_parrymod"); if(valor > 0) attr["hab_parrymod"] := valor; endif
-            valor := CInt(item.GetProp("parrydelay_mod")) - CInt(attr."base_parrydelaymod"); if(valor > 0) attr["hab_parrydelaymod"] := valor; endif
         endif
 
         SetarProp(item, attr);
+        if (item.hp<item.maxhp) item.hp := item.hp+item.maxhp_mod; endif //COMPENSAR O HP CORRIGIDO
 
-        SendSysMessageEx(who, "!!! Item {} atualizado para novo modelo de base de dados com SUCESSO !!!".Format(Hex(item.objtype)), SSM_INFO);
+        SendSysMessageEx(who, "----------");
+        SendSysMessageEx(who, "Item {} atualizado para novo modelo de base de dados com SUCESSO !!!".Format(Hex(item.objtype)), SSM_INFO);
     endif
 endfunction
