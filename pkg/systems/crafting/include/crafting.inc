@@ -307,7 +307,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 
 			//passando a cor pra materiais coloridos que nao tem Id proprio (como madeira)
 			AddMaterialMod(who, craft_skill, theitem, chosenPrincipalMaterial, materialColor);
-			//SetarAllProps(theitem); //ATIVAR
+			SetarAllProps(theitem); //ATIVAR
 			CraftExceptional(who, theitem, craft_skill, skillreq);
 			CraftLockable(who, theitem);
 
@@ -409,21 +409,30 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 	SetObjProperty(theitem, "material", principalMaterial);
 
 	//Insere modificadores de dano e resistencia
-	var DmgMods := GetConfigString(elem, "AoSDamageMod");
+	/* OBSOLETO - EVILLINK1.0
+	var DmgMods := GetConfigString(elem, "AoSDamageMod"); 
 	DmgMods := SplitWords(DmgMods);
 	var ResistMods := GetConfigString(elem, "AoSResistMod");
 	ResistMods := SplitWords(ResistMods);
     var hpmod := GetConfigInt(elem, "hpmod"); //modificador de durabilidade do item pelo material
+	*/
+	var DmgMods := TabelaMaterialDamageMod(principalMaterial); //EVILLINK1.0
+	var ResistMods := TabelaMaterialResistMod(principalMaterial); //EVILLINK1.0
+	var hpmod := 0;
+	if (theitem.IsA(POLCLASS_WEAPON)) var hpmod := DmgMods[6];
+	elseif (theitem.IsA(POLCLASS_ARMOR)) var hpmod := ResistMods[6];
+	endif
+
 	var attr := PegarProp(theitem);
 
 	if(theitem.isA(POLCLASS_WEAPON))
         var cfg:=ReadConfigFile(":combat:itemdesc");
         var elem := FindConfigElem(cfg, theitem.objtype);
-		theitem.damage_physical_mod := theitem.damage_physical_mod + Cint(DmgMods[1]);
-		theitem.damage_fire_mod := theitem.damage_fire_mod + Cint(DmgMods[2]);
-		theitem.damage_cold_mod := theitem.damage_cold_mod + Cint(DmgMods[3]);
-		theitem.damage_poison_mod := theitem.damage_poison_mod + Cint(DmgMods[4]);
-		theitem.damage_energy_mod := theitem.damage_energy_mod + Cint(DmgMods[5]);
+		theitem.damage_physical_mod := (theitem.damage_physical_mod + Cint(DmgMods[1]))-(theitem.damage_physical-theitem.damage_physical_mod);
+		theitem.damage_fire_mod := (theitem.damage_fire_mod + Cint(DmgMods[2]))-(theitem.damage_fire-theitem.damage_fire_mod);
+		theitem.damage_cold_mod := (theitem.damage_cold_mod + Cint(DmgMods[3]))-(theitem.damage_physical-theitem.damage_physical_mod);
+		theitem.damage_poison_mod := (theitem.damage_poison_mod + Cint(DmgMods[4]))-(theitem.damage_physical-theitem.damage_physical_mod);
+		theitem.damage_energy_mod := (theitem.damage_energy_mod + Cint(DmgMods[5]))-(theitem.damage_physical-theitem.damage_physical_mod);
 
 		sendsysmessage(who,craft_skill);
 		if(craft_skill == "MetalWorking")
@@ -468,11 +477,11 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 	        theitem.resist_poison_mod := theitem.resist_poison_mod + 2 * Cint(ResistMods[4]);
 	        theitem.resist_energy_mod := theitem.resist_energy_mod + 2 * Cint(ResistMods[5]);
 
-			attr["hab_physicalmod"] := CInt(ResistMods[1]);
-			attr["hab_firemod"] := 2 * CInt(ResistMods[2]);
-			attr["hab_coldmod"] := 2 * CInt(ResistMods[3]);
-			attr["hab_poisonmod"] := 2 * CInt(ResistMods[4]);
-			attr["hab_energymod"] := 2 * CInt(ResistMods[5]);
+			//attr["hab_physicalmod"] := CInt(ResistMods[1]);
+			attr["hab_firemod"] := CInt(ResistMods[2]);
+			attr["hab_coldmod"] := CInt(ResistMods[3]);
+			attr["hab_poisonmod"] := CInt(ResistMods[4]);
+			attr["hab_energymod"] := CInt(ResistMods[5]);
 	    else
 	    	theitem.resist_physical_mod := theitem.resist_physical_mod + Cint(ResistMods[1]);
 	        theitem.resist_fire_mod := theitem.resist_fire_mod + Cint(ResistMods[2]);
@@ -480,11 +489,11 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 	        theitem.resist_poison_mod := theitem.resist_poison_mod + Cint(ResistMods[4]);
 	        theitem.resist_energy_mod := theitem.resist_energy_mod + Cint(ResistMods[5]);
 
-			attr["hab_physicalmod"] := CInt(ResistMods[1]);
+			/*attr["hab_physicalmod"] := CInt(ResistMods[1]);
 			attr["hab_firemod"] := CInt(ResistMods[2]);
 			attr["hab_coldmod"] := CInt(ResistMods[3]);
 			attr["hab_poisonmod"] := CInt(ResistMods[4]);
-			attr["hab_energymod"] := CInt(ResistMods[5]);
+			attr["hab_energymod"] := CInt(ResistMods[5]);*/ // APAGAR
 	    endif
 
         if ((CInt(elem.parrybonus) != 0) || CInt(elem.parrydelay) != 0) //aplica o modificador de durabilidade do material nos escudos
@@ -606,28 +615,32 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 			if((CInt(theitem.resist_physical)==0)) //Não é armadura
 				if(TemHabilidade(who,"Tratar Tecido"))
 					var ct := 0;
-					var randomDmg;
+					var randomDmg; var bonusfire := 0; var bonuscold := 0;
 					while(ct < 4)
 						randomDmg := RandomIntMinMax(1,3);
 						case(randomDmg)
-							1: theitem.damage_fire_mod := theitem.damage_fire_mod + 1; attr["hab_firemod"] := 1; break;
-							2: theitem.damage_cold_mod := theitem.damage_cold_mod + 1; attr["hab_coldmod"] := 1; break;
+							1: theitem.damage_fire_mod := theitem.damage_fire_mod + 1; bonusfire := bonusfire + 1; break;
+							2: theitem.damage_cold_mod := theitem.damage_cold_mod + 1; bonuscold := bonuscold + 1; break;
 						endcase
 						ct := ct + 1;
 					endwhile
+					attr["hab_firemod"] := bonusfire;
+					attr["hab_coldmod"] := bonuscold;
 				endif
 			else
 				if(TemHabilidade(who,"Tratar Couro"))
 					var ct := 0;
-					var randomDmg;
+					var randomDmg; var bonusenergy := 0; var bonuspoison := 0;
 					while(ct < 4)
 						randomDmg := RandomIntMinMax(1,3);
 						case(randomDmg)
-							1: theitem.damage_energy_mod := theitem.damage_energy_mod + 1; attr["hab_energymod"] := 1; break;
-							2: theitem.damage_poison_mod := theitem.damage_poison_mod + 1; attr["hab_poisonmod"] := 1; break;
+							1: theitem.damage_energy_mod := theitem.damage_energy_mod + 1; bonusenergy := bonusenergy + 1; break;
+							2: theitem.damage_poison_mod := theitem.damage_poison_mod + 1; bonuspoison := bonuspoison + 1; break;
 						endcase
 						ct := ct + 1;
 					endwhile
+					attr["hab_energymod"] := bonusenergy;
+					attr["hab_poisonmod"] := bonuspoison;
 				endif
 
 			endif
@@ -648,7 +661,7 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 		if(TemHabilidade(who,"Preparo do Metal"))
 			//(HP total x 1.5) x (HP total - HP inicial)
 			var temp := (theitem.maxhp * 1.5) - (theitem.maxhp-theitem.maxhp_mod);
-			attr["hab_hpmod"] := (CInt(theitem.maxhp * 1.5))-theitem.maxhp;
+			attr["hab_hpmod"] := CInt(temp);
 			theitem.maxhp_mod := CInt(temp);
 		endif
 	elseif(craft_skill == "WoodWorking")

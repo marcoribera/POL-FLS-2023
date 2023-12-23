@@ -1,7 +1,7 @@
 ///////////////////////////////
 ///// NOVO ".CFG" - START /////
 ///////////////////////////////
-function TabelaResistMod(item) //objtype do material: return {FISICO, FIRE, COLD, POISON, ENERGY, HP}
+function TabelaMaterialResistMod(item) //objtype do material: return {FISICO, FIRE, COLD, POISON, ENERGY, HP}
     var material := Lower(Hex(item.GetProp("material")));
     case(material)
         //////////METAL
@@ -21,7 +21,7 @@ function TabelaResistMod(item) //objtype do material: return {FISICO, FIRE, COLD
         "0x630c": return {1,0,0,4,0,20}; //SINQUE
         "0x630b": return {1,0,0,0,4,20}; //HELCE
         "0x6602": return {2,1,1,1,1,20}; //ACIELITH
-        "0x6603": return {-1,0,0,0,0,-30}; //CRITALITH
+        "0x6603": return {-1,0,0,0,0,-30}; //CRISTALITH
         "0x6601": return {1,0,0,0,0,80}; //STALITH
 
         //TIER 3
@@ -112,7 +112,7 @@ function TabelaResistMod(item) //objtype do material: return {FISICO, FIRE, COLD
     endcase
 endfunction
 
-function TabelaDamageMod(item) //objtype do material: return {FISICO, FIRE, COLD, POISON, ENERGY, HP}
+function TabelaMaterialDamageMod(item) //objtype do material: return {FISICO, FIRE, COLD, POISON, ENERGY, HP}
     var material := Lower(Hex(item.GetProp("material")));
 
     case(material)
@@ -228,7 +228,7 @@ function TabelaDamageMod(item) //objtype do material: return {FISICO, FIRE, COLD
     endcase
 endfunction
 
-function TabelaValoresDanos(item) //FUTURAMENTE TROCAR POR UMA LISTA DE ITENS SEMELHANTE ÀS TABELAS ANTERIORES OU A POSTERIOR
+function TabelaDanos(item) //FUTURAMENTE TROCAR POR UMA LISTA DE ITENS SEMELHANTE ÀS TABELAS ANTERIORES OU A POSTERIOR
     var cfg := ReadConfigFile(":combat:itemdesc");
     var elem := FindConfigElem(cfg, item.objtype);
     var dano := Array;
@@ -241,23 +241,23 @@ function TabelaValoresDanos(item) //FUTURAMENTE TROCAR POR UMA LISTA DE ITENS SE
 
     return dano;
 endfunction
-function TabelaValoresProtecao(item)
+function TabelaProtecao(item)
     var tipo := Lower(PegarTipo(item));
     case(tipo) //ARMADURAS: -=> TipoProtecao: return {FISICO, FIRE, COLD, POISON, ENERGY}
         //TIER 1
-        "armadura leve fraca": return {1,1,1,1,1};
-        "armadura leve media": return {2,2,2,2,2};
-        "armadura leve forte": return {3,3,3,3,3};
+        "armadura leve fraca": return {0,0,0,0,0};
+        "armadura leve media": return {1,1,1,1,1};
+        "armadura leve forte": return {2,2,2,2,2};
 
         //TIER 2
-        "armadura media fraca": return {4,4,4,4,4};
-        "armadura media media": return {5,5,5,5,5};
-        "armadura media forte": return {6,6,6,6,6};
+        "armadura media fraca": return {3,0,0,0,0};
+        "armadura media media": return {4,0,0,0,0};
+        "armadura media forte": return {5,0,0,0,0};
 
         //TIER 3
-        "armadura pesada fraca": return {7,7,7,7,7};
-        "armadura pesada media": return {8,8,8,8,8};
-        "armadura pesada forte": return {9,9,9,9,9};
+        "armadura pesada fraca": return {6,0,0,0,0};
+        "armadura pesada media": return {7,0,0,0,0};
+        "armadura pesada forte": return {8,0,0,0,0};
     endcase
 
     case(tipo) //ESCUDOS: -=> TipoProtecao: return {RESIST, DEXPENALTY, PARRYBONUS, PARRYDELAY}
@@ -282,7 +282,7 @@ function TabelaValoresProtecao(item)
         "escudo de corpo forte": return {11,-16,14,6};
     endcase
 endfunction
-function TabelaValoresSlot(item)
+function TabelaSlot(item)
     var slot := Lower(PegarSlot(item));
 
     case(slot) //[1] = ResistBase; [2] = DexPenalty
