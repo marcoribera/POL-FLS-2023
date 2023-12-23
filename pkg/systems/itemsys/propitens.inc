@@ -10,7 +10,7 @@ VER ITENS COM RECIPE
 //TOGGLES PARA SEGURANÇA NA FASE DE IMPLEMENTAÇÃO
 //COLOCAR O NIVEL DO CMDLEVEL MÍNIMO NO TOGGLE PARA LIMITAR O USO EM FASE DE TESTES - PLAYER -> cmdlevel = 1; GM -> cmdlevel = 4; ADMIN -> cmdlevel = 5
 const TOGGLELVL_CRAFT := 100;
-const TOGGLELVL_EQUIP := 100;
+const TOGGLELVL_EQUIP := 2;
 //proc = 1 -> AtualizarItemAntigo(who, item); 2 -> SetarModsNoItem(who, item);
 
 function NovoSistemaDeItens(who, item, TOGGLE, PROCEDIMENTO);
