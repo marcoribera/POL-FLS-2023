@@ -2,6 +2,9 @@ include ":itemsys:tabelas";
 /*
 TODO:
 ADICIONAR A ATUALIZAÇÃO NO SCRIPT QUE CRIA A PROP CREATEDBY EM TODOS OS ITENS
+ADICIONAR PARA SOMAR DEXPENALTY DAS ARMADURAS
+VER A QUESTÃO DOS ITENS MÁGICOS
+VER ITENS COM RECIPE
 */
 function SetarModsNoItem(who, item)
     SetarAllProps(item);
@@ -34,17 +37,9 @@ function SetarModsNoItem(who, item)
                 item.resist_energy_mod := energymod;
 
                 if (IsEscudo(item))
-                    /*var newattr := PegarProp(item);
-                    var attr_escudo := BuscarValoresSlot(item);
-                    
-                    newattr["item_dexpen"] := attr_escudo[2];
-                    newattr["item_parry"] := attr_escudo[3];
-                    newattr["item_parrydelay"] := attr_escudo[4];
-                    SetarProp(item, newattr);*/
-
-                    //CalcPropMod(item, "dexpenmod");
-                    //item.SetProp("parrybonus", CalcPropMod(item, "parrymod"));
-                    //item.SetProp("parrydelay_mod", CalcPropMod(item, "parrydelaymod"));
+                    item.SetProp("penaltybonus", attr["base_dexpenmod"]);
+                    item.SetProp("parrybonus", attr["base_parrymod"]);
+                    item.SetProp("parrydelay_mod", attr["base_parrydelaymod"]);
                 endif
 
             elseif (item.IsA(POLCLASS_WEAPON))
@@ -149,7 +144,7 @@ function SetarPropBase(item) //SETA AS PROPS DE MODIFICADORES DE (MATERIAL - ITE
 
         attr["base_hpmod"] := CalcPropMod(item, "hpmod", slot);
 
-		attr["base_physicalmod"] := CalcPropMod(item, "physicalmod", slot);//(newattr[1] + attr["item_physical"])-(item.damage_physical-item.damage_physical_mod);
+		attr["base_physicalmod"] := CalcPropMod(item, "physicalmod", slot); //(newattr[1] + attr["item_physical"])-(item.damage_physical-item.damage_physical_mod);
 		attr["base_firemod"] := CalcPropMod(item, "firemod", slot);
 		attr["base_coldmod"] := CalcPropMod(item, "coldmod", slot);
 		attr["base_poisonmod"] := CalcPropMod(item, "poisonmod", slot);
@@ -197,18 +192,42 @@ function BuscarValoresSlot(item);
     var valprot := Array;
     var valslot := Array;
 
-    if(IsEscudo(item))
-        valores := TabelaProtecao(item);
-    
-    elseif(item.IsA(POLCLASS_WEAPON))
-        valores := TabelaDanos(item);
-
-    elseif(item.IsA(POLCLASS_ARMOR)) //ARMADURA TEM SOMA BASEADO NO SLOT
+    if(IsEscudo(item)) //ESCUDO TEM SOMA BASEADO NO SLOT
         valprot := TabelaProtecao(item);
         valslot := TabelaSlot(item);
 
         valores := valprot;
-        valores[1] += valslot[1];
+        valores[1] := valores[1] + valslot[1];
+    elseif(item.IsA(POLCLASS_WEAPON))
+        valores := TabelaDanos(item);
+
+    elseif(item.IsA(POLCLASS_ARMOR)) //ARMADURA TAMBÉM
+        valprot := TabelaProtecao(item);
+        valslot := TabelaSlot(item);
+
+        valores := valprot;
+        valores[1] := valores[1] + valslot[1];
+    endif
+
+    return valores;
+endfunction
+
+function BuscarDebuffSlot(item)
+    var valores := Array;
+    var valdebuff := Array;
+    var valslot := Array;
+
+    if(IsEscudo(item))
+        valdebuff := TabelaProtecao(item);
+        valslot := TabelaSlot(item);
+
+        valores := valdebuff;
+        valores[2] := valores[2] + valslot[2];
+    elseif(item.IsA(POLCLASS_ARMOR))
+        valdebuff := TabelaProtecao(item);
+        valslot := TabelaSlot(item);
+
+        valores := valslot;
     endif
 
     return valores;
@@ -261,7 +280,7 @@ endfunction
 
 //FUNCTIONS DE CÁLCULO
 function CalcPropMod(item, mod, slot) //CALCULA O VALOR REAL PARA DEFINIR NO ITEM
-    var valor, newattr, newattr_escudo;
+    var valor, newattr, newattr_escudo, newattrdebuff;
     var attr := PegarProp(item);
     var attr_excp := PegarPropExcep(item);
     mod.Lower(); slot.Lower();
@@ -286,11 +305,12 @@ function CalcPropMod(item, mod, slot) //CALCULA O VALOR REAL PARA DEFINIR NO ITE
         endcase
     elseif (slot == "armor")
         newattr := TabelaMaterialResistMod(item);
+        newattrdebuff := BuscarDebuffSlot(item);
 
         case (mod)
             "hpmod": valor := (newattr[6] + CInt(attr["item_hp"]) + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"]))-(item.MaxHP-item.MaxHP_Mod); break;
             
-            "dexpenmod": valor := (CInt(attr["item_dexpen"]) + CInt(attr."hab_dexpenmod") + CInt(attr_excp."dexpenmod")); break;
+            "dexpenmod": valor := (newattrdebuff[2] + CInt(attr["item_dexpen"]) + CInt(attr."hab_dexpenmod") + CInt(attr_excp."dexpenmod")); break;
 
             "physicalmod": valor := (newattr[1] + CInt(attr["item_physical"]) + CInt(attr."hab_physicalmod") + CInt(attr_excp."physicalmod"))-(item.resist_physical-item.resist_physical_mod); break;
             "firemod": valor := (newattr[2] + CInt(attr["item_fire"]) + CInt(attr."hab_firemod") + CInt(attr_excp."firemod"))-(item.resist_fire-item.resist_fire_mod); break;
@@ -302,12 +322,13 @@ function CalcPropMod(item, mod, slot) //CALCULA O VALOR REAL PARA DEFINIR NO ITE
     elseif (slot == "shield")
         newattr := TabelaMaterialResistMod(item);
         newattr_escudo := TabelaProtecao(item);
+        newattrdebuff := BuscarDebuffSlot(item);
         //print("{} {} {}".Format(newattr[1], newattr[2], newattr[3]));
 
         case (mod)
             "hpmod": valor := ((newattr[6]*5) + CInt(attr["item_hp"]) + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"]))-(item.MaxHP-item.MaxHP_Mod); break;
  
-            "dexpenmod": valor := (CInt(attr["item_dexpen"]) + CInt(attr."hab_dexpenmod") + CInt(attr_excp."dexpenmod")); break;
+            "dexpenmod": valor := (newattrdebuff[2] + CInt(attr["item_dexpen"]) + CInt(attr."hab_dexpenmod") + CInt(attr_excp."dexpenmod")); break;
             "parrymod": valor := (CInt(attr["item_parry"]) + CInt(attr."hab_parrymod") + CInt(attr_excp."parrymod")); break;
             "parrydelaymod": valor := (CInt(attr["item_parrydelay"]) + CInt(attr."hab_parrydelaymod") + CInt(attr_excp."parrydelaymod")); break;
 
