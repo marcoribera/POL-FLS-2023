@@ -128,10 +128,10 @@ program equipweapon(who, item)
 		start_script (":spells:swordmage", {who, item});
 	endif
 
-	if (who.cmdlevel > 1) //SEGURANÇA EM ÚLTIMO LUGAR... ahuHUahHaHUa
-		AtualizarItemAntigo(who, item);  //USADO APENAS PARA ATUALIZAR ITENS ANTIGOS - DESATIVAR DEPOIS DE 2 SEMANAS
-		SetarModsNoItem(who, item); //ATIVAR ESSE DEPOIS QUE DESATIVAR O ANTERIOR
-	endif
+	//AtualizarItemAntigo(who, item); //SUBSTITUINDO POR NovoSistemaDeItens();
+	//SetarModsNoItem(who, item);
+
+	NovoSistemaDeItens(who, item, TOGGLELVL_EQUIP, 3); //[3] E [4] SÃO TOGGLES NO propitens.inc PARA LIMITAR O USO EM FASE DE TESTES
 
 	set_critical(1);
 	var ret := SetEquipmentMods(who, item);
