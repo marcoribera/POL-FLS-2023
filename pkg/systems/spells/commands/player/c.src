@@ -16,6 +16,7 @@ program magia(who, spellname)
 	var elem;
 	var id := 1;
 	var achou := 0;
+
 	foreach spell in ( GetConfigIntKeys(cfg) )
 		elem := FindConfigElem(cfg, id);
 		if ( GetConfigString(elem, "Name") == spellname)
@@ -26,57 +27,46 @@ program magia(who, spellname)
 	endforeach
 
 	if (!achou)
-		SendSysMessageEx(who, "A runa " + spellname + " nao existe.", SSM_FAIL);
+		SendSysMessageEx(who, "A magia " + spellname + " nao existe.", SSM_FAIL);
 		return;
 	endif
-    var is_rune := {0xC000, 0xC001, 0xC005, 0xC003, 0xC004, 0xC002, 0xC007, 0xC006, 0xC009, 0xC008, 0xC00A, 0xC00B, 0xC00C, 0xC00D, 0xC00E, 0xC00F, 0xC010, 0xC011, 0xC012, 0xC013, 0xC014, 0xC015, 0xC016, 0xC017, 0xc018, 0xc019};
-	SendSysMessage(who, " " + id);
-	var spellbook := 0;
-	var booktype;
-	foreach item in ( EnumerateItemsInContainer(who.backpack) )
-		if ( item.objtype in is_rune)
-            var rune := GetObjProperty(item, "runatype");
-            print("rune: " + rune);
-            print ("id: " + id);
-            if ( rune == id)
-                spellbook := 1;
-                booktype := GetBookType(item);
-                break;
-            endif
+
+	var cintosabio := 0xC892;
+	//Tenta achar primeiro no cinto do sabio, depois na backpack
+	foreach equip in (ListEquippedItems(who))
+		if (equip.objtype == cintosabio)
+			foreach item in (EnumerateItemsInContainer(equip))
+			
+			var runaId := GetObjProperty(item, "runatype");
+				if (runaId == id)
+					// SendSysMessage(who,"Achou a runa");
+					var script := start_script( ":spells:priestrune_m", {who, item});
+					if ( script.errortext )
+						SendSysMessage(who, "Error - Could not start spell starter ->"+script.errortext);
+						return 0;
+					endif
+					return;
+				endif
+
+			endforeach
+		else
+			foreach item in (EnumerateItemsInContainer(who.backpack))
+			
+			var runaId := GetObjProperty(item, "runatype");
+				if (runaId == id)
+					// SendSysMessage(who,"Achou a runa");
+					var script := start_script( ":spells:priestrune_m", {who, item});
+					if ( script.errortext )
+						SendSysMessage(who, "Error - Could not start spell starter ->"+script.errortext);
+						return 0;
+					endif
+					return;
+				endif
+
+			endforeach
 		endif
+
 	endforeach
-
-    foreach equip in (ListEquippedItems(who))
-        if (equip.objtype == 0xC892)
-            var runes := EnumerateItemsInContainer(equip);
-            foreach rune in runes
-                if ( rune.objtype in is_rune)
-                    var rune := GetObjProperty(rune, "runatype");
-                    print("rune: " + rune);
-                    print ("id: " + id);
-                    if ( rune == id)
-                        spellbook := 1;
-                        booktype := GetBookType(rune);
-                        break;
-                    endif
-                endif
-            endforeach
-        endif
-    endforeach
-
-	if ( !spellbook)
-		SendSysMessageEx(who, "Voce nao possui a runa " +spellname+ " na sua mochila." , SSM_FAIL);
-		return;
-	endif
-
-	var spellinfo := struct;
-	spellinfo.+id := id;
-        var script := Start_Script(":spells:cast_spell", {who, spellinfo, booktype});
-        if ( script.errortext )
-            SendSysMessage(who, "Error - Could not start spell starter ->"+script.errortext);
-            return 0;
-	    endif
-
 
 
 endprogram
