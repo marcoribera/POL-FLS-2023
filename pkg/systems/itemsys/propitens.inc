@@ -12,51 +12,47 @@ function SetarModsNoItem(who, item)
     var attr_excp := PegarPropExcep(item);
     //var tipoequip := PegarTipo(item);
 
-    //attr := PegarProp(item);
-
     if (attr)
-        //if (attr."Atualiza" == 1)
-            var hpmod := attr["base_hpmod"]; //aqui é só pra setar os valores
+        var hpmod := attr["base_hpmod"];
 
-            var physicalmod := attr["base_physicalmod"];
-            var firemod := attr["base_firemod"];
-            var coldmod := attr["base_coldmod"];
-            var poisonmod := attr["base_poisonmod"];
-            var energymod := attr["base_energymod"];
-            var dmgmod, speedmod, dexmod, parrymod, parrydelaymod;
-            
-            item.quality := attr["Quality"];
+        var physicalmod := attr["base_physicalmod"];
+        var firemod := attr["base_firemod"];
+        var coldmod := attr["base_coldmod"];
+        var poisonmod := attr["base_poisonmod"];
+        var energymod := attr["base_energymod"];
+        var dmgmod, speedmod, dexmod, parrymod, parrydelaymod;
+        
+        item.quality := attr["Quality"];
 
-            if (item.IsA(POLCLASS_ARMOR))
-                item.maxhp_mod := hpmod;
+        if (item.IsA(POLCLASS_ARMOR))
+            item.maxhp_mod := hpmod;
 
-                item.resist_physical_mod := physicalmod;
-                item.resist_fire_mod := firemod;
-                item.resist_cold_mod := coldmod;
-                item.resist_poison_mod := poisonmod;
-                item.resist_energy_mod := energymod;
+            item.resist_physical_mod := physicalmod;
+            item.resist_fire_mod := firemod;
+            item.resist_cold_mod := coldmod;
+            item.resist_poison_mod := poisonmod;
+            item.resist_energy_mod := energymod;
 
-                if (IsEscudo(item))
-                    item.SetProp("penaltybonus", attr["base_dexpenmod"]);
-                    item.SetProp("parrybonus", attr["base_parrymod"]);
-                    item.SetProp("parrydelay_mod", attr["base_parrydelaymod"]);
-                endif
-
-            elseif (item.IsA(POLCLASS_WEAPON))
-                dmgmod := attr["dmgmod"];
-                speedmod := attr["speedmod"];
-
-                item.maxhp_mod := hpmod;
-                item.dmg_mod := dmgmod;
-                item.speed_mod := speedmod; item.SetProp("attackspeedbonus", speedmod); //DEPOIS CONFERIR PARA DEIXAR APENAS 1 DELES
-
-                item.damage_physical_mod := physicalmod;
-                item.damage_fire_mod := firemod;
-                item.damage_cold_mod := coldmod;
-                item.damage_poison_mod := poisonmod;
-                item.damage_energy_mod := energymod;
+            if (IsEscudo(item))
+                item.SetProp("penaltybonus", attr["base_dexpenmod"]);
+                item.SetProp("parrybonus", attr["base_parrymod"]);
+                item.SetProp("parrydelay_mod", attr["base_parrydelaymod"]);
             endif
-        //endif
+
+        elseif (item.IsA(POLCLASS_WEAPON))
+            dmgmod := attr["dmgmod"];
+            speedmod := attr["speedmod"];
+
+            item.maxhp_mod := hpmod;
+            item.dmg_mod := dmgmod;
+            item.speed_mod := speedmod; item.SetProp("attackspeedbonus", speedmod); //DEPOIS CONFERIR PARA DEIXAR APENAS 1 DELES
+
+            item.damage_physical_mod := physicalmod;
+            item.damage_fire_mod := firemod;
+            item.damage_cold_mod := coldmod;
+            item.damage_poison_mod := poisonmod;
+            item.damage_energy_mod := energymod;
+        endif
     else
         SendSysMessageEx(who, "BUG 666: ITEM {} SEM VALORES NO SISTEMA! FAVOR COMUNICAR A STAFF".Format(Hex(item.objtype)));
     endif
@@ -308,7 +304,9 @@ function CalcPropMod(item, mod, slot) //CALCULA O VALOR REAL PARA DEFINIR NO ITE
         newattrdebuff := BuscarDebuffSlot(item);
 
         case (mod)
-            "hpmod": valor := (newattr[6] + CInt(attr["item_hp"]) + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"]))-(item.MaxHP-item.MaxHP_Mod); break;
+            "hpmod": valor := (newattr[6] + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"]));//-(item.MaxHP-item.MaxHP_Mod);
+            print("calculando hp!"); print(newattr[6]); print(item.MaxHP); print(item.MaxHP_Mod); print((item.MaxHP-item.MaxHP_Mod)); print(valor);
+            break;
             
             "dexpenmod": valor := (newattrdebuff[2] + CInt(attr["item_dexpen"]) + CInt(attr."hab_dexpenmod") + CInt(attr_excp."dexpenmod")); break;
 
