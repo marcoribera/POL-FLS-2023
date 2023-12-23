@@ -2,7 +2,6 @@ include ":itemsys:tabelas";
 /*
 TODO:
 ADICIONAR A ATUALIZAÇÃO NO SCRIPT QUE CRIA A PROP CREATEDBY EM TODOS OS ITENS
-ADICIONAR PARA SOMAR DEXPENALTY DAS ARMADURAS
 VER A QUESTÃO DOS ITENS MÁGICOS
 VER ITENS COM RECIPE
 */
@@ -234,6 +233,7 @@ function BuscarValoresSlot(item)
     var valores := Array;
     var valprot := Array;
     var valslot := Array;
+    var valtipo := Array;
 
     if(IsEscudo(item)) //ESCUDO TEM SOMA BASEADO NO SLOT
         valprot := TabelaProtecao(item);
@@ -247,13 +247,27 @@ function BuscarValoresSlot(item)
     elseif(item.IsA(POLCLASS_ARMOR)) //ARMADURA TAMBÉM
         valprot := TabelaProtecao(item);
         valslot := TabelaSlot(item);
+        valtipo := TabelaMaterialTipo(item);
 
         valores := valprot;
-        valores[1] := valores[1] + valslot[1];
+        valores[1] := valores[1] + valslot[1] + valtipo[1];
+        valores[2] := valores[2] + valtipo[2];
+        valores[3] := valores[3] + valtipo[3];
+        valores[4] := valores[4] + valtipo[4];
+        valores[5] := valores[5] + valtipo[5];
     endif
 
     return valores;
 endfunction
+
+/*function BuscarValoresSoma(item)
+    var material := BuscarValorMaterial(item);
+    var protecao := BuscarValoresSlot(item);
+    var soma := protecao;
+
+    soma[1] := soma[1] + 
+    return
+endfunction*/
 
 function BuscarDebuffSlot(item)
     var valores := Array;
