@@ -10,31 +10,24 @@ VER ITENS COM RECIPE
 //COLOCAR O NIVEL DO CMDLEVEL MÍNIMO NO TOGGLE PARA LIMITAR O USO EM FASE DE TESTES - PLAYER -> cmdlevel = 1; GM -> cmdlevel = 4; ADMIN -> cmdlevel = 5
 const TOGGLELVL_CRAFT := 100;
 const TOGGLELVL_EQUIP := 2;
-//proc = 1 -> AtualizarItemAntigo(who, item); 2 -> SetarModsNoItem(who, item);
 
 function NovoSistemaDeItens(who, item, TOGGLE, PROCEDIMENTO);
-    if (who.cmdlevel < TOGGLE) print("nao tem nivel"); return; endif
+    if (who.cmdlevel < TOGGLE) return; endif
 
     if (PROCEDIMENTO == 1)
-        print("atualiza");
         AtualizarItemAntigo(who, item);
     elseif (PROCEDIMENTO == 2)
-        print("seta");
         SetarModsNoItem(who, item);
     elseif (PROCEDIMENTO == 3)
-        print("tudo");
         AtualizarItemAntigo(who, item);
         SetarModsNoItem(who, item);
     endif
 endfunction
 
 function SetarModsNoItem(who, item)
-    //TOOGLES PARA PROTEÇÃO NA FASE DE TESTES
-
     SetarAllProps(item);
     var attr := PegarProp(item);
     var attr_excp := PegarPropExcep(item);
-    //var tipoequip := PegarTipo(item);
     
     attr["Atualiza"] := 1;
     if (attr)
@@ -113,8 +106,7 @@ function SetarPropTipo(item)
     SetarProp(item, attr);
 endfunction
 
-function SetarPropItem(item)
-    //função para setar os valores base DO ITEM!
+function SetarPropItem(item) //função para setar os valores base DO ITEM!
     var attr := PegarProp(item);
     var newattr := BuscarValoresSlot(item);
     var newattrdebuff := BuscarDebuffMod(item);
@@ -156,13 +148,11 @@ function SetarPropBase(item) //SETA AS PROPS DE MODIFICADORES DE (MATERIAL - ITE
     var attr_excp := PegarPropExcep(item);
     var newattr := Array;
     var newattrescudo := Array;
-    //var material := Hex(item.GetProp("material"));
-    //var tipo := attr."TipoEquip";
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //ADICIONAR MODS BASE
     attr["Atualiza"] := 1;
-    if (IsEscudo(item)) //AS COMENTADAS JÁ EXISTEM EM OUTRA PROP EM OUTRO LUGAR. NÃO REMOVI PRA CASO DE PRECISAR REORGANIZAR FUTURAMENTE
+    if (IsEscudo(item))
         var slot := "shield";
 
         attr["base_hpmod"]          := CalcPropBase(item, "hpmod", slot);
@@ -196,13 +186,12 @@ function SetarPropBase(item) //SETA AS PROPS DE MODIFICADORES DE (MATERIAL - ITE
         attr["base_dmgmod"] := CalcPropBase(item, "dmgmod", slot);
         attr["base_speedmod"] := CalcPropBase(item, "speedmod", slot);
 
-		attr["base_physicalmod"] := CalcPropBase(item, "physicalmod", slot); //(newattr[1] + attr["item_physical"])-(item.damage_physical-item.damage_physical_mod);
+		attr["base_physicalmod"] := CalcPropBase(item, "physicalmod", slot);
 		attr["base_firemod"] := CalcPropBase(item, "firemod", slot);
 		attr["base_coldmod"] := CalcPropBase(item, "coldmod", slot);
 		attr["base_poisonmod"] := CalcPropBase(item, "poisonmod", slot);
 		attr["base_energymod"] := CalcPropBase(item, "energymod", slot);
 
-        //print(newattr[1]+" "+newattr[2]+" "+newattr[3]+" "+newattr[4]+" "+newattr[5]+" "+newattr[6]);
     endif
 
     SetarProp(item, attr);
@@ -229,7 +218,6 @@ function BuscarValorMaterial(item)
 endfunction
 
 function BuscarValoresSlot(item)
-    //var attr := PegarProp(item);
     var resultado := Array;
     var valresist := TabelaTipoProtecaoMod(item);
     valresist := valresist[1];
@@ -249,22 +237,16 @@ function BuscarValoresSlot(item)
         resultado := valmaterial;
 
         resultado[1] := resultado[1] + valresist + valslot;
-        if (resultado[2] > 0) resultado[2] := resultado[2] + valresist; print("entrou> "+resultado[2]); endif
+        if (resultado[2] > 0) resultado[2] := resultado[2] + valresist; endif
         if (resultado[3] > 0) resultado[3] := resultado[3] + valresist; endif
         if (resultado[4] > 0) resultado[4] := resultado[4] + valresist; endif
         if (resultado[5] > 0) resultado[5] := resultado[5] + valresist; endif
 
         resultado[1] := resultado[1] + valmaterial[1];
-        resultado[2] := resultado[2] + valmaterial[2]; print(resultado[2]);
-        resultado[3] := resultado[3] + valmaterial[3];
-        resultado[4] := resultado[4] + valmaterial[4];
-        resultado[5] := resultado[5] + valmaterial[5];
-
-        /*resultado[1] := resultado[1] + valslot[1] + valmaterial[1];
         resultado[2] := resultado[2] + valmaterial[2];
         resultado[3] := resultado[3] + valmaterial[3];
         resultado[4] := resultado[4] + valmaterial[4];
-        resultado[5] := resultado[5] + valmaterial[5];*/
+        resultado[5] := resultado[5] + valmaterial[5];
 
     elseif(item.IsA(POLCLASS_WEAPON))
         resultado := TabelaDanos(item);
@@ -287,19 +269,6 @@ function BuscarDebuffMod(item)
     valores[2] := valores[2] + valslot[2];
     valores[3] := valores[3] + valslot[3];
     valores[4] := valores[4] + valslot[4];
-
-    /*if(IsEscudo(item))
-        valdebuff := TabelaTipoProtecaoMod(item);
-        valslot := TabelaSlot(item);
-
-        valores := valdebuff;
-        valores[2] := valores[2] + valslot[2];
-    elseif(item.IsA(POLCLASS_ARMOR))
-        valdebuff := TabelaTipoProtecaoMod(item);
-        valslot := TabelaSlot(item);
-
-        valores := valslot;
-    endif*/
 
     return valores;
 endfunction

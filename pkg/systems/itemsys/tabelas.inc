@@ -411,10 +411,10 @@ function TabelaSlot(item)
     case(slot) //[1] = ResistBase; [2] = DexPenalty
         "head": return {1,-1};
         "neck": return {1,-1};
-        "body": return {4,-3};
-        "arms": return {2,-2};
+        "body": return {1,-3};
+        "arms": return {1,-2};
         "hands": return {1,-1};
-        "legs/feet": return {3,-2};
+        "legs/feet": return {1,-2};
         "shield": return {2,-1};
     endcase
 endfunction
