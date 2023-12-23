@@ -297,6 +297,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 					return theitems;
 				endif
 			endif
+			//var attr := PegarProp(item); //terminar para adicionar valores no item assim que começar a criar
 			theitem := CreateItem(who, objtype, chosenPrincipalMaterial, more);
 			if(!theitem)
 				SendSysMessageEx(who, "Voce nao tem espaco suficiente na sua mochila!", SSM_FAIL);
@@ -307,7 +308,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 
 			//passando a cor pra materiais coloridos que nao tem Id proprio (como madeira)
 			AddMaterialMod(who, craft_skill, theitem, chosenPrincipalMaterial, materialColor);
-			SetarAllProps(theitem); //ATIVAR
+			//SetarAllProps(theitem); //ATIVAR
 			CraftExceptional(who, theitem, craft_skill, skillreq);
 			CraftLockable(who, theitem);
 
