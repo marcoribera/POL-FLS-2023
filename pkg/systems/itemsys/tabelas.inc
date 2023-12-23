@@ -228,7 +228,7 @@ function TabelaMaterialDamageMod(item) //objtype do material: return {FISICO, FI
     endcase
 endfunction
 
-function TabelaMaterialTipo(item) //objtype do material: return {FISICO, FIRE, COLD, POISON, ENERGY, HP}
+function TabelaMaterialMod(item) //objtype do material: return {FISICO, FIRE, COLD, POISON, ENERGY}
     var material := Lower(Hex(item.GetProp("material")));
     case(material)
         //////////METAL
@@ -270,7 +270,7 @@ function TabelaMaterialTipo(item) //objtype do material: return {FISICO, FIRE, C
 
         //TIER 5
         "0x699b": //ORICALCUM
-            return {0,0,0,0,0,0}; //MOD METAIS
+            return {0,0,0,0,0}; //MOD METAIS
 
         //////////COURO
         //TIER 1
@@ -298,7 +298,7 @@ function TabelaMaterialTipo(item) //objtype do material: return {FISICO, FIRE, C
         //TIER 5
         "0xef23": //ASPERO
         "0xc605": //NEGRO
-            return {1,4,4,0,0,0}; //MOD COUROS
+            return {0,2,2,0,0}; //MOD COUROS
 
         //////////OSSO
         //TIER 1
@@ -319,7 +319,7 @@ function TabelaMaterialTipo(item) //objtype do material: return {FISICO, FIRE, C
 
         //TIER 5
         "0xef29": //DEMONÍACO
-            return {1,0,0,3,0,0}; //MOD OSSOS
+            return {0,0,0,2,0}; //MOD OSSOS
 
         //////////TECIDO
         //TIER 1
@@ -339,11 +339,19 @@ function TabelaMaterialTipo(item) //objtype do material: return {FISICO, FIRE, C
         //TIER 4
         "0xfb7": //FLAMEL
         "0xfbd": //RAJAL
-            return {0,0,0,0,0,0}; //MOD TECIDOS
+            return {0,0,0,0,0}; //MOD TECIDOS
+
+        /*
+        //"QUITINA": //QUITINA - BUSCAR OBJTYPE
+            return {0,0,0,0,0};
+
+        //"MADEIRA": //MADEIRA - BUSCAR OBJTYPE
+            return {0,0,0,0,0};
+        */
     endcase
 endfunction
 
-function TabelaDanos(item) //FUTURAMENTE TROCAR POR UMA LISTA DE ITENS SEMELHANTE ÀS TABELAS ANTERIORES OU A POSTERIOR
+function TabelaDanos(item)
     var cfg := ReadConfigFile(":combat:itemdesc");
     var elem := FindConfigElem(cfg, item.objtype);
     var dano := Array;
@@ -356,26 +364,26 @@ function TabelaDanos(item) //FUTURAMENTE TROCAR POR UMA LISTA DE ITENS SEMELHANT
 
     return dano;
 endfunction
-function TabelaProtecao(item)
+function TabelaTipoProtecaoMod(item) // TipoProtecao -=> return {RESIST, DEXPENALTY, PARRYBONUS, PARRYDELAY}
     var tipo := Lower(PegarTipo(item));
-    case(tipo) //ARMADURAS: -=> TipoProtecao: return {FISICO, FIRE, COLD, POISON, ENERGY}
+    case(tipo)
         //TIER 1
-        "armadura leve fraca": return {0,0,0,0,0};
-        "armadura leve media": return {1,0,0,0,0};
-        "armadura leve forte": return {2,0,0,0,0};
+        "armadura leve fraca": return {0,0,0,0};
+        "armadura leve media": return {1,0,0,0};
+        "armadura leve forte": return {2,0,0,0};
 
         //TIER 2
-        "armadura media fraca": return {3,0,0,0,0};
-        "armadura media media": return {4,0,0,0,0};
-        "armadura media forte": return {5,0,0,0,0};
+        "armadura media fraca": return {3,1,0,0};
+        "armadura media media": return {4,2,0,0};
+        "armadura media forte": return {5,2,0,0};
 
         //TIER 3
-        "armadura pesada fraca": return {6,0,0,0,0};
-        "armadura pesada media": return {7,0,0,0,0};
-        "armadura pesada forte": return {8,0,0,0,0};
+        "armadura pesada fraca": return {6,3,0,0};
+        "armadura pesada media": return {7,4,0,0};
+        "armadura pesada forte": return {8,4,0,0};
     endcase
 
-    case(tipo) //ESCUDOS: -=> TipoProtecao: return {RESIST, DEXPENALTY, PARRYBONUS, PARRYDELAY}
+    case(tipo)
         //TIER 1
         "escudo leve fraco": return {0,0,0,-1};
         "escudo leve medio": return {1,-1,1,0};

@@ -117,7 +117,7 @@ function SetarPropItem(item)
     //função para setar os valores base DO ITEM!
     var attr := PegarProp(item);
     var newattr := BuscarValoresSlot(item);
-    var newattrdebuff := BuscarDebuffSlot(item);
+    var newattrdebuff := BuscarDebuffMod(item);
     var elem := BuscarValoresCfg(item);
 
     attr["Atualiza"] := 1;
@@ -155,7 +155,7 @@ function SetarPropBase(item) //SETA AS PROPS DE MODIFICADORES DE (MATERIAL - ITE
     var attr := PegarProp(item);
     var attr_excp := PegarPropExcep(item);
     var newattr := Array;
-    var newattr_escudo := Array;
+    var newattrescudo := Array;
     //var material := Hex(item.GetProp("material"));
     //var tipo := attr."TipoEquip";
 
@@ -230,64 +230,76 @@ endfunction
 
 function BuscarValoresSlot(item)
     //var attr := PegarProp(item);
-    var valores := Array;
-    var valprot := Array;
-    var valslot := Array;
-    var valtipo := Array;
+    var resultado := Array;
+    var valresist := TabelaTipoProtecaoMod(item);
+    valresist := valresist[1];
+    var valslot := TabelaSlot(item);
+    valslot := valslot[1];
+    var valmaterial := Array;
+    var valmod;
 
     if(IsEscudo(item)) //ESCUDO TEM SOMA BASEADO NO SLOT
-        valprot := TabelaProtecao(item);
-        valslot := TabelaSlot(item);
 
-        valores := valprot;
-        valores[1] := valores[1] + valslot[1];
+        resultado := valresist;
+        resultado[1] := resultado[1] + valslot[1];
 
     elseif(item.IsA(POLCLASS_ARMOR)) //ARMADURA TAMBÉM
-        valprot := TabelaProtecao(item);
-        valslot := TabelaSlot(item);
-        valtipo := TabelaMaterialTipo(item);
+        valmaterial := TabelaMaterialMod(item);
 
-        valores := valprot;
-        valores[1] := valores[1] + valslot[1] + valtipo[1];
-        valores[2] := valores[2] + valtipo[2];
-        valores[3] := valores[3] + valtipo[3];
-        valores[4] := valores[4] + valtipo[4];
-        valores[5] := valores[5] + valtipo[5];
+        resultado := valmaterial;
+
+        resultado[1] := resultado[1] + valresist + valslot;
+        if (resultado[2] > 0) resultado[2] := resultado[2] + valresist; print("entrou> "+resultado[2]); endif
+        if (resultado[3] > 0) resultado[3] := resultado[3] + valresist; endif
+        if (resultado[4] > 0) resultado[4] := resultado[4] + valresist; endif
+        if (resultado[5] > 0) resultado[5] := resultado[5] + valresist; endif
+
+        resultado[1] := resultado[1] + valmaterial[1];
+        resultado[2] := resultado[2] + valmaterial[2]; print(resultado[2]);
+        resultado[3] := resultado[3] + valmaterial[3];
+        resultado[4] := resultado[4] + valmaterial[4];
+        resultado[5] := resultado[5] + valmaterial[5];
+
+        /*resultado[1] := resultado[1] + valslot[1] + valmaterial[1];
+        resultado[2] := resultado[2] + valmaterial[2];
+        resultado[3] := resultado[3] + valmaterial[3];
+        resultado[4] := resultado[4] + valmaterial[4];
+        resultado[5] := resultado[5] + valmaterial[5];*/
 
     elseif(item.IsA(POLCLASS_WEAPON))
-        valores := TabelaDanos(item);
+        resultado := TabelaDanos(item);
 
     endif
 
-    return valores;
+    return resultado;
 endfunction
 
-/*function BuscarValoresSoma(item)
-    var material := BuscarValorMaterial(item);
-    var protecao := BuscarValoresSlot(item);
-    var soma := protecao;
-
-    soma[1] := soma[1] + 
-    return
-endfunction*/
-
-function BuscarDebuffSlot(item)
+function BuscarDebuffMod(item)
     var valores := Array;
     var valdebuff := Array;
     var valslot := Array;
 
-    if(IsEscudo(item))
-        valdebuff := TabelaProtecao(item);
+    valdebuff := TabelaTipoProtecaoMod(item);
+    valslot := TabelaSlot(item);
+
+    valores := valdebuff;
+    valores[1] := 0; //PARA NÃO USAR - APENAS PARA MANTER A ORDEM DOS OUTROS;
+    valores[2] := valores[2] + valslot[2];
+    valores[3] := valores[3] + valslot[3];
+    valores[4] := valores[4] + valslot[4];
+
+    /*if(IsEscudo(item))
+        valdebuff := TabelaTipoProtecaoMod(item);
         valslot := TabelaSlot(item);
 
         valores := valdebuff;
         valores[2] := valores[2] + valslot[2];
     elseif(item.IsA(POLCLASS_ARMOR))
-        valdebuff := TabelaProtecao(item);
+        valdebuff := TabelaTipoProtecaoMod(item);
         valslot := TabelaSlot(item);
 
         valores := valslot;
-    endif
+    endif*/
 
     return valores;
 endfunction
@@ -341,7 +353,7 @@ endfunction
 
 //FUNCTIONS DE CÁLCULO
 function CalcPropBase(item, mod, slot) //CALCULA O VALOR REAL PARA DEFINIR NO ITEM
-    var valor, newattr_escudo, newattrdebuff;
+    var valor, newattrescudo, newattrdebuff;
     var attr := PegarProp(item);
     var attr_excp := PegarPropExcep(item);
     var newattr := BuscarValorMaterial(item);
@@ -351,14 +363,15 @@ function CalcPropBase(item, mod, slot) //CALCULA O VALOR REAL PARA DEFINIR NO IT
         "quality":  valor := attr["Quality"]; break;
     endcase
     if (slot == "shield")
-        newattr_escudo := BuscarValoresSlot(item);
+        newattrdebuff := BuscarDebuffMod(item);
+        newattrescudo := BuscarValoresSlot(item);
 
         case (mod)
             "hpmod":            valor := ((newattr[6]) + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"])); break;
  
-            "dexpenmod":        valor := (CInt(attr["item_dexpen"]) + CInt(attr."hab_dexpenmod") + CInt(attr_excp."dexpenmod")); break;
-            "parrymod":         valor := (CInt(attr["item_parry"]) + CInt(attr."hab_parrymod") + CInt(attr_excp."parrymod")); break;
-            "parrydelaymod":    valor := (CInt(attr["item_parrydelay"]) + CInt(attr."hab_parrydelaymod") + CInt(attr_excp."parrydelaymod")); break;
+            "dexpenmod":        valor := (newattrdebuff[2] + CInt(attr["item_dexpen"]) + CInt(attr."hab_dexpenmod") + CInt(attr_excp."dexpenmod")); break;
+            "parrymod":         valor := (newattrdebuff[3] + CInt(attr["item_parry"]) + CInt(attr."hab_parrymod") + CInt(attr_excp."parrymod")); break;
+            "parrydelaymod":    valor := (newattrdebuff[4] + CInt(attr["item_parrydelay"]) + CInt(attr."hab_parrydelaymod") + CInt(attr_excp."parrydelaymod")); break;
 
             "physicalmod":      valor := (newattr[1] + CInt(attr["item_physical"]) + CInt(attr."hab_physicalmod") + CInt(attr_excp."physicalmod"))-(item.resist_physical-item.resist_physical_mod); break;
             "firemod":          valor := (newattr[2] + CInt(attr["item_fire"]) + CInt(attr."hab_firemod") + CInt(attr_excp."firemod"))-(item.resist_fire-item.resist_fire_mod); break;
@@ -369,7 +382,7 @@ function CalcPropBase(item, mod, slot) //CALCULA O VALOR REAL PARA DEFINIR NO IT
             default:            valor := 0;
         endcase
     elseif (slot == "armor")
-        newattrdebuff := BuscarDebuffSlot(item);
+        newattrdebuff := BuscarDebuffMod(item);
 
         case (mod)
             "hpmod":            valor := (newattr[6] + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"])); break;
