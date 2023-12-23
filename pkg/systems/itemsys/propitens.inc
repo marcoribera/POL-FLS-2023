@@ -241,8 +241,6 @@ function BuscarValoresSlot(item)
 
         valores := valprot;
         valores[1] := valores[1] + valslot[1];
-    elseif(item.IsA(POLCLASS_WEAPON))
-        valores := TabelaDanos(item);
 
     elseif(item.IsA(POLCLASS_ARMOR)) //ARMADURA TAMBÉM
         valprot := TabelaProtecao(item);
@@ -255,6 +253,10 @@ function BuscarValoresSlot(item)
         valores[3] := valores[3] + valtipo[3];
         valores[4] := valores[4] + valtipo[4];
         valores[5] := valores[5] + valtipo[5];
+
+    elseif(item.IsA(POLCLASS_WEAPON))
+        valores := TabelaDanos(item);
+
     endif
 
     return valores;

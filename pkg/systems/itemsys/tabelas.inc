@@ -361,8 +361,8 @@ function TabelaProtecao(item)
     case(tipo) //ARMADURAS: -=> TipoProtecao: return {FISICO, FIRE, COLD, POISON, ENERGY}
         //TIER 1
         "armadura leve fraca": return {0,0,0,0,0};
-        "armadura leve media": return {1,1,1,1,1};
-        "armadura leve forte": return {2,2,2,2,2};
+        "armadura leve media": return {1,0,0,0,0};
+        "armadura leve forte": return {2,0,0,0,0};
 
         //TIER 2
         "armadura media fraca": return {3,0,0,0,0};
