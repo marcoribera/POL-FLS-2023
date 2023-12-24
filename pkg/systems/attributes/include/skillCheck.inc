@@ -69,7 +69,7 @@ function SkillCheck(mobile, attrib_name, difficulty, award_diff:=0, advance_flag
 
 	var pass_chance := CalcSuccessPercent(mobile, attrib_name, difficulty, effective_skill);
 	var check_roll := RandomFloat(100);
-	var pass_success := (pass_chance - check_roll)+1;
+	var pass_success := (pass_chance - check_roll);
 	SkillDbgMsg(mobile, "Chance: "+pass_chance+"%");
 	SkillDbgMsg(mobile, "Roll: "+check_roll+"%");
 	if ( difficulty == -1 )
