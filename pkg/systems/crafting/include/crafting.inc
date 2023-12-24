@@ -308,7 +308,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 
 			//passando a cor pra materiais coloridos que nao tem Id proprio (como madeira)
 			AddMaterialMod(who, craft_skill, theitem, chosenPrincipalMaterial, materialColor);
-			//SetarAllProps(theitem); //ATIVAR
+			NovoSistemaDeItens(who, item, TOGGLELVL_CRAFT, 2); //[3] E [4] SÃO TOGGLES NO propitens.inc PARA LIMITAR O USO EM FASE DE TESTES
 			CraftExceptional(who, theitem, craft_skill, skillreq);
 			CraftLockable(who, theitem);
 
@@ -417,8 +417,8 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 	ResistMods := SplitWords(ResistMods);
     var hpmod := GetConfigInt(elem, "hpmod"); //modificador de durabilidade do item pelo material
 	*/
-	var DmgMods := TabelaMaterialDamageMod(principalMaterial); //EVILLINK1.0
-	var ResistMods := TabelaMaterialResistMod(principalMaterial); //EVILLINK1.0
+	var DmgMods := TabelaMaterialDamageMod(theitem); //EVILLINK1.0
+	var ResistMods := TabelaMaterialResistMod(theitem); //EVILLINK1.0
 	var hpmod := 0;
 	if (theitem.IsA(POLCLASS_WEAPON)) var hpmod := DmgMods[6];
 	elseif (theitem.IsA(POLCLASS_ARMOR)) var hpmod := ResistMods[6];
@@ -429,11 +429,11 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 	if(theitem.isA(POLCLASS_WEAPON))
         var cfg:=ReadConfigFile(":combat:itemdesc");
         var elem := FindConfigElem(cfg, theitem.objtype);
-		theitem.damage_physical_mod := (theitem.damage_physical_mod + Cint(DmgMods[1]))-(theitem.damage_physical-theitem.damage_physical_mod);
-		theitem.damage_fire_mod := (theitem.damage_fire_mod + Cint(DmgMods[2]))-(theitem.damage_fire-theitem.damage_fire_mod);
-		theitem.damage_cold_mod := (theitem.damage_cold_mod + Cint(DmgMods[3]))-(theitem.damage_physical-theitem.damage_physical_mod);
-		theitem.damage_poison_mod := (theitem.damage_poison_mod + Cint(DmgMods[4]))-(theitem.damage_physical-theitem.damage_physical_mod);
-		theitem.damage_energy_mod := (theitem.damage_energy_mod + Cint(DmgMods[5]))-(theitem.damage_physical-theitem.damage_physical_mod);
+		theitem.damage_physical_mod := (theitem.damage_physical_mod + Cint(DmgMods[1]));//-(theitem.damage_physical-theitem.damage_physical_mod);
+		theitem.damage_fire_mod := (theitem.damage_fire_mod + Cint(DmgMods[2]));//-(theitem.damage_fire-theitem.damage_fire_mod);
+		theitem.damage_cold_mod := (theitem.damage_cold_mod + Cint(DmgMods[3]));//-(theitem.damage_physical-theitem.damage_physical_mod);
+		theitem.damage_poison_mod := (theitem.damage_poison_mod + Cint(DmgMods[4]));//-(theitem.damage_physical-theitem.damage_physical_mod);
+		theitem.damage_energy_mod := (theitem.damage_energy_mod + Cint(DmgMods[5]));//-(theitem.damage_physical-theitem.damage_physical_mod);
 
 		sendsysmessage(who,craft_skill);
 		if(craft_skill == "MetalWorking")
@@ -682,7 +682,7 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 
 	endif
 
-	//SetarProp(theitem, attr); //ATIVAR
+	SetarProp(theitem, attr); //ATIVAR
 
 	//Atualiza o HP
 	theitem.hp := theitem.maxhp;
@@ -697,7 +697,7 @@ function CraftExceptional(who, byref theitem, craft_skill, skillreq)
 		var qualidade := ExceptionalCraft(who, craft_skill, theitem, AP_GetSkill(who, craft_skill), skillreq);
 		theitem.quality := qualidade;
 		attr["Quality"] := qualidade;
-		//SetarProp(theitem, attr); //ATIVAR
+		SetarProp(theitem, attr); //ATIVAR
 
 
 		if(qualidade >= 1.2)
