@@ -309,7 +309,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 			SkillCheck(who, SURVIVAL, -1);
 		endif
 	else
-		tatics := CDbl(AP_GetSkill(who, TACTICS))/200.0; //Armazena o valor da skill que afeta dano
+		tatics := CDbl(AP_GetSkill(who, TACTICS))/100.0; //Armazena o valor da skill que afeta dano
 	endif
 
 	//Bonus STR
@@ -518,7 +518,8 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 
 	//Multiplicador de tactics X multiplicador de força X multiplicadores de habilidades e itens X Multiplicador de buff X multiplicador de Debuff
 	//dmg := CInt(dmg*(1.0+(2*tatics))*(1.0+str)*(1.0+(weapon+other))*(inimigo_predileto)*(1.0+blessbonus)*(1.0-reducao_dano));
-	dmg := CInt(dmg*Pow(1.0+tatics,2.0)*(1.0+str)*(1.0+(weapon+other))*(inimigo_predileto)*(1.0+blessbonus)*(1.0-reducao_dano));
+	//dmg := CInt(dmg*Pow(1.0+tatics,1.5)*(1.0+str)*(1.0+(weapon+other))*(inimigo_predileto)*(1.0+blessbonus)*(1.0-reducao_dano));
+	dmg := CInt(dmg * (Pow(1.0+tatics,1.5) + str) * (1.0+(weapon+other+blessbonus)) * (inimigo_predileto) * (1.0-reducao_dano));
 	if (dmg < 1)
 		dmg := 1;
 	endif
