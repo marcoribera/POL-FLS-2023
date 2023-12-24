@@ -88,7 +88,7 @@ function CloseIn(me, lx, ly, mode := 0 )
 	      	WalkTowardLocation(lx, ly);
 	     else
 		RunTowardLocation(lx, ly);
-    Quebraquebra(me);
+    //Quebraquebra(me);
 	     endif
              return 0;
   endcase
@@ -569,7 +569,7 @@ function CalcPathAndMove(me, byref opponent, sleepdelay)
 
       if (move_type)
          RunToward( opponent );
-         Quebraquebra(me);
+         //Quebraquebra(me);
       else
          WalkToward( opponent );
       endif
@@ -645,7 +645,7 @@ function CalcPathAndMove(me, byref opponent, sleepdelay)
          endif
       else
          if (move_type) RunToward( opponent );
-         Quebraquebra(me);
+         //Quebraquebra(me);
          else WalkToward( opponent ); endif
          sleepms(sleepdelay);
       endif

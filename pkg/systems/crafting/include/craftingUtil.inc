@@ -153,54 +153,49 @@ function AddQualityDamageMod(who, craft_skill, byref theitem, quality )
 				attr_excp["dmgmod"] := CInt(elem.MaxDam * modadc) - attr."hab_dmgmod";
 			endif
 		endif
-		//SetarPropExcep(theitem, attr_excp); //ATIVAR
+		SetarPropExcep(theitem, attr_excp); //ATIVAR
 	endif
 	return;
 endfunction
 
 function AddQualityResistMod(who, craft_skill, byref theitem, quality)
-	var i;
 	if (quality >= 1.2)
 		var randomDmg;
 		var maxBonus := CInt(quality);
 		var attr_excp := PegarPropExcep(theitem);
 		//SendSysMessage(who,"Adicionando resistencia do excepcional");
 
-		var bonusphy, bonusfire, bonuscold, bonuspoison, bonusenergy;
+		var bonusphy := 0; var bonusfire := 0; var bonuscold := 0; var bonuspoison := 0; var bonusenergy := 0;
 		//Soma um bonus em todas as resistencias que o item já dá
+		var i;
 		for (i := 1; i <= maxBonus; i := i + 1)
 			if (theitem.resist_physical_mod)
 				theitem.resist_physical_mod := theitem.resist_physical_mod +1;
-				bonusphy += 1;
-				break;
+				bonusphy := bonusphy + 1;
 			endif
 			if (theitem.resist_fire_mod)
 				theitem.resist_fire_mod := theitem.resist_fire_mod +1;
-				bonusfire += 1;
-				break;
+				bonusfire := bonusfire + 1;
 			endif
 			if (theitem.resist_cold_mod)
 				theitem.resist_cold_mod := theitem.resist_cold_mod +1; 
-				bonuscold += 1;
-				break;
+				bonuscold := bonuscold+1;
 			endif
 			if (theitem.resist_energy_mod)
 				theitem.resist_energy_mod := theitem.resist_energy_mod +1;  
-				bonusenergy += 1;
-				break;
+				bonusenergy := bonusenergy+1;
 			endif
 			if (theitem.resist_poison_mod)
 				theitem.resist_poison_mod := theitem.resist_poison_mod +1;  
-				bonuspoison += 1;
-				break;
+				bonuspoison := bonuspoison+1;
 			endif
 		endfor
-		attr_excp["physicalmod"] := bonusphy;
-		attr_excp["firemod"] := bonusfire;
-		attr_excp["coldmod"] := bonuscold;
-		attr_excp["poisonmod"] := bonuspoison;
-		attr_excp["energymod"] := bonusenergy;
-		//SetarPropExcep(theitem, attr_excp); //ATIVAR
+		attr_excp["physicalmod"] := CInt(bonusphy);
+		attr_excp["firemod"] := CInt(bonusfire);
+		attr_excp["coldmod"] := CInt(bonuscold);
+		attr_excp["poisonmod"] := CInt(bonuspoison);
+		attr_excp["energymod"] := CInt(bonusenergy);
+		SetarPropExcep(theitem, attr_excp); //ATIVAR
 	else
 		return;
 	endif

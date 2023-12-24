@@ -52,7 +52,9 @@ program unequipweapon(who, item)
 	endif
 
 	RemoveEquipmentMods(who, item);
-	//SetarModsNoItem(who, item); //ATIVAR ESSE DEPOIS QUE FIZER A TROCA DE ATIVAÇÕES NO equip.src
+
+	//VER SE VALE A PENA ATIVAR O [4] PARA 2 AO DESEQUIPAR
+	NovoSistemaDeItens(who, item, TOGGLELVL_EQUIP, 0); //[3] E [4] SÃO TOGGLES NO propitens.inc PARA LIMITAR O USO EM FASE DE TESTES 
 
 	set_critical(0);
 endprogram

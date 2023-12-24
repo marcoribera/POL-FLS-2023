@@ -1,7 +1,7 @@
 ///////////////////////////////
 ///// NOVO ".CFG" - START /////
 ///////////////////////////////
-function TabelaResistMod(item) //objtype do material: return {FISICO, FIRE, COLD, POISON, ENERGY, HP}
+function TabelaMaterialResistMod(item) //objtype do material: return {FISICO, FIRE, COLD, POISON, ENERGY, HP}
     var material := Lower(Hex(item.GetProp("material")));
     case(material)
         //////////METAL
@@ -21,7 +21,7 @@ function TabelaResistMod(item) //objtype do material: return {FISICO, FIRE, COLD
         "0x630c": return {1,0,0,4,0,20}; //SINQUE
         "0x630b": return {1,0,0,0,4,20}; //HELCE
         "0x6602": return {2,1,1,1,1,20}; //ACIELITH
-        "0x6603": return {-1,0,0,0,0,-30}; //CRITALITH
+        "0x6603": return {-1,0,0,0,0,-30}; //CRISTALITH
         "0x6601": return {1,0,0,0,0,80}; //STALITH
 
         //TIER 3
@@ -112,7 +112,7 @@ function TabelaResistMod(item) //objtype do material: return {FISICO, FIRE, COLD
     endcase
 endfunction
 
-function TabelaDamageMod(item) //objtype do material: return {FISICO, FIRE, COLD, POISON, ENERGY, HP}
+function TabelaMaterialDamageMod(item) //objtype do material: return {FISICO, FIRE, COLD, POISON, ENERGY, HP}
     var material := Lower(Hex(item.GetProp("material")));
 
     case(material)
@@ -148,7 +148,7 @@ function TabelaDamageMod(item) //objtype do material: return {FISICO, FIRE, COLD
 
         //TIER 4
         "0x6997": return {-40,80,0,0,0,40}; //SOLIUM
-        "0x699A": return {-40,0,80,0,0,40}; //ICELUM
+        "0x699a": return {-40,0,80,0,0,40}; //ICELUM
         "0x6999": return {-40,0,0,80,0,40}; //HISSIUM
         "0x6998": return {-40,0,0,0,80,40}; //TESLIUM
         "0x6311": return {-40,20,20,20,20,50}; //MITHRIL
@@ -228,7 +228,130 @@ function TabelaDamageMod(item) //objtype do material: return {FISICO, FIRE, COLD
     endcase
 endfunction
 
-function TabelaValoresDanos(item) //FUTURAMENTE TROCAR POR UMA LISTA DE ITENS SEMELHANTE ÀS TABELAS ANTERIORES OU A POSTERIOR
+function TabelaMaterialMod(item) //objtype do material: return {FISICO, FIRE, COLD, POISON, ENERGY}
+    var material := Lower(Hex(item.GetProp("material")));
+    case(material)
+        //////////METAL
+        //TIER 1
+        "0x6309": //FERRO
+        "0x6993": //PRATA LUNAR
+        "0x6991": //ESTANHO
+        "0x6465": //COBRE
+        "0x6995": //AÇO
+        "0x6994": //BRONZE
+        "0x630e": //OURO
+
+        //TIER 2
+        "0x630a": //LITAN
+        "0x630d": //FIGIN
+        "0x6460": //ARGONIL
+        "0x630c": //SINQUE
+        "0x630b": //HELCE
+        "0x6602": //ACIELITH
+        "0x6603": //CRISTALITH
+        "0x6601": //STALITH
+
+        //TIER 3
+        "0x6310": //GALVORN
+        "0x6605": //IGNARILITH
+        "0x6606": //GLACIALITH
+        "0x6607": //VENERILITH
+        "0x6608": //ENERLITH
+        "0x6604": //PLATINUM
+        "0x6609": //LUNIUM
+        "0x6610": //CELERIUM
+        
+        //TIER 4
+        "0x6997": //SOLIUM
+        "0x699a": //ICELUM
+        "0x6999": //HISSIUM
+        "0x6998": //TESLIUM
+        "0x6311": //MITHRIL
+
+        //TIER 5
+        "0x699b": //ORICALCUM
+            return {0,0,0,0,0}; //MOD METAIS
+
+        //////////COURO
+        //TIER 1
+        "0xee45": //CURTIDO
+        "0xef24": //PELUDO
+
+        //TIER 2
+        "0xef21": //ESPESSO
+        "0xef26": //POLAR
+        "0xef20": //ESCAMOSO
+        "0xef22": //ANFIBIO
+
+        //TIER 3
+        "0xc601": //OGRO
+        "0xc602": //MARINHO
+        "0xc603": //REPTILIANO
+        "0xc604": //HIDRA
+
+        //TIER 4
+        "0xed29": //DRACONIANO
+        "0xef25": //TROLL
+        "0xef28": //TERATHAN
+        "0xef27": //GIGANTE
+
+        //TIER 5
+        "0xef23": //ASPERO
+        "0xc605": //NEGRO
+            return {0,2,2,0,0}; //MOD COUROS
+
+        //////////OSSO
+        //TIER 1
+        "0xf7e": //OSSO
+        "0xef32": //CINZA
+
+        //TIER 2
+        "0xef30": //VERMELHO
+        "0xef31": //PRETO
+
+        //TIER 3
+        "0xef38": //LICH
+        "0xef39": //REPTILIANO
+
+        //TIER 4
+        "0xef3a": //GIGANTE
+        "0xef3b": //TERATHAN
+
+        //TIER 5
+        "0xef29": //DEMONÍACO
+            return {0,0,0,2,0}; //MOD OSSOS
+
+        //////////TECIDO
+        //TIER 1
+        "0x1765": //LÃ
+        "0x1764": //ALGODÃO
+
+        //TIER 2
+        "0xf92": //SEDA
+        "0xf9f": //LINHO
+
+        //TIER 3
+        "0xfa2": //MALVA
+        "0xfad": //SISAL
+        "0xfaf": //DENIM
+        "0xfb2": //RAMI
+
+        //TIER 4
+        "0xfb7": //FLAMEL
+        "0xfbd": //RAJAL
+            return {0,0,0,0,0}; //MOD TECIDOS
+
+        /*
+        //"QUITINA": //QUITINA - BUSCAR OBJTYPE
+            return {0,0,0,0,0};
+
+        //"MADEIRA": //MADEIRA - BUSCAR OBJTYPE
+            return {0,0,0,0,0};
+        */
+    endcase
+endfunction
+
+function TabelaDanos(item)
     var cfg := ReadConfigFile(":combat:itemdesc");
     var elem := FindConfigElem(cfg, item.objtype);
     var dano := Array;
@@ -241,26 +364,26 @@ function TabelaValoresDanos(item) //FUTURAMENTE TROCAR POR UMA LISTA DE ITENS SE
 
     return dano;
 endfunction
-function TabelaValoresProtecao(item)
+function TabelaTipoProtecaoMod(item) // TipoProtecao -=> return {RESIST, DEXPENALTY, PARRYBONUS, PARRYDELAY}
     var tipo := Lower(PegarTipo(item));
-    case(tipo) //ARMADURAS: -=> TipoProtecao: return {FISICO, FIRE, COLD, POISON, ENERGY}
+    case(tipo)
         //TIER 1
-        "armadura leve fraca": return {1,1,1,1,1};
-        "armadura leve media": return {2,2,2,2,2};
-        "armadura leve forte": return {3,3,3,3,3};
+        "armadura leve fraca": return {0,0,0,0};
+        "armadura leve media": return {1,0,0,0};
+        "armadura leve forte": return {2,0,0,0};
 
         //TIER 2
-        "armadura media fraca": return {4,4,4,4,4};
-        "armadura media media": return {5,5,5,5,5};
-        "armadura media forte": return {6,6,6,6,6};
+        "armadura media fraca": return {3,1,0,0};
+        "armadura media media": return {4,2,0,0};
+        "armadura media forte": return {5,2,0,0};
 
         //TIER 3
-        "armadura pesada fraca": return {7,7,7,7,7};
-        "armadura pesada media": return {8,8,8,8,8};
-        "armadura pesada forte": return {9,9,9,9,9};
+        "armadura pesada fraca": return {6,3,0,0};
+        "armadura pesada media": return {7,4,0,0};
+        "armadura pesada forte": return {8,4,0,0};
     endcase
 
-    case(tipo) //ESCUDOS: -=> TipoProtecao: return {RESIST, DEXPENALTY, PARRYBONUS, PARRYDELAY}
+    case(tipo)
         //TIER 1
         "escudo leve fraco": return {0,0,0,-1};
         "escudo leve medio": return {1,-1,1,0};
@@ -282,16 +405,16 @@ function TabelaValoresProtecao(item)
         "escudo de corpo forte": return {11,-16,14,6};
     endcase
 endfunction
-function TabelaValoresSlot(item)
+function TabelaSlot(item)
     var slot := Lower(PegarSlot(item));
 
     case(slot) //[1] = ResistBase; [2] = DexPenalty
         "head": return {1,-1};
         "neck": return {1,-1};
-        "body": return {4,-3};
-        "arms": return {2,-2};
+        "body": return {1,-3};
+        "arms": return {1,-2};
         "hands": return {1,-1};
-        "legs/feet": return {3,-2};
+        "legs/feet": return {1,-2};
         "shield": return {2,-1};
     endcase
 endfunction
