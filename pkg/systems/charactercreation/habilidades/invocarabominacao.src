@@ -21,12 +21,14 @@ program manobra(attacker)
 	endif
     var time := lvl/10;
     var i := 0;
+    who.frozen := 1;
+
     for (i := 0; i < time; i++)
         PerformAction(attacker, ANIM_CAST_AREA);
         PlayObjectCenteredEffect(targ, FX_CURSE_EFFECT, 1, 16);
 	    sleep(1);
     endfor
-
+    who.frozen := 0;
     PlaySoundEffect(targ, SFX_SPELL_SUMMON_DAEMON);
 	if (lvl >= 40 && lvl < 60)
 		CreateNpcFromTemplate(":brainai:ossadaescarlateinvoked", targ.x, targ.y, targ.z, 0, targ.realm);

@@ -277,7 +277,7 @@ program SpellStarter(params)
 
 		mobile.frozen := 0;
 		if(TemHabilidade(mobile, "Sensibilidade Profana"))
-		attribute := MECHANICALAPITUDE;
+		    attribute := MECHANICALAPITUDE;
 		endif
 
 		var skill_check := SkillCheck(mobile, attribute, difficulty);
@@ -289,7 +289,8 @@ program SpellStarter(params)
 					SubtractAmount(scroll, 1);
 				else
 					var chance := RandomIntMinMax(0,100);
-					if (chance > attribute)
+                    var attrib_value := AP_GetTrueSkill(mobile, attribute);
+					if (chance > attrib_value) // Mais alta skill, maior a dificuldade de subtrair o scroll
 						SubtractAmount(scroll, 1);
 					endif
 				endif
