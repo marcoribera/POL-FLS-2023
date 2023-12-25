@@ -9,11 +9,11 @@ include ":timedscripts:timedScripts";
 
 program SpellScript(params)
 	var who := params[1];
-	var info := params[2];
+	var targ := params[2];
 	params := 0; // No longer needed
 
-	SendSysMessageEx(who, "Escolha o alvo.", SSM_REQUEST);
-	var targ := Spell_Target(who, TGTOPT_CHECK_LOS);
+	//SendSysMessageEx(who, "Escolha o alvo.", SSM_REQUEST);
+	//var targ := Spell_Target(who, TGTOPT_CHECK_LOS);
 	if (!targ)
 		return;
 	endif
