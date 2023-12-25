@@ -684,6 +684,7 @@ function GetRealName(byref who)
 	endif
 	return nome;
 endfunction
+
 function AddMyItemForSale(npc, player)
 
 	var VendorProperty := GetObjProperty(npc, "onlygmsells");
@@ -739,6 +740,7 @@ function AddItem(npc, player, targ)
 	var cost_type;
 	var cost_name;
 	var item;
+	var valorTaxaAnterior;
 	var specialProp := struct;
 
 	if (player.cmdlevel > 2) //Se é GM colocando à venda
@@ -856,6 +858,7 @@ function AddItem(npc, player, targ)
 			elseif(taxa > 0)
 				var totalPago := 0;
 				var faltaPagar := taxa;
+				valorTaxaAnterior := taxa;
 				var dicionarioAtual := Dictionary;
 				var recursos := recursosDisponiveis[5];
 				//print("recursos: "+ recursos +" ");
@@ -941,7 +944,8 @@ function AddItem(npc, player, targ)
 		AI_Speak(npc, "Tudo certo. Colocarei seu item a venda.");
 		SendSysMessage(player, "O item foi adicionado com sucesso.");
 	else
-		AI_Speak(npc, "Me desculpe, mas nao poderei vender isto para voce.");
+		DarTroco(player, npc, valorTaxaAnterior); //A ideia é o npc devolva as moedas que cobrou
+		AI_Speak(npc, "Me desculpe, mas nao poderei vender isto para voce e estou devolvendo suas moedas.");
 	endif
 endfunction
 

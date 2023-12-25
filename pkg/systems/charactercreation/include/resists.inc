@@ -114,6 +114,7 @@ function GetResist(who, resist)
 
 		// Aplica modificadores de vantagens raciais
 		if (vantagem == "Vontade de Ferro")
+		//if (vantagem == "Vontade de Ferro" || who.npctemplate)
 			valor := valor + 20; // +200% do VALOR_REFERENCIA
 		endif
 
