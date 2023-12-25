@@ -20,6 +20,11 @@ program SpellScript(params)
 		return;
 	endif
 
+    if (targ == who)
+        SendSysMessageEx(who, "Precisa de dois para um pacto ser feito", SSM_FAIL);
+		return;
+    endif
+    
 	if (GetObjProperty(who, "pactodesepultura"))
 		SendSysMessageEx(who, "Voce ja esta em um pacto de sepultura", SSM_FAIL);
 		return;
