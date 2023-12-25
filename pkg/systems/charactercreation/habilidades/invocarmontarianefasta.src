@@ -10,7 +10,7 @@ program summonSkeletaSteed(params)
 	var who := params[1];
 	var targ := params[2];
     if (GetObjProperty(who, "dread_lord"))
-        SendSysMessage(who, "Voce precisa aguardar antes de invocar uma nova montaria")
+        SendSysMessage(who, "Voce precisa aguardar antes de invocar uma nova montaria");
     endif
 	//Efeito da magia
 	PlaySoundEffect(targ, 0x58E);

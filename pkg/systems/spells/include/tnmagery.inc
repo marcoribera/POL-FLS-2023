@@ -781,7 +781,8 @@ function Corromper(who, spell, targ)
 	//checa se é player
 	if (targ)
 		if (targ.acctname)
-			if ("Sacerdote de Zhark" in GetObjProperty(targ, "descmod") || "Cavaleiro de Rothen" in GetObjProperty(targ, "descmod") )
+            var chardata := GetObjProperty(targ, "chardata");
+			if (chardata.magia == "Sacerdote")
 				variavel := variavel + 0.8;
 			else
 				variavel := variavel + 0.3;
@@ -789,7 +790,6 @@ function Corromper(who, spell, targ)
 		endif
 	endif
 	//fim de checagem
-
 
 	//calculo de corrupcao
 	corrupcao := (spellinfo.mana) /5 * spellinfo.cycles;
