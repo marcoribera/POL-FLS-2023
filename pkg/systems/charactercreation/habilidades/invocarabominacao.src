@@ -3,6 +3,7 @@
 include ":attributes:attributes";
 include ":timedScripts:timedScripts";
 include "include/say";
+include "include/client";
 
 program manobra(attacker)
 
@@ -13,7 +14,17 @@ program manobra(attacker)
 		SendSysMessageEx(attacker, "O Alvo nao esta visivel para voce.", SSM_FAIL);
 		return 1;
 	endif
-	
+
+    if (!targ.isA(POLCLASS_CORPSE))
+		SendSysMessageEx(attacker, "Voce precisa usar um corpo.", SSM_FAIL);
+		return 1;
+	endif
+    var time := lvl/10;
+    var i := 0;
+    for (i := 0; i < time; i++)
+        PlayObjectCenteredEffect(targ, FX_CURSE_EFFECT, 1, 16);
+	    sleep(1);
+    endfor
 	if (lvl >= 40 && lvl < 60)
 		CreateNpcFromTemplate(":brainai:ossadaescarlateinvoked", targ.x, targ.y, targ.z, 0, targ.realm);
 		CreateNpcFromTemplate(":brainai:ossadaescarlateinvoked", targ.x, targ.y, targ.z, 0, targ.realm);
