@@ -73,6 +73,7 @@ program skinning(parms)
 				SetObjProperty(cadaver, "deathtime", polcore().systime);
 				SetName(cadaver, "Corpo Irreconhecivel");
 				SetObjProperty(cadaver, "morto",1);
+                SetObjProperty(cadaver, "assassinado",1);
 
 				var region := GetRegionName(cadaver);
 				var tipo := "pk";
