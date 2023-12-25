@@ -801,7 +801,7 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 	var rand := Cint((RandomInt(100) + 1) + bonus_Preservar_Orgaos);
 	//printtextabove(attacker, "chance " + chance + " rand " + rand + " " + (chance > rand) );
 
-	if (TemHabilidade(defender, "Corpo ao Extremo"))
+	if (TemHabilidade(defender, "Mumificacao"))
 		SendSysMessageEx(defender, "Seu corpo evita o critico", SSM_INFO);
 		SendSysMessageEx(attacker, "Seu critico nao surte efeito", SSM_FAIL);
 		chance := 0;
