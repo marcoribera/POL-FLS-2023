@@ -38,8 +38,8 @@ var gflayout := array{
 
 		"text 245 120 1153 0",
 
-		"Text  420 580 2103 10",
-		"Button 470 580 9903 9905 1 2 10",
+		"Text  420 580 2103 13",
+		"Button 470 580 9903 9905 1 2 13",
 
 		"page 1",
 
@@ -47,22 +47,28 @@ var gflayout := array{
 
 		"text 215 200 2105 8",
 
-		"text 265 240 2105 3",
-		"text 265 280 2105 4",
-		"text 265 320 2105 2",
-		"Radio 230 237 9726 9729 1 1", //asanita
-		"Radio 230 277 9726 9729 0 2", //thuriao
-		"Radio 230 317 9726 9729 0 3", //zharkiano
+		"text 265 220 2105 3",
+		"text 265 260 2105 4",
+		"text 265 300 2105 2",
+		"Radio 230 217 9726 9729 1 1", //asanita
+		"Radio 230 257 9726 9729 0 2", //thuriao
+		"Radio 230 297 9726 9729 0 3", //zharkiano
 
-		"text 215 360 2105 9",
+		"text 215 330 2105 9",
 
-		"text 265 400 2105 7",
-		"text 265 440 2105 6",
-		"text 265 480 2105 5",
-		"Radio 230 397 9726 9729 0 4", //aquilrano
-		"Radio 230 437 9726 9729 0 5", //numajene
-		"Radio 230 477 9726 9729 0 6" //vanirio
+		"text 265 360 2105 7",
+		"text 265 400 2105 6",
+		"text 265 440 2105 5",
+		"Radio 230 357 9726 9729 0 4", //aquilrano
+		"Radio 230 397 9726 9729 0 5", //numajene
+		"Radio 230 437 9726 9729 0 6", //vanirio
 
+		//"text 215 480 2105 12",
+
+        //"text 265 510 2105 10",
+		//"text 265 550 2105 11",
+		//"Radio 230 547 9726 9729 0 11", //Drow
+		//"Radio 230 507 9726 9729 0 10" //Anao
 		};
 var gfdata := array{
 		"Forgotten Lore Shard", //0
@@ -75,6 +81,9 @@ var gfdata := array{
 		"Aquilrano", //7
 		"Humano", //8
 		"Elfo", //9
+        "Anão", // 10
+        "Drow", // 11
+        "Povos Originários", //12
 		"Próximo"
 		};
 
@@ -99,6 +108,12 @@ var gfdata := array{
 	elseif (6 in ret.keys)
 		chardata.+raca := "Elfo";
 		chardata.+povo := "Vanirio";
+    elseif (10 in ret.keys)
+		chardata.+raca := "Anao";
+		chardata.+povo := "Balduran";
+    elseif (11 in ret.keys)
+		chardata.+raca := "Elfo negro";
+		chardata.+povo := "Drow";
 	endif
 endfunction
 
