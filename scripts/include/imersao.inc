@@ -14,7 +14,7 @@ use util;
 
 include "include/say";
 
-const FONTCOLOR_YELLOW := 53;
+const FONTE_AMARELA := 53;
 
 //REFERÊNCIAS
 //HUMANOIDE
@@ -344,7 +344,7 @@ function Imersao(who, tipoimersao, qtdloops:=1, tempoloop:=0, saisom:=1, saiemot
 		if ((saianim == 1) && (!whoanim)) erro := " ANIM,"; endif
 		if ((saiefeito == 1) && (!whoefeito)) erro := " EFEITO,"; endif
 
-		if (erro) SendSysMessageEx(user, "GM: Executando imersao sem{}!".Format(erro), FONTCOLOR_YELLOW); endif
+		if (erro) SendSysMessageEx(user, "GM: Executando imersao sem{}!".Format(erro), FONTE_AMARELA); endif
 	endif
 
 	var i;
