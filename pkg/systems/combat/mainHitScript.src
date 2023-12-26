@@ -1173,6 +1173,7 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 		if (GetCooldown(defender, "defesasgloriosas"))
 			TS_StartTimer(attacker, "paralysis", 5);
 			SetCooldown(defender, "defesasgloriosas", 0);
+            defender.attack_once(attacker);
 		endif
 
 		//Pike desarma defensor que bloquear sem escudo
