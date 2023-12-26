@@ -1011,8 +1011,16 @@ function PoisonChecks(attacker, defender, weapon, armor, basedamage, rawdamage)
 			if (IsPoisonImune(defender, poisonInfo.name) )
 				return 0;
 			endif
+            // Sempre que for mexer nesse timer, mexer também  no .arremessar ou criar funcao e chamar em ambos
 			if (poisonInfo.name == "paralyzePoison")
-				poisonInfo.time := 2;
+                var duration := CInt(AP_GetSkill(attacker, ALCHEMY) / 20 );
+                if (duration < 2)
+                    duration := 2;
+                endif
+                if (temHabilidade(attacker, "Veneno Puro"))
+                    duration := duration * 2;
+                endif
+				poisonInfo.time := duration;
 			endif
 
 			if (CheckResist(defender, FORTITUDE, 15,-20*poisonInfo.level))

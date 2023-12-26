@@ -268,7 +268,7 @@ function do_poison(who, potion)
     poisonInfo.+time := 40 + level*10;
     if (temHabilidade(who, "Veneno Puro"))
       poisonInfo.dosage := CInt(poisonInfo.dosage * 1.5);
-      poisonInfo.time := CInt(poisonInfo.time * 1.2);
+      poisonInfo.time := CInt(poisonInfo.time * 1.25);
     endif
 
     if (CheckResist(who, FORTITUDE, 15,-20*poisonInfo.level))
