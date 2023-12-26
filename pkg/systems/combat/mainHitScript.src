@@ -199,7 +199,7 @@ program MainHitScript( params )
 				var copmobs := getobjproperty(defender, "#chainserials");
 				var mage := SystemFindObjectBySerial( GetObjProperty(defender, "#mageserial"));
 				var copdefenders := array;
-				var lvl := cdbl(AP_GetSkill(mage, MAGICLORE)/100);
+				var lvl := cdbl(AP_GetSkill(mage, MAGICLORE)/200);
 				foreach serial in copmobs
 					copdefenders.append(SystemFindObjectBySerial(serial));
 				endforeach
