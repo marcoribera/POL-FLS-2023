@@ -61,7 +61,7 @@ var gflayout := array{
 		"text 265 440 2105 5",
 		"Radio 230 357 9726 9729 0 4", //aquilrano
 		"Radio 230 397 9726 9729 0 5", //numajene
-		"Radio 230 437 9726 9729 0 6", //vanirio
+		"Radio 230 437 9726 9729 0 6" //vanirio
 
 		//"text 215 480 2105 12",
 
