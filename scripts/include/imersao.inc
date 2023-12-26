@@ -1,6 +1,6 @@
 /* By EvilLink
 Biblioteca para imersão com Sons e/ou Emotes
-Exemplo de uso: Imersao(who, "Gritar", 1, 0, 0) - Grita; sai som; não sai emote; não sai animação relacionada
+Exemplo de uso: Imersao(who, "Gritar", 1, 250, 1, 0, 0) - Grita; 1 loop; 250ms cada loop; sai som; não sai emote; não sai animação relacionada; 
 Exemplo2 de uso: Imersao(who, "Gritar") - Grita; sai som; sai emote; sai animação relacionada
 who = alvo (player/item)
 "Gritar" = Emote/Som a ser emitido
@@ -10,211 +10,305 @@ who = alvo (player/item)
 
 use uo;
 use os;
+use util;
 
 include "include/say";
 
+const FONTCOLOR_YELLOW := 53;
+
 //REFERÊNCIAS
 //HUMANOIDE
-const EL_BOW_ANIM := 0x20;
+var EL_BOW := Dictionary{
+	"anim" -> 0x20
+};
 
-const EL_GRITAR_SOM_MALE := 0x441;
-const EL_GRITAR_SOM_FEMALE := 0x32F;
-const EL_GRITAR_EMOTE := "*Gritando*";
+var EL_GRITAR := Dictionary{
+	"anim" -> "",
+	"sound" -> {0x441, 0x32F},
+	"emote" -> "*Gritando*"
+};
 
-const EL_GRITARB_SOM_MALE := 0x44B;
-const EL_GRITARB_SOM_FEMALE := 0x339;
-const EL_GRITARB_EMOTE := EL_GRITAR_EMOTE;
+var EL_GRITAR2 := Dictionary{
+	"anim" -> "",
+	"sound" -> {0x44B, 0x339},
+	"emote" -> "*Gritando*"
+};
 
-const EL_HUH_SOM_MALE := 0x430;
-const EL_HUH_SOM_FEMALE := 0x320;
-const EL_HUH_EMOTE := "*Huh?*";
-const EL_HUH_ANIM := 0x05; //olhar para os lados
+var EL_HUH := Dictionary{
+	"anim" -> "",
+	"sound" -> {0x441, 0x32F},
+	"emote" -> "*Huh*"
+};
 
-const EL_TOSSIRA_SOM_MALE := 0x421;
-const EL_TOSSIRA_SOM_FEMALE := 0x312;
-const EL_TOSSIRB_SOM_MALE := 0x422;
-const EL_TOSSIRB_SOM_FEMALE := 0x313;
-const EL_TOSSIR_EMOTE := "*Tossindo*";
+var EL_TOSSIR1 := Dictionary{
+	"anim" -> "",
+	"sound" -> {0x421, 0x312},
+	"emote" -> "*Tossindo*"
+};
 
-const EL_ARFAR_SOM_MALE := 0x42A;
-const EL_ARFAR_SOM_FEMALE := 0x31A;
-const EL_ARFAR_EMOTE := "*Arfando*";
+var EL_TOSSIR2 := Dictionary{
+	"anim" -> 0x441,
+	"sound" -> {0x422, 0x313},
+	"emote" -> "*Gritando*"
+};
 
-const EL_GEMER_SOM_MALE := 0x42C;
-const EL_GEMER_SOM_FEMALE := 0x31C;
-const EL_GEMER_EMOTE := "*Gemendo*";
+var EL_ARFAR := Dictionary{
+	"anim" -> "",
+	"sound" -> {0x42A, 0x31A},
+	"emote" -> "*Arfar*"
+};
 
-const EL_CAIR_SOM_MALE := 0x42C;
-const EL_CAIR_SOM_FEMALE := 0x31C;
-const EL_CAIR_EMOTE := "*Cai*";
-const EL_CAIR_ANIM := 0x15;
-const EL_CAIR_ANIMB := 0x16;
+var EL_GEMER := Dictionary{
+	"anim" -> 0x441,
+	"sound" -> {0x42C, 0x31C},
+	"emote" -> "*Gemendo*"
+};
 
-const EL_GOLPEAR_SOM_MALE := EL_GRITARB_SOM_MALE;
-const EL_GOLPEAR_SOM_FEMALE := EL_GRITARB_SOM_FEMALE;
-const EL_GOLPEAR_EMOTE := "*Golpeando*";
-const EL_GOLPEAR_ANIM := 0x09;
+var EL_CAIR := Dictionary{
+	"anim" -> "", //PROCURAR
+	"sound" -> {EL_GEMER["sound"][1], EL_GEMER["sound"][2]},
+	"emote" -> ""
+};
 
-const EL_SUSTO_SOM_MALE := 0x434;
-const EL_SUSTO_SOM_FEMALE := 0x324;
-const EL_SUSTO_EMOTE := "*Oh*";
-const EL_SUSTO_ANIM := 0x14;
+var EL_GOLPEAR := Dictionary{
+	"anim" -> 0x441,
+	"sound" -> {EL_GRITAR2["sound"][1], EL_GRITAR2["sound"][2]},
+	"emote" -> "*Golpeando*"
+};
 
-const EL_VOMITAR_SOM_MALE := 0;
-const EL_VOMITAR_SOM_FEMALE := 0;
-const EL_VOMITAR_EMOTE := "*Vomita*";
-const EL_VOMITAR_ANIM := EL_BOW_ANIM;
+var EL_SUSTO := Dictionary{
+	"anim" -> 0x441,
+	"sound" -> {0x434, 0x324},
+	"emote" -> "*Gritando*"
+};
+
+var EL_VOMITAR := Dictionary{
+	"anim" -> EL_BOW["anim"],
+	"sound" -> {0x440, 0x32e},
+	"emote" -> "*Vomitando*"
+};
 
 //CRAFT
-const EL_METAL_SOM := 0x002b;
-const EL_MADEIRA_SOM := 0x23e;
-const EL_FLECHA_SOM := 0x5a;
-const EL_TESOURA_SOM := 0x249;
-const EL_CRAFT_MW_SOM := EL_METAL_SOM;
-const EL_CRAFT_MW_ANIM := 0x0b;
-const EL_CRAFT_WW_SOM := EL_MADEIRA_SOM;
-const EL_CRAFT_BC_SOM := EL_FLECHA_SOM;
-const EL_CRAFT_DW_SOM := EL_TESOURA_SOM;
+var EL_METAL := Dictionary{
+	"anim" -> "", //ADICIONAR
+	"sound" -> 0x002b,
+	"emote" -> ""
+};
+
+var EL_MADEIRA := Dictionary{
+	"anim" -> "",
+	"sound" -> 0x23e,
+	"emote" -> ""
+};
+
+var EL_FLECHA := Dictionary{
+	"anim" -> "",
+	"sound" -> 0x5a,
+	"emote" -> ""
+};
+
+var EL_TESOURA := Dictionary{
+	"anim" -> "",
+	"sound" -> 0x249,
+	"emote" -> ""
+};
+
+var EL_CRAFT_MW := Dictionary{
+	"anim" -> 0x0b,
+	"sound" -> EL_METAL["sound"],
+	"emote" -> ""
+};
+
+var EL_CRAFT_WW := Dictionary{
+	"anim" -> "",
+	"sound" -> EL_MADEIRA["sound"],
+	"emote" -> "*Moldando*"
+};
+
+var EL_CRAFT_BC := Dictionary{
+	"anim" -> "",
+	"sound" -> {EL_FLECHA["sound"][1], EL_FLECHA["sound"][2]},
+	"emote" -> "*Moldando*"
+};
+
+var EL_CRAFT_DW := Dictionary{
+	"anim" -> "",
+	"sound" -> {EL_TESOURA["sound"][1], EL_TESOURA["sound"][2]},
+	"emote" -> "*Costurando*"
+};
 
 //OBJETOS
-const EL_VIDRO_SOM := 0x03F;
-const EL_VIDRO_EMOTE := "*Quebrou*";
-
-//alchemy 0x243
-
+var EL_VIDRO := Dictionary{
+	"anim" -> "",
+	"sound" -> 0x03F,
+	"emote" -> "*Quebrou*"
+};
 
 /////INÍCIO IMERSÃO/////
-function Imersao(byref who, tipoemote, saisom:=1, saiemote:=1, saianim:=1, saiefeito:=1, byref user:=0)
-	var whosound, whoemote, whoanim, whoefeito, noexist;
-	tipoemote := Lower(tipoemote);
+function Imersao(who, tipoimersao, qtdloops:=1, tempoloop:=0, saisom:=1, saiemote:=1, saianim:=1, saiefeito:=1, user:=0) //EXEMPLO DE USO NO INÍCIO DO ARQUIVO
+	var whosound, whoemote, whoanim, whoefeito, noexist, erro;
+	tipoimersao := Lower(tipoimersao);
 	
-	case (tipoemote)
+	case (tipoimersao)
 		//HUMANOIDE
 		"gritar":
-			whoemote := EL_GRITAR_EMOTE;
+			whoemote := EL_GRITAR["emote"];
+			whoanim := EL_GRITAR["anim"];
 			case (who.graphic)
 				400:
-					whosound := EL_GRITAR_SOM_MALE;
+					whosound := EL_GRITAR["sound"][1];
 				401:
-					whosound := EL_GRITAR_SOM_FEMALE;
+					whosound := EL_GRITAR["sound"][2];
+
+				default: erro := " HUMANOIDE";
 			endcase
 			break;
 
 		"huh":
-			whoemote := EL_HUH_EMOTE;
-			whoanim := EL_HUH_ANIM;
+			whoemote := EL_HUH["emote"];
+			whoanim := EL_HUH["anim"];
 			case (who.graphic)
 				400:
-					whosound := EL_HUH_SOM_MALE;
+					whosound := EL_HUH["sound"][1];
 				401:
-					whosound := EL_HUH_SOM_FEMALE;
+					whosound := EL_HUH["sound"][2];
+
+				default: erro := " HUMANOIDE";
 			endcase
 			break;
 
 		"tossir1":
-			whoemote := EL_TOSSIR_EMOTE;
+			whoemote := EL_TOSSIR1["emote"];
 			case (who.graphic)
 				400:
-					whosound := EL_TOSSIRA_SOM_MALE;
+					whosound := EL_TOSSIR1["sound"][1];
 				401:
-					whosound := EL_TOSSIRA_SOM_FEMALE;
+					whosound := EL_TOSSIR1["sound"][2];
+
+				default: erro := " HUMANOIDE";
 			endcase
 			break;
 
 		"tossir2":
-			whoemote := EL_TOSSIR_EMOTE;
+			whoemote := EL_TOSSIR2["emote"];
 			case (who.graphic)
 				400:
-					whosound := EL_TOSSIRB_SOM_MALE;
+					whosound := EL_TOSSIR2["sound"][1];
 				401:
-					whosound := EL_TOSSIRB_SOM_FEMALE;
+					whosound := EL_TOSSIR2["sound"][2];
+
+				default: erro := " HUMANOIDE";
 			endcase
 			break;
 
 		"arfar":
-			whoemote := EL_ARFAR_EMOTE;
+			whoemote := EL_ARFAR["emote"];
 			case (who.graphic)
 				400:
-					whosound := EL_ARFAR_SOM_MALE;
+					whosound := EL_ARFAR["sound"][1];
 				401:
-					whosound := EL_ARFAR_SOM_FEMALE;
+					whosound := EL_ARFAR["sound"][2];
+
+				default: erro := " HUMANOIDE";
 			endcase
 			break;
 
 		"gemer":
-			whoemote := EL_GEMER_EMOTE;
+			whoemote := EL_GEMER["emote"];
 			case (who.graphic)
 				400:
-					whosound := EL_GEMER_SOM_MALE;
+					whosound := EL_GEMER["sound"][1];
 				401:
-					whosound := EL_GEMER_SOM_FEMALE;
+					whosound := EL_GEMER["sound"][2];
+
+				default: erro := " HUMANOIDE";
 			endcase
 			break;
 		
 		"cair":
-			whoemote := EL_CAIR_EMOTE;
-			whoanim := EL_CAIR_ANIM;
+			whoemote := EL_CAIR["emote"];
+			whoanim := EL_CAIR["anim"];
 			case (who.graphic)
 				400:
-					//whosound := EL_CAIR_SOM_MALE;
+					//whosound := EL_CAIR["sound"][1];
 				401:
-					//whosound := EL_CAIR_SOM_FEMALE;
+					//whosound := EL_CAIR["sound"][2];
+
+				default: erro := " HUMANOIDE";
 			endcase
 			break;
 
 		"cair2":
-			whoemote := EL_CAIR_EMOTE;
-			whoanim := EL_CAIR_ANIMB;
+			whoemote := EL_CAIR["emote"];
+			whoanim := EL_CAIR["anim"];
 			case (who.graphic)
 				400:
-					//whosound := EL_CAIR_SOM_MALE;
+					//whosound := EL_CAIR["sound"][1];
 				401:
-					//whosound := EL_CAIR_SOM_FEMALE;
+					//whosound := EL_CAIR["sound"][2];
+
+				default: erro := " HUMANOIDE";
 			endcase
 			break;
 
 		"golpear":
-			whoemote := EL_GOLPEAR_EMOTE;
-			whoanim := EL_GOLPEAR_ANIM;
+			whoemote := EL_GOLPEAR["emote"];
+			whoanim := EL_GOLPEAR["anim"];
 			case (who.graphic)
 				400:
-					whosound := EL_GOLPEAR_SOM_MALE;
+					whosound := EL_GOLPEAR["sound"][1];
 				401:
-					whosound := EL_GOLPEAR_SOM_FEMALE;
+					whosound := EL_GOLPEAR["sound"][2];
+
+				default: erro := " HUMANOIDE";
 			endcase
 			break;
 		
 		"susto":
-			whoemote := EL_SUSTO_EMOTE;
-			whoanim := EL_SUSTO_ANIM;
+			whoemote := EL_SUSTO["emote"];
+			whoanim := EL_SUSTO["anim"];
 			case (who.graphic)
 				400:
-					whosound := EL_SUSTO_SOM_MALE;
+					whosound := EL_SUSTO["sound"][1];
 				401:
-					whosound := EL_SUSTO_SOM_FEMALE;
+					whosound := EL_SUSTO["sound"][2];
+
+				default: erro := " HUMANOIDE";
 			endcase
 			break;
 		
 		"vomitar":
+			whoemote := EL_VOMITAR["emote"];
+			whoanim := EL_VOMITAR["anim"];
+			case (who.graphic)
+				400:
+					whosound := EL_VOMITAR["sound"][1];
+				401:
+					whosound := EL_VOMITAR["sound"][2];
+
+				default: whosound := EL_VOMITAR["sound"][1];
+			endcase
+
+			whoefeito := 1;
 			break;
 		
 		//PROFISSÕES
 		"mw":
 			//whoemote := ;
-			whoanim := EL_CRAFT_MW_ANIM;
-			whosound := EL_CRAFT_MW_SOM;
+			whoanim := EL_CRAFT_MW["anim"];
+			whosound := EL_CRAFT_MW["sound"];
 			break;
 
 		"ww":
 			//whoemote := ;
-			//whoanim := EL_CRAFT_WW_ANIM;
-			whosound := EL_CRAFT_WW_SOM;
+			//whoanim := EL_CRAFT_WW["anim"];
+			whosound := EL_CRAFT_WW["sound"];
 			break;
 
 		"dw":
 			//whoemote := ;
-			//whoanim := EL_CRAFT_DW_ANIM;
-			whosound := EL_CRAFT_DW_SOM;
+			//whoanim := EL_CRAFT_DW["anim"];
+			whosound := EL_CRAFT_DW["sound"];
 			break;
 
 		//OBJETOS
@@ -225,12 +319,12 @@ function Imersao(byref who, tipoemote, saisom:=1, saiemote:=1, saianim:=1, saief
 			break;
 		
 		"metal":
-			whosound := EL_METAL_SOM;
+			whosound := EL_METAL["sound"];
 			break;
 
 		"vidro":
-			whoemote := EL_VIDRO_EMOTE;
-			whosound := EL_VIDRO_SOM;
+			whoemote := EL_VIDRO["emote"];
+			whosound := EL_VIDRO["sound"];
 			whoefeito := 1;
 			break;
 
@@ -242,41 +336,60 @@ function Imersao(byref who, tipoemote, saisom:=1, saiemote:=1, saianim:=1, saief
 		return;
 	endif
 
-	if (saisom == 1)
-		if (whosound) PlaySoundEffect(who, whosound);
-		elseif (user.cmdlevel > 1) SendSysMessageEx(user, "GM: Imersao sem SOM!", SSM_FAIL);
-		endif
+	if (user.cmdlevel > 1) //ERROS
+		if (erro) SendSysMessageEx(user, "GM: Essa imersao deve ser usada apenas em{}!".Format(erro), SSM_FAIL); return; endif
+
+		if ((saisom == 1) && (!whosound)) erro := " SOM,"; endif
+		if ((saiemote == 1) && (!whoemote)) erro := " EMOTE,"; endif
+		if ((saianim == 1) && (!whoanim)) erro := " ANIM,"; endif
+		if ((saiefeito == 1) && (!whoefeito)) erro := " EFEITO,"; endif
+
+		if (erro) SendSysMessageEx(user, "GM: Executando imersao sem{}!".Format(erro), FONTCOLOR_YELLOW); endif
 	endif
 
-	if (saiemote == 1)
-		if (whoemote) PrintText(who, whoemote);
-		elseif (user.cmdlevel > 1) SendSysMessageEx(user, "GM: Imersao sem EMOTE!", SSM_FAIL);
-		endif
-	endif
+	var i;
+	for (i:=0; i<qtdloops; i++) //EXECUTAR IMERSÃO
+		if (saisom == 1) PlaySoundEffect(who, whosound); endif
+		if (saiemote == 1) PrintText(who, whoemote); endif
+		if (saianim == 1) PerformAction(who, whoanim); endif
 
-	if (saianim == 1)
-		if (whoanim) PerformAction(who, whoanim);
-		elseif (user.cmdlevel > 1) SendSysMessageEx(user, "GM: Imersao sem ANIMACAO!", SSM_FAIL);
-		endif
-	endif
-
-	if (saiefeito == 1)
-		if (whoefeito)
-			case (tipoemote)
+		if (saiefeito == 1)
+			case (tipoimersao) //AÇÕES COM EFEITOS
 				"vomitar":
-					//vômito no pé do who
+					Vomitar(who);
 					break;
 				
 				"explodir":
-					//efeito de explosão
+					//efeito de explosão em who
 					break;
 				
 				"vidro":
-					sleep(1);
-					DestroyItem(who);
+					if (who.account) erro := " ITEM";
+					else
+						DestroyItem(who);
+					endif
 					break;
 			endcase
-		elseif (user.cmdlevel > 1) SendSysMessageEx(user, "GM: Imersao sem EFEITO!", SSM_FAIL);
 		endif
-	endif
+
+		sleepms(tempoloop);
+	endfor
+endfunction
+
+///////////////
+// EFEITOS
+function Vomitar(who)
+	sleepms(200);
+	var vomito := CreateItemAtLocation(who.x, who.y, who.z, 0x0f3c, 1);
+	vomito.name := CStr("Vômito de "+who.name);
+
+	//random color
+	var cor := RandomInt(4);
+	case (cor)
+		0:	vomito.color := 1422;
+		1:	vomito.color := 540;
+		2:	vomito.color := 555;
+		3:	vomito.color := 970;
+	endcase;
+	vomito.decayat := ReadGameClock() + 10;
 endfunction
