@@ -87,7 +87,7 @@ function PlayAttackAnimation(attacker)
 			attack_anim := anim_list[1];
 		endif
 	endif
-	if ( attacker.graphic != 400 && attacker.graphic != 401)
+	if ( attacker.graphic != 400 && attacker.graphic != 401 && attacker.graphic != 1828 && attacker.graphic != 1829 && attacker.graphic != 1830 && attacker.graphic != 1831 && attacker.graphic != 1832 && attacker.graphic != 1833 && attacker.graphic != 1834 && attacker.graphic != 1835)
 		attack_anim := 0x0c;
 	endif
 

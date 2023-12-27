@@ -328,7 +328,7 @@ function FalhaCritica(who, item)
 	elseif ( falha < 86 )
 		SendSysMEssageEx(who,"O que foi isso?!", SSM_FAIL);
 		if (who.graphic == 401)
-			who.graphic := 400;
+			who.graphic := 400; who.graphic := 1828; who.graphic := 1829; who.graphic := 1830; who.graphic := 1831; who.graphic := 1832; who.graphic := 1833; who.graphic := 1834; who.graphic := 1835;      
 		else
 			who.graphic := 401;
 		endif

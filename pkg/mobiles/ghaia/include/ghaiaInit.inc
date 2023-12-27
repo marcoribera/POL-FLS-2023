@@ -221,6 +221,30 @@ function EquipItemString(who, str, lastcolor)
               elseif(sex == "f" && who.graphic == 401)
                 newarray[i] := str2[1];
                 i := i + 1;
+              elseif(sex == "Anão M" && who.graphic == 1828)
+                newarray[i] := str2[1];
+                i := i + 1;
+              elseif(sex == "Anão F" && who.graphic == 1829)
+                newarray[i] := str2[1];
+                i := i + 1;
+              elseif(sex == "Elfo M" && who.graphic == 1830)
+                newarray[i] := str2[1];
+                i := i + 1;
+              elseif(sex == "Elfo F" && who.graphic == 1831)
+                newarray[i] := str2[1];
+                i := i + 1;
+              elseif(sex == "Orc M" && who.graphic == 1832)
+                newarray[i] := str2[1];
+                i := i + 1;  
+              elseif(sex == "Orc F" && who.graphic == 1833)
+                newarray[i] := str2[1];
+                i := i + 1;
+              elseif(sex == "Wolfkin M" && who.graphic == 1834)
+                newarray[i] := str2[1];
+                i := i + 1;  
+              elseif(sex == "Wolfkin F" && who.graphic == 1835)
+                newarray[i] := str2[1];
+                i := i + 1;
               endif
             else
               newarray[i] := str2[1];

@@ -13,7 +13,7 @@ function SetEquipmentMods(who, item)
 	var itemdesc := ReadConfigFile("::itemdesc");
 
 	var restrict := Cint(itemdesc[item.objtype].GenderSpecific);
-	if((restrict == 1) && (who.graphic == 400))
+	if((restrict == 1) && (who.graphic == 400 ||who.graphic == 1828 || who.graphic == 1830 || who.graphic == 1832 || who.graphic == 1834 ))
 		SendSysMessage(who, "Apenas mulheres podem vestir isto.");
 		return 0;
 	endif

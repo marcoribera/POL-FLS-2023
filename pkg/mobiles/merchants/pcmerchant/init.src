@@ -38,6 +38,38 @@ program InitScript(params)
 			npc.gender := 1;
 			npc.graphic := 401;
 			result := NPC_SetupName(npc, "Human_Female");
+		2: //ANÃO MACHO
+			npc.gender := 2;
+			npc.graphic := 1828;
+			result := NPC_SetupName(npc, "Dwarf_Male");
+		3: //ANÃO FEMEA
+			npc.gender := 3;
+			npc.graphic := 1829;
+			result := NPC_SetupName(npc, "Dwarf_Female");
+		4: //ELFO MACHO
+			npc.gender := 4;
+			npc.graphic := 1830;
+			result := NPC_SetupName(npc, "Elf_Male");
+		5: //ELFO FEMEA
+			npc.gender := 5;
+			npc.graphic := 1831;
+			result := NPC_SetupName(npc, "Elf_Female");
+		6: //ORC MACHO
+			npc.gender := 6;
+			npc.graphic := 1832;
+			result := NPC_SetupName(npc, "Orc_Male");
+		7: //ORC FEMEA
+			npc.gender := 7;
+			npc.graphic := 1833;
+			result := NPC_SetupName(npc, "Orc_Female");
+		8: //WOLFKIN MACHO
+			npc.gender := 8;
+			npc.graphic := 1834;
+			result := NPC_SetupName(npc, "Wolfkin_Male");
+		9: //WOLFKIN FEMEA
+			npc.gender := 9;
+			npc.graphic := 1835;
+			result := NPC_SetupName(npc, "Wolfkin_Female");
 	endcase	
 	
 	if (npc.npctemplate == ":merchants:estalagem")

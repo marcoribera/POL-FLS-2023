@@ -159,6 +159,23 @@ function Imersao(who, tipoimersao, qtdloops:=1, tempoloop:=0, saisom:=1, saiemot
 					whosound := EL_GRITAR["sound"][1];
 				401:
 					whosound := EL_GRITAR["sound"][2];
+				1828:
+					whosound := EL_GRITAR["sound"][1];
+				1829:
+					whosound := EL_GRITAR["sound"][2];
+				1830:
+					whosound := EL_GRITAR["sound"][1];
+				1831:
+					whosound := EL_GRITAR["sound"][2];
+				1832:
+					whosound := EL_GRITAR["sound"][1];
+				1833:
+					whosound := EL_GRITAR["sound"][2];
+				1834:
+					whosound := EL_GRITAR["sound"][1];
+				1835:
+					whosound := EL_GRITAR["sound"][2];
+																
 
 				default: erro := " HUMANOIDE";
 			endcase
@@ -172,6 +189,22 @@ function Imersao(who, tipoimersao, qtdloops:=1, tempoloop:=0, saisom:=1, saiemot
 					whosound := EL_HUH["sound"][1];
 				401:
 					whosound := EL_HUH["sound"][2];
+				1828:
+					whosound := EL_HUH["sound"][1];
+				1829:
+					whosound := EL_HUH["sound"][2];
+				1830:
+					whosound := EL_HUH["sound"][1];
+				1831:
+					whosound := EL_HUH["sound"][2];
+				1832:
+					whosound := EL_HUH["sound"][1];
+				1833:
+					whosound := EL_HUH["sound"][2];
+				1834:
+					whosound := EL_HUH["sound"][1];
+				1835:
+					whosound := EL_HUH["sound"][2];
 
 				default: erro := " HUMANOIDE";
 			endcase
@@ -184,7 +217,22 @@ function Imersao(who, tipoimersao, qtdloops:=1, tempoloop:=0, saisom:=1, saiemot
 					whosound := EL_TOSSIR1["sound"][1];
 				401:
 					whosound := EL_TOSSIR1["sound"][2];
-
+				1828:
+					whosound := EL_TOSSIR1["sound"][1];
+				1829:
+					whosound := EL_TOSSIR1["sound"][2];
+				1830:
+					whosound := EL_TOSSIR1["sound"][1];
+				1831:
+					whosound := EL_TOSSIR1["sound"][2];
+				1832:
+					whosound := EL_TOSSIR1["sound"][1];
+				1833:
+					whosound := EL_TOSSIR1["sound"][2];
+				1834:
+					whosound := EL_TOSSIR1["sound"][1];
+				1835:
+					whosound := EL_TOSSIR1["sound"][2];
 				default: erro := " HUMANOIDE";
 			endcase
 			break;
@@ -196,7 +244,22 @@ function Imersao(who, tipoimersao, qtdloops:=1, tempoloop:=0, saisom:=1, saiemot
 					whosound := EL_TOSSIR2["sound"][1];
 				401:
 					whosound := EL_TOSSIR2["sound"][2];
-
+				1828:
+					whosound := EL_TOSSIR2["sound"][1];
+				1829:
+					whosound := EL_TOSSIR2["sound"][2];
+				1830:
+					whosound := EL_TOSSIR2["sound"][1];
+				1831:
+					whosound := EL_TOSSIR2["sound"][2];
+				1832:
+					whosound := EL_TOSSIR2["sound"][1];
+				1833:
+					whosound := EL_TOSSIR2["sound"][2];
+				1834:
+					whosound := EL_TOSSIR2["sound"][1];
+				1835:
+					whosound := EL_TOSSIR2["sound"][2];					
 				default: erro := " HUMANOIDE";
 			endcase
 			break;
@@ -208,6 +271,23 @@ function Imersao(who, tipoimersao, qtdloops:=1, tempoloop:=0, saisom:=1, saiemot
 					whosound := EL_ARFAR["sound"][1];
 				401:
 					whosound := EL_ARFAR["sound"][2];
+				1828:
+					whosound := EL_ARFAR["sound"][1];
+				1829:
+					whosound := EL_ARFAR["sound"][2];
+				1830:
+					whosound := EL_ARFAR["sound"][1];
+				1831:
+					whosound := EL_ARFAR["sound"][2];
+				1832:
+					whosound := EL_ARFAR["sound"][1];
+				1833:
+					whosound := EL_ARFAR["sound"][2];
+				1834:
+					whosound := EL_ARFAR["sound"][1];
+				1835:
+					whosound := EL_ARFAR["sound"][2];
+
 
 				default: erro := " HUMANOIDE";
 			endcase
@@ -219,6 +299,22 @@ function Imersao(who, tipoimersao, qtdloops:=1, tempoloop:=0, saisom:=1, saiemot
 				400:
 					whosound := EL_GEMER["sound"][1];
 				401:
+					whosound := EL_GEMER["sound"][2];
+				1828:
+					whosound := EL_GEMER["sound"][1];
+				1829:
+					whosound := EL_GEMER["sound"][2];
+				1830:
+					whosound := EL_GEMER["sound"][1];
+				1831:
+					whosound := EL_GEMER["sound"][2];
+				1832:
+					whosound := EL_GEMER["sound"][1];
+				1833:
+					whosound := EL_GEMER["sound"][2];
+				1834:
+					whosound := EL_GEMER["sound"][1];
+				1835:
 					whosound := EL_GEMER["sound"][2];
 
 				default: erro := " HUMANOIDE";
@@ -233,7 +329,22 @@ function Imersao(who, tipoimersao, qtdloops:=1, tempoloop:=0, saisom:=1, saiemot
 					//whosound := EL_CAIR["sound"][1];
 				401:
 					//whosound := EL_CAIR["sound"][2];
-
+				1828:
+					//whosound := EL_CAIR["sound"][1];
+				1829:
+					//whosound := EL_CAIR["sound"][2];
+				1830:
+					//whosound := EL_CAIR["sound"][1];
+				1831:
+					//whosound := EL_CAIR["sound"][2];
+				1832:
+					//whosound := EL_CAIR["sound"][1];
+				1833:
+					//whosound := EL_CAIR["sound"][2];
+				1834:
+					//whosound := EL_CAIR["sound"][1];
+				1835:
+					//whosound := EL_CAIR["sound"][2];					
 				default: erro := " HUMANOIDE";
 			endcase
 			break;
@@ -245,6 +356,22 @@ function Imersao(who, tipoimersao, qtdloops:=1, tempoloop:=0, saisom:=1, saiemot
 				400:
 					//whosound := EL_CAIR["sound"][1];
 				401:
+					//whosound := EL_CAIR["sound"][2];
+				1828:
+					//whosound := EL_CAIR["sound"][1];
+				1829:
+					//whosound := EL_CAIR["sound"][2];
+				1830:
+					//whosound := EL_CAIR["sound"][1];
+				1831:
+					//whosound := EL_CAIR["sound"][2];
+				1832:
+					//whosound := EL_CAIR["sound"][1];
+				1833:
+					//whosound := EL_CAIR["sound"][2];
+				1834:
+					//whosound := EL_CAIR["sound"][1];
+				1835:
 					//whosound := EL_CAIR["sound"][2];
 
 				default: erro := " HUMANOIDE";
@@ -259,7 +386,22 @@ function Imersao(who, tipoimersao, qtdloops:=1, tempoloop:=0, saisom:=1, saiemot
 					whosound := EL_GOLPEAR["sound"][1];
 				401:
 					whosound := EL_GOLPEAR["sound"][2];
-
+				1828:
+					whosound := EL_GOLPEAR["sound"][1];
+				1829:
+					whosound := EL_GOLPEAR["sound"][2];
+				1830:
+					whosound := EL_GOLPEAR["sound"][1];
+				1831:
+					whosound := EL_GOLPEAR["sound"][2];
+				1832:
+					whosound := EL_GOLPEAR["sound"][1];
+				1833:
+					whosound := EL_GOLPEAR["sound"][2];
+				1834:
+					whosound := EL_GOLPEAR["sound"][1];
+				1835:
+					whosound := EL_GOLPEAR["sound"][2];
 				default: erro := " HUMANOIDE";
 			endcase
 			break;
@@ -272,7 +414,22 @@ function Imersao(who, tipoimersao, qtdloops:=1, tempoloop:=0, saisom:=1, saiemot
 					whosound := EL_SUSTO["sound"][1];
 				401:
 					whosound := EL_SUSTO["sound"][2];
-
+				1828:
+					whosound := EL_SUSTO["sound"][1];
+				1829:
+					whosound := EL_SUSTO["sound"][2];
+				1830:
+					whosound := EL_SUSTO["sound"][1];
+				1831:
+					whosound := EL_SUSTO["sound"][2];
+				1832:
+					whosound := EL_SUSTO["sound"][1];
+				1833:
+					whosound := EL_SUSTO["sound"][2];
+				1834:
+					whosound := EL_SUSTO["sound"][1];
+				1835:
+					whosound := EL_SUSTO["sound"][2];
 				default: erro := " HUMANOIDE";
 			endcase
 			break;
@@ -285,7 +442,22 @@ function Imersao(who, tipoimersao, qtdloops:=1, tempoloop:=0, saisom:=1, saiemot
 					whosound := EL_VOMITAR["sound"][1];
 				401:
 					whosound := EL_VOMITAR["sound"][2];
-
+				1828:
+					whosound := EL_VOMITAR["sound"][1];
+				1829:
+					whosound := EL_VOMITAR["sound"][2];
+				1830:
+					whosound := EL_VOMITAR["sound"][1];
+				1831:
+					whosound := EL_VOMITAR["sound"][2];
+				1832:
+					whosound := EL_VOMITAR["sound"][1];
+				1833:
+					whosound := EL_VOMITAR["sound"][2];
+				1834:
+					whosound := EL_VOMITAR["sound"][1];
+				1835:
+					whosound := EL_VOMITAR["sound"][2];
 				default: whosound := EL_VOMITAR["sound"][1];
 			endcase
 
