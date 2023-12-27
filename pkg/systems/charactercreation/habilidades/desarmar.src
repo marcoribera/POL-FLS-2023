@@ -34,6 +34,7 @@ program doubleattack(params)
     if ((defweapon.objtype == 0x1F020 || defender.npctemplate) && TemHabilidade(attacker, "Artista Marcial"))
         TS_StartTimer(defender, "dmgreduction", tactics_bonus, 4, attacker);
 	elseif ((defender.isA(POLCLASS_NPC) || defender.npctemplate) && defweapon.objtype != 0x1F020)
+		TS_StartTimer(defender, "dmgreduction", 20, 2, attacker);
 		SetObjProperty(defender, "arma_desarmada", defweapon.objtype);
 		MoveItemToContainer(defweapon, defender.backpack);
     else
