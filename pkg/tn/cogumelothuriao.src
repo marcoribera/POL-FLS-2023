@@ -44,11 +44,28 @@ program cogumelo(who, item)
 
         var i := 0;
         while (i < 3)
-            if (who.graphic == 401)
+            case (who.graphic)
+            401:
                 PlaySoundEffect( who, 0x339 );
-            else
+            400:
                 PlaySoundEffect( who, 0x44B );
-	        endif
+            1828:
+                PlaySoundEffect( who, 0x44B );
+            1829:
+                PlaySoundEffect( who, 0x339 );         
+            1830:
+                PlaySoundEffect( who, 0x44B );
+            1831:
+                PlaySoundEffect( who, 0x339 );    
+            1832:
+                PlaySoundEffect( who, 0x44B );
+            1833:
+                PlaySoundEffect( who, 0x339 );   
+            1834:
+                PlaySoundEffect( who, 0x44B );
+            1835:
+                PlaySoundEffect( who, 0x339 );                   
+	        endcase
             i++;
             sleep(i);
         endwhile

@@ -70,6 +70,22 @@ program TrapWalkOn(mobile, trap)
 					PlaySoundEffect( mobile, 0x32F );
 				elseif (mobile.graphic == 400)
 					PlaySoundEffect( mobile, 0x441 );
+                    elseif (mobile.graphic == 1828)
+			PlaySoundEffect( mobile, 0x441 );
+		elseif (mobile.graphic == 1829)
+			PlaySoundEffect( mobile, 0x32F );
+		elseif (mobile.graphic == 1830)
+			PlaySoundEffect( mobile, 0x441 );
+		elseif (mobile.graphic == 1831)
+			PlaySoundEffect( mobile, 0x32F );
+		elseif (mobile.graphic == 1832)
+			PlaySoundEffect( mobile, 0x441 );
+		elseif (mobile.graphic == 1833)
+			PlaySoundEffect( mobile, 0x32F );
+		elseif (mobile.graphic == 1834)
+			PlaySoundEffect( mobile, 0x441 );
+		elseif (mobile.graphic == 1835)
+			PlaySoundEffect( mobile, 0x32F );
 				endif
 				sleep(5);
                 CreateItemAtLocation(trap.x, trap.y, trap.z, 0xff97, 1, trap.realm);
@@ -110,6 +126,22 @@ program TrapWalkOn(mobile, trap)
                 PlaySoundEffect( mobile, 0x32F );
             elseif (mobile.graphic == 400)
                 PlaySoundEffect( mobile, 0x441 );
+                elseif (mobile.graphic == 1828)
+			PlaySoundEffect( mobile, 0x441 );
+		elseif (mobile.graphic == 1829)
+			PlaySoundEffect( mobile, 0x32F );
+		elseif (mobile.graphic == 1830)
+			PlaySoundEffect( mobile, 0x441 );
+		elseif (mobile.graphic == 1831)
+			PlaySoundEffect( mobile, 0x32F );
+		elseif (mobile.graphic == 1832)
+			PlaySoundEffect( mobile, 0x441 );
+		elseif (mobile.graphic == 1833)
+			PlaySoundEffect( mobile, 0x32F );
+		elseif (mobile.graphic == 1834)
+			PlaySoundEffect( mobile, 0x441 );
+		elseif (mobile.graphic == 1835)
+			PlaySoundEffect( mobile, 0x32F );
             endif
             sleep(5);
             DestroyItem(trap);
@@ -166,6 +198,22 @@ program TrapWalkOn(mobile, trap)
                     PlaySoundEffect( mob, 0x32F );
                 elseif (mob.graphic == 400)
                     PlaySoundEffect( mob, 0x441 );
+                    elseif (mob.graphic  == 1828)
+			PlaySoundEffect( mob, 0x441 );
+		elseif (mob.graphic   == 1829)
+			PlaySoundEffect( mob, 0x32F );
+		elseif (mob.graphic  == 1830)
+			PlaySoundEffect( mob, 0x441 );
+		elseif (mob.graphic  == 1831)
+			PlaySoundEffect( mob, 0x32F );
+		elseif (mob.graphic  == 1832)
+			PlaySoundEffect( mob, 0x441 );
+		elseif (mob.graphic  == 1833)
+			PlaySoundEffect( mob, 0x32F );
+		elseif (mob.graphic  == 1834)
+			PlaySoundEffect( mob, 0x441 );
+		elseif (mob.graphic  == 1835)
+			PlaySoundEffect( mob, 0x32F );
                 endif
 
 		    endforeach

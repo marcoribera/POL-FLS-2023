@@ -8,13 +8,40 @@ program TimedScript_Paralysis(params)
 
 	PlaySoundEffect(mobile, 0x205);
 	
-	if (mobile.graphic == 401)
+	
+	case (mobile.graphic)
+	401:
 	  PlaySoundEffect( mobile, 0x334 );
 	  PrintTextAbove(mobile, "*Dormindo*");
-	else
+	400:
 	  PlaySoundEffect( mobile, 0x446 );
 	  PrintTextAbove(mobile, "*Dormindo*");
-	endif
+	1828: 
+	  PlaySoundEffect( mobile, 0x446 );
+	  PrintTextAbove(mobile, "*Dormindo*");
+	1829:
+	  PlaySoundEffect( mobile, 0x334 );
+	  PrintTextAbove(mobile, "*Dormindo*");		
+	1830: 
+	  PlaySoundEffect( mobile, 0x446 );
+	  PrintTextAbove(mobile, "*Dormindo*");
+	1831:
+	  PlaySoundEffect( mobile, 0x334 );
+	  PrintTextAbove(mobile, "*Dormindo*");	
+	1832: 
+	  PlaySoundEffect( mobile, 0x446 );
+	  PrintTextAbove(mobile, "*Dormindo*");
+	1833:
+	  PlaySoundEffect( mobile, 0x334 );
+	  PrintTextAbove(mobile, "*Dormindo*");	
+	1834: 
+	  PlaySoundEffect( mobile, 0x446 );
+	  PrintTextAbove(mobile, "*Dormindo*");
+	1835:
+	  PlaySoundEffect( mobile, 0x334 );
+	  PrintTextAbove(mobile, "*Dormindo*");		 
+	endcase 
+	
 	
 	SendSysMessage(mobile, "Voce esta dormindo.");
 	mobile.paralyzed := 1;

@@ -13,7 +13,6 @@ program SpellScript(params)
 	var info := params[2];
 	params := 0; // No longer needed
 
-	
 	SetObjProperty(who, "aparenciacadaverica", 1);
 
 	TS_StartTimer(who, "aparenciacadaverica", GetSpellDuration(AP_GetSkill(who, MAGICLORE)), 1, who, 0); //20 min

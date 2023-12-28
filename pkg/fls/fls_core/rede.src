@@ -25,7 +25,7 @@ program rope(who, item)
 		diff := 100;
 	endif
 
-	if (alvo.corpsetype == 400 || alvo.corpsetype == 401) // Se for corpo
+	if (alvo.corpsetype == 400 || alvo.corpsetype == 401 || alvo.corpsetype == 1828 || alvo.corpsetype == 1829 || alvo.corpsetype == 1830 || alvo.corpsetype == 1831 || alvo.corpsetype == 1832 || alvo.corpsetype == 1833 || alvo.corpsetype == 1834 || alvo.corpsetype == 1835) // Se for corpo
 		var char := SystemFindObjectBySerial(alvo.ownerserial);
 
 		if (!char)

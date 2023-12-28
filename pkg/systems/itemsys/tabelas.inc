@@ -109,6 +109,29 @@ function TabelaMaterialResistMod(item) //objtype do material: return {FISICO, FI
         //TIER 4
         "0xfb7": return {0,2,0,2,0,50}; //FLAMEL
         "0xfbd": return {0,0,2,0,2,50}; //RAJAL
+
+        //////////MADEIRA
+        //TIER 1
+        "0x1bd7": return {0,-5,0,0,1,0}; //MADEIRA
+        "0xee66": return {-1,0,0,0,1,0}; //PINHEIRO
+        "0xee67": return {1,0,0,0,0,10}; //CARVALHO
+
+        //TIER 2
+        "0xee68": return {2,0,2,0,0,20}; //NOGUEIRA
+        "0xee70": return {2,0,0,2,0,20}; //CIPRESTE
+        "0xee69": return {2,0,0,0,2,20}; //SALGUEIRO
+
+        //TIER 3
+        "0xee73": return {3,0,3,0,0,30}; //POLAR
+        "0x615b": return {3,0,0,3,0,30}; //TEIXO
+        "0xee64": return {3,0,0,0,3,30}; //IMBUIA
+
+        //TIER 4
+        "0xee65": return {4,4,0,4,0,40}; //COGUMELO
+        "0xef2a": return {4,0,4,0,4,40}; //MOGNO
+
+        //TIER 5
+        "0xff05": return {5,0,5,5,0,50}; //EBANO
     endcase
 endfunction
 
@@ -225,6 +248,29 @@ function TabelaMaterialDamageMod(item) //objtype do material: return {FISICO, FI
         "0xfb7": return {0,0,0,0,0}; //FLAMEL
         "0xfbd": return {0,0,0,0,0}; //RAJAL
         */
+
+        //////////MADEIRA
+        //TIER 1
+        "0x1bd7": return {0,0,0,0,0,0}; //MADEIRA
+        "0xee66": return {-10,0,0,0,10,0}; //PINHEIRO
+        "0xee67": return {10,0,0,0,0,10}; //CARVALHO
+
+        //TIER 2
+        "0xee68": return {-10,0,20,0,0,20}; //NOGUEIRA
+        "0xee70": return {-10,0,0,20,0,20}; //CIPRESTE
+        "0xee69": return {-10,0,0,0,20,20}; //SALGUEIRO
+
+        //TIER 3
+        "0xee73": return {-20,0,40,0,0,30}; //POLAR
+        "0x615b": return {-20,0,0,40,0,30}; //TEIXO
+        "0xee64": return {-20,0,0,0,40,30}; //IMBUIA
+
+        //TIER 4
+        "0xee65": return {-30,30,0,30,0,40}; //COGUMELO
+        "0xef2a": return {-30,0,30,0,30,40}; //MOGNO
+
+        //TIER 5
+        "0xff05": return {-40,0,40,40,0,50}; //EBANO
     endcase
 endfunction
 
@@ -341,6 +387,9 @@ function TabelaMaterialMod(item) //objtype do material: return {FISICO, FIRE, CO
         "0xfbd": //RAJAL
             return {0,0,0,0,0}; //MOD TECIDOS
 
+        //////////TECIDO
+        //TIER 1
+
         /*
         //"QUITINA": //QUITINA - BUSCAR OBJTYPE
             return {0,0,0,0,0};
@@ -411,10 +460,10 @@ function TabelaSlot(item)
     case(slot) //[1] = ResistBase; [2] = DexPenalty
         "head": return {1,-1};
         "neck": return {1,-1};
-        "body": return {1,-3};
-        "arms": return {1,-2};
+        "body": return {4,-3};
+        "arms": return {2,-2};
         "hands": return {1,-1};
-        "legs/feet": return {1,-2};
+        "legs/feet": return {3,-2};
         "shield": return {2,-1};
     endcase
 endfunction

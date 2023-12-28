@@ -105,8 +105,8 @@ function FalhaCritica(who, item)
 	elseif ( falha < 75 )
 		SendSysMEssageEx(who,"O que foi isso?!", SSM_FAIL);
 		if (who.graphic == 401)
-			who.graphic := 400;
-		else
+		who.graphic := 400; who.graphic := 1828; who.graphic := 1829; who.graphic := 1830; who.graphic := 1831; who.graphic := 1832; who.graphic := 1833; who.graphic := 1834; who.graphic := 1835;      
+	else
 			who.graphic := 401;
 		endif
 		alchEmoteSound(who, "Huh");
@@ -148,6 +148,23 @@ function alchEmoteSound(byref who, tipoemote, saiemote:=1)
 					whosound := 0x32F;
 				400:
 					whosound := 0x441;
+				1829:
+					whosound := 0x32F;
+				1828:
+					whosound := 0x441;
+				1831:
+					whosound := 0x32F;
+				1830:
+					whosound := 0x441;
+				1833:
+					whosound := 0x32F;
+				1832:
+					whosound := 0x441;
+				1835:
+					whosound := 0x32F;
+				1834:
+					whosound := 0x441;
+				
 			endcase
 			break;
 
@@ -157,6 +174,22 @@ function alchEmoteSound(byref who, tipoemote, saiemote:=1)
 				401:
 					whosound := 0x320;
 				400:
+					whosound := 0x430;
+				1829:
+					whosound := 0x320;
+				1828:
+					whosound := 0x430;
+				1831:
+					whosound := 0x320;
+				1830:
+					whosound := 0x430;
+				1833:
+					whosound := 0x320;
+				1832:
+					whosound := 0x430;
+				1835:
+					whosound := 0x320;
+				1834:
 					whosound := 0x430;
 			endcase
 			break;
@@ -168,6 +201,22 @@ function alchEmoteSound(byref who, tipoemote, saiemote:=1)
 					whosound := 0x312;
 				400:
 					whosound := 0x421;
+				1829:
+					whosound := 0x312;
+				1828:
+					whosound := 0x421;
+				1831:
+					whosound := 0x312;
+				1830:
+					whosound := 0x421;
+				1833:
+					whosound := 0x312;
+				1832:
+					whosound := 0x421;
+				1835:
+					whosound := 0x312;
+				1834:
+					whosound := 0x421;
 			endcase
 			break;
 
@@ -177,6 +226,22 @@ function alchEmoteSound(byref who, tipoemote, saiemote:=1)
 				401:
 					whosound := 0x313;
 				400:
+					whosound := 0x422;
+				1829:
+					whosound := 0x313;
+				1828:
+					whosound := 0x422;
+				1831:
+					whosound := 0x313;
+				1830:
+					whosound := 0x422;
+				1833:
+					whosound := 0x313;
+				1832:
+					whosound := 0x422;
+				1835:
+					whosound := 0x313;
+				1834:
 					whosound := 0x422;
 			endcase
 			break;
@@ -188,6 +253,22 @@ function alchEmoteSound(byref who, tipoemote, saiemote:=1)
 					whosound := 0x31A;
 				400:
 					whosound := 0x42A;
+				1829:
+					whosound := 0x31A;
+				1828:
+					whosound := 0x42A;
+				1831:
+					whosound := 0x31A;
+				1830:
+					whosound := 0x42A;
+				1833:
+					whosound := 0x31A;
+				1832:
+					whosound := 0x42A;
+				1835:
+					whosound := 0x31A;
+				1834:
+					whosound := 0x42A;
 			endcase
 			break;
 
@@ -197,6 +278,22 @@ function alchEmoteSound(byref who, tipoemote, saiemote:=1)
 				401:
 					whosound := 0x31C;
 				400:
+					whosound := 0x42C;
+				1829:
+					whosound := 0x31C;
+				1828:
+					whosound := 0x42C;
+				1831:
+					whosound := 0x31C;
+				1830:
+					whosound := 0x42C;
+				1833:
+					whosound := 0x31C;
+				1832:
+					whosound := 0x42C;
+				1835:
+					whosound := 0x31C;
+				1834:
 					whosound := 0x42C;
 			endcase
 			break;

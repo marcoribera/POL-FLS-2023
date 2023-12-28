@@ -31,7 +31,7 @@ program SpellScript(params)
     printtextabove(defender, "*K.O.*");
 	PlaySoundEffect(attacker, 0x658);
 	SendSysMessageEx(attacker, "O alvo apagou.", SSM_INFO);
-    if (attacker.graphic == 400)
+    if (attacker.graphic == 400 || attacker.graphic == 401 || attacker.graphic == 1828 || attacker.graphic == 1829 || attacker.graphic == 1830 || attacker.graphic == 1831 || attacker.graphic == 1832 || attacker.graphic == 1833 || attacker.graphic == 1834 || attacker.graphic == 1835)
         PlaySoundEffect(attacker, 0x515);
     else
         PlaySoundEffect(attacker, 0x514);
