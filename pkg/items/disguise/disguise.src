@@ -411,6 +411,30 @@ function disguiseSelf(who, kit, byref disfarce);
 		elseif (sexo == "Feminino")
 			disfarce.sexo := 401;
 			SendSysMessageEx(who, "Voce escolheu o sexo para o disfarce.", SSM_INFO);
+		elseif (sexo == "Anão Masculino")
+			disfarce.sexo := 1828;
+			SendSysMessageEx(who, "Voce escolheu o sexo para o disfarce.", SSM_INFO);
+		elseif (sexo == "Anão Feminino")
+			disfarce.sexo := 1829;
+			SendSysMessageEx(who, "Voce escolheu o sexo para o disfarce.", SSM_INFO);
+		elseif (sexo == "elfo Masculino")
+			disfarce.sexo := 1830;
+			SendSysMessageEx(who, "Voce escolheu o sexo para o disfarce.", SSM_INFO);
+		elseif (sexo == "Elfo Feminino")
+			disfarce.sexo := 1831;
+			SendSysMessageEx(who, "Voce escolheu o sexo para o disfarce.", SSM_INFO);
+		elseif (sexo == "Orc Masculino")
+			disfarce.sexo := 1832;
+			SendSysMessageEx(who, "Voce escolheu o sexo para o disfarce.", SSM_INFO);
+		elseif (sexo == "Orc Feminino")
+			disfarce.sexo := 1833;
+			SendSysMessageEx(who, "Voce escolheu o sexo para o disfarce.", SSM_INFO);
+		elseif (sexo == "WolfKin Masculino")
+			disfarce.sexo := 1834;
+			SendSysMessageEx(who, "Voce escolheu o sexo para o disfarce.", SSM_INFO);
+		elseif (sexo == "Wolfkin Feminino")
+			disfarce.sexo := 1835;
+			SendSysMessageEx(who, "Voce escolheu o sexo para o disfarce.", SSM_INFO);
 		else
 			SendSysMessageEx(who, "Cancelado.", SSM_FAIL);
 		endif

@@ -128,7 +128,7 @@ program do_poisoning(who)
 		poisonInfo.+time := 40 + level*10;
 		if (temHabilidade(who, "Veneno Puro"))
 			poisonInfo.dosage := CInt(poisonInfo.dosage * 1.5);
-			poisonInfo.time := CInt(poisonInfo.time * 1.2);
+			poisonInfo.time := CInt(poisonInfo.time * 1.25);
 		endif
 		if ( the_item.graphic == 0x1bfb || the_item.graphic == 0xf3f  )
 			poisonInfo.dosage := "infinito"; //Era 100 antes

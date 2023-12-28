@@ -3,7 +3,7 @@ use uo;
 include "include/imersao";
 
 program textcmd_imersao(who, params)
-    var targ, tipoemote, saisom, saiemote, saianim, saiefeito;
+    var targ, tipoemote, saisom, saiemote, saianim, saiefeito, qtdloops, tempoloop;
     params := SplitWords(params);
 
     targ := Target(who); //target
@@ -14,10 +14,20 @@ program textcmd_imersao(who, params)
         SendSysMessageEx(who, "E necessario digitar o tipo da acao!", SSM_FAIL);
         return;
     endif
-    if (params[2]) saisom := CInt(params[2]); else saisom := 1; endif
-    if (params[3]) saiemote := CInt(params[3]); else saiemote := 1; endif
-    if (params[4]) saianim := CInt(params[4]); else saianim := 1; endif
-    if (params[5]) saianim := CInt(params[5]); else saiefeito := 1; endif
+
+    qtdloops := CInt(params[2]);
+    tempoloop := CInt(params[3]);
+    saisom := CInt(params[4]);
+    saiemote := CInt(params[5]);
+    saianim := CInt(params[6]);
+    saianim := CInt(params[7]);
+
+    if (params[2]) qtdloops := CInt(params[2]); else qtdloops := 1; endif
+    if (params[3]) tempoloop := CInt(params[3]); else tempoloop := 0; endif
+    if (params[4]) saisom := CInt(params[4]); else saisom := 1; endif
+    if (params[5]) saiemote := CInt(params[5]); else saiemote := 1; endif
+    if (params[6]) saianim := CInt(params[6]); else saianim := 1; endif
+    if (params[7]) saianim := CInt(params[7]); else saiefeito := 1; endif
     
-    Imersao(targ, tipoemote, saisom, saiemote, saianim, saiefeito, who);
+    Imersao(targ, tipoemote, qtdloops, tempoloop, saisom, saiemote, saianim, saiefeito, who);
 endprogram

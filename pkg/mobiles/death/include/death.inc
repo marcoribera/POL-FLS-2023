@@ -37,11 +37,11 @@ function DP_PlayDeathSound(object)
 	endif
 	if ( !death_sound || object.corpsetype == 401 )
 		// No sound selected yet.
-		if ( object.graphic == 402 || object.corpsetype == 400 )
+		if ( object.graphic == 402 || object.corpsetype == 400 || object.corpsetype == 1828  || object.corpsetype == 1830 || object.corpsetype == 1832  || object.corpsetype == 1834  )
 			 // Male ghost / corpse
 			var sounds := array{347, 348, 349, 350};
 			death_sound := sounds[RandomInt(sounds.Size())+1];
-		elseif ( (GetObjProperty(object, "female") == 1) || object.graphic == 401 ||  object.graphic == 403 || object.corpsetype == 401 )
+		elseif ( (GetObjProperty(object, "female") == 1) || object.graphic == 401 ||  object.graphic == 403 || object.corpsetype == 401 || object.corpsetype == 1829 || object.corpsetype == 1831 || object.corpsetype == 1833 || object.corpsetype == 1835 )
 			 // Female ghost / corpse
 			var sounds := array{337, 338, 339, 340};
 			death_sound := sounds[RandomInt(sounds.Size())+1];

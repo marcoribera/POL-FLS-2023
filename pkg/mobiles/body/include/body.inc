@@ -58,7 +58,7 @@ endfunction
 
 function HasPaperdoll( byref graphic )
 
-	return ( graphic in { 400, 401, 402, 403, 605, 606, 607, 608, 666, 667, 695, 694, 987 } );
+	return ( graphic in { 400, 401, 402, 403, 605, 606, 607, 608, 666, 667, 695, 694, 987, 1828, 1829, 1830, 1831, 1832, 1833, 1834, 1835 } );
 endfunction
 
 function IsMonster( graphic )

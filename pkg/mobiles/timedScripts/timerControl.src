@@ -217,7 +217,7 @@ function AddTimer(mobile, byref event, byref timer_list, byref cooldowns, byref 
 			SendSysMessageEx(mobile, "O veneno nao faz efeito em voce.", SSM_INFO);
 			return 0;
 		endif
-		if ( TemHabilidade(mobile, "Corpo ao Extremo" ) )
+		if ( TemHabilidade(mobile, "Mumificacao" ) )
 			SendSysMessageEx(mobile, "O veneno nao faz efeito em voce.", SSM_INFO);
 			return 0;
 		endif

@@ -37,6 +37,12 @@ program vacuodemana(params)
 	
     var danomana := (AP_GetVitalMaximumValue(defender, "mana") - AP_GetVital(defender, "mana")) * 1.2;
     danomana += GetResist(attacker, VONTADE);
+
+    //TODO colocar isso em uma funcao depois
+	var dmgList := dictionary;
+	dmgList := getNewDamageList(attacker);
+	var total := cint(CalculateTotalDamage(defender, basedamage, attacker, dmgList));
+	DamageFLS(defender, total, DMG_PHYSICAL, attacker);
 	DamageFLS(defender, danomana, DMG_FIRE, attacker);
 
 	//PlayAttackAnimation(attacker);

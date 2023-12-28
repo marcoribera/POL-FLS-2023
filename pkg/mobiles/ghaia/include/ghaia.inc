@@ -108,7 +108,7 @@ function CanFight(me, mobile, align)
           if ( (mytemplate == "MercenarioRecruta") || (mytemplate == "MercenarioBesteiro") || (mytemplate == "Roguearcher") || (mytemplate == "Mercenario") || (mytemplate == "Rogue") || (mytemplate == "MercenarioLider") || (mytemplate == "MercenarioExperiente") )
             return 0;
           endif
-	endif
+      endif
 
       //printtextabove(me, "mytemplate " + mytemplate + " " + cint(GetObjProperty(mobile, "empatiacomanimais")));
       if ( (GetObjProperty(mobile, "kit") == "criado por lobos") || (cint(GetObjProperty(mobile, "empatiacomanimais")) == 1) || TemHabilidade(mobile, "Senso da Natureza" ) || TemHabilidade(mobile, "Campestre" ) )//verifica se tem empatia por animais
@@ -116,17 +116,17 @@ function CanFight(me, mobile, align)
         || (mytemplate == "giantserpent") || (mytemplate == "snake") || (mytemplate == "mongbat") || (mytemplate == "naja")
         || (mytemplate == "warg") || (mytemplate == "polarbear") || (mytemplate == "lynx") ||  (mytemplate == "cougar")
         ||  (mytemplate == "alligator")  || (mytemplate == "panther") || (mytemplate == "bull") || (mytemplate == "grizzlybear") || (mytemplate == "wolf") || (mytemplate == "sapop"))
-      if (isBoss(mobile)) //verifica se � boss
-        return 1;
-      else
-        return 0;
-      endif
+            if (isBoss(mobile)) //verifica se � boss
+                return 1;
+            else
+                return 0;
+            endif
         endif
       elseif ( (mycategory == "undead") && (GetObjProperty(mobile, "aparenciacadaverica") == 1) )
           return 0;
 
-    elseif (GetObjProperty(mobile, "unattack"))
-      return 0;
+      elseif (GetObjProperty(mobile, "unattack"))
+        return 0;
 
       elseif ( propallies != error )
         foreach key in (propallies.keys())

@@ -94,6 +94,23 @@ program TrapWalkOn(mobile, trap)
 					PlaySoundEffect( mobile, 0x32F );
 				elseif (mobile.graphic == 400)
 					PlaySoundEffect( mobile, 0x441 );
+				elseif (mobile.graphic == 1828)
+					PlaySoundEffect( mobile, 0x441 );
+				elseif (mobile.graphic == 1829)
+					PlaySoundEffect( mobile, 0x32F );
+				elseif (mobile.graphic == 1830)
+					PlaySoundEffect( mobile, 0x441 );
+				elseif (mobile.graphic == 1831)
+					PlaySoundEffect( mobile, 0x32F );
+				elseif (mobile.graphic == 1832)
+					PlaySoundEffect( mobile, 0x441 );
+				elseif (mobile.graphic == 1833)
+					PlaySoundEffect( mobile, 0x32F );
+				elseif (mobile.graphic == 1834)
+					PlaySoundEffect( mobile, 0x441 );
+				elseif (mobile.graphic == 1835)
+					PlaySoundEffect( mobile, 0x32F );
+				
 				endif
 				sleep(tempo);
 				EraseObjProperty(trap, "trap_ativada");
@@ -130,6 +147,23 @@ program TrapWalkOn(mobile, trap)
 			PlaySoundEffect( mobile, 0x32F );
 		elseif (mobile.graphic == 400)
 			PlaySoundEffect( mobile, 0x441 );
+		elseif (mobile.graphic == 1828)
+			PlaySoundEffect( mobile, 0x441 );
+		elseif (mobile.graphic == 1829)
+			PlaySoundEffect( mobile, 0x32F );
+		elseif (mobile.graphic == 1830)
+			PlaySoundEffect( mobile, 0x441 );
+		elseif (mobile.graphic == 1831)
+			PlaySoundEffect( mobile, 0x32F );
+		elseif (mobile.graphic == 1832)
+			PlaySoundEffect( mobile, 0x441 );
+		elseif (mobile.graphic == 1833)
+			PlaySoundEffect( mobile, 0x32F );
+		elseif (mobile.graphic == 1834)
+			PlaySoundEffect( mobile, 0x441 );
+		elseif (mobile.graphic == 1835)
+			PlaySoundEffect( mobile, 0x32F );
+
 		endif
 		sleep(10);
 	dowhile (mobile.x == trap.x && mobile.y == trap.y && mobile.z == trap.z && !GetObjProperty(trap, "trap_inativa"));

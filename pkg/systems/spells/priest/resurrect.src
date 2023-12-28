@@ -4,14 +4,12 @@ use file;
 include ":death:resurrection";
 include ":attributes:attributes";
 include "include/client";
+include ":tn:cooldown";
+include ":timedScripts:timedScripts";
 
 program SpellScript(params)
-    print("Entrei");
-
 	var who := params[1];
     var targ := Target(who);
-    print("who: " + who.name);
-    print("targ: " + targ.name);
 
 	if (!targ)
 		return;
@@ -30,30 +28,33 @@ program SpellScript(params)
         return 0;
     endif
 
-    PlaySoundEffect(targ, SFX_RESURRECT);
-	PlayObjectCenteredEffect(targ, GFX_BLUE_SPARKLES, 10,10);
-	Resurrect(targ);
-	EraseObjProperty(targ, "morto");
-    var dpmod := cint(GetObjProperty(targ, "dpmod"));
-    if (!dpmod)
-        dpmod := 0;
+    if (GetObjProperty(targ, "assassinado"))
+        SendSysMessage(who, "O corpo foi violado e voce nao podera ajuda-lo");
     endif
-    dpmod := dpmod - 10;
-    SetObjProperty(targ, "dpmod", dpmod);
-    var plytarget := GetPersonBySerial(targ.serial);
-    print("plytarget: " + plytarget);
-    MoveObjectToLocation( plytarget, targ.x, targ.y, targ.z, targ.realm, MOVEOBJECT_FORCELOCATION);
 
+    var mlore := Cint(AP_GetSkill(who, MAGICLORE));
+    if (GetCooldown(targ, "morto_recentemente") > 0 )   
+        RessPlayer(targ);
+        if (mlore <= 70) DecreaseDP(who); endif // Remove DP de clerigo secundario
+        DecreaseDP(targ);
+    else
+        if (mlore >= 90)
+            RessPlayer(targ);
+        endif
+    endif
+
+    var plytarget := GetPersonBySerial(targ.serial);
+    var tempo := 3600;
+    SendSysMessage(plytarget, "Voce fraturou alguns ossos!");
+    SetCoolDown(plytarget, "hurt", tempo);
+    TS_StartTimer(plytarget, "fraturaexposta", 1);
+
+    MoveObjectToLocation( plytarget, targ.x, targ.y, targ.z, targ.realm, MOVEOBJECT_FORCELOCATION);
     recalcvitals(targ);
 endprogram
 
-
 function GetPersonBySerial(name_text)
-
 	foreach player in EnumerateOnlineCharacters()
-        print("player: " + player.name);
-        print("ownerserial " + player.serial);
-        print("txt: " + name_text);
 		if ( player.serial == name_text)
 				return player;
 		endif
@@ -61,5 +62,20 @@ function GetPersonBySerial(name_text)
 	endforeach	
 	
 	return 0;
+endfunction
 
+function RessPlayer(targ)
+    PlaySoundEffect(targ, SFX_RESURRECT);
+    PlayObjectCenteredEffect(targ, GFX_BLUE_SPARKLES, 10,10);
+    Resurrect(targ);
+    EraseObjProperty(targ, "morto");
+endfunction
+
+function DecreaseDP(mobile)
+    var dpmod := cint(GetObjProperty(mobile, "dpmod"));
+    if (!dpmod)
+        dpmod := 0;
+    endif
+    dpmod := dpmod - 10;
+    SetObjProperty(mobile, "dpmod", dpmod);
 endfunction

@@ -199,7 +199,7 @@ program MainHitScript( params )
 				var copmobs := getobjproperty(defender, "#chainserials");
 				var mage := SystemFindObjectBySerial( GetObjProperty(defender, "#mageserial"));
 				var copdefenders := array;
-				var lvl := cdbl(AP_GetSkill(mage, MAGICLORE)/100);
+				var lvl := cdbl(AP_GetSkill(mage, MAGICLORE)/200);
 				foreach serial in copmobs
 					copdefenders.append(SystemFindObjectBySerial(serial));
 				endforeach
@@ -801,7 +801,7 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 	var rand := Cint((RandomInt(100) + 1) + bonus_Preservar_Orgaos);
 	//printtextabove(attacker, "chance " + chance + " rand " + rand + " " + (chance > rand) );
 
-	if (TemHabilidade(defender, "Corpo ao Extremo"))
+	if (TemHabilidade(defender, "Mumificacao"))
 		SendSysMessageEx(defender, "Seu corpo evita o critico", SSM_INFO);
 		SendSysMessageEx(attacker, "Seu critico nao surte efeito", SSM_FAIL);
 		chance := 0;
@@ -1011,8 +1011,16 @@ function PoisonChecks(attacker, defender, weapon, armor, basedamage, rawdamage)
 			if (IsPoisonImune(defender, poisonInfo.name) )
 				return 0;
 			endif
+            // Sempre que for mexer nesse timer, mexer também  no .arremessar ou criar funcao e chamar em ambos
 			if (poisonInfo.name == "paralyzePoison")
-				poisonInfo.time := 2;
+                var duration := CInt(AP_GetSkill(attacker, ALCHEMY) / 20 );
+                if (duration < 2)
+                    duration := 2;
+                endif
+                if (temHabilidade(attacker, "Veneno Puro"))
+                    duration := duration * 2;
+                endif
+				poisonInfo.time := duration;
 			endif
 
 			if (CheckResist(defender, FORTITUDE, 15,-20*poisonInfo.level))
@@ -1165,6 +1173,7 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 		if (GetCooldown(defender, "defesasgloriosas"))
 			TS_StartTimer(attacker, "paralysis", 5);
 			SetCooldown(defender, "defesasgloriosas", 0);
+            defender.attack_once(attacker);
 		endif
 
 		//Pike desarma defensor que bloquear sem escudo

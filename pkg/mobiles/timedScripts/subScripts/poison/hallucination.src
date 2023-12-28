@@ -123,7 +123,7 @@ function DrawObject(ktowhom, kobj, kgraphic, kcolor, keqitrandcolor := 0)
 	PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(kobj.facing, 1);
 	PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(kcolor, 2);
 	PacketHexStringPart2 := PacketHexStringPart2 +"0000";
-	if ((kobj.isa(POLCLASS_MOBILE)) && ((kobj.graphic == 400) || (kobj.graphic == 401)))
+	if ((kobj.isa(POLCLASS_MOBILE)) && ((kobj.graphic == 400) || (kobj.graphic == 401)|| (kobj.graphic == 1828) || (kobj.graphic == 1829) || (kobj.graphic == 1830) || (kobj.graphic == 1831) || (kobj.graphic == 1832) || (kobj.graphic == 1833) || (kobj.graphic == 1834) || (kobj.graphic == 1835)))
 		var color;
 		var graphic;
 		foreach item in ListEquippedItems(kobj)
