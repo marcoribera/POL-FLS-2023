@@ -525,25 +525,25 @@ function GetSoundEffect(who, input)
 	  resultado[2] := "*Arfando*";
 	1829:
 	  resultado[1] := 0x31A ;
-	  resultado[2] := "*Arfando*";	  
+	  resultado[2] := "*Arfando*";
 	1830:
 	  resultado[1] := 0x42A ;
 	  resultado[2] := "*Arfando*";
 	1831:
 	  resultado[1] := 0x31A ;
-	  resultado[2] := "*Arfando*";	  
+	  resultado[2] := "*Arfando*";
 	1832:
 	  resultado[1] := 0x42A ;
 	  resultado[2] := "*Arfando*";
 	1833:
 	  resultado[1] := 0x31A ;
-	  resultado[2] := "*Arfando*";	  
+	  resultado[2] := "*Arfando*";
 	1834:
 	  resultado[1] := 0x42A ;
 	  resultado[2] := "*Arfando*";
 	1835:
 	  resultado[1] := 0x31A ;
-	  resultado[2] := "*Arfando*";	  
+	  resultado[2] := "*Arfando*";
 
 	endcase
 	endif
@@ -579,7 +579,7 @@ function GetSoundEffect(who, input)
 	1835:
 	  resultado[1] := 0x31B ;
 	  resultado[2] := "*Rindo*";
-	
+
 endcase
 	endif
 	if ( (input[12]==1) )
@@ -627,25 +627,25 @@ endcase
 	  resultado[2] := "*Rosnando*";
 	1828:
 	  resultado[1] := 0x42D ;
-	  resultado[2] := "*Rosnando*";	
+	  resultado[2] := "*Rosnando*";
 	1829:
 	  resultado[1] := 0x31D ;
 	  resultado[2] := "*Rosnando*";
 	1830:
 	  resultado[1] := 0x42D ;
-	  resultado[2] := "*Rosnando*";	
+	  resultado[2] := "*Rosnando*";
 	1831:
 	  resultado[1] := 0x31D ;
 	  resultado[2] := "*Rosnando*";
 	1832:
 	  resultado[1] := 0x42D ;
-	  resultado[2] := "*Rosnando*";	
+	  resultado[2] := "*Rosnando*";
 	1833:
 	  resultado[1] := 0x31D ;
 	  resultado[2] := "*Rosnando*";
 	1834:
 	  resultado[1] := 0x42D ;
-	  resultado[2] := "*Rosnando*";	
+	  resultado[2] := "*Rosnando*";
 	1835:
 	  resultado[1] := 0x31D ;
 	  resultado[2] := "*Rosnando*";
@@ -677,7 +677,7 @@ endcase
 	1832:
 	  resultado[1] := 0x42E ;
 	  resultado[2] := "*Hey*";
-	1832:
+	1833:
 	  resultado[1] := 0x31E ;
 	  resultado[2] := "*Hey*";
 	1834:
@@ -866,7 +866,7 @@ endcase
 
 
 
-	  
+
 endcase
 	endif
 	if ( (input[20]==1) )
