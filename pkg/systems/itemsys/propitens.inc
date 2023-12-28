@@ -224,7 +224,6 @@ function BuscarValoresSlot(item)
     var valslot := TabelaSlot(item);
     valslot := valslot[1];
     var valmaterial := Array;
-    var valmod;
 
     if(IsEscudo(item)) //ESCUDO TEM SOMA BASEADO NO SLOT
 
@@ -237,16 +236,10 @@ function BuscarValoresSlot(item)
         resultado := valmaterial;
 
         resultado[1] := resultado[1] + valresist + valslot;
-        if (resultado[2] > 0) resultado[2] := resultado[2] + valresist; endif
-        if (resultado[3] > 0) resultado[3] := resultado[3] + valresist; endif
-        if (resultado[4] > 0) resultado[4] := resultado[4] + valresist; endif
-        if (resultado[5] > 0) resultado[5] := resultado[5] + valresist; endif
-
-        resultado[1] := resultado[1] + valmaterial[1];
-        resultado[2] := resultado[2] + valmaterial[2];
-        resultado[3] := resultado[3] + valmaterial[3];
-        resultado[4] := resultado[4] + valmaterial[4];
-        resultado[5] := resultado[5] + valmaterial[5];
+        if (resultado[2] > 0) resultado[2] := resultado[2] + valresist + valslot; endif
+        if (resultado[3] > 0) resultado[3] := resultado[3] + valresist + valslot; endif
+        if (resultado[4] > 0) resultado[4] := resultado[4] + valresist + valslot; endif
+        if (resultado[5] > 0) resultado[5] := resultado[5] + valresist + valslot; endif
 
     elseif(item.IsA(POLCLASS_WEAPON))
         resultado := TabelaDanos(item);
