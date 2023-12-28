@@ -70,8 +70,8 @@ function empty_bottle(character, potion, potiontype := 0)
 
 endfunction
 
-function isotherreagent(what) //essa funcao so se mantem pra checar os kindlings e ingots. se nao quiser checar isso use .isReagent();
-	case(what.objtype)
+function isotherreagent(what) //essa funcao so se mantem pra checar o que não é reagent do próprio UO. se nao quiser checar isso use .isReagent();
+	case(Lower(what.objtype))
     ///// GRAVETOS /////
 		0xf7a:  
 		0xf7b:  
@@ -92,10 +92,10 @@ function isotherreagent(what) //essa funcao so se mantem pra checar os kindlings
 		0xf91: 
 		0xf89: 
 		0xf82: 
-		0xF81: 
-		0xF78: 
-		0xF8F: 
-		0xF90: 
+		0xf81: 
+		0xf78: 
+		0xf8f: 
+		0xf90: 
 
 		0xee25: 
 		0xee26: 
@@ -111,7 +111,8 @@ function isotherreagent(what) //essa funcao so se mantem pra checar os kindlings
     0xee2d: 
     0xee2e: 
 
-		0x1F91: 
+		0x1f91: //COPO D'ÁGUA
+    0x1f9e: //JARRA D'ÁGUA
 
     ///// INGOTS /////
 		0x6993: //BARRA DE PRATA LUNAR
@@ -202,7 +203,7 @@ function GetReagName(objtype)
    return "copo de agua";
   endif
 
-  case(objtype) //EvilLink
+  case(Lower(objtype)) //EvilLink
     ///// INGOTS /////
     0x6993: return "barras de prata lunar";
     0x630e: return "barras de ouro";
@@ -225,7 +226,8 @@ function GetReagName(objtype)
  
 
     ///// OTHERS /////
-    0x1852: return "oleo exotico";
+    0x1f9e: return "Jarra de Água";
+    0x1852: return "Óleo Exótico";
   endcase
 
 endfunction
