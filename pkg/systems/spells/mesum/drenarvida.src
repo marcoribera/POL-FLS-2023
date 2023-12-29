@@ -70,6 +70,9 @@ program SpellScript(params)
 		if ( (who.x != oldx) || (who.y != oldy))
 			time:=10;
 			SendSysMessageEx(who, "Voce se moveu e cancelou a magia.", SSM_FAIL);
+		elseif ( mobile.frozen )
+			time:=10;
+			SendSysMessageEx(who, "Voce esta incapaz de se mover.", SSM_FAIL);
 		elseif (Distance(who, targ) >= 16)
 			time:=10;
 			SendSysMessageEx(who, "O alvo se distanciou muito.", SSM_FAIL);
