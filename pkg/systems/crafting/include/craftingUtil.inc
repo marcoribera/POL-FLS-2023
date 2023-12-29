@@ -146,7 +146,7 @@ function AddQualityDamageMod(who, craft_skill, byref theitem, quality )
 		elseif(craft_skill == "WoodWorking")
 			if(TemHabilidade(who,"Entalhe para Combate"))
 				SetObjProperty(theitem,"attackspeedbonus", CInt(elem.Speed * modadc)); //VAI FICAR OBSOLETA DEPOIS DA IMPLEMENTAÇÃO DO propitens.inc
-				attr_excp["dmgmod"] := CInt(elem.MaxDam * modadc) - attr."hab_dmgmod";
+				attr_excp["speedmod"] := CInt(elem.Speed * modadc) - attr["hab_speedmod"];
 				//theitem.speed_mod := CInt(elem.Speed * modadc); //BUGADO
 			endif
 			if(TemHabilidade(who,"Flexao da Madeira")) //&& (Cint(elem.maxrange) > 2))

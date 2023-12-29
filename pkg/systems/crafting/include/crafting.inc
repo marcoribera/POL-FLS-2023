@@ -459,8 +459,9 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 			endif
 		elseif(craft_skill == "WoodWorking")
 			if(TemHabilidade(who,"Entalhe para Combate"))
-				theitem.speed_mod := CInt(elem.Speed*0.1);
+				SetObjProperty(theitem,"attackspeedbonus", CInt(elem.Speed*0.1));
 				attr["hab_speedmod"] := CInt(elem.Speed*0.1);
+				//theitem.speed_mod := CInt(elem.Speed*0.1);
 			endif
 			if(TemHabilidade(who,"Flexao da Madeira") && (Cint(elem.maxrange) > 2))
 				theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.1);
