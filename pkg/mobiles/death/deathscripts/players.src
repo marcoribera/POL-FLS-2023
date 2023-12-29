@@ -87,7 +87,7 @@ program death(params)
 			//if (getCoolDown(ghost, "deathtime") == 0 )
 			if (killer.npctemplate && killer.script  == ":ghaia:tamed")  //se for tamed nao tira dp
 			else
-				EraseObjProperty(ghost, "#Casting")
+				EraseObjProperty(ghost, "#Casting");
 				AP_ConsumeVital(ghost, "DP", 10);
 				SendSysMessage(ghost, "Voce perdeu 1 DP e agora tem " + AP_GetVital(ghost, "DP")/10);
 			endif
