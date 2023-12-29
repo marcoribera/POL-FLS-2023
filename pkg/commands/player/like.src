@@ -39,6 +39,8 @@ program like(who, param)
 
     if (GetObjProperty(targ, "#likes") == error)
         SetObjProperty(targ, "#likes", 1);
+        SendSysMessage(who, "Voce deu um like em outro jogador.");
+        SendSysMessage(targ, "Voce ganhou um like por seu rp! Seu total agora e " + GetObjProperty(targ, "#likes") + " likes");
     else
         var likes := GetObjProperty(targ, "#likes");
 
