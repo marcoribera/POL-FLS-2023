@@ -308,7 +308,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 
 			//passando a cor pra materiais coloridos que nao tem Id proprio (como madeira)
 			AddMaterialMod(who, craft_skill, theitem, chosenPrincipalMaterial, materialColor);
-			NovoSistemaDeItens(who, item, TOGGLELVL_CRAFT, 2); //[3] E [4] SÃO TOGGLES NO propitens.inc PARA LIMITAR O USO EM FASE DE TESTES
+			NovoSistemaDeItens(who, theitem, TOGGLELVL_CRAFT, 2); //[3] E [4] SÃO TOGGLES NO propitens.inc PARA LIMITAR O USO EM FASE DE TESTES
 			CraftExceptional(who, theitem, craft_skill, skillreq);
 			CraftLockable(who, theitem);
 
@@ -459,8 +459,9 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 			endif
 		elseif(craft_skill == "WoodWorking")
 			if(TemHabilidade(who,"Entalhe para Combate"))
-				theitem.speed_mod := CInt(elem.Speed*0.1);
+				SetObjProperty(theitem,"attackspeedbonus", CInt(elem.Speed*0.1));
 				attr["hab_speedmod"] := CInt(elem.Speed*0.1);
+				//theitem.speed_mod := CInt(elem.Speed*0.1);
 			endif
 			if(TemHabilidade(who,"Flexao da Madeira") && (Cint(elem.maxrange) > 2))
 				theitem.dmg_mod := theitem.dmg_mod + CInt(elem.MaxDam * 0.1);

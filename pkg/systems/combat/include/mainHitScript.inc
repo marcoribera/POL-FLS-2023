@@ -75,7 +75,15 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 		var gain_wait := CInt(CS_GetSettingsCfgElem("General").GainWait);
 		SetObjProperty(attacker, "#CS_GainTime", ReadGameClock()+gain_wait);
 		//if ( rawdamage > 0 )
-			SkillCheck(attacker, weapon.attribute, -1);
+			if (attacker.weapon.objtype == 0x13b9)
+				if (!attacker.shield)
+					SkillCheck(attacker, MELEECOMBAT2H, -1);
+				else
+					SkillCheck(attacker, MELEECOMBAT1H, -1);
+				endif
+			else
+				SkillCheck(attacker, weapon.attribute, -1);
+			endif
 			sleepms(50);
 			SkillCheck(attacker, skillUsedForCritical, -1);
 		//endif
