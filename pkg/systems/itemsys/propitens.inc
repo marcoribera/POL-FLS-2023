@@ -17,7 +17,7 @@ function NovoSistemaDeItens(who, item, TOGGLE, PROCEDIMENTO);
     if (PROCEDIMENTO == 1)
         AtualizarItemAntigo(who, item);
     elseif (PROCEDIMENTO == 2)
-        SetarModsNoItem(who, item);
+        SetarAllProps(item);
     elseif (PROCEDIMENTO == 3)
         AtualizarItemAntigo(who, item);
         SetarModsNoItem(who, item);
@@ -51,9 +51,9 @@ function SetarModsNoItem(who, item)
             item.resist_energy_mod := energymod;
 
             if (IsEscudo(item))
-                item.SetProp("penaltybonus", attr["base_dexpenmod"]);
-                item.SetProp("parrybonus", attr["base_parrymod"]);
-                item.SetProp("parrydelay_mod", attr["base_parrydelaymod"]);
+                item.SetProp("penaltybonus", attr["hab_dexpenmod"]);
+                item.SetProp("parrybonus", attr["hab_parrymod"]);
+                item.SetProp("parrydelay_mod", attr["hab_parrydelaymod"]);
             endif
 
         elseif (item.IsA(POLCLASS_WEAPON))
@@ -113,7 +113,8 @@ function SetarPropItem(item) //função para setar os valores base DO ITEM!
 
     attr["Atualiza"] := 1;
     attr["item_hp"] := elem.MaxHP;
-     if (IsEscudo(item))
+
+    if (IsEscudo(item))
         attr["item_dexpen"]     := newattrdebuff[2];
         attr["item_parry"]      := newattrdebuff[3];
         attr["item_parrydelay"] := newattrdebuff[4];
@@ -123,12 +124,14 @@ function SetarPropItem(item) //função para setar os valores base DO ITEM!
         attr["item_cold"]       := 0;
         attr["item_poison"]     := 0;
         attr["item_energy"]     := 0;
+
     elseif (item.isA(POLCLASS_WEAPON))
         attr["item_physical"]   := newattr[2];
         attr["item_fire"]       := newattr[3];
         attr["item_cold"]       := newattr[4];
         attr["item_poison"]     := newattr[5];
         attr["item_energy"]     := newattr[6];
+
     elseif (item.isA(POLCLASS_ARMOR))
         //attr["item_dexpen"] := newattrdebuff[2]; //REVER PARA CONSERTAR DEPOIS
 
