@@ -97,7 +97,7 @@ endfunction
 
 function HaveReverseVision(who)
 
-	if (GetObjProperty(who, "raca") == "Drow")
+	if (GetObjProperty(who, "chardata").povo == "Drow")
 		return 1;
 	elseif (cint(GetObjProperty(who, "reversevision")) == 1)
 		return 1;

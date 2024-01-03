@@ -260,7 +260,7 @@ function BuildHairDyeGump(cur_color := 0, povo := 0)
 
 	var color_cfg := ReadConfigFile(":hair:config/hairColors");
 	var index_elem;
-	if (povo == "Zharkiano" || povo == "Asanita")
+	if (povo == "Zharkiano" || povo == "Asanita" || povo == "Anao")
 	  index_elem := color_cfg["Humano"]; // Controls order colors appear.
 	elseif (povo == "Qualquer")
 	  index_elem := color_cfg["Index"]; // Controls order colors appear.
@@ -385,6 +385,8 @@ function SkinGump(who, byref new_look, povo := 0, sempreretorna := 0)
 		skin_cfg := skin_cfg["brancos"];
 	elseif (povo == "Aquilrano");
 		skin_cfg := skin_cfg["negros"];
+    elseif (povo == "Drow")
+        skin_cfg := skin_cfg["drow"];
 	else
 		skin_cfg := skin_cfg["list"];
 	endif

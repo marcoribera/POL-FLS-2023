@@ -10,7 +10,6 @@ include ":fls_core:fls_characters";
 include "include/say";
 include "include/client";
 include ":taming:taming";
-include ":fls_core:fls_characters";
 include ":gumps:gumpPrompt";
 include ":gumps:gumpPrompt";
 include ":charactercreation:resists";
