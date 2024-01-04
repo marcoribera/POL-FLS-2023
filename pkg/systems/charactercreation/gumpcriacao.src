@@ -38,8 +38,8 @@ var gflayout := array{
 
 		"text 245 120 1153 0",
 
-		"Text  420 580 2103 13",
-		"Button 470 580 9903 9905 1 2 13",
+		"Text  420 580 2103 14",
+		"Button 470 580 9903 9905 1 2 14",
 
 		"page 1",
 
@@ -63,12 +63,14 @@ var gflayout := array{
 		"Radio 230 397 9726 9729 0 5", //numajene
 		"Radio 230 437 9726 9729 0 6" //vanirio
 
-		//"text 215 480 2105 12"
+		//"text 215 480 2105 13",
 
         //"text 265 510 2105 10",
 		//"text 265 550 2105 11",
+        //"text 265 590 2105 12",
+		//"Radio 230 507 9726 9729 0 10", //Anao
 		//"Radio 230 547 9726 9729 0 11", //Drow
-		//"Radio 230 507 9726 9729 0 10" //Anao
+        //"Radio 230 587 9726 9729 0 12" //Anao
 		};
 var gfdata := array{
 		"Forgotten Lore Shard", //0
@@ -83,8 +85,9 @@ var gfdata := array{
 		"Elfo", //9
         "Anão", // 10
         "Drow", // 11
-        "Povos Originários", //12
-		"Próximo"
+        "Orc", // 12
+        "Povos Originários", //13
+		"Próximo" // 14
 		};
 
 
@@ -119,6 +122,14 @@ var gfdata := array{
     elseif (11 in ret.keys)
 		chardata.+raca := "Elfo";
 		chardata.+povo := "Drow";
+    elseif (12 in ret.keys)
+		chardata.+raca := "Humano";
+		chardata.+povo := "Orc";
+        if (who.graphic == 400)
+            who.graphic := 1832;
+        else 
+            who.graphic := 1833;
+        endif
 	endif
 
     if (who.graphic == 400 && chardata.raca == "Elfo")
@@ -177,7 +188,7 @@ var gflayout := array{
 		"Escolha uma vantagem racial:" //2
 		};
 
-	if (chardata.raca == "Humano" || chardata.raca == "Anao")
+	if (chardata.raca == "Humano")
 		gfdata.append("Versatilidade");
 		gfdata.append("Homens são movidos pela curiosidade, o que faz com que explorem várias áreas de conhecimento. Começa com +2 pontos de skills.");
         if (chardata.povo == "Zharkiano")
@@ -195,6 +206,10 @@ var gflayout := array{
         if (chardata.povo == "Anao")
             gfdata.append("Constituicao Ana");
 	    	gfdata.append("Anões são um povo trabalhador e por isso recebem mais 10 de HP e mais 10 de stamina");
+        endif
+        if (chardata.povo == "Orc")
+            gfdata.append("Resistencia implacavel");
+	    	gfdata.append("Orcs são um povo forte, sempre que um golpe te deixar com 0 de hp, você fica com 1");
         endif
 	elseif ( chardata.raca == "Elfo")
         gfdata.append("Sabedoria dos Antigos");
@@ -226,6 +241,8 @@ var gflayout := array{
 			chardata.+vantagemracial := "Pacto com Asan";
         elseif (2 in ret.keys && chardata.povo == "Anao")
 			chardata.+vantagemracial := "Constituicao Ana";
+        elseif (2 in ret.keys && chardata.povo == "Orc")
+			chardata.+vantagemracial := "Resistencia implacavel";
 		endif
 	else
 		if (1 in ret.keys)
@@ -1417,6 +1434,12 @@ program createchar(who)
         AP_SetTrueStat(who, INTELLIGENCE, chardata.int+5);
 	endif
 
+    if (chardata.povo == "Orc")
+        AP_SetTrueStat(who, STRENGTH, chardata.str+20);
+        AP_SetTrueStat(who, DEXTERITY, chardata.dex-5);
+        AP_SetTrueStat(who, INTELLIGENCE, chardata.int-5);
+	endif
+
 	//SETA O KIT
 	//printtextabove(who, "ALCHEMY1");
 	//PrintTextAbove(who, " ALCHEMY"+ chardata.Skills + " " + chardata.Skills["Alchemy"] );
@@ -1606,7 +1629,7 @@ function ExibeGumpAparencia(who, chardata)
 
     escolherCabelo(who, disfarce, chardata.povo);
     escolheCorCabelo(who, disfarce, 0, chardata.povo, 1);
-    if (chardata.raca != "Elfo")
+    if (chardata.raca == "Humano" && chardata.povo != "Orc")
         escolherBarba(who, disfarce);
     endif
     SkinGump(who, disfarce, chardata.povo, 1);

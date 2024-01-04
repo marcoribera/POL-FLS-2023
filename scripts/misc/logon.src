@@ -27,7 +27,7 @@ program Logon(who)
 			SetName(who, who.title_race);
 		endif
 	endif
-
+    var chardata := GetObjProperty(who, "chardata");
     if (who.graphic == 400 && chardata.raca == "Elfo")
         who.graphic := 1830;
     elseif(who.graphic == 401 && chardata.raca == "Elfo")
