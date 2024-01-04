@@ -1410,6 +1410,11 @@ program createchar(who)
         AP_SetTrueStat(who, DEXTERITY, chardata.dex+10);
 	endif
 
+    if (chardata.povo == "Drow")
+        AP_SetTrueStat(who, DEXTERITY, chardata.dex+5);
+        AP_SetTrueStat(who, INTELLIGENCE, chardata.int+5);
+	endif
+
 	//SETA O KIT
 	//printtextabove(who, "ALCHEMY1");
 	//PrintTextAbove(who, " ALCHEMY"+ chardata.Skills + " " + chardata.Skills["Alchemy"] );
