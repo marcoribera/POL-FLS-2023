@@ -28,6 +28,12 @@ program Logon(who)
 		endif
 	endif
 
+    if (who.graphic == 400 && chardata.raca == "Elfo")
+        who.graphic := 1830;
+    elseif(who.graphic == 401 && chardata.raca == "Elfo")
+        who.graphic := 1831;
+    endif
+
 	EraseObjProperty(who, "#pegueiesse"); // evitar bugs no stealing.
 	EraseObjProperty(who, "#torobando");
     EraseObjProperty(who, "#Casting"); // Bugs de cast
