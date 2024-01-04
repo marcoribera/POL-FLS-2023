@@ -119,12 +119,14 @@ var gfdata := array{
     elseif (11 in ret.keys)
 		chardata.+raca := "Elfo";
 		chardata.+povo := "Drow";
-        if (who.graphic == 400)
-            who.graphic := 1830;
-        else 
-            who.graphic := 1831;
-        endif
 	endif
+
+    if (who.graphic == 400 && chardata.raca == "Elfo")
+        who.graphic := 1830;
+    elseif(who.graphic == 401 && chardata.raca == "Elfo")
+        who.graphic := 1831;
+    endif
+
 endfunction
 
 
