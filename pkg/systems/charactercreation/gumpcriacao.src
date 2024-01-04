@@ -1435,9 +1435,7 @@ program createchar(who)
 	endif
 
     if (chardata.povo == "Orc")
-        AP_SetTrueStat(who, STRENGTH, chardata.str+20);
-        AP_SetTrueStat(who, DEXTERITY, chardata.dex-5);
-        AP_SetTrueStat(who, INTELLIGENCE, chardata.int-5);
+        AP_SetTrueStat(who, INTELLIGENCE, chardata.int+10);
 	endif
 
 	//SETA O KIT
