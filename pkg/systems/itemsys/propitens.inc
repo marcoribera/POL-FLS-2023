@@ -17,7 +17,7 @@ function NovoSistemaDeItens(who, item, TOGGLE, PROCEDIMENTO);
     if (PROCEDIMENTO == 1)
         AtualizarItemAntigo(who, item);
     elseif (PROCEDIMENTO == 2)
-        SetarModsNoItem(who, item);
+        SetarAllProps(item);
     elseif (PROCEDIMENTO == 3)
         AtualizarItemAntigo(who, item);
         SetarModsNoItem(who, item);
@@ -51,9 +51,9 @@ function SetarModsNoItem(who, item)
             item.resist_energy_mod := energymod;
 
             if (IsEscudo(item))
-                item.SetProp("penaltybonus", attr["base_dexpenmod"]);
-                item.SetProp("parrybonus", attr["base_parrymod"]);
-                item.SetProp("parrydelay_mod", attr["base_parrydelaymod"]);
+                item.SetProp("penaltybonus", attr["hab_dexpenmod"]);
+                item.SetProp("parrybonus", attr["hab_parrymod"]);
+                item.SetProp("parrydelay_mod", attr["hab_parrydelaymod"]);
             endif
 
         elseif (item.IsA(POLCLASS_WEAPON))
@@ -107,28 +107,31 @@ endfunction
 
 function SetarPropItem(item) //função para setar os valores base DO ITEM!
     var attr := PegarProp(item);
-    var newattr := BuscarValoresSlot(item);
+    var newattr := BuscarResistSlot(item);
     var newattrdebuff := BuscarDebuffMod(item);
     var elem := BuscarValoresCfg(item);
 
     attr["Atualiza"] := 1;
     attr["item_hp"] := elem.MaxHP;
-     if (IsEscudo(item))
-        attr["item_dexpen"]     := newattr[2];
-        attr["item_parry"]      := newattr[3];
-        attr["item_parrydelay"] := newattr[4];
+
+    if (IsEscudo(item))
+        attr["item_dexpen"]     := newattrdebuff[2];
+        attr["item_parry"]      := newattrdebuff[3];
+        attr["item_parrydelay"] := newattrdebuff[4];
 
         attr["item_physical"]   := newattr[1];
         attr["item_fire"]       := 0;
         attr["item_cold"]       := 0;
         attr["item_poison"]     := 0;
         attr["item_energy"]     := 0;
+
     elseif (item.isA(POLCLASS_WEAPON))
         attr["item_physical"]   := newattr[2];
         attr["item_fire"]       := newattr[3];
         attr["item_cold"]       := newattr[4];
         attr["item_poison"]     := newattr[5];
         attr["item_energy"]     := newattr[6];
+
     elseif (item.isA(POLCLASS_ARMOR))
         //attr["item_dexpen"] := newattrdebuff[2]; //REVER PARA CONSERTAR DEPOIS
 
@@ -216,7 +219,7 @@ function BuscarValorMaterial(item)
     return valor;
 endfunction
 
-function BuscarValoresSlot(item)
+function BuscarResistSlot(item)
     var resultado := Array;
     var valresist := TabelaTipoProtecaoMod(item);
     valresist := valresist[1];
@@ -321,15 +324,14 @@ function CalcPropBase(item, mod, slot) //CALCULA O VALOR REAL PARA DEFINIR NO IT
     mod.Lower(); slot.Lower();
 
     case (mod) //COMUM A TODOS
-        "quality":  valor := attr["Quality"]; break;
+        "quality": valor := attr["Quality"]; break;
+
+        "hpmod": valor := ((newattr[6]) + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"])); break;
     endcase
     if (slot == "shield")
         newattrdebuff := BuscarDebuffMod(item);
-        newattrescudo := BuscarValoresSlot(item);
 
         case (mod)
-            "hpmod":            valor := ((newattr[6]) + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"])); break;
- 
             "dexpenmod":        valor := (newattrdebuff[2] + CInt(attr["item_dexpen"]) + CInt(attr."hab_dexpenmod") + CInt(attr_excp."dexpenmod")); break;
             "parrymod":         valor := (newattrdebuff[3] + CInt(attr["item_parry"]) + CInt(attr."hab_parrymod") + CInt(attr_excp."parrymod")); break;
             "parrydelaymod":    valor := (newattrdebuff[4] + CInt(attr["item_parrydelay"]) + CInt(attr."hab_parrydelaymod") + CInt(attr_excp."parrydelaymod")); break;
@@ -346,8 +348,6 @@ function CalcPropBase(item, mod, slot) //CALCULA O VALOR REAL PARA DEFINIR NO IT
         newattrdebuff := BuscarDebuffMod(item);
 
         case (mod)
-            "hpmod":            valor := (newattr[6] + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"])); break;
-            
             "dexpenmod":        valor := (newattrdebuff[2] + CInt(attr["item_dexpen"]) + CInt(attr."hab_dexpenmod") + CInt(attr_excp."dexpenmod")); break;
 
             "physicalmod":      valor := (newattr[1] + CInt(attr["item_physical"]) + CInt(attr."hab_physicalmod") + CInt(attr_excp."physicalmod"))-(item.resist_physical-item.resist_physical_mod); break;
@@ -362,8 +362,6 @@ function CalcPropBase(item, mod, slot) //CALCULA O VALOR REAL PARA DEFINIR NO IT
     elseif (slot == "weapon")
         
         case (mod)
-            "hpmod":            valor := (newattr[6] + CInt(attr["hab_hpmod"]) + CInt(attr_excp["hpmod"])); break;
-
             "dmgmod":           valor := (CInt(attr."hab_dmgmod") + CInt(attr_excp."dmgmod")); break;
             "speedmod":         valor := (CInt(attr["item_speed"]) + CInt(attr["hab_speedmod"]) + CInt(attr_excp["speedmod"])); break;
 
@@ -482,7 +480,7 @@ function AtualizarItemAntigo(who, item)
         endif
 
         SetarProp(item, attr);
-        if (item.hp<item.maxhp) item.hp := item.hp+item.maxhp_mod; endif //COMPENSAR O HP CORRIGIDO
+        //if (item.hp<item.maxhp) item.hp := item.hp+item.maxhp_mod; endif //COMPENSAR O HP CORRIGIDO
 
         SendSysMessageEx(who, "----------");
         SendSysMessageEx(who, "Item {} atualizado para novo modelo de base de dados com SUCESSO !!!".Format(Hex(item.objtype)), SSM_INFO);

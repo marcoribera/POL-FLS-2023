@@ -1,0 +1,26 @@
+use uo;
+use os;
+include ":attributes:attributes";
+
+program sanctuary(params)
+	var who := params[1];
+
+    var duration := Cint(AP_GetSkill(who, MAGICLORE) / 8);
+    var i := 0;
+	while (protected(who) && i < duration)
+        who.concealed := 1;
+		sleep(1);
+        i++;
+	endwhile
+
+    who.concealed := 0;
+endprogram
+
+function protected(who)
+    if (who.warmode && !TemHabilidade(who, "Forma Umbral"))
+        SendSysMessage(who, "Voce entrou em modo de combate e cancelou o avanco sombrio");
+		return 0;
+	endif
+
+	return 1;
+endfunction

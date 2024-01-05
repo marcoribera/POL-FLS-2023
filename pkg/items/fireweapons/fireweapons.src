@@ -82,6 +82,10 @@ program fireweapons(who, item)
             elseif (is_carabine)
                 powder_amt := 2;
             endif
+
+            if (TemHabilidade(who, "Otimizacao da Polvora") && powder_amt > 2)
+                powder_amt := 2;
+            endif
             while (who.x == current_x && who.y == current_y)
                 if (wet == 1)
                     SendSysMessageEx(who, "Voce nao consegue recarregar com o clima umido.", SSM_FAIL);
@@ -115,6 +119,9 @@ program fireweapons(who, item)
                         reload_time := 4;
                     elseif (is_musket)
                         reload_time := 8;
+                    endif
+                    if (TemHabilidade(who, "Recarregador profissional"))
+                        reload_time /= 2;
                     endif
                     // Toca os sons de recarregar
                     while (i < reload_time)
@@ -223,10 +230,17 @@ program fireweapons(who, item)
     elseif(is_handcannon)
         dmg := 140;
     endif
+
+    if (TemHabilidade(who, "Municao Explosiva"))
+        dmg += 40;
+    endif
     
     // Cálculo de dano baseado na distância
     // TODO: Transformar numa função
     var max_range := 6;
+    if (TemHabilidade(who, "Mira telescopica"))
+        max_range += 4;
+    endif
     if (is_pistol)
         if (dist > max_range)
             dmg := dmg - ((dist - max_range) * 10);
@@ -236,12 +250,12 @@ program fireweapons(who, item)
             dmg := 0;
         endif
     elseif (is_carabine)
-        max_range := 12;
+        max_range += 6;
         if (dist > max_range)
             dmg := dmg - ((dist - max_range) * 10);
         endif
     elseif (is_musket)
-        max_range := 20;
+        max_range += 14;
         if (dist > max_range)
             dmg := dmg - ((dist - max_range) * 10);
         endif
@@ -271,7 +285,7 @@ program fireweapons(who, item)
 		return;
 	endif
     var random := randomfloat(100);
-    if (random <= 5)
+    if (random <= 5 && !TemHabilidade(who, "Artilheiro preparado"))
         SendSysMessageEx(who, "O tiro saiu pela culatra!", SSM_FAIL);
         targ := who;
         DestroyItem(item);

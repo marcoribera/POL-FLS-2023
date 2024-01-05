@@ -192,6 +192,19 @@ exported function Attack(attacker, defender)
 	var dmg := 1;
 	if ( random < hit_chance )
 
+        if (getcooldown(attacker, "deathdance") > 0)
+            if (!IsBehind(attacker, defender.x, defender.y))
+                // Calculate the position behind the opponent
+                var behindX := defender.x + (defender.x - attacker.x);
+                var behindY := defender.y + (defender.y - attacker.y);
+
+                // Move the attacker to the calculated position
+                MoveObjectToLocation(attacker, behindX, behindY, defender.z, defender.realm, MOVEOBJECT_FORCELOCATION);
+                if (!IsFacing(attacker, defender.x, defender.y))
+			        TurnObjectToward(attacker, defender.x, defender.y);
+                endif
+	        endif
+        endif
 
 	    //testa possiveis esquivas
 	    if (getObjProperty(defender, "#desviarprojetil"))
@@ -595,6 +608,11 @@ function CalculateHitChance(attacker, defender)
 		if ( defender.weapon.objtype in monk_weapons )
 			hit_chance := hit_chance - tactics_bonus;
 		endif
+	endif
+
+    if (TemHabilidade(attacker, "Danca das Sombras"))
+        var dancer_bonus := CInt(AP_GetSkill(attacker, MAGICLORE) / 5);
+        hit_chance := hit_chance + dancer_bonus;
 	endif
 
 	if (hit_chance < 5.0)
