@@ -30,6 +30,7 @@ program reanimar(who)
 
         if (GetObjProperty(targ_corpse, "assassinado") || GetObjProperty(targ, "assassinado") || GetObjProperty(plytarget, "assassinado"))
             SendSysMessage(who, "O corpo foi violado e voce nao podera ajuda-lo");
+            retorn 0;
         endif
 
         if(GetCooldown(plytarget, "reani_recent") > 0)
