@@ -44,6 +44,9 @@ exported function GetHitsMaximumValue(mobile)
     if (GetObjProperty(mobile, "kit") == "Corpulento")
         vital_points := vital_points + 2000;
     endif
+    if (GetObjProperty(mobile, "chardata").vantagemracial == "Constituicao Ana")
+        vital_points := vital_points + 1000;
+    endif
 
     if (!mobile.npctemplate)
 		var hunger := CInt(AP_GetVital(mobile, "Hunger") / 60);
@@ -133,6 +136,9 @@ exported function GetStaminaMaximumValue(mobile)
 		vital_points := CInt(AP_GetTrueStat(mobile, "Dexterity")) * 100;
 		if (GetObjProperty(mobile, "kit") == "Agil")
 			vital_points := vital_points + 2000;
+		endif
+        if (GetObjProperty(mobile, "chardata").vantagemracial == "Constituicao Ana")
+			vital_points := vital_points + 1000;
 		endif
 	endif
 

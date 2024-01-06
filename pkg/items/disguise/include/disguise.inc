@@ -117,7 +117,7 @@ function escolherCabelo(who, byref disfarce, raca := 0)
 	var sizey3 := 600;
 	var sizeh := 270;
 	var grande;
-	if (raca == "Aquilrano")
+	if (raca == "Aquilrano" || raca == "Orc")
 		hair := config["Aquilrano"];
 		sizey1 := 350;
 		sizey2 := 320;
@@ -260,8 +260,12 @@ function BuildHairDyeGump(cur_color := 0, povo := 0)
 
 	var color_cfg := ReadConfigFile(":hair:config/hairColors");
 	var index_elem;
-	if (povo == "Zharkiano" || povo == "Asanita")
+	if (povo == "Zharkiano" || povo == "Asanita" || povo == "Anao")
 	  index_elem := color_cfg["Humano"]; // Controls order colors appear.
+    elseif (povo == "Orc")
+        index_elem := color_cfg["Orc"];
+    elseif (povo == "Drow")
+        index_elem := color_cfg["Drow"];
 	elseif (povo == "Qualquer")
 	  index_elem := color_cfg["Index"]; // Controls order colors appear.
 	else
@@ -385,6 +389,10 @@ function SkinGump(who, byref new_look, povo := 0, sempreretorna := 0)
 		skin_cfg := skin_cfg["brancos"];
 	elseif (povo == "Aquilrano");
 		skin_cfg := skin_cfg["negros"];
+    elseif (povo == "Drow")
+        skin_cfg := skin_cfg["drow"];
+    elseif (povo == "Orc")
+        skin_cfg := skin_cfg["orc"];
 	else
 		skin_cfg := skin_cfg["list"];
 	endif
