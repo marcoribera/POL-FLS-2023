@@ -5,6 +5,7 @@ include "include/say";
 include ":taming:taming";
 include "include/client";
 include ":brainai:npcUtil";
+include ":attributes:attributes";
 
 program controlar(who)
 

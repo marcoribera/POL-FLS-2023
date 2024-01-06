@@ -49,13 +49,17 @@ function SkillCheck(mobile, attrib_name, difficulty, award_diff:=0, advance_flag
 	elseif ( GetObjProperty(mobile, "NoGains") )
 		advance_flags := ADV_DISABLE;
 	endif
-
+    
 	// Global skill-debug ( for SkillDbgMsg() )
 	if (!g_skill_debug)
 		g_skill_debug := (GetObjProperty(mobile, "SkillDebug") != error);
 	endif
 
 	var effective_skill := AP_GetTrueSkill(mobile, attrib_name);
+    if (TemHabilidade(mobile, "Visao Verdadeira") && attrib_name == AWARENESS)
+        effective_skill += AP_GetSkill(mobile, MAGICLORE) / 3;
+    endif
+
 	SkillDbgMsg(mobile, attrib_name+": "+effective_skill+"% (+"+AP_GetSkillMod(mobile, attrib_name)+")");
 
 	// Difficulty checks

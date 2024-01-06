@@ -1,9 +1,16 @@
 use uo;
 use os;
 include ":attributes:attributes";
+include "include/dungeons";
+include ":timedScripts:timedScripts";
 
 program sanctuary(params)
 	var who := params[1];
+    var duration_valsharess := cint(AP_GetSkill(who, MAGICLORE)/5);
+
+    if (InDarkness(who) && TemHabilidade(who, "Caminhar nas sombras"))
+        TS_StartTimer(who, "velocidade", duration_valsharess); //30 seg
+    endif
 
     var duration := Cint(AP_GetSkill(who, MAGICLORE) / 8);
     var i := 0;
@@ -18,7 +25,7 @@ endprogram
 
 function protected(who)
     if (who.warmode && !TemHabilidade(who, "Forma Umbral"))
-        SendSysMessage(who, "Voce entrou em modo de combate e cancelou o avanco sombrio");
+        SendSysMessage(who, "Voce entrou em modo de combate, saindo das sombras");
 		return 0;
 	endif
 
