@@ -398,6 +398,11 @@ function comprarHabilidade(who, item, nv:=-1)
 		if (!temRequisito(who, escolhida))
 			return 0;
 		endif
+        if (escolhida == "Visao verdadeira" && who.graphic != 1831 && GetObjProperty(who, "chardata").povo != "Drow")
+            SendSysMessageEx(who, "Apenas drows femeas podem comprar essa habilidade.", SSM_FAIL);			
+            return 0;
+        endif
+
 		SendSysMessageEx(who, "Voce comprou a habilidade: " + escolhida, SSM_INFO);
 		if (escolhida == "Grande Fortitude")
 			var hitsmod := cint(GetObjProperty(who, "hitsmod"));
