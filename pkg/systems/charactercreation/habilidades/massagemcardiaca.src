@@ -28,6 +28,10 @@ program reanimar(who)
         var plytarget := GetPersonBySerial(targ.serial);
         var serialC := targ.serial;
 
+        if (GetObjProperty(targ_corpse, "assassinado") || GetObjProperty(targ, "assassinado") || GetObjProperty(plytarget, "assassinado"))
+            SendSysMessage(who, "O corpo foi violado e voce nao podera ajuda-lo");
+        endif
+
         if(GetCooldown(plytarget, "reani_recent") > 0)
             SendSysMessageEx(who, "Essa pessoa ja foi reanimada recentemente e voce nao pode fazer nada por ela.", SSM_FAIL);
             return 0;
