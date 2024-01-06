@@ -15,6 +15,8 @@ include ":charactercreation:habilidades";
 include ":attributes:advanceCheck";
 include ":charactercreation:resists";
 include ":charactercreation:createchar";
+include ":containers:storageAreas";
+include ":keys:key";
 
 program death(params)
 
@@ -127,6 +129,7 @@ program death(params)
 				var tipo := "morreu";
 				var coords := {corpse.x, corpse.y};
 				var nome := GetObjProperty(ghost, "nome_inicial");
+				ProcurarItensQuarto(ghost);
 				Start_script(":DiscordWebhook:discord", {tipo, nome, ghost.acctname, killer.name, region, coords});
 				SetCooldown(corpse, "morto_recentemente", 300);
 				SetObjProperty(corpse, "morto", 1);
@@ -449,4 +452,59 @@ function idadeCharInDays(character)// para 10000 deu 292 segundos 300
     var tempoDevida:= tempoAgora - criadoEm;
     var dias := cint(tempoDevida/(86400));//24horas*60minutos*60segundos = 86400 segundos
     return dias;
+endfunction
+
+function MoverItensQuartoParaBau(x, y, z, r, player, npc)
+	var bank_region := GetObjProperty(npc, "City");
+	if ( !bank_region )
+		bank_region := CP_DEFAULT_AREA;
+	endif
+	var bank_box := CP_GetStorageContainerForMobile(player, bank_region, CP_NOCREATE);
+	var objects := ListItemsNearLocation( x, y, z, 10, r);
+	var backpack := CreateItemAtLocation(npc.x, npc.y, npc.z, "backpack", 1);
+	backpack.name := "bolsa do " + GetObjProperty(player, "nome_inicial");
+	foreach obj in objects
+		if (CheckLosBetween( x, y, z, obj.x, obj.y, obj.z, r))
+			if (KP_IsLockable(obj))
+				var container := EnumerateItemsInContainer( obj, ENUMERATE_IGNORE_LOCKED );
+				foreach item in container
+					SetObjProperty(item, "personagem_morreu", 1);
+					MoveItemToContainer(item, bank_box);
+					sleepms(20);
+				endforeach
+			endif
+		endif
+		sleepms(20);
+	endforeach
+endfunction
+
+function ProcurarItensQuarto(who)
+	var mobile_list := ListMobilesNearLocationEx(who.x, who.y, who.z, CInt(80000), LISTEX_FLAG_NORMAL+LISTEX_FLAG_HIDDEN, who.realm);
+	foreach npc in mobile_list
+		if (npc.npctemplate != ":merchants:estalagem")
+			continue;
+		endif
+
+		var quartos := GetObjProperty(npc, "quartos");
+		var souInquilino := 0;
+		var meuquarto := -1;
+		var j := 1;
+		foreach quarto in quartos
+			if (quarto.inquilino == who.serial)
+				souInquilino := 1;
+				meuquarto := j;
+				break;
+			endif
+			j := j + 1;
+		endforeach
+
+		var quarto := quartos[meuquarto];
+		var cent := quarto.centro;
+		if (cent[1])
+			MoverItensQuartoParaBau(cent[1], cent[2], cent[3], npc.realm, who, npc);
+			if (cent[4])
+				MoverItensQuartoParaBau(cent[4], cent[5], cent[6], npc.realm, who, npc);
+			endif
+		endif		
+	endforeach
 endfunction

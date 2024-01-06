@@ -28,6 +28,8 @@ program canInsert(mobile, container, movetype, inserttype, item, existing_stack,
 		return 1;
 	elseif (GetObjProperty(item, "bank"))
 		return 1;
+	elseif (GetObjProperty(item, "personagem_morreu"))
+		return 1;
 	endif
 
 	SendSysMessage(mobile, "O banco nao aceita todos os tipos de itens. Apenas pertences pessoais, tais como:");
