@@ -469,7 +469,9 @@ function MoverItensQuartoParaBau(x, y, z, r, player, npc)
 				var container := EnumerateItemsInContainer( obj, ENUMERATE_IGNORE_LOCKED );
 				foreach item in container
 					SetObjProperty(item, "personagem_morreu", 1);
-					MoveItemToContainer(item, bank_box);
+					if (!MoveItemToContainer(item, bank_box))
+						DestroyItem (item);
+					endif
 					sleepms(20);
 				endforeach
 			endif
