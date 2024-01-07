@@ -506,6 +506,10 @@ function CalculateHitChance(attacker, defender)
 		hit_chance := hit_chance - 10;
 	endif
 
+    if (getcooldown(attacker, "blinded") > 0)
+		hit_chance := hit_chance - 20;
+	endif
+
 	if (TemHabilidade(attacker, "Postura Ofensiva"))
 		hit_chance := hit_chance + 10;
 	endif

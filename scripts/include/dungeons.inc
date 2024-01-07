@@ -39,3 +39,14 @@ function HasPlayerNear(x, y, realm := 0)
 
 	return 0;
 endfunction
+
+function InDarkness(who)
+    var diaounoite := GetGlobalProperty("dia");
+
+    if (!InDungeon(who) || diaounoite != "noite")
+        SendSysMessage(who, "Sua visao verdadeira funciona apenas na escuridao");
+        Return 1;
+    endif
+
+    return 0;
+endfunction
