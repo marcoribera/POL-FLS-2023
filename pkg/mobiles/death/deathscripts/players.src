@@ -15,6 +15,8 @@ include ":charactercreation:habilidades";
 include ":attributes:advanceCheck";
 include ":charactercreation:resists";
 include ":charactercreation:createchar";
+include ":containers:storageAreas";
+include ":keys:key";
 
 program death(params)
 
@@ -127,6 +129,7 @@ program death(params)
 				var tipo := "morreu";
 				var coords := {corpse.x, corpse.y};
 				var nome := GetObjProperty(ghost, "nome_inicial");
+				ProcurarItensQuarto(ghost);
 				Start_script(":DiscordWebhook:discord", {tipo, nome, ghost.acctname, killer.name, region, coords});
 				SetCooldown(corpse, "morto_recentemente", 300);
 				SetObjProperty(corpse, "morto", 1);
@@ -219,6 +222,8 @@ program death(params)
 			SetObjProperty(corpse, "morto", 1);
 			SetObjProperty(ghost, "morto", 1);
 			SetObjProperty(corpse, "deathtimer", polcore().systime);
+			SetCooldown(corpse, "morto_recentemente", 300);
+			ProcurarItensQuarto(ghost);
             var dias := idadeCharInDays(ghost);
             if (dias < 2 || dias == error || dias > 1000) // byte hell, char recriado muitas vzes tava vindo com 19k+ dias
                 dias := 2;
@@ -449,4 +454,89 @@ function idadeCharInDays(character)// para 10000 deu 292 segundos 300
     var tempoDevida:= tempoAgora - criadoEm;
     var dias := cint(tempoDevida/(86400));//24horas*60minutos*60segundos = 86400 segundos
     return dias;
+endfunction
+
+function MoverItensQuartoParaNpc(x, y, z, r, player, npc)
+	var objects := ListItemsNearLocation( x, y, z, 10, r);
+	var backpack;
+	if (player && player != error)
+		backpack := CreateItemAtLocation( x, y, z, hex(3701), 1, r);
+		backpack.desc := player.name;
+	endif
+	foreach obj in objects
+		if (CheckLosBetween( x, y, z, obj.x, obj.y, obj.z, r))
+			if (GetObjProperty(obj, "crafterserial"))
+				if (player && player != error)
+					obj.movable := 1;
+					MoveItemToContainer( obj, backpack);
+				else
+					DestroyItem(obj);
+				endif
+
+
+			elseif (obj.IsA(POLCLASS_CONTAINER))
+				var container := EnumerateItemsInContainer( obj, ENUMERATE_IGNORE_LOCKED );
+				foreach item in container
+				if (player && player != error)
+					item.movable := 1;
+					MoveItemToContainer( item, backpack);
+				else
+					DestroyItem(item);
+				endif
+					sleepms(20);
+				endforeach
+			endif
+		endif
+		sleepms(20);
+	endforeach
+	if (player && player != error)
+		if ( !npc.backpack )
+			Set_Critical(1);
+			var newpack := CreateItemAtLocation(npc.x, npc.y, npc.z, "backpack", 1, npc.realm);
+			if ( !EquipItem(npc, newpack) )
+				DestroyItem(newpack);
+				return 0;
+			endif
+		endif
+		MoveItemToContainer( backpack, npc.backpack);
+	endif
+	return 1;
+endfunction
+
+function ProcurarItensQuarto(who)
+	var innkeepers := getglobalproperty("InnKeeper");
+
+	if (innkeepers[1] == error)
+		return 1;
+	endif
+
+	var x := 1;
+	while (x <= innkeepers.size())
+		var npc := SystemFindObjectBySerial(cint(innkeepers[x]));
+		if (npc.errortext)
+			innkeepers.erase(x);
+			SetGlobalProperty("InnKeeper", innkeepers);
+		endif
+
+		var quartos := GetObjProperty(npc, "quartos");
+
+		var i := 1;
+		while (i <= quartos.size())
+			if (quartos[i].inquilino == who.serial)
+				var quarto := quartos[i];
+				var cent := quarto.centro;
+				if (cent[1])
+					MoverItensQuartoParaNpc(cent[1], cent[2], cent[3], npc.realm, who, npc);
+					if (cent[4])
+						MoverItensQuartoParaNpc(cent[4], cent[5], cent[6], npc.realm, who, npc);
+					endif
+				endif
+			endif
+			i := i + 1;
+			sleepms(20);
+		endwhile
+
+		x := x+1;
+		sleepms(20);
+	endwhile
 endfunction
