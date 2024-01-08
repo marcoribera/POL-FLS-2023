@@ -44,7 +44,7 @@ function InDarkness(who)
     var diaounoite := GetGlobalProperty("dia");
 
     if (!InDungeon(who) || diaounoite != "noite")
-        SendSysMessage(who, "Sua visao verdadeira funciona apenas na escuridao");
+        SendSysMessage(who, "Voce nao esta na escuridao");
         Return 1;
     endif
 
