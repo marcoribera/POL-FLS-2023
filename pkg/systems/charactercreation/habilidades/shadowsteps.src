@@ -3,7 +3,7 @@ use os;
 use polsys;
 
 include ":attributes:attributes";
-//include "include/dungeons";
+include "include/dungeons";
 include ":timedScripts:timedScripts";
 include ":tn:cooldown";
 
