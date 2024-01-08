@@ -15,7 +15,7 @@ program sanctuary(params)
         TS_StartTimer(who, "velocidade", duration_valsharess);
     endif
 
-    if (InDarkness(who) && TemHabilidade(who, "Forma Umbral"))
+    if (InDarkness(who))
         var duration_shadowdancer := cint(AP_GetSkill(who, MAGICLORE)/2.5);
         Setcooldown(who, "spectre", duration_shadowdancer);
     endif
