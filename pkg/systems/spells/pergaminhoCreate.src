@@ -30,6 +30,11 @@ program cria(item)
 			if (!unico)
 				randomspells.append(key);
 			endif
+		elseif( (spelllvl == lvl) && ( spelltype == "Sangria"))
+			var unico := GetConfigInt( FindConfigElem(spellcfg, key), "Unico" );
+			if (!unico)
+				randomspells.append(key);
+			endif
 		endif
 	endforeach
 

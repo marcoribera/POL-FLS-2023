@@ -4,6 +4,7 @@ use cfgfile;
 
 include "include/say";
 include ":spells:spellbooks";
+include ":charactercreation:habilidades";
 
 program magia(who, spellname)
 	if ( GetObjProperty(who, "#Casting") )
@@ -51,7 +52,8 @@ program magia(who, spellname)
 		endif
 	endforeach
 
-	if ( !spellbook)
+	var kitahster_cantrip_spells := array{101, 102, 103, 104};
+	if ( !spellbook && GetObjProperty(who, "advclass") != "kitahster" && !(id in kitahster_cantrip_spells))
 		SendSysMessageEx(who, "Voce nao possui a magia " + spellname + " nos seu grimorio.", SSM_FAIL);
 		return;
 	endif
@@ -59,12 +61,9 @@ program magia(who, spellname)
 
 	var spellinfo := struct;
 	spellinfo.+id := id;
-        var script := Start_Script(":spells:cast_spell", {who, spellinfo, booktype});
-        if ( script.errortext )
-                         SendSysMessage(who, "Error - Could not start spell starter ->"+script.errortext);
-	                 return 0;
+	var script := Start_Script(":spells:cast_spell", {who, spellinfo, booktype});
+	if ( script.errortext )
+		SendSysMessage(who, "Error - Could not start spell starter ->"+script.errortext);
+		return 0;
 	endif
-
-
-
 endprogram

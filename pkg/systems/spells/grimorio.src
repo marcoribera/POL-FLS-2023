@@ -31,6 +31,11 @@ program book(who, book)
 		return 1;
 	endif
 
+	if (GetObjProperty(book, "SangriaBook") && GetObjProperty(who, "advclass") != "kitahster")
+		SendSysMessageEx(who, "Voce nao entende esse livro.", SSM_FAIL);
+		return 1;
+	endif
+
 	var donoGrimorio := GetObjProperty(book, "serialDono");
 	if (donoGrimorio)
 		if (donoGrimorio != who.serial)
@@ -146,7 +151,12 @@ function CreateBookGump(book, who)
 // Begin Page 1 Setup
 	GFPage(book_gump, 1);
 	//GFAddButton(book_gump, 125, 15, 2472, 2473, GF_CLOSE_BTN, 50);
-	GFHTMLArea(book_gump, 135, 22, 100, 18, "Livro de Mesum");
+	if(GetObjProperty(book, "NecroBook"))
+		GFHTMLArea(book_gump, 135, 22, 100, 18, "Livro de Mesum");
+	else
+		GFHTMLArea(book_gump, 135, 22, 100, 18, "Livro da Sangria");
+	endif
+	
 	GFAddButton(book_gump, 393, 14, 2206, 2206, GF_PAGE_BTN, 2);
 
 	if (rune_list[1])
