@@ -46,11 +46,11 @@ program summonSkeletaSteed(params)
 	var mount := summon(template, targ, who);
 	var duracao := 120 + 180 * AP_GetSkill(who, MAGICLORE)/ 100;
 
-    PlayObjectCenteredEffect(mount, 0x37C4, 10, 20);
 	TS_StartTimer(mount, "summon", duracao ); //inicio do timedScripts no summon
     if (InDarkness(who))
         TS_StartTimer(mount, "summon", duracao ); //inicio do timedScripts no summon
     endif
+    PlayObjectCenteredEffect(mount, 0x37C4, 10, 20);
 
     SendSysMessageEx(who, "Sua prole sombria esta pronta para servi-la");
 	return 1;

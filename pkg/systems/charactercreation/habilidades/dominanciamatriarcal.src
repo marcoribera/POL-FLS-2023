@@ -37,8 +37,8 @@ program vacuodemana(params)
 	//PlaySoundEffect(defender, 0x358);
 	
     var dano_mlore := CInt(AP_GetSkill(attacker, MAGICLORE) / 2);
-    var is_whip := Array{0x166E};
-    if (!(weapon.objtype in is_whip))
+    
+    if (weapon.objtype != 0x166E)
         SendSysMessage(attacker, "Voce precisa estar usando chicote para usar essa habilidade");
         return 1;
     endif

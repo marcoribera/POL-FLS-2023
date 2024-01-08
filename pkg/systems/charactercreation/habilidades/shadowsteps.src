@@ -3,24 +3,27 @@ use os;
 use polsys;
 
 include ":attributes:attributes";
-include "include/dungeons";
+//include "include/dungeons";
 include ":timedScripts:timedScripts";
 include ":tn:cooldown";
 
 program sanctuary(params)
 	var who := params[1];
 
-    if (InDarkness(who) && TemHabilidade(who, "Caminhar nas sombras"))
-        var duration_valsharess := cint(AP_GetSkill(who, MAGICLORE)/5);
-        TS_StartTimer(who, "velocidade", duration_valsharess);
+    var duration := Cint(AP_GetSkill(who, MAGICLORE) / 5);
+    if (TemHabilidade(who, "Caminhar nas sombras"))
+        if(InDarkness(who))
+            TS_StartTimer(who, "velocidade", duration);
+        endif
     endif
 
-    if (InDarkness(who))
-        var duration_shadowdancer := cint(AP_GetSkill(who, MAGICLORE)/2.5);
-        Setcooldown(who, "spectre", duration_shadowdancer);
+    if (TemHabilidade(who, "Avanco Sombrio"))
+        if(InDarkness(who))
+            var duration_shadowdancer := cint(AP_GetSkill(who, MAGICLORE)/2.5);
+            Setcooldown(who, "spectre", duration_shadowdancer);
+        endif
     endif
 
-    var duration := Cint(AP_GetSkill(who, MAGICLORE) / 8);
     var i := 0;
     PlayObjectCenteredEffectHuefx(who, 0x54CE, 10, 20, 1420, 1);
     PLaySoundEffect(who, 0x204);
