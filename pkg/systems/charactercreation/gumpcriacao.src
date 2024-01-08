@@ -1545,13 +1545,13 @@ program createchar(who)
 					SetObjProperty(p1, "spellinfo", spellinfo);
 					ganheispell := 1;
 				endif
-        elseif (chardata.povo == "Zharkiano")
+        elseif (chardata.povo == "Zharkiano" || chardata.povo == "Drow" && who.graphic == 1831 || chardata.povo == "Anao")
             if (ganheispell == 0)
                 chardata.magia := "Sacerdote";
                 var malhoecinzel := CreateItemInBackpack(who, 0xf40, 1);
-                var simbolo_sagrado := CreateItemInBackpack(who, 0xB888, 1); //Simbolo Sagrado
-				SetName(simbolo_sagrado, "Símbolo Sagrado");
-                SetObjProperty(simbolo_sagrado, "descmod", "Acólito de Zhark");
+                //var simbolo_sagrado := CreateItemInBackpack(who, 0xB888, 1); //Simbolo Sagrado
+				//SetName(simbolo_sagrado, "Símbolo Sagrado");
+                //SetObjProperty(simbolo_sagrado, "descmod", "Acólito de Zhark");
                 createiteminbackpack(who, "runaarmasagrada");
                 createiteminbackpack(who, "runacuraleve");
                 createiteminbackpack(who, "runadescanso");

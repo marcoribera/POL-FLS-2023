@@ -23,8 +23,8 @@ program truesight(who)
             var duration := cint(AP_GetSkill(who, MAGICLORE)/10);
             TS_StartTimer(char, "paralysis", duration);
 
-            // todo Play animation sparkles pra ficar bonito
-            PrintTextAbove(char, "Voce foi revelado pela visao verdadeira");
+            PlayObjectCenteredEffect(char, 0x6D4B, 5, 50);
+            PrintTextAbove(char, "*revelado*");
             sleepms(500);
         endif
     endforeach

@@ -12,9 +12,9 @@ program change(who, item )
     endif
     item.graphic := elem.change;
     if (item.graphic == 6222)
-          foreach balao in listitemsnearlocation (item.x, item.y, item.z, 1)
+          foreach balao in listitemsnearlocation (item.x, item.y, item.z, 1, item.realm)
              if ( (balao.objtype == 6194) || (balao.objtype == 6195) || (balao.objtype == 6196) )
-                  foreach beker in listitemsnearlocation (item.x, item.y, item.z, 1)
+                  foreach beker in listitemsnearlocation (item.x, item.y, item.z, 1, item.realm)
                      if ( (beker.objtype == 6192) || (beker.objtype == 6193) )
                          Destilar(balao, beker, who, item);
                      endif

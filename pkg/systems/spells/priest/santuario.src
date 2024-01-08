@@ -7,6 +7,7 @@ program sanctuary(params)
 
     var duration := Cint(AP_GetSkill(who, MAGICLORE) / 2);
     var i := 0;
+    PLaySoundEffect(who, 0x216);
 	while (protected(who) && i < Cint(duration / 3))
         GrantPrivilege(who, "invul");
         who.enable("invul");

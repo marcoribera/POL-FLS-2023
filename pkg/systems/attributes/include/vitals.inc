@@ -253,6 +253,9 @@ function AP_RefreshVitals(mobile)
 		if (elem_name != "SkillCap")
 			AP_SetVital(mobile, elem_name, AP_GetVitalMaximumValue(mobile, elem_name));
 		endif
+        if (elem_name == "Hunger")
+            AP_SetVital(mobile, elem_name, 0);
+        endif
 		sleepms(2);
 	endforeach
 

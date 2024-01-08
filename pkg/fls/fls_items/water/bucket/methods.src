@@ -29,7 +29,7 @@ function SwapBucket(bucket, change_to)
 	if ( info.container )
 		new_bucket := CreateItemInContainer(info.container, change_to, 1);
 	else
-		new_bucket := CreateItemAtLocation(info.x, info.y, info.z, change_to, 1);
+		new_bucket := CreateItemAtLocation(info.x, info.y, info.z, change_to, info.realm);
 	endif
 	new_bucket.color := info.color;
 

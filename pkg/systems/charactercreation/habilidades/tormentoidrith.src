@@ -14,19 +14,21 @@ program truesight(who)
     var nearby := ListMobilesNearLocation( who.x ,who.y, who.z, range, who.realm);
     foreach char in nearby
         if (!(char in (festa.members)))
-            var duration := cint(AP_GetSkill(who, MAGICLORE)/8);
-            TS_StartTimer(char, "paralysis", duration);
+            if (char != who)
+                var duration := cint(AP_GetSkill(who, MAGICLORE)/8);
+                TS_StartTimer(char, "paralysis", duration);
 
-            // todo Play animation sparkles pra ficar bonito
-            PrintTextAbove(char, "*atormentado*");
+                // todo Play animation sparkles pra ficar bonito
+                PrintTextAbove(char, "*atormentado*");
 
-            if (InDarkness(char))
-                SendSysMessage(who, "Sua visao verdadeira funciona apenas na escuridao");
-                duration += cint(AP_GetSkill(who, MAGICLORE)/5);
-                SetCooldown(char, "blinded", duration);
-                PrintTextAbove(char, "*cegueira*");
+                if (InDarkness(char))
+                    SendSysMessage(who, "Sua visao verdadeira funciona apenas na escuridao");
+                    duration += cint(AP_GetSkill(who, MAGICLORE)/5);
+                    SetCooldown(char, "blinded", duration);
+                    PrintTextAbove(char, "*cegueira*");
+                endif
+                sleepms(500);
             endif
-            sleepms(500);
         endif
     endforeach
 endprogram

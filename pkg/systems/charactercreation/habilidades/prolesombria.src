@@ -50,6 +50,7 @@ program summonSkeletaSteed(params)
     if (InDarkness(who))
         TS_StartTimer(mount, "summon", duracao ); //inicio do timedScripts no summon
     endif
+    PlayObjectCenteredEffect(mount, 0x37C4, 10, 20);
 
     SendSysMessageEx(who, "Sua prole sombria esta pronta para servi-la");
 	return 1;

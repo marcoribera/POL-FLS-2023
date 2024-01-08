@@ -17,11 +17,16 @@ function InDungeonMountCheck(mobile, coord) //retorna 1 se estiver fora de caver
 endfunction
 
 function InDungeon(coord) // retorna 1 se tiver numa caverna
-	if ( coord.x > 3768 && coord.y > 1141 && coord.x < 4326 && coord.y < 2461 )
-		return 1;
-	elseif ( coord.x > 3757 && coord.y > 0 && coord.x < 4982 && coord.y < 1078 )
-		return 1;
-	elseif ( coord.x > 5120 && coord.y > 0 && coord.x < 6131 && coord.y < 3346 )
+	//if ( coord.x > 3768 && coord.y > 1141 && coord.x < 4326 && coord.y < 2461 )
+	//	return 0;
+	//elseif ( coord.x > 3757 && coord.y > 0 && coord.x < 4982 && coord.y < 1078 )
+	//	return 0;
+	//elseif ( coord.x > 5120 && coord.y > 0 && coord.x < 6131 && coord.y < 3346 )
+	//	return 0;
+	//else
+	//	return 1;
+	//endif
+    if ( coord.x >= 4390 && coord.y <= 4150)
 		return 1;
 	else
 		return 0;
@@ -43,10 +48,13 @@ endfunction
 function InDarkness(who)
     var diaounoite := GetGlobalProperty("dia");
 
-    if (!InDungeon(who) || diaounoite != "noite")
-        SendSysMessage(who, "Sua visao verdadeira funciona apenas na escuridao");
-        Return 1;
+    if (!InDungeon(who) )
+        SendSysMessage(who, "Voce nao esta na escuridao");
+        Return 0;
+    elseif(diaounoite != "noite")
+        SendSysMessage(who, "Nao eh noite");
+        Return 0;
     endif
 
-    return 0;
+    return 1;
 endfunction
