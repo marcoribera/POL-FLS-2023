@@ -1570,38 +1570,64 @@ program createchar(who)
             endif
         elseif (chardata.povo == "Vanirio")
             if (ganheispell == 0)
-                chardata.magia := "Kitah";
-                var gump3 := GFCreateGump();
-                GFDisposable(gump3, 0);
-                GFResizePic(gump3, 0, 25, 3600, 170, 200);
-                GFResizePic(gump3, 15, 40, 0x13BE, 140, 170);
-                GFTextLine(gump3, 45, 50, 1153, "Escolha o elemento");
+				var gump4 := GFCreateGump();
+                GFDisposable(gump4, 0);
+                GFResizePic(gump4, 0, 25, 3600, 170, 200);
+                GFResizePic(gump4, 15, 40, 0x13BE, 140, 170);
+                GFTextLine(gump4, 45, 50, 1153, "Escolha o caminho");
 
-                GFTextLine(gump3, 40, 70, 1153, "Fogo");
-                GFTextLine(gump3, 40, 90, 1153, "Gelo");
-                GFTextLine(gump3, 40, 110, 1153, "Eletricidade");
+                GFTextLine(gump4, 40, 70, 1153, "Kitah");
+                GFTextLine(gump4, 40, 90, 1153, "Kitahster");
 
-                GfAddButton(gump3, 20, 73, 2117, 2118, GF_CLOSE_BTN,  10);
-                GfAddButton(gump3, 20, 94 , 2117, 2118, GF_CLOSE_BTN,  20);
-                GfAddButton(gump3, 20, 113 , 2117, 2118, GF_CLOSE_BTN,  30);
+                GfAddButton(gump4, 20, 73, 2117, 2118, GF_CLOSE_BTN,  10);
+                GfAddButton(gump4, 20, 94 , 2117, 2118, GF_CLOSE_BTN,  20);
 
-                var input3 := GFSendGump(who, gump3);
-                input3 := input3[0];
+                var input4 := GFSendGump(who, gump4);
+                input4 := input4[0];
 
-                if (input3 == 10)
-                    createiteminbackpack(who, "pedralaminaflamejante");
-                    createiteminbackpack(who, "pedraataqueelementalfogo");
-                    CreateItemInBackpack(who, "SulphurousAsh", 10);
-                elseif (input3 == 20)
-                    createiteminbackpack(who, "pedralaminacongelante");
-                    createiteminbackpack(who, "pedraataqueelementalgelo");
-                    CreateItemInBackpack(who, "BlackPearl", 10);
-                elseif (input3 == 30)
-                    createiteminbackpack(who, "pedralaminaeletrificada");
-                    createiteminbackpack(who, "pedraataqueelementalenergia");
-                    CreateItemInBackpack(who, "Deadwood", 10);
-                endif
-                SetObjProperty(who, "EspadaArcana", 1);
+				var gump3 := GFCreateGump();
+				GFDisposable(gump3, 0);
+				GFResizePic(gump3, 0, 25, 3600, 170, 200);
+				GFResizePic(gump3, 15, 40, 0x13BE, 140, 170);
+				GFTextLine(gump3, 45, 50, 1153, "Escolha o elemento");
+
+				GFTextLine(gump3, 40, 70, 1153, "Fogo");
+				GFTextLine(gump3, 40, 90, 1153, "Gelo");
+				GFTextLine(gump3, 40, 110, 1153, "Eletricidade");
+
+				GfAddButton(gump3, 20, 73, 2117, 2118, GF_CLOSE_BTN,  10);
+				GfAddButton(gump3, 20, 94 , 2117, 2118, GF_CLOSE_BTN,  20);
+				GfAddButton(gump3, 20, 113 , 2117, 2118, GF_CLOSE_BTN,  30);
+
+				var input3 := GFSendGump(who, gump3);
+				input3 := input3[0];
+
+				if (input4 == 10) //Kitah
+                    chardata.magia := "Kitah";
+					if (input3 == 10) //Fogo
+						createiteminbackpack(who, "pedralaminaflamejante");
+						createiteminbackpack(who, "pedraataqueelementalfogo");
+						CreateItemInBackpack(who, "SulphurousAsh", 10);
+					elseif (input3 == 20) //Gelo
+						createiteminbackpack(who, "pedralaminacongelante");
+						createiteminbackpack(who, "pedraataqueelementalgelo");
+						CreateItemInBackpack(who, "BlackPearl", 10);
+					elseif (input3 == 30) //Eletricidade
+						createiteminbackpack(who, "pedralaminaeletrificada");
+						createiteminbackpack(who, "pedraataqueelementalenergia");
+						CreateItemInBackpack(who, "Deadwood", 10);
+					endif
+					SetObjProperty(who, "EspadaArcana", 1);
+                elseif (input4 == 20) //Kitahster
+                    //TODO fazer parte da nova classe
+					chardata.magia := "Kitahster";
+
+					if (input3 == 10) //Fogo
+					elseif (input3 == 20) //Gelo
+					elseif (input3 == 30) //Eletricidade
+					endif
+					SetObjProperty(who, "Kitahster", 1);
+                endif            
             endif
 		endif
 	endif
