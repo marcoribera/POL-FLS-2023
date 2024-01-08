@@ -23,32 +23,25 @@ program SpawnThatStuff( me, region )
 
 	var i := cint(region);
 	var elem;
-	for (i := 1; i<=numregions; i := i+1);
-        	var spawnregion := reagspawn[ i ];
+    for (i := 1; i<=numregions; i := i+1); 
+        var spawnregion := reagspawn[ i ];
+        var spawngroups := GetConfigStringArray( spawnregion, "group" );
+        var realm := cstr(GetConfigString( spawnregion, "realm" ));
+        print("realm: "+realm);
+        foreach spawngroup in spawngroups
+            var groupstring := splitwords(spawngroup);
+            var groupname := groupstring[1];
+            var groupdensity := cint(groupstring[2]);
+            var groupamt := cint(groupstring[3]);
 
-
-		elem := FindConfigElem(reagspawn, i);
-		var spawngroups := GetConfigStringArray( spawnregion, "group" );
-		var realm := cstr(GetConfigStringArray( elem, "realm" ));
-
-		var split := splitwords(realm);
-
-		foreach spawngroup in spawngroups
-			var groupstring := splitwords(spawngroup);
-			var groupname := groupstring[1];
-			var groupdensity := cint(groupstring[2]);
-			var groupamt := cint(groupstring[3]);
-
-			spawnthisgroup(me, i, spawnregion, groupname, groupdensity, groupamt, split[2]);
-			sleep(1);
-		endforeach
-		sleep(1);
-    	endfor
+            spawnthisgroup(me, i, spawnregion, groupname, groupdensity, groupamt, realm);
+            sleep(1);
+        endforeach
+        sleep(1);
+        endfor
 
 	UnloadConfigFile( "reagentspawn" );
 	EraseGlobalProperty("#reagentspawnerisrunning");
-
-
 endprogram
 
 function gmreport(text)

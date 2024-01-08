@@ -97,7 +97,7 @@ endfunction
 
 function HaveReverseVision(who)
 
-	if (GetObjProperty(who, "raca") == "Drow")
+	if (GetObjProperty(who, "chardata").povo == "Drow")
 		return 1;
 	elseif (cint(GetObjProperty(who, "reversevision")) == 1)
 		return 1;
@@ -124,9 +124,7 @@ function ReverseLight(player)
 
 	if (player.x >= 3749 && player.y >= 0 && player.x <= 6141 && player.y <= 4000)
 		player.setlightlevel(0, 9000); // Is in a dungeon
-		print("em dungeon");
 	else
-		print("fora dunfeon");
 		var newlight := abs(darkness - light);
 		player.setlightlevel(newlight, 9000);
 	endif

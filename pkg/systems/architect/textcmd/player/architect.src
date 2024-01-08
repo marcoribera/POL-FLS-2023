@@ -14,6 +14,7 @@ use os;
 use uo;
 use util;
 
+include ":keys:key";
 include ":containers:containers";
 include "include/say";
 include ":gumps:yesNo";
@@ -1505,9 +1506,33 @@ function create_marked(who, x, y, z, type)
         SendSysMessageEx(who, "Voce usou o(s) recursos(s).", SSM_INFO);
         var created:= CreateItemAtLocation (x, y, z, type);
         created.movable:= 0;
-        //  created.saveonexit:= 0;
-        //  created.usescript:= ":architect:cantuse";
+
         SetObjProperty (created, "#built_by_architect", who.serial);
+
+        if (KP_IsLockable(created))
+          var fechadura := YesNo(who, "Voce deseja por uma fechadura nesse item?");
+          if (fechadura)
+            SendSysMessageEx(who, "Escolha a fechadura para por neste item.", SSM_REQUEST);
+            var targ := Target(who);
+            if (targ)
+              if (targ.objtype == 4001)
+                if (!created.isDoor())
+                  var lvl := Cint(GetObjProperty(targ, "level"));
+                  if (!lvl)
+                    lvl := 1;
+                  endif
+                  SetObjProperty(created, "level", lvl);
+                endif
+                var lockid := CInt(GetObjProperty(targ, "LockId"));
+                SetObjProperty(created, "LockId", lockid);
+                DestroyItem(targ);
+                SendSysMessageEx(who, "Voce instalou a fechadura com sucesso.", SSM_INFO);
+              else
+                SendSysMessageEx(who, "Isto nao parece uma fechadura.", SSM_FAIL);
+              endif
+            endif
+          endif
+        endif
 
         return created;
     endif
@@ -1598,6 +1623,11 @@ function get_objtype(type)
     {144, 165},
     {527, 538},
     {1685, 1732},
+    {1520, 1534},
+    {1414, 1428},
+    {1444, 1458},
+    {1474, 1519},
+    {1535, 1652},
     {1749, 1780},
     {2105, 2139},
     {2150, 2168},

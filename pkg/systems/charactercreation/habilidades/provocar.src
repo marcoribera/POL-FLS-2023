@@ -35,7 +35,7 @@ program taunt(who)
 		PlaySoundEffect( who, 0x339 );
 	endcase
 	PerformAction(who, ANIM_HIT);
-        var nearby := ListMobilesNearLocation( who.x ,who.y, who.z, 8);
+        var nearby := ListMobilesNearLocation( who.x ,who.y, who.z, 8, who.realm);
         var provoke_times := cint(AP_GetSkill(who, PARRY)/20);
         var i := 0;
         while(i < provoke_times)

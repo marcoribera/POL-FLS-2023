@@ -45,6 +45,11 @@ program SpellStarter(params)
 		endif
 	endif
 
+    if (GetCooldown(mobile, "silence"))
+        SendSysMessageEx(mobile, "Voce esta silenciado e nao pode usar magias.");
+        return 1;
+    endif
+
 	//se magia nao for de swordmage e tiver kit de swordmage, retorna.
 	if ( (spellinfo.spelltype != "Swordmage") && (TemHabilidade(mobile, "Concentracao Aprimorada")))
 		SendSysMessageEx(mobile, "Voce nao pode utilizar essas magias.", SSM_FAIL);

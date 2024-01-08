@@ -323,6 +323,15 @@ program MainHitScript( params )
 		if ( !GetCooldown(defender, "trapacearmorte_rodando") > 0 )
 			start_script(":charactercreation:habilidades/trapacearmorte", array{defender, total});
 		endif
+    elseif(GetObjProperty(defender, "chardata").vantagemracial == "Resistencia implacavel" && (AP_GetVital(defender, HITS) < total))
+        if (GetObjProperty(defender, "Resistencia implacavel"))
+            EraseObjProperty(defender, "Resistencia implacavel");
+            DamageFLS(defender, total, DMG_FORCED, attacker);
+        else  
+            AP_SetVital(defender, HITS, 1);
+            SendsysMessageEx(defender, "Sua resistencia implacavel o mantem de pe");
+            SetObjPRoperty(defender, "Resistencia implacavel", 1);
+        endif
 	else
 		//printtextabove(attacker, "causa dano");
 		var finalizar := 0;
@@ -340,6 +349,15 @@ program MainHitScript( params )
 				total := total*2;
 				EraseObjProperty(attacker, "backstab");
 				EraseObjProperty(attacker, "#nextcritical");
+            elseif(attacker.weapon.objtype == 0x166E)
+                var dist := Distance(attacker, defender);
+                if (dist == 1)
+                    DamageFLS(defender, cint(total/3), DMG_FORCED, attacker);
+                elseif(dist == 2)
+                    DamageFLS(defender, cint(total/2), DMG_FORCED, attacker);
+                else
+				    DamageFLS(defender, total, DMG_FORCED, attacker);
+                endif
 			else
 				DamageFLS(defender, total, DMG_FORCED, attacker);
 			endif
@@ -349,6 +367,8 @@ program MainHitScript( params )
 		endif
 	endif
 	EraseObjProperty(attacker, "backstab");
+
+
 	return 1;
 endprogram
 
@@ -798,6 +818,9 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 		bonus_Preservar_Orgaos := 25;
 	endif
 	*/
+    if (GetObjProperty(attacker, "chardata").povo == "Orc")
+        chance := chance + 2;
+    endif
 	var rand := Cint((RandomInt(100) + 1) + bonus_Preservar_Orgaos);
 	//printtextabove(attacker, "chance " + chance + " rand " + rand + " " + (chance > rand) );
 

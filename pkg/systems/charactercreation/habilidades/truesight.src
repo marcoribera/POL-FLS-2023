@@ -1,0 +1,32 @@
+ use uo;
+
+include ":attributes:attributes";
+include ":timedScripts:timedScripts";
+include "include/client";
+include "include/say";
+include "include/dungeons";
+
+program truesight(who)
+    var range := cint(AP_GetSkill(who, MAGICLORE)/5);
+
+    if (!InDarkness(who))
+        SendSysMessage(who, "Sua visao verdadeira funciona apenas na escuridao");
+        Return 0;
+    endif
+
+    var nearby := ListMobilesNearLocation( who.x ,who.y, who.z, range, who.realm);
+    foreach char in nearby
+        if (char.hidden || char.concealed && char.cmdlevel < 1)
+            char.hidden := 0;
+            char.concealed := 0;
+            
+            var duration := cint(AP_GetSkill(who, MAGICLORE)/10);
+            TS_StartTimer(char, "paralysis", duration);
+
+            PlayObjectCenteredEffect(char, 0x6D4B, 5, 50);
+            PrintTextAbove(char, "*revelado*");
+            sleepms(500);
+        endif
+    endforeach
+
+endprogram
