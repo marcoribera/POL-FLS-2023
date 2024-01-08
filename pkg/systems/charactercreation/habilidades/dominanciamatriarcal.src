@@ -37,17 +37,13 @@ program vacuodemana(params)
 	//PlaySoundEffect(defender, 0x358);
 	
     var dano_mlore := CInt(AP_GetSkill(attacker, MAGICLORE) / 2);
-    var is_whip := Array{};
-    if (!(weapon in is_whip))
+    var is_whip := Array{0x166E};
+    if (!(weapon.objtype in is_whip))
         SendSysMessage(attacker, "Voce precisa estar usando chicote para usar essa habilidade");
         return 1;
     endif
 
-    if (attacker.hidden || attacker.concealed)
-        dano_mlore *= 2;
-    endif
     var duration := cint(AP_GetSkill(attacker, MAGICLORE)/10);
-
     if (InDarkness(attacker))
         TS_StartTimer(defender, "paralysis", duration);
     endif
@@ -55,8 +51,15 @@ program vacuodemana(params)
     //TODO colocar isso em uma funcao depois
 	var dmgList := dictionary;
 	dmgList := getNewDamageList(attacker);
+
 	var total := cint(CalculateTotalDamage(defender, basedamage, attacker, dmgList));
 	DamageFLS(defender, total, DMG_PHYSICAL, attacker);
 	DamageFLS(defender, dano_mlore, DMG_COLD, attacker);
+    if (attacker.hidden || attacker.concealed)
+    	PlayAttackAnimation(attacker);
+	    PlayHitSounds(attacker, defender);
+        DamageFLS(defender, dano_mlore, DMG_COLD, attacker);
+    endif
+
     return 1;
 endprogram 

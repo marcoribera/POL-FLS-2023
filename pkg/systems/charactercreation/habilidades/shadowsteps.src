@@ -5,6 +5,7 @@ use polsys;
 include ":attributes:attributes";
 include "include/dungeons";
 include ":timedScripts:timedScripts";
+include ":tn:cooldown";
 
 program sanctuary(params)
 	var who := params[1];

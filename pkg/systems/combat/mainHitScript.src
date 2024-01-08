@@ -349,6 +349,15 @@ program MainHitScript( params )
 				total := total*2;
 				EraseObjProperty(attacker, "backstab");
 				EraseObjProperty(attacker, "#nextcritical");
+            elseif(attacker.weapon.objtype == 0x166E)
+                var dist := Distance(attacker, defender);
+                if (dist == 1)
+                    DamageFLS(defender, cint(total/3), DMG_FORCED, attacker);
+                elseif(dist == 2)
+                    DamageFLS(defender, cint(total/2), DMG_FORCED, attacker);
+                else
+				    DamageFLS(defender, total, DMG_FORCED, attacker);
+                endif
 			else
 				DamageFLS(defender, total, DMG_FORCED, attacker);
 			endif
