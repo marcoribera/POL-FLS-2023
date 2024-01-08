@@ -140,7 +140,7 @@ function EmptyBalde(bucket)
 	if ( info.container )
 		new_bucket := CreateItemInContainer(info.container, 3715, 1);
 	else
-		new_bucket := CreateItemAtLocation(info.x, info.y, info.z, 3715, 1);
+		new_bucket := CreateItemAtLocation(info.x, info.y, info.z, 3715, info.realm);
 	endif
 	SetObjProperty(new_bucket, "canfix", GetObjProperty(bucket, "canfix"));
 	SetObjProperty(new_bucket, "crafterserial", GetObjProperty(bucket, "crafterserial"));
