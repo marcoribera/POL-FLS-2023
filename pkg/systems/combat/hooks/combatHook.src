@@ -617,10 +617,13 @@ function CalculateHitChance(attacker, defender)
 		endif
 	endif
 
+    var dancer_bonus := CInt(AP_GetSkill(attacker, MAGICLORE) / 5);
     if (TemHabilidade(attacker, "Danca das Sombras"))
-        var dancer_bonus := CInt(AP_GetSkill(attacker, MAGICLORE) / 5);
         hit_chance := hit_chance + dancer_bonus;
 	endif
+    if (GetCooldown(defender, "spectre") > 0)
+        hit_chance := hit_chance - dancer_bonus;
+    endif
 
 	if (hit_chance < 5.0)
 		hit_chance := 5.0;

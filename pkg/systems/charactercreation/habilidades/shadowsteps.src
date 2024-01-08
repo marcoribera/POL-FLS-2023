@@ -8,10 +8,15 @@ include ":timedScripts:timedScripts";
 
 program sanctuary(params)
 	var who := params[1];
-    var duration_valsharess := cint(AP_GetSkill(who, MAGICLORE)/5);
 
     if (InDarkness(who) && TemHabilidade(who, "Caminhar nas sombras"))
-        TS_StartTimer(who, "velocidade", duration_valsharess); //30 seg
+        var duration_valsharess := cint(AP_GetSkill(who, MAGICLORE)/5);
+        TS_StartTimer(who, "velocidade", duration_valsharess);
+    endif
+
+    if (InDarkness(who) && TemHabilidade(who, "Forma Umbral"))
+        var duration_shadowdancer := cint(AP_GetSkill(who, MAGICLORE)/2.5);
+        Setcooldown(who, "spectre", duration_shadowdancer);
     endif
 
     var duration := Cint(AP_GetSkill(who, MAGICLORE) / 8);
