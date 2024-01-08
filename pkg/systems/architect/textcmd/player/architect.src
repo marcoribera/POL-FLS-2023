@@ -112,26 +112,26 @@ program architect_gump(who)
 
     // create construction site borders
     for (x:= startloc[1] + 1; x <= startloc[1] + SITESIZE - 1; x:= x + 1)
-      dummy:= CreateItemAtLocation (x, startloc[2], GetWorldHeight (x, startloc[2], who.realm), 52, 1);
+      dummy:= CreateItemAtLocation (x, startloc[2], GetWorldHeight (x, startloc[2], who.realm), 52, 1, who.realm);
       dummy.saveonexit:= 0;
-      dummy:= CreateItemAtLocation (x, startloc[2] + SITESIZE, GetWorldHeight (x, startloc[2] + SITESIZE, who.realm), 52, 1);
+      dummy:= CreateItemAtLocation (x, startloc[2] + SITESIZE, GetWorldHeight (x, startloc[2] + SITESIZE, who.realm), 52, 1, who.realm);
       dummy.saveonexit:= 0;
     endfor
 
     for (y:= startloc[2] + 1; y <= startloc[2] + SITESIZE - 1; y:= y + 1)
-      dummy:= CreateItemAtLocation (startloc[1], y, GetWorldHeight (startloc[1], y), 53, 1);
+      dummy:= CreateItemAtLocation (startloc[1], y, GetWorldHeight (startloc[1], y), 53, 1, who.realm);
       dummy.saveonexit:= 0;
-      dummy:= CreateItemAtLocation (startloc[1] + SITESIZE, y, GetWorldHeight (startloc[1] + SITESIZE, y, who.realm), 53, 1);
+      dummy:= CreateItemAtLocation (startloc[1] + SITESIZE, y, GetWorldHeight (startloc[1] + SITESIZE, y, who.realm), 53, 1, who.realm);
       dummy.saveonexit:= 0;
     endfor
 
-    dummy:= CreateItemAtLocation (startloc[1], startloc[2], GetWorldHeight (startloc[1], startloc[2], who.realm), 54, 1);
+    dummy:= CreateItemAtLocation (startloc[1], startloc[2], GetWorldHeight (startloc[1], startloc[2], who.realm), 54, 1, who.realm);
     dummy.saveonexit:= 0;
     dummy:= CreateItemAtLocation (startloc[1] + SITESIZE, startloc[2], GetWorldHeight (startloc[1] + SITESIZE, startloc[2]), 52, 1, who.realm);
     dummy.saveonexit:= 0;
     dummy:= CreateItemAtLocation (startloc[1], startloc[2] + SITESIZE, GetWorldHeight (startloc[1], startloc[2] + SITESIZE), 53, 1, who.realm);
     dummy.saveonexit:= 0;
-    dummy:= CreateItemAtLocation (startloc[1] + SITESIZE, startloc[2] + SITESIZE, GetWorldHeight (startloc[1], startloc[2] + SITESIZE, who.realm), 51, 1);
+    dummy:= CreateItemAtLocation (startloc[1] + SITESIZE, startloc[2] + SITESIZE, GetWorldHeight (startloc[1], startloc[2] + SITESIZE, who.realm), 51, 1, who.realm);
     dummy.saveonexit:= 0;
   endif
 
@@ -148,7 +148,7 @@ program architect_gump(who)
   endforeach
 
   if (!choice)
-    choice:= array {0, "Walls", "Bricks", 51, 0, 0, 0, 0};
+    choice:= array {0, "Walls", "BambooWall", 527, 0, 0, 0, 0};
   endif
 
   if (!gpos)
@@ -964,7 +964,6 @@ program architect_gump(who)
                 if (GetObjProperty (tbd, "#built_by_architect") == who.serial)
                   DestroyItem (tbd);
                   undone:= 1;
-                  CreateItemInBackPack(who, BLOCK_OF_STONE, 10); //Caso seja desfeita a criacao, ele recriar as pedras
                 endif
 
                 Sleepms (2);
@@ -1504,7 +1503,7 @@ function create_marked(who, x, y, z, type)
         endforeach
 
         SendSysMessageEx(who, "Voce usou o(s) recursos(s).", SSM_INFO);
-        var created:= CreateItemAtLocation (x, y, z, type);
+        var created:= CreateItemAtLocation (x, y, z, type, 1, who.realm);
         created.movable:= 0;
 
         SetObjProperty (created, "#built_by_architect", who.serial);

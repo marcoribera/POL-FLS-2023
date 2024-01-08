@@ -22,9 +22,9 @@ program ConfigArchitect(who)
 	endif
 
 	var i := 1;
-	foreach mina in (areasdf.keys())
+	foreach area in (areasdf.keys())
 		y := y+ 15;
-		GFTextLine(gump, 35, y, 1153, ""+mina);
+		GFTextLine(gump, 35, y, 1153, ""+area);
 		GFAddButton(gump, 20, y+2, 2117, 2118, 1, 400+i);
 		i := i + 1;
 	endforeach
@@ -37,9 +37,9 @@ program ConfigArchitect(who)
 		var  nome := RequestGump(who, "Escolha o nome da area");
 		var rect :=  RequestGump(who, "Qual o rect da area?");
 
-		var mina := areasdf.createelement(""+nome);
-		mina.setprop("Name", nome);
-		mina.setprop("Rect", rect);
+		var area := areasdf.createelement(""+nome);
+		area.setprop("Name", nome);
+		area.setprop("Rect", rect);
 
 	elseif(input >= 400)
 
