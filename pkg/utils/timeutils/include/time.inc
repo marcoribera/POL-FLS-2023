@@ -292,3 +292,43 @@ function GetTimeBetween(old_time, new_time, type := "days")
 	var diff := Floor((new_time - old_time)/diff_calc);
 	return diff;
 endfunction
+
+
+/*
+ * AddTimeTo(time, amount, type)
+ *
+ * Purpose
+ * Add seconds, hours to time
+ *
+ * Parameters
+ * time:	Time to be calculated
+ * amount:	Amount of time
+ * type:	Time type, can be "years", "days", "minutes", "seconds", "weeks"
+ *
+ * Return value
+ * The difference number in "type"
+ *
+ */
+function AddTimeTo(time, amount, type := "days")
+	var diff_calc;
+	if (type["day"])
+		diff_calc := SECONDS_IN_DAY;
+	elseif (type["hour"])
+		diff_calc := SECONDS_IN_HOUR;
+	elseif (type["second"])
+		diff_calc := 1;
+	elseif (type["year"])
+		diff_calc := SECONDS_IN_YEAR;
+	elseif (type["minute"])
+		diff_calc := SECONDS_IN_MINUTE;
+	elseif (type["week"])
+		diff_calc := SECONDS_IN_WEEK;
+	else
+		print("Wrong type for AddTimeTo: {}".format(type) );
+		return time;
+	endif
+	amount := amount * diff_calc;
+
+	var result := time + amount;
+	return result;
+endfunction

@@ -48,12 +48,9 @@ endfunction
 function InDarkness(who)
     var diaounoite := GetGlobalProperty("dia");
 
-    if (!InDungeon(who) )
+    if ((diaounoite == "dia" && !InDungeon(who)))
         SendSysMessage(who, "Voce nao esta na escuridao");
-        Return 0;
-    elseif(diaounoite != "noite")
-        SendSysMessage(who, "Nao eh noite");
-        Return 0;
+        return 0;
     endif
 
     return 1;

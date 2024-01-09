@@ -25,7 +25,7 @@ program truesight(who)
 
             PlayObjectCenteredEffect(char, 0x6D4B, 10, 10);
             PrintTextAbove(char, "*revelado*");
-            sleepms(500);
+            sleepms(20);
         endif
     endforeach
 
