@@ -45,10 +45,10 @@ program summonSkeletaSteed(params)
 
 	var mount := summon(template, targ, who);
 	var duracao := 120 + 180 * AP_GetSkill(who, MAGICLORE)/ 100;
-
+    var mount2 := summon(template, targ, who);
 	TS_StartTimer(mount, "summon", duracao ); //inicio do timedScripts no summon
     if (InDarkness(who))
-        TS_StartTimer(mount, "summon", duracao ); //inicio do timedScripts no summon
+        TS_StartTimer(mount2, "summon", duracao ); //inicio do timedScripts no summon
     endif
     PlayObjectCenteredEffect(mount, 0x37C4, 10, 20);
 

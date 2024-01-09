@@ -1,17 +1,3 @@
-/*use uo;
-
-include ":attributes:attributes";
-include ":timedScripts:timedScripts";
-include "include/say";
-include ":tn:cooldown";
-
-program VacuoDeMana(attacker)
-
-	SendSysMessageEx(attacker, "Seu proximo golpe danificara a alma do oponente", SSM_INFO);
-	SetCooldown(attacker, "vacuodemana", 60);
-
-endprogram    */
-
 use uo;
 
 include ":fls_core:packets";
@@ -20,25 +6,26 @@ include ":blood:blood";
 include "include/damage";
 include "include/say";
 include ":timedScripts:timedScripts";
-include ":attributes:vitals";
-include ":charactercreation:resists";
 include "include/dungeons";
 
 program vacuodemana(params)
 	var attacker	:= params[1];
-	var defender	:= params[2];
-	var weapon	:= params[3];
-	var armor	:= params[4];
 	var basedamage	:= params[5];
 	var rawdamage	:= params[6];
 	params := 0; // Not needed anymore.
-
-	//PlayObjectCenteredEffect(defender, 0xAFED, 7, 16);
-	//PlaySoundEffect(defender, 0x358);
+    var defender := Target(attacker);
+    if (!defender)
+        return;
+    endif
 	
+    var dist := Distance(attacker, defender);
+    if (dist > 3)
+        SendSysMessage(attacker, "O alvo esta muito distante");
+        return 1;
+    endif
+
     var dano_mlore := CInt(AP_GetSkill(attacker, MAGICLORE) / 2);
-    
-    if (weapon.objtype != 0x166E)
+    if (attacker.weapon.objtype != 0x166E)
         SendSysMessage(attacker, "Voce precisa estar usando chicote para usar essa habilidade");
         return 1;
     endif
@@ -53,6 +40,8 @@ program vacuodemana(params)
 	dmgList := getNewDamageList(attacker);
 
 	var total := cint(CalculateTotalDamage(defender, basedamage, attacker, dmgList));
+    PlayAttackAnimation(attacker);
+    PlayHitSounds(attacker, defender);
 	DamageFLS(defender, total, DMG_PHYSICAL, attacker);
 	DamageFLS(defender, dano_mlore, DMG_COLD, attacker);
     if (attacker.hidden || attacker.concealed)

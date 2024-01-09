@@ -3,7 +3,7 @@ use os;
 use polsys;
 
 include ":attributes:attributes";
-//include "include/dungeons";
+include "include/dungeons";
 include ":timedScripts:timedScripts";
 include ":tn:cooldown";
 
@@ -84,23 +84,4 @@ function fixPacketLength( packetString, byteLength )
     endwhile
 
     return packetString;
-endfunction
-
-function InDungeon(coord) // retorna 1 sucesso
-    if ( coord.x >= 4390 && coord.y <= 4150)
-		return 1;
-	else
-		return 0;
-	endif
-endfunction
-
-function InDarkness(who)
-    var diaounoite := GetGlobalProperty("dia");
-
-    if ((diaounoite == "dia" && !InDungeon(who)))
-        SendSysMessage(who, "Voce nao esta na escuridao");
-        return 0;
-    endif
-
-    return 1;
 endfunction
