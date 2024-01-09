@@ -94,14 +94,14 @@ var climamodtemp;
 	
 
 	//Mensagens para o Usuario
-	SendSysMessage(who, "Estacao do Ano: " + estacaonow,FONT_NORMAL,colore);
+	SendSysMessageEx(who, "Estacao do Ano: " + estacaonow, colore);
        if(diaounoite == "noite")
-	SendSysMessage(who, "Fase da Lua: " + fase,FONT_NORMAL,0);
+	SendSysMessageEx(who, "Fase da Lua: " + fase, SSM_INFO);
        endif
        if(diaounoite == "dia")
-	SendSysMessage(who, "Posicao do Sol: " + solpos,FONT_NORMAL,0);
+	SendSysMessageEx(who, "Posicao do Sol: " + solpos, SSM_INFO);
        endif
-	SendSysMessage(who, "Sensacao Termica: " + sensacao,FONT_NORMAL,color);
+	SendSysMessageEx(who, "Sensacao Termica: " + sensacao, color);
 
 
 endprogram
@@ -135,7 +135,7 @@ function GetTempRegion(diaounoite, who, x, y)
 				tempmod := (tempmod - 16);
 			endif
 			if (elem == "regiaodungeons")
-				SendSysMessage(who, "Esse comando nao pode ser usado dentro de Dungeons ou Cavernas.",FONT_NORMAL,0);
+				SendSysMessageEx(who, "Esse comando nao pode ser usado dentro de Dungeons ou Cavernas.", SSM_FAIL);
 				return 999;
 			endif
 			return tempmod;

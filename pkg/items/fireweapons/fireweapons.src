@@ -14,11 +14,14 @@ include "include/facings";
 */
 
 program fireweapons(who, item)
+    Set_Script_Option(SCRIPTOPT_NO_RUNAWAY, 1); //Adicionado para diminuir a quantidade de logs no arquivo script.log
+
 	var wet := GetObjProperty(who, "molhado");
     var pistol := Array{0xC5FD, 0xC5FE};
     var handcannon := 0xC5FF;
     var carabine := 0xC600;
-    var musket := 0xc606;
+    var musket := 0x89A7;
+    var fireweapons := Array{pistol[1], pistol[2], handcannon, carabine, musket};
     
     var is_pistol := 0;
     var is_handcannon := 0;
@@ -36,8 +39,9 @@ program fireweapons(who, item)
     endif
 
     // Verifica se a arma está equipada
-    var weapon := GetEquipmentByLayer(who, LAYER_HAND2);
-    if (item.objtype == 0xC5FE) // pistola destra
+    var weapon1 := GetEquipmentByLayer(who, LAYER_HAND1);
+    var weapon2 := GetEquipmentByLayer(who, LAYER_HAND2);
+    /*if (item.objtype == 0xC5FE) // pistola destra
         weapon := GetEquipmentByLayer(who, LAYER_HAND1);
         if (weapon.serial != item.serial)
 		    SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
@@ -46,7 +50,12 @@ program fireweapons(who, item)
 	elseif (weapon.serial != item.serial)
 		SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
 		return;
-	endif
+	endif*/
+    if (item.objtype != weapon1.objtype && item.objtype != weapon2.objtype) //novo check de mão
+        SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
+        return;
+    endif
+
 
     // Verifica se a arma está municiada
 	var balas := cint(GetObjProperty(item, "balas"));
@@ -73,6 +82,10 @@ program fireweapons(who, item)
             elseif (is_carabine)
                 powder_amt := 2;
             endif
+
+            if (TemHabilidade(who, "Otimizacao da Polvora") && powder_amt > 2)
+                powder_amt := 2;
+            endif
             while (who.x == current_x && who.y == current_y)
                 if (wet == 1)
                     SendSysMessageEx(who, "Voce nao consegue recarregar com o clima umido.", SSM_FAIL);
@@ -87,7 +100,7 @@ program fireweapons(who, item)
                     else 
                         SendSysMessageEx(who, "Selecione o socador de polvora.");
                         var powder_fixer := Target(who);
-                        if (powder_fixer.objtype != 0x9093)
+                        if (powder_fixer.objtype != 0xC611)
                             SendSysMessageEx(who, "Esse nao eh um socador de polvora valido.", SSM_FAIL);
                             return;
                         endif
@@ -106,6 +119,9 @@ program fireweapons(who, item)
                         reload_time := 4;
                     elseif (is_musket)
                         reload_time := 8;
+                    endif
+                    if (TemHabilidade(who, "Recarregador profissional"))
+                        reload_time /= 2;
                     endif
                     // Toca os sons de recarregar
                     while (i < reload_time)
@@ -155,7 +171,7 @@ program fireweapons(who, item)
     endif
 
 	TurnObjectToward(who, targ.x, targ.y);
-	PrintText(who, "*mirando em *" + targ.name);
+	PrintText(who, "*mirando em {}*".format(targ.name));
     PlaySoundEffect(who, 0x667);
 	who.frozen := 1;
     var i := 0;
@@ -166,7 +182,12 @@ program fireweapons(who, item)
 	who.frozen := 0;
 
 	//testa 2x
-    if (item.objetype == 0xC5FE) // pistola destra
+    if (item.objtype != weapon1.objtype && item.objtype != weapon2.objtype) //novo check de mão
+        SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
+        return;
+    endif
+
+    /*if (item.objetype == 0xC5FE) // pistola destra
         weapon := GetEquipmentByLayer(who, LAYER_HAND1);
         if (weapon.serial != item.serial)
 		    SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
@@ -175,7 +196,7 @@ program fireweapons(who, item)
 	elseif (weapon.serial != item.serial)
 		SendSysMessageEx(who, "Voce precisa equipar a arma.", SSM_FAIL);
 		return;
-	endif
+	endif*/
 
 	if ( !CheckLosBetween(who.x, who.y, who.z, targ.x, targ.y, targ.z, who.realm))
 		SendSysMessageEx(who, "O alvo saiu do seu campo de visao.", SSM_FAIL);
@@ -209,10 +230,17 @@ program fireweapons(who, item)
     elseif(is_handcannon)
         dmg := 140;
     endif
+
+    if (TemHabilidade(who, "Municao Explosiva"))
+        dmg += 40;
+    endif
     
     // Cálculo de dano baseado na distância
     // TODO: Transformar numa função
     var max_range := 6;
+    if (TemHabilidade(who, "Mira telescopica"))
+        max_range += 4;
+    endif
     if (is_pistol)
         if (dist > max_range)
             dmg := dmg - ((dist - max_range) * 10);
@@ -222,12 +250,12 @@ program fireweapons(who, item)
             dmg := 0;
         endif
     elseif (is_carabine)
-        max_range := 12;
+        max_range += 6;
         if (dist > max_range)
             dmg := dmg - ((dist - max_range) * 10);
         endif
     elseif (is_musket)
-        max_range := 20;
+        max_range += 14;
         if (dist > max_range)
             dmg := dmg - ((dist - max_range) * 10);
         endif
@@ -256,8 +284,8 @@ program fireweapons(who, item)
 	    SetObjProperty(item, "balas", balas);
 		return;
 	endif
-    var random := randomint(10);
-    if (random <= 1)
+    var random := randomfloat(100);
+    if (random <= 5 && !TemHabilidade(who, "Artilheiro preparado"))
         SendSysMessageEx(who, "O tiro saiu pela culatra!", SSM_FAIL);
         targ := who;
         DestroyItem(item);
@@ -266,5 +294,5 @@ program fireweapons(who, item)
     PlayObjectCenteredEffect(who, GFX_FIZZLE, 5, 50);
     PlayMovingEffect(who, targ, FX_EXPLODE_1, 5, 1, 1);
 	PlaySoundEffect(who, shot_sound);
-	DamageFLS(targ, dmg,  DMG_FORCED, who);
+	DamageFLS(targ, dmg, DMG_FORCED, who);
 endprogram

@@ -1,4 +1,3 @@
-
 use uo;
 use os;
 use math;
@@ -26,6 +25,14 @@ program skill_LumberJack(who,tool)
 	if ( !targ )
 		SendSysMessage(who, "Cancelado.");
 		return 0;
+	endif
+	var quebravel := GetObjProperty(targ.item, "quebravel");
+
+	if (targ.item)
+		if (quebravel)
+			Quebraitem(who, tool, targ.item);
+			return 0;
+		endif
 	endif
 
 	if ( CoordinateDistance(who.x, who.y, targ.x, targ.y) > 1 )
@@ -90,7 +97,7 @@ function ChopTree(who, tool, targ, orig_x, orig_y)
 			return 0;
 		endif
 
-			PerformAction(who, ANIM_ATTACK_2HAND_WIDE);
+			PerformAction(who, 0x0b);
 		PlaySoundEffect(who, FLS_SFX_SKILL_LUMBERJACK);
 		sleepms(1200);
 	endfor
@@ -121,7 +128,7 @@ function ChopTree(who, tool, targ, orig_x, orig_y)
 	//	SendSysMessage(who, "Difficulty ->"+difficulty);
 	//endif
 
-	if ( SkillCheck(who, GATHERING, difficulty) > 0 )
+	if ( SkillCheck(who, GATHERING, difficulty) > 0  || TemHabilidade(who, "Arquiteto"))
 		var amt := Cint(AP_GetSkill(who, GATHERING)/20);
 		if(TemHabilidade(who, "Lenhador Talentoso"))
 			amt := amt + 4;
@@ -182,28 +189,91 @@ function CanChop(who, axe, targ, orig_x, orig_y)
 endfunction
 
 //dificuldade de PEGAR o minerio
+
 function DetermineLumberDifficulty(logtype)
 
 	case (logtype)
-
+        0x1bdd:
+        	return 10; //madeira;
         0xee36:
         	return 20; //pinheiro
         0xee37:
-        	return 30; //carvalho
-        0xee38:
-        	return 75; //nogueira
+        	return 50; //carvalho
         0xee39:
-        	return 40; //salgueiro
+        	return 60; //salgueiro
         0xee3a:
-        	return 50; //sipreste
+        	return 60; //sipreste
+        0xee38:
+        	return 60; //nogueira
+		0xee3d:
+            return 70; //polar
+		0xee3e:
+            return 70; //Teixo 
+		0xee3f:
+            return 70; //Imbuia
+        0xee40:
+            return 80; //mogno
+		0xee3c:
+            return 80; //Cogumelo   
         0xee3b:
-        	return 60; //angelim
-        0xee3c:
-        	return 70; //ebano
-        0x1bdd:
-        	return 10; //madeira;
+        	return 95; //ebano
         default:
         	return 0;
     endcase
 
+
+endfunction
+
+function Quebraitem(who, tool, item)
+	var quebravel := GetObjProperty(item, "quebravel");
+	if (quebravel == "gathering")
+
+		var mex := who.x;
+		var mey := who.y;
+		var hp;
+		var itens:=array;
+		var i := 3 ;
+
+		hp := GetObjProperty(item, "durabilidade");
+		var gatherer:= AP_GetSkill(who, GATHERING);
+				
+		PrintTextAbove(who, "*Batendo com força*");
+		CheckToolWear(who, tool, GATHERING);
+
+		while((i <= 9) && (who.x == mex) && (who.y == mey))
+
+			if((who.x != mex) && (who.y != mey))
+				break;
+			endif
+
+			PerformAction(who, 0x0b);
+			PlaySoundEffect(who, 0x126);
+
+			sleep(1);
+
+			if((who.x != mex) || (who.y != mey))
+				SendSysMessageEx(who,"Voce deve ficar parado enquanto trabalha", SSM_FAIL);
+				return;
+			endif
+			i := i + 1;
+		endwhile
+
+		hp := hp - gatherer;
+		SetObjProperty(item, "durabilidade", hp);
+
+		if (hp <= 0)
+			PrintTextAbove(item, "*quebra*");
+			sleep(2);
+
+			var itens := GetObjProperty(item,"itens");
+			foreach itemarray in itens
+				var itemcriado:=CreateItemAtLocation(item.x, item.y, item.z,itemarray , itemarray.amount, realm := _DEFAULT_REALM);
+				SetName(itemcriado, itemarray.name);
+			endforeach
+			DestroyItem(item);
+		endif
+	elseif ((quebravel == "survival") || (quebravel == "domesticwork"))
+			SendSysMessageEx(who, "Voce deve usar outra ferramenta para este servico", SSM_FAIL);
+			return;
+	endif
 endfunction

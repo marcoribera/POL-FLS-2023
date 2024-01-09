@@ -103,13 +103,13 @@ program skill_Anatomy(who)
 	var strMsg, strFail;
 
 	if(subject.serial == who.serial)
-		strMsg := "Voce";
+		strMsg := "-se";
 	else
-		strMsg := subject.name;
+		strMsg := " "+subject.name;
 		strFail := "das caracteristicas fisicas dessa criatura.";
 	endif
 
-	PrintTextAbove(who, "*examinando " + strMsg + "*");
+	PrintTextAbove(who, "*examinando" + strMsg + "*");
 	if (!Wait(subject, 2))
 		SendSysMessageEx(who, "O paciente precisa ficar preparado.", SSM_FAIL);
 		return 0;
@@ -117,8 +117,13 @@ program skill_Anatomy(who)
 	var hunger := CInt(AP_GetVital(subject, "Hunger") / 10);
 	PrintTextAbovePrivate(subject, "Niveis de fome: " + hunger , who);
 
+	var sucesso := 0;
+	if (who.serial == subject.serial) sucesso := 1; //PARA O PLAYER SEMPRE ACERTAR E NUNCA UPAR, CASO USE NELE MESMO
+	else sucesso := SkillCheck(who, MEDICINE, 30);
+	endif
+
 	if (temHabilidade(who, "Formacao Academica"))
-		if((SkillCheck(who, MEDICINE, 30, 11) > 0) || (who.serial == subject.serial))
+		if(sucesso > 0)
 			SendSysMessageEx(who, strMsg + " parece " + streng +" (" +AP_GetStat(subject, "Strength") + "),", SSM_INFO);
 			SendSysMessageEx(who, dext +" (" + AP_GetStat(subject, "Dexterity") + "),", SSM_INFO);
 			SendSysMessageEx(who, endur + ".", SSM_INFO);
@@ -134,14 +139,20 @@ program skill_Anatomy(who)
 			return 0;
 		endif
 	else
-		if((SkillCheck(who, MEDICINE, 30, 11) > 0) || (who.serial == subject.serial))
+		if(sucesso > 0)
 			SendSysMessageEx(who, strMsg + " parece " + streng + ", " + dext + " e " + endur + ".", SSM_INFO);
 			if ((valorInicial(who, MEDICINE) >= 40) || (who.serial == subject.serial))
 				SendSysMessageEx(who, strMsg + " parece " + fort + ", " + refl + " e "+ vont + ".", SSM_INFO);
 			endif
             if (who.serial == subject.serial)
-			    SendSysMessageEx(who, "O alvo esta " + DPMsg(subject,who), SSM_INFO);
-            endif
+			   SendSysMessageEx(who, "O alvo esta " + DPMsg(subject,who), SSM_INFO);
+			elseif (GetObjProperty(subject, "bond") == "fiel")
+			   if (AP_Getvital(subject, "DP") == 20)
+				SendSysMessageEx(who, "O alvo esta bastante disposto", SSM_INFO);
+			   else
+				SendSysMessageEx(who, "O alvo esta quase morto", SSM_INFO);
+				endif
+			endif
             return 1;
 		else
 			SendSysMessageEx(who, "Voce nao faz ideia " + strFail, SSM_FAIL);

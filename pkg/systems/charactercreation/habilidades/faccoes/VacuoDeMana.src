@@ -31,15 +31,27 @@ program vacuodemana(params)
 	var basedamage	:= params[5];
 	var rawdamage	:= params[6];
 	params := 0; // Not needed anymore.
+    SetCooldown(attacker, "corpofechado", 5);
+	PlayObjectCenteredEffect(defender, 0xAFED, 7, 16);
+	PlaySoundEffect(defender, 0x358);
 	
-	PlayAttackAnimation(attacker);
-	PlayHitSounds(attacker, defender);
-	SendSysMessageEx(attacker, "O panteão zharkiano testemunha sua fé", SSM_INFO);
-	//SetObjProperty(attacker, "#golpeceleste", 1);
-	var danomana := (AP_GetVitalMaximumValue(defender, "mana") - AP_GetVital(defender, "mana")) * 1.2;
-    if (defender.npctemplate)
-        danomana := GetResist(attacker, VONTADE);
-    endif
+    var danomana := (AP_GetVitalMaximumValue(defender, "mana") - AP_GetVital(defender, "mana")) * 1.2;
+    danomana += GetResist(attacker, VONTADE);
 
-	DamageFLS(defender, danomana, DMG_FORCED, attacker);
+    //TODO colocar isso em uma funcao depois
+	var dmgList := dictionary;
+	dmgList := getNewDamageList(attacker);
+	var total := cint(CalculateTotalDamage(defender, basedamage, attacker, dmgList));
+	DamageFLS(defender, total, DMG_PHYSICAL, attacker);
+	DamageFLS(defender, danomana, DMG_FIRE, attacker);
+
+	//PlayAttackAnimation(attacker);
+	//PlayHitSounds(attacker, defender);
+	//SendSysMessageEx(attacker, "O panteão zharkiano testemunha sua fé", SSM_INFO);
+	////SetObjProperty(attacker, "#golpeceleste", 1);
+	//var danomana := (AP_GetVitalMaximumValue(defender, "mana") - AP_GetVital(defender, "mana")) * 1.2;
+    //    danomana += GetResist(attacker, VONTADE);
+
+	//DamageFLS(defender, danomana, DMG_FORCED, attacker);
+    return 1;
 endprogram 

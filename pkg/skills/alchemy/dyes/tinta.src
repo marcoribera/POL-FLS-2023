@@ -21,7 +21,7 @@ program drink_blue (who, potion)
     SendSysMessage(who, "Cancelado");
     return;
   endif
-  if (what.objtype == 0x0FAB)
+  if (what.objtype == 0x0FAB) 
      what.color := potion.color;
      DestroyItem(potion);
      CreateItemInBackpack(who, UOBJ_EMPTY_BOTTLE, 1);

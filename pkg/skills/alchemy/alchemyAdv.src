@@ -58,7 +58,7 @@ program advalchemy(who, item)
 	endif
        
 	GFTextLine(advgump, 48, 237, 600, "Remover Ingredientes");
-	GFTextLine( advgump, 48, 257, 600, "Adicionar Ingredientes");
+	GFTextLine(advgump, 48, 257, 600, "Adicionar Ingredientes");
 	GFTextLine(advgump, 48, 277, 600, "Preparar Extrato");
 	GFAddButton(advgump, 37, 261, 2103, 2104, 1, 11);//adicionar
 	GFAddButton(advgump, 37, 281, 2103, 2104, 1, 12);//misturar
@@ -197,13 +197,6 @@ function MakePotion ( pot, item, who, magic, strength := 0)
 
 	var difficulty := recipes[pot].skill;
 	var loop := 0;
-	while(loop < 3)
-		PlaySoundEffect(who, SOUND_EFFECT_GRIND);
-		PrintText(who, "*preparando um extrato*");
-		sleep(1);
-		loop := loop + 1;
-	endwhile
-      
     
 	if(SkillCheck(who, ALCHEMY, difficulty) > 0) 
 		//if (GetObjProperty(who, "classe") == "sabio")
@@ -227,6 +220,12 @@ function MakePotion ( pot, item, who, magic, strength := 0)
 		set_critical(0);
 
 		if(hasbottle)
+			while(loop < 3)
+				PlaySoundEffect(who, SOUND_EFFECT_GRIND);
+				PrintText(who, "*preparando um extrato*");
+				sleep(1);
+				loop := loop + 1;
+			endwhile
 			var thing;
 			if (!magic)//se nao tiver o flag magic como as tintas, cria o item
 				thing := CreateItemInBackpack(who, pot, 1);
@@ -329,7 +328,7 @@ function FalhaCritica(who, item)
 	elseif ( falha < 86 )
 		SendSysMEssageEx(who,"O que foi isso?!", SSM_FAIL);
 		if (who.graphic == 401)
-			who.graphic := 400;
+			who.graphic := 400; who.graphic := 1828; who.graphic := 1829; who.graphic := 1830; who.graphic := 1831; who.graphic := 1832; who.graphic := 1833; who.graphic := 1834; who.graphic := 1835;      
 		else
 			who.graphic := 401;
 		endif

@@ -59,24 +59,22 @@ function makeAlchemyItems(who, what, amt, tool )
 	endif
 
 	var loop := 0;
-	while(loop < 3)
-		PlaySoundEffect(who, SOUND_EFFECT_GRIND);
-		PrintText(who, "*preparando um extrato*");
-		sleep(1);
-		loop := loop + 1;
-	endwhile
 
 	var item := CraftItem(who, "Alchemy", tool, what, amt, 0, 0);
-
-	if(!item)
+	
+	if(item.size() == 0)
 		if (RandomInt(100) <= 25)
 			FalhaCritica(who, item);
 		else
 			PlaySoundEffect(who, SOUND_EFFECT_GRIND);
-			PrintText(who, "*preparando um extrato*");
-			sleep(2);
-			PlaySoundEffect(who, SOUND_EFFECT_POUR);
 			SendSysMessageEx(who, "Voce nao conseguiu fazer nada com isso.", SSM_FAIL);
+			sleep(2);
+			if (RandomInt(100) >= 75)
+				SendSysMessageEx(who, "Voce conseguiu salvar o frasco!", 90);
+				CreateItemInBackPack(who, 0x0F0E, 1);
+			else
+				SendSysMessageEx(who, "Voce tentou salvar o frasco mas nao conseguiu!", SSM_FAIL);
+			endif
 			return 0;
 		endif
 	endif
@@ -90,50 +88,217 @@ function FalhaCritica(who, item)
 	if (TemHabilidade(who, "Alquimista Precavido"))
 		return 1;
 	endif
+	var whoemote, whosound;
 
 	var falha := RandomInt(100)+1;
-	var loop := 0;
-	if (falha < 65 )
-		while(loop < 3)
-			PlaySoundEffect(who, SOUND_EFFECT_GRIND);
-			PrintText(who, "*preparando um extrato*");
-			sleep(1);
-			loop := loop + 1;
-		endwhile
-		PlaySoundEffect(who, SOUND_EFFECT_POUR);
-		SendSysMessageEx(who, "Voce nao conseguiu fazer nada com isso.", SSM_FAIL);
-		return;
-	//elseif ( falha < 68 )
-	//	SendSysMEssageEx(who,"AHH!  Seu cabelo caiu!!!", SSM_FAIL);
-	//	DestroyItem(GetEquipmentByLayer (who, LAYER_HAIR));
-	//	DestroyItem(GetEquipmentByLayer (who, LAYER_BEARD));
-	//	return;
-	elseif ( falha < 78 )
+	if ( falha < 65 )
 		SendSysMessageEx(who,"Ugh... Voce nao esta se sentindo muito bem...", SSM_FAIL);
 		TS_StartTimer(who, "strPoison", 120, 2);
+		alchEmoteSound(who, "Tossir1");
 	elseif ( falha < 82 )
 		SendSysMessageEx(who,"Ahh!", SSM_FAIL);
+		alchEmoteSound(who, "Gemer");
 		who.color := 18;
 		Detach();
 		sleep(180);
 		who.color := who.truecolor;
-	elseif ( falha < 86 )
+	elseif ( falha < 75 )
 		SendSysMEssageEx(who,"O que foi isso?!", SSM_FAIL);
 		if (who.graphic == 401)
-			who.graphic := 400;
-		else
+		who.graphic := 400; who.graphic := 1828; who.graphic := 1829; who.graphic := 1830; who.graphic := 1831; who.graphic := 1832; who.graphic := 1833; who.graphic := 1834; who.graphic := 1835;      
+	else
 			who.graphic := 401;
 		endif
+		alchEmoteSound(who, "Huh");
 		sleep(600);
 		Detach();
 		who.graphic := who.objtype;
-	elseif ( falha < 95 )
+	elseif ( falha < 90 )
 		SendSysMEssageEx(who,"VAI EXPLO...", SSM_FAIL);
+		alchEmoteSound(who, "Gritar");
+		sleep(1);
+
 		PlayStationaryEffect( who.x, who.y, who.z, 0x36b0, 7, 10, 1);
 		PlaySoundEffect(who, 0x208);
 		ApplyRawDamage(who, cint(30+ randomInt(100) ) );
+		sleep(2);
+
+		alchEmoteSound(who, "Arfar");
 	else
 		SendSysMessageEX(who,"Voce esta envenenado!!", SSM_FAIL);
 		TS_StartTimer(who, "defaultPoison", 120, 5);
+		alchEmoteSound(who, "Tossir1");
+		sleep(1);
+		
+		alchEmoteSound(who, "Tossir2");
+		sleep(1);
+
+		alchEmoteSound(who, "Arfar");
 	endif
+endfunction
+
+function alchEmoteSound(byref who, tipoemote, saiemote:=1)
+	var whosound, whoemote;
+	
+	case (tipoemote)
+		"Gritar":
+			whoemote := "*Gritando*";
+			case (who.graphic)
+				401:
+					whosound := 0x32F;
+				400:
+					whosound := 0x441;
+				1829:
+					whosound := 0x32F;
+				1828:
+					whosound := 0x441;
+				1831:
+					whosound := 0x32F;
+				1830:
+					whosound := 0x441;
+				1833:
+					whosound := 0x32F;
+				1832:
+					whosound := 0x441;
+				1835:
+					whosound := 0x32F;
+				1834:
+					whosound := 0x441;
+				
+			endcase
+			break;
+
+		"Huh":
+			whoemote := "*Huh?*";
+			case (who.graphic)
+				401:
+					whosound := 0x320;
+				400:
+					whosound := 0x430;
+				1829:
+					whosound := 0x320;
+				1828:
+					whosound := 0x430;
+				1831:
+					whosound := 0x320;
+				1830:
+					whosound := 0x430;
+				1833:
+					whosound := 0x320;
+				1832:
+					whosound := 0x430;
+				1835:
+					whosound := 0x320;
+				1834:
+					whosound := 0x430;
+			endcase
+			break;
+
+		"Tossir1":
+			whoemote := "*Tossindo*";
+			case (who.graphic)
+				401:
+					whosound := 0x312;
+				400:
+					whosound := 0x421;
+				1829:
+					whosound := 0x312;
+				1828:
+					whosound := 0x421;
+				1831:
+					whosound := 0x312;
+				1830:
+					whosound := 0x421;
+				1833:
+					whosound := 0x312;
+				1832:
+					whosound := 0x421;
+				1835:
+					whosound := 0x312;
+				1834:
+					whosound := 0x421;
+			endcase
+			break;
+
+		"Tossir2":
+			whoemote := "*Tossindo*";
+			case (who.graphic)
+				401:
+					whosound := 0x313;
+				400:
+					whosound := 0x422;
+				1829:
+					whosound := 0x313;
+				1828:
+					whosound := 0x422;
+				1831:
+					whosound := 0x313;
+				1830:
+					whosound := 0x422;
+				1833:
+					whosound := 0x313;
+				1832:
+					whosound := 0x422;
+				1835:
+					whosound := 0x313;
+				1834:
+					whosound := 0x422;
+			endcase
+			break;
+
+		"Arfar":
+			whoemote := "*Arfando*";
+			case (who.graphic)
+				401:
+					whosound := 0x31A;
+				400:
+					whosound := 0x42A;
+				1829:
+					whosound := 0x31A;
+				1828:
+					whosound := 0x42A;
+				1831:
+					whosound := 0x31A;
+				1830:
+					whosound := 0x42A;
+				1833:
+					whosound := 0x31A;
+				1832:
+					whosound := 0x42A;
+				1835:
+					whosound := 0x31A;
+				1834:
+					whosound := 0x42A;
+			endcase
+			break;
+
+		"Gemer":
+			whoemote := "*Gemendo*";
+			case (who.graphic)
+				401:
+					whosound := 0x31C;
+				400:
+					whosound := 0x42C;
+				1829:
+					whosound := 0x31C;
+				1828:
+					whosound := 0x42C;
+				1831:
+					whosound := 0x31C;
+				1830:
+					whosound := 0x42C;
+				1833:
+					whosound := 0x31C;
+				1832:
+					whosound := 0x42C;
+				1835:
+					whosound := 0x31C;
+				1834:
+					whosound := 0x42C;
+			endcase
+			break;
+	endcase
+
+	PlaySoundEffect(who, whosound);
+	if (saiemote == 0) PrintTextAbove(who, whoemote); endif
 endfunction

@@ -145,7 +145,7 @@ program skill_Stealing(mobile)
 				if (temHabilidade(mobile, "Punga"))
 					diff := 0;
 				endif
-			elseif (steal.objtype IN {0x1085, 0x1086, 0x1087, 0x1088, 0x1089, 0x108a, 0x2b6e, 0x2b6f, 0x2b70}) // joias
+			elseif (steal.objtype IN {0x1085, 0x1086, 0x1087, 0x1088, 0xA349, 0x1089, 0x108a, 0x2b6e, 0x2b6f, 0x2b70, 0xCE3D, 0xCE3E, 0xCE3F}) // joias
 				diff := CInt(steal.weight*10);
 				if (temHabilidade(mobile, "Punga"))
 					diff := 0;
@@ -178,7 +178,7 @@ program skill_Stealing(mobile)
 				MoveItemToContainer(steal, mobile.backpack);
 				SendSysMessageEx(mobile, "Voce roubou "+steal.desc+".", SSM_INFO);
 				SkillCheck(mobile, PICKPOCKETING, -1);
-				
+
 				var region := GetRegionName(mobile);
 				var char_name := mobile.serial;
 				var fin := SystemFindObjectBySerial(char_name, SYSFIND_SEARCH_OFFLINE_MOBILES);
@@ -239,7 +239,7 @@ function CriticalFailure(mobile, targ)
 	endif
 	SendSysMessageEx(mobile, "Voce chamou muita atencao!", SSM_FAIL);
 				if (TS_GetTimerInfo(targ, "sleep"))
-					print("entrou");
+					//print("entrou");
 					SendSysMessageEx(mobile, "Voce acordou o alvo!", SSM_FAIL);
 					TS_LowerDuration(targ, "sleep", -1);
 				endif

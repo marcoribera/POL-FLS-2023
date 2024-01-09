@@ -38,6 +38,11 @@ function AP_GetSkill(who, skill_name)
 				return 70;
 			endif
 		endif
+        if (TemHabilidade(who, "Sensibilidade Profana"))
+			skill_name := AWARENESS;
+            var arcane_thief_bonus := Cint((AP_GetTrueSkill(who, skill_name) + AP_GetSkillMod(who, skill_name)) / 2);
+            return arcane_thief_bonus;
+		endif
 		if (TemHabilidade(who, "Corrupcao Constante"))
 			bonus_corrucao := cInt(GetObjProperty(who, "corruption")/1000);
 		endif

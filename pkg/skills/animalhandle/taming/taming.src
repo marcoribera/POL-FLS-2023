@@ -4,6 +4,7 @@ use os;
 use util;
 
 include ":attributes:attributes";
+include ":attributes:stats";
 include ":brainAI:include/npcCommands";
 include ":gumps:gumps_ex";
 include ":gumps:gumps"; //add
@@ -90,8 +91,8 @@ program TamingSkill(who)
 		var pet := SystemFindObjectBySerial(serial);
 		var text_fiel := "";
 		if (GetObjProperty(pet, "bond") == "fiel")
-			text_fiel := "<basefont color=#34eb7a> *fiel*";
-			GFTextLine(yn_gump, 40, y, 1153, "" + pet.name + text_fiel);
+			text_fiel := " *fiel*";//<basefont color=#34eb7a>
+			GFTextLine(yn_gump, 40, y, 0xf7, "" + pet.name + text_fiel);
 		else
 			GFTextLine(yn_gump, 40, y, 1153, "" + pet.name);
 			if (GetObjProperty(pet, "Fidelizar?") == "nao")
@@ -107,7 +108,7 @@ program TamingSkill(who)
 		y := y + 20;
 	endforeach
 
-	 pets := GetObjProperty(who, "SummonedPets");
+/*	 pets := GetObjProperty(who, "SummonedPets");
 	foreach serial in pets
 		var pet := SystemFindObjectBySerial(serial);
 		GFTextLine(yn_gump, 40, y, 1153, "" + pet.name + "(invocado)");
@@ -116,7 +117,7 @@ program TamingSkill(who)
 		endif
 		i := i + 1;
 		y := y + 20;
-	endforeach
+	endforeach*/
 
 	var input := GFSendGump(who, yn_gump);
 	input := input[0];
@@ -641,17 +642,23 @@ function TeachNow(who, tamed, ins)
 	if(!critic) //adiciona os criticos ou modificações nos stats
 		if(info_cfg[ins].Nome == "Ferocidade")
 			AP_SetTrueStat(tamed, STRENGTH, AP_GetStat(tamed, STRENGTH) + 15);
+			tamed.resist_physical_mod  := tamed.resist_physical_mod + 20;
+			RecalcVitals(tamed);
 		elseif(info_cfg[ins].Nome == "Flexibilidade")
 			AP_SetTrueStat(tamed, DEXTERITY, AP_GetStat(tamed, DEXTERITY) + 15);
+			tamed.resist_physical_mod  := tamed.resist_physical_mod + 20;
+			RecalcVitals(tamed);
 		elseif(info_cfg[ins].Nome == "Fortaleza")
-			var mudar := GetObjProperty(tamed, "%NPC_Vitals%").HITS;
-			var Variavel := GetObjProperty(tamed, "%NPC_Vitals%");
-			Variavel["HITS"] := mudar + 40;
-			SetObjProperty(tamed, "%NPC_Vitals%", Variavel);
+			var hits := CInt(AP_GetVitalMaximumValue(tamed, "Hits"));
+			var variavel := Cint(hits / 2);
+			var variavel2 := Cint(variavel /2); //não sei pq ele duplica por isso a divisão pela metade
+			setObjProperty(tamed, "hitsmod", variavel2);
 			RecalcVitals(tamed);
 		elseif(info_cfg[ins].Nome == "Sentidos Aguçados")
 			var teste := GetAttribute(tamed, AWARENESS);
 			AP_SetTrueSkill(tamed, AWARENESS, teste + 40);
+			tamed.resist_physical_mod  := tamed.resist_physical_mod + 20;
+			RecalcVitals(tamed);
 		//elseif(info_cfg[ins].Nome == "Animal de Carga") //DECICIDIR SE VAI TER OU NÃO, HJ O CARA SÓ BOTA A BACKPACK E JÁ CRIA ANIMAL DE CARGA
 			//if (tamed.objtype == 0xdc) //para lhamas
 				//tamed.graphic := 292;

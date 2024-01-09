@@ -12,6 +12,11 @@ program skill_armslore(who)
 	SendSysMessageEx(who, "Escolha um objeto para avaliar.", SSM_REQUEST);
 	var item := Target(who, TGTOPT_CHECK_LOS);
 
+	if ((GetObjProperty(item, "magic") == 2) )
+		SendSysMessageEx(who, "Voce jah identificou encantamentos nesse item.", SSM_FAIL);
+		return;
+	endif
+
 	if (!item)
 		SendSysMessageEx(who, "Cancelado.", SSM_FAIL);
 		return;
@@ -103,7 +108,7 @@ program skill_armslore(who)
 				var whos := GetObjProperty(item, "magicwho");
 				if (whos == error)
 					whos := array;
-					if (TemHabilidade(who, "Essencia de Zhark"))
+					if (TemHabilidade(who, "Fluxo Divino"))
 						SetObjProperty(item, "cargas", 30);	
 					endif
 				endif
@@ -116,7 +121,7 @@ program skill_armslore(who)
 				return 1;
 			endif
 
-			if (GetObjProperty(item, "magic") != error)
+			if (GetObjProperty(item, "magic"))
 				if (GetObjProperty(item, "equip"))
 					ActivateMagicItem(item);
 				endif

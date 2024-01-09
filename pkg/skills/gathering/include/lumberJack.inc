@@ -110,47 +110,56 @@ function LJ_GetDataElem(elem_name)
 	return data_elem;
 endfunction
 
-
 function LJ_GetWoodType(tree)
     case (tree.objtype)
          0xcd6:
                return 0xee36; //pinheiro
          0xcd8:
-                return 0xee36;
+                return 0xee36;//pinheiro
          0xcda:
                 return 0xee37; //carvalho
          0xcdd:
-                return 0xee37;
+                return 0xee37;//carvalho
          0xce0:
                 return 0xee38; //nogueira
          0xce3:
-                return 0xee38;
+                return 0xee38; //nogueira
          0xce6:
                 return 0xee39; //salgueiro
          0xcf8:
-                return 0xee3a; //sipestre
+                return 0xee3a; //cipreste
          0xcfb:
-                return 0xee3a;
+                return 0xee3a; //cipreste
          0xcfe:
-                return 0xee3a;
+                return 0xee3a; //cipreste
+         0x309c:
+                return 0xee40; //mogno
          0xd01:
-                return 0xee3a;
+                return 0xee3a;//cipreste
+		0x247d:
+				return 0xee3d; //polar
 		 0x222E:
 	 	 0x222F:
 	 	 0x2230:
        	 0x2231:
-				return 0xee3c; // cogumelo
-         default: 
-                return 0x1bdd;
+			return 0xee3c; // cogumelo
+		0x12b9:
+			return 0xee3e; //teixo
+		0xa5ce:
+			return 0xee3f; //imbuia
+		0x30bd:
+			return 0xee3b; //ebano
+
+         default:
+            return 0x1bdd;
     endcase
 endfunction
-
 /*
  * LJ_SetWoodType(realm, x_pos, y_pos, wood_type)
  *
  * Purpose
  * Sets the wood type for an X Y coordinate on a realm.
- * 
+ *
  * Parameters
  * realm:	Name of the realm to set the wood type on.
  * x_pos:	X coordinate to set the wood type on.
@@ -163,9 +172,9 @@ endfunction
  */
 function LJ_SetWoodType(realm, x_pos, y_pos, wood_type)
 	var pos_string := CStr(realm+" "+x_pos+"x"+y_pos);
-	
+
 	var data_elem := LJ_GetDataElem(pos_string);
-	
+
 	return data_elem.SetProp("Type", wood_type);
 endfunction
 
@@ -174,7 +183,7 @@ endfunction
  *
  * Purpose
  * Sets the wood amount for an X Y coordinate on a realm.
- * 
+ *
  * Parameters
  * realm:	Name of the realm to set the wood amount on.
  * x_pos:	X coordinate to set the wood amount on.
@@ -187,9 +196,9 @@ endfunction
  */
 function LJ_SetWoodAmount(realm, x_pos, y_pos, amount)
 	var pos_string := CStr(realm+" "+x_pos+"x"+y_pos);
-	
+
 	var data_elem := LJ_GetDataElem(pos_string);
-	
+
 	data_elem.SetProp("Amount", CInt(amount));
 endfunction
 
@@ -210,16 +219,16 @@ endfunction
  */
 function LJ_GetWoodAmount(realm, x_pos, y_pos)
 	var pos_string := CStr(realm+" "+x_pos+"x"+y_pos);
-	
+
 	var data_elem := LJ_GetDataElem(pos_string);
-	
+
 	var amount := data_elem.GetProp("Amount");
 	if ( amount == error )
 		var settings := LJ_GetSettingsCfgElem("Settings");
 		amount := CInt(settings.MaxWood);
 		LJ_SetWoodAmount(realm, x_pos, y_pos, amount);
 	endif
-	
+
 	return CInt(amount);
 endfunction
 
@@ -264,6 +273,6 @@ function LJ_PickWoodType(realm, x_pos, y_pos)
 	if ( !selected_wood )
 		return GetObjTypeByName("Log");
 	endif
-	
+
 endfunction
 

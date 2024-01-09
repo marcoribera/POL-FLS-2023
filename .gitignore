@@ -37,8 +37,15 @@ scripts/runecl
 config/multis.cfg
 config/tiles.cfg
 config/landtiles.cfg
+uoconvert.bat
+landtiles.cfg
+multis.cfg
+tiles.cfg
+pol.cfg
 
 # Muls
 muls/
 realm/
 objtypes.txt
+pcs.txt
+

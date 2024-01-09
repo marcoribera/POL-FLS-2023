@@ -1,9 +1,12 @@
 use uo;
 use cfgfile;
 
+include ":mounts:mounts";
+
 var couleurs;
 var vetements;
 var templt;
+
 
 function SetupAmmo(mobile)
 
@@ -23,7 +26,7 @@ function SetupAmmo(mobile)
 			return 1;
 		endif
 	endif
-	
+
 	return 1;
 
 endfunction
@@ -52,9 +55,9 @@ function SetupColor(who)
     who.truecolor := clr;
   endif
 endfunction
-    
+
 function SetupName(mobile)
-    
+
 	if (!mobile.name["<random>"])
 		return 1;
 	endif
@@ -103,7 +106,7 @@ function SetupEquip(who)
 
   if(who.graphic == 0x190)
         //case(randomint(2))
-          //0: 
+          //0:
               who.graphic := 0x190;
              who.gender := 0;
              categ := categ + "M";
@@ -135,19 +138,22 @@ function SetupEquip(who)
       endforeach
     endif
   endif
+  var montaria := Getobjproperty(who, "Montaria");
+  if (!montaria)
+  else
+	var graphic := MP_GetMountGraphic(montaria);
+	print("graphic eh" +graphic);
+	var item := CreateItemAtLocation(who.x, who.y, who.z, MOUNT_OBJTYPE, 1);
+	item.graphic := graphic;
+	print("item eh "+item.graphic);
+	Equipitem (who, item);
+  endif
 
-var montaria := Getobjproperty(who, "Montaria");
-if (!montaria)
-else
-Equipitem (who, montaria);
-endif
-
-if (!mobile_taxonomy)
-else
-SetupGender(who);
-SetupAnimalCritic(who);
-endif
-
+  if (!mobile_taxonomy)
+  else
+    SetupGender(who);
+    SetupAnimalCritic(who);
+  endif
 endfunction
 
 function EquipItemString(who, str, lastcolor)
@@ -215,6 +221,30 @@ function EquipItemString(who, str, lastcolor)
               elseif(sex == "f" && who.graphic == 401)
                 newarray[i] := str2[1];
                 i := i + 1;
+              elseif(sex == "Anão M" && who.graphic == 1828)
+                newarray[i] := str2[1];
+                i := i + 1;
+              elseif(sex == "Anão F" && who.graphic == 1829)
+                newarray[i] := str2[1];
+                i := i + 1;
+              elseif(sex == "Elfo M" && who.graphic == 1830)
+                newarray[i] := str2[1];
+                i := i + 1;
+              elseif(sex == "Elfo F" && who.graphic == 1831)
+                newarray[i] := str2[1];
+                i := i + 1;
+              elseif(sex == "Orc M" && who.graphic == 1832)
+                newarray[i] := str2[1];
+                i := i + 1;  
+              elseif(sex == "Orc F" && who.graphic == 1833)
+                newarray[i] := str2[1];
+                i := i + 1;
+              elseif(sex == "Wolfkin M" && who.graphic == 1834)
+                newarray[i] := str2[1];
+                i := i + 1;  
+              elseif(sex == "Wolfkin F" && who.graphic == 1835)
+                newarray[i] := str2[1];
+                i := i + 1;
               endif
             else
               newarray[i] := str2[1];
@@ -248,7 +278,7 @@ endfunction
  * Set the gender of the npc  based on its 'Sex'
  * settings in its npcdesc.cfg template.
  *
- * mobile:	The npc that will be given the gender.
+ * mobile:  The npc that will be given the gender.
  *
  * Return value
  * Returns 1
@@ -257,15 +287,15 @@ endfunction
 function SetupGender(mobile)
   var gender_set := npccfgfile[ParseTemplateName(mobile.npctemplate).template].Gender;
 
-	if ( gender_set == 0)
-		//var gender_new := Cint(randomint(2) + 1);
-		case(randomint(2))
+  if ( gender_set == 0)
+    //var gender_new := Cint(randomint(2) + 1);
+    case(randomint(2))
           0: Setobjproperty(mobile, "Sexo", 1);
           1: Setobjproperty(mobile, "Sexo", 2);
         endcase
-	else
-		Setobjproperty(mobile, "Sexo", Cint(mobile.Gender) );
-	endif
+  else
+    Setobjproperty(mobile, "Sexo", Cint(mobile.Gender) );
+  endif
 
 endfunction
 
@@ -276,7 +306,7 @@ endfunction
  * Set the critic of the savage annimal npc  based on its category 'Critics'
  * settings in its npcdesc.cfg template.
  *
- * mobile:	The npc that will be given the critic.
+ * mobile:  The npc that will be given the critic.
  *
  * Return value
  * Returns 1
@@ -292,41 +322,41 @@ return;
 endif
 
 if (taxonomy == "bovidae" || taxonomy == "cervidae")
-	case (RandomInt(1))
-	0:
-		SetObjProperty(mobile, "Critic", "Coice" );
-	1:
-		SetObjProperty(mobile, "Critic", "Chifrada");
-	endcase	
+  case (RandomInt(1))
+  0:
+    SetObjProperty(mobile, "Critic", "Coice" );
+  1:
+    SetObjProperty(mobile, "Critic", "Chifrada");
+  endcase
 elseif (taxonomy == "suidae" || taxonomy == "camelidae" || taxonomy == "equus")
-	SetObjProperty(mobile, "Critic", "Coice");
+  SetObjProperty(mobile, "Critic", "Coice");
 elseif (taxonomy == "anura" || taxonomy == "serpentes")
-	case (RandomInt(1))
-	0:
-		SetObjProperty(mobile, "Critic", "Bote" );
-	1:
-		SetObjProperty(mobile, "Critic", "Glandulas_concentradas" );
-	endcase
+  case (RandomInt(1))
+  0:
+    SetObjProperty(mobile, "Critic", "Bote" );
+  1:
+    SetObjProperty(mobile, "Critic", "Glandulas_concentradas" );
+  endcase
 elseif (taxonomy == "primatomorpha" || taxonomy == "ursidae")
-	case (RandomInt(2))
-	0:
-		SetObjProperty(mobile, "Critic", "Frenesi" );
-	1:
-		SetObjProperty(mobile, "Critic", "Rugir" );
-	endcase
+  case (RandomInt(2))
+  0:
+    SetObjProperty(mobile, "Critic", "Frenesi" );
+  1:
+    SetObjProperty(mobile, "Critic", "Rugir" );
+  endcase
 elseif (taxonomy == "canidae" || taxonomy == "felidae" || taxonomy == "chiroptera" || taxonomy == "rodentia"|| taxonomy == "reptilia" || taxonomy == "crustacean" || taxonomy == "scarabaeidae")
-	case (RandomInt(2))
-	0:
-		SetObjProperty(mobile, "Critic", "Presas_profundas" );
-	1:
-		SetObjProperty(mobile, "Critic", "Garras_afiadas" );
-	endcase
+  case (RandomInt(2))
+  0:
+    SetObjProperty(mobile, "Critic", "Presas_profundas" );
+  1:
+    SetObjProperty(mobile, "Critic", "Garras_afiadas" );
+  endcase
 elseif (taxonomy == "immortuos" || taxonomy == "draco")
-	SetObjProperty(mobile, "Critic", "Baforada" );
+  SetObjProperty(mobile, "Critic", "Baforada" );
 elseif (taxonomy == "aves" || taxonomy == "phasianidae")
-	SetObjProperty(mobile, "Critic", "Garras_afiadas");
+  SetObjProperty(mobile, "Critic", "Garras_afiadas");
 endif
 
-	SetObjProperty(mobile, "Selvagem", 1);
+  SetObjProperty(mobile, "Selvagem", 1);
 
 endfunction

@@ -37,7 +37,7 @@ program SpellScript(params)
 	var time := cint(AP_GetSkill(who, MAGICLORE))*2;
 	Corromper(who, 28, targ);
 	SendSysMessageEx(targ, "Olho por olho...", SSM_INFO);
-	TS_StartTimer(targ, "dmgreturn", time, lvl);
+	TS_StartTimer(targ, "dmgreturn", time, lvl, who, 1);
 
 	if (GetObjProperty(who, "#magiasilenciosa"))
         SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);

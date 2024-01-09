@@ -124,21 +124,24 @@ function iteminfogump(who, item)
 	GFPage(gump, 2);
 
 	GFTextLine(gump, 40, 150, 1153, "Nome: " + lower(item.desc));
-	GFTextLine(gump, 40, 165, 1153, "Cor: " + item.color);
-	GFTextLine(gump, 40, 180, 1153, "Qualidade: " + item.quality);
-	GFTextLine(gump, 40, 195, 1153, "Hp: "  + item.hp);
-	GFTextLine(gump, 40, 210, 1153, "MaxHp_mod: " + item.maxhp_mod);
-	GFTextLine(gump, 40, 225, 1153, "MaxHp: "  + item.maxhp );
-	GFTextLine(gump, 40, 240, 1153, "Newbie: " + item.newbie);
-	GFTextLine(gump, 40, 255, 1153, "Dmg_mod: " + item.dmg_mod);
+	GFTextLine(gump, 40, 165, 1153, "Objtype: " + lower(item.objtype) + " / " + lower(hex(item.objtype)));
+	GFTextLine(gump, 40, 180, 1153, "Cor: " + item.color);
+	GFTextLine(gump, 40, 195, 1153, "Qualidade: " + item.quality);
+	GFTextLine(gump, 40, 210, 1153, "Hp: "  + item.hp);
+	GFTextLine(gump, 40, 225, 1153, "MaxHp_mod: " + item.maxhp_mod);
+	GFTextLine(gump, 40, 240, 1153, "MaxHp: "  + item.maxhp );
+	GFTextLine(gump, 40, 255, 1153, "Newbie: " + item.newbie);
+	GFTextLine(gump, 40, 270, 1153, "Dmg_mod: " + item.dmg_mod);
+	GFTextLine(gump, 40, 285, 1153, "Speed_mod: " + item.speed_mod);
 
 	GFAddButton( gump, 20, 153, 2103, 2104, 1, 10);
-	GFAddButton( gump, 20, 168, 2103, 2104, 1, 11);
-	GFAddButton( gump, 20, 183, 2103, 2104, 1, 12);
-	GFAddButton( gump, 20, 198, 2103, 2104, 1, 13);
-	GFAddButton( gump, 20, 213, 2103, 2104, 1, 14);
-	GFAddButton( gump, 20, 243, 2103, 2104, 1, 15);
-	GFAddButton( gump, 20, 258, 2103, 2104, 1, 16);
+	GFAddButton( gump, 20, 183, 2103, 2104, 1, 11);
+	GFAddButton( gump, 20, 198, 2103, 2104, 1, 12);
+	GFAddButton( gump, 20, 213, 2103, 2104, 1, 13);
+	GFAddButton( gump, 20, 243, 2103, 2104, 1, 14);
+	GFAddButton( gump, 20, 258, 2103, 2104, 1, 15);
+	GFAddButton( gump, 20, 273, 2103, 2104, 1, 16);
+	GFAddButton( gump, 20, 288, 2103, 2104, 1, 17);
 
 	GFPage(gump, 5);
 
@@ -237,6 +240,9 @@ function iteminfogump(who, item)
 		iteminfogump(who, item);
 	elseif (result[0] == 16 )
 		item.dmg_mod := Cint(RequestGump(who, "Escreva o dmg_mod do item"));
+		iteminfogump(who, item);
+	elseif (result[0] == 17 )
+		item.speed_mod := Cint(RequestGump(who, "Escreva o speed_mod do item"));
 		iteminfogump(who, item);
 	elseif ( result[0] == 20 )
 		var uses := CheckBoxGump(who, 150, 230, "Escolha os usescripts",  array{ "dmg", "heal", "timedscript", "combinacao", "upgrade" });
@@ -452,6 +458,7 @@ function iteminfogump(who, item)
 			endif
 			//iteminfogump(who, item);
 		endforeach
+		setobjproperty(item, "magic", 1);
 		setobjproperty(item, "equip", mods);
 		iteminfogump(who, item);
 
@@ -460,7 +467,7 @@ function iteminfogump(who, item)
 		var mats := array;
 		var dict := dictionary;
 		while(mais)
-			var mattype := RadioGump(who, 260, 280, "Escolha o material que o item vai ser feito.", array{"wood", "metal", "leather", "glass", "cloth", "outro"});
+			var mattype := RadioGump(who, 260, 280, "Escolha o material que o item vai ser feito.", array{"wood", "metal", "ossos", "leather", "glass", "cloth", "outro"});
 			//SendSysMessage(who, "Selecione o material que sera utilizado. Aperte esc para cancelar");
 			var val := Cint(RequestGump(who, "Qual a quantidade desse item?"));
 			if (mattype == "outro")

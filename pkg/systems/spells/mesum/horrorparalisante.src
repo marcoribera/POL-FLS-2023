@@ -60,7 +60,7 @@ program SpellScript(params)
 	endif
 
 	while  (time < 10)
-
+		
 		if ( (who.x != oldx) || (who.y != oldy))
 			SendSysMessageEx(who, "Voce se moveu e cancelou a magia.", SSM_FAIL);
 			break;
@@ -74,7 +74,7 @@ program SpellScript(params)
 		if(targ.dead)
 			break;
 		endif
-
+		PerformAction(who, 17);
 		time := time + 1;
 		sleep(1);
 	endwhile

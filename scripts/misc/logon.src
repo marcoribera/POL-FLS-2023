@@ -10,7 +10,6 @@ include ":fls_core:fls_characters";
 include "include/say";
 include "include/client";
 include ":taming:taming";
-include ":fls_core:fls_characters";
 include ":gumps:gumpPrompt";
 include ":gumps:gumpPrompt";
 include ":charactercreation:resists";
@@ -28,105 +27,30 @@ program Logon(who)
 			SetName(who, who.title_race);
 		endif
 	endif
+    var chardata := GetObjProperty(who, "chardata");
+    if (who.graphic == 400 && chardata.raca == "Elfo")
+        who.graphic := 1830;
+    elseif(who.graphic == 401 && chardata.raca == "Elfo")
+        who.graphic := 1831;
+    endif
 
 	EraseObjProperty(who, "#pegueiesse"); // evitar bugs no stealing.
 	EraseObjProperty(who, "#torobando");
+    EraseObjProperty(who, "#Casting"); // Bugs de cast
 	SetObjProperty(who, "ConnectTime", polcore().systime);
 
 	var createdat :=  getobjproperty(who, "createdate");
-	var obitodat := FindAccount(who.acctname).getprop("mortelog");
+	//var obitodat := FindAccount(who.acctname).getprop("mortelog");
 
-
-	if (!obitodat)
-		if (createdat == error)
-		SetObjProperty(who, "createdate", polcore().systime);
-		endif
-
-	else
-		if (createdat == error)
-		SetObjProperty(who, "createdate", (polcore().systime));
-		endif
-
-	endif
-    var heirdat := FindAccount(who.acctname).getprop("herdado");
-
-    if (heirdat)
-        var dias := FindAccount(who.acctname).getprop("heir_days");
-        SetObjProperty(who, "createdate", dias);
-    endif
-
-	//checa se vai subir skill passiva
-	if (CInt(FindAccount(who.acctname).getprop("nota")) == 4)
-
-		var intervalo := 3600*5; // 0.1 a cada 5 horas
-
-		var lastPrize := CInt(getobjproperty(who, "lastprize"));
-		if (lastPrize == error)
-			lastPrize := polcore().systime;
-			SetObjProperty(who, "lastprize", lastPrize);
-		endif
-
-		var deltaTime := polcore().systime - lastPrize;
-		var ticks := cint(deltaTime/intervalo);
-
-		//print(who.acctname + " ticks " + ticks);
-		SendSysMessage(who, "NotaRP 4: Calculando UP passivo...");
-		if ( ticks >= 1 ) //da +0.1 a cada 5h
-			var time := ticks * intervalo; // soma apenas o tempo que foi usado pra subir a skill
-
-			var i := 0;
-
-			var possiveis;
-			var skills := GetObjProperty(who, "chardata").Skills;
-			var temp;
-			var chosen;
-			for ( i := 0; i < ticks; i := i + 1)
-
-				possiveis := array;
-
-				foreach skill in (skills.keys())
-					if (CanPassiveIncreaseSkill(who, skill))
-						possiveis.append(skill);
-					endif
-					sleep(2);
-				endforeach
-
-				if(!possiveis)
-					SetObjProperty(who, "lastprize", polcore().systime);
-					SendSysMessage(who, who.name + " (" + who.acctname + ") nao tem como melhorar passivamente com o cap atual.");
-					break;
-				endif
-
-				chosen := possiveis[ RandomInt(possiveis.size())+1 ];
-				//LogToFile(":tn:passiva.log", who.name + " " + who.acctname + " ganhou 0.1 em " + chosen);
-				SendSysMessage(who, who.name + " (" + who.acctname + ") ganhou 0.1 em " + chosen +" passivamente.");
-				SetObjProperty(who, "skillpassiva", cint(GetObjProperty(who, "skillpassiva"))+1); //conta quantos ups teve
-				//AP_SetTrueSkill(who, chosen,   (AP_GetTrueSkill(who, chosen)+0.1));
-
-				//print("Chosen: "+AP_GetTrueSkill(who, chosen));
-				temp := (AP_GetTrueSkill(who, chosen)+0.1);
-				//print("Chosen+0.1: "+temp);
-
-				///while ( CInt(temp*10.0) == CInt(GetAttributeBaseValue(who, chosen)) )
-				//	temp := temp+0.1;
-				//	sleepms(10);
-				//endwhile
-
-				AP_SetTrueSkill(who, chosen, temp);
-				sleep(2);
-			endfor
-
-			SetObjProperty(who, "lastprize", lastPrize + time);
-		else
-			if(lastprize > polcore().systime)
-				lastprize := polcore().systime;
-			endif
-			SetObjProperty(who, "lastprize", lastPrize);
-			SendSysMessage(who, "NotaRP 4: Sem tempo suficiente para outro UP passivo.");
-		endif
-	else
-		EraseObjProperty(who, "lastprize");
-	endif
+	//if (!obitodat)
+	//	if (createdat == error)
+	//	    SetObjProperty(who, "createdate", polcore().systime);
+	//	endif
+	//else
+	//	if (createdat == error)
+	//	    SetObjProperty(who, "createdate", (polcore().systime));
+	//	endif
+	//endif
 
 	if (HaveReverseVision(who))
 		ReverseLight(who);
@@ -169,6 +93,84 @@ program Logon(who)
 	GetResist(who, FORTITUDE);
 	GetResist(who, VONTADE);
 	GetResist(who, REFLEXOS);
+
+	//checa se vai subir skill passiva
+	if (CInt(FindAccount(who.acctname).getprop("nota")) == 4)
+
+		var intervalo := 3600*5; // 0.1 a cada 5 horas
+
+		var lastPrize := CInt(getobjproperty(who, "lastprize"));
+		if (lastPrize == error)
+			lastPrize := polcore().systime;
+			SetObjProperty(who, "lastprize", lastPrize);
+			return 0;
+		endif
+
+		var deltaTime := polcore().systime - lastPrize;
+		var ticks := cint(deltaTime/intervalo);
+
+		//print(who.acctname + " ticks " + ticks);
+		SendSysMessage(who, "NotaRP 4: Calculando UP passivo...");
+		if ( ticks >= 1 ) //da +0.1 a cada 5h
+			var time := ticks * intervalo; // soma apenas o tempo que foi usado pra subir a skill
+			SendSysMessage(who, who.name + " tem tempo para subir 0.1 "+ ticks + "vezes.");
+			var i := 0;
+
+			var possiveis;
+			var skills := GetObjProperty(who, "chardata").Skills;
+			if(!skills)
+				return 0;
+			endif
+			var temp;
+			var chosen;
+			for ( i := 0; i < ticks; i := i + 1)
+
+				possiveis := array;
+
+				foreach skill in (skills.keys())
+					if (CanPassiveIncreaseSkill(who, skill))
+						possiveis.append(skill);
+					endif
+					sleep(2);
+				endforeach
+
+				if(possiveis[1] == error)
+					SendSysMessage(who, who.name + " nao tem mais skills pra subir passivamente.");
+					SetObjProperty(who, "lastprize", polcore().systime);
+					SendSysMessage(who, who.name + " (" + who.acctname + ") nao tem como melhorar passivamente com o cap atual.");
+					return 0;
+				endif
+
+				chosen := possiveis[ RandomInt(possiveis.size())+1 ];
+				//LogToFile(":tn:passiva.log", who.name + " " + who.acctname + " ganhou 0.1 em " + chosen);
+				//SendSysMessage(who, who.name + " (" + who.acctname + ") ganhou 0.1 em " + chosen +" passivamente.");
+				SetObjProperty(who, "skillpassiva", cint(GetObjProperty(who, "skillpassiva"))+1); //conta quantos ups teve
+				//AP_SetTrueSkill(who, chosen,   (AP_GetTrueSkill(who, chosen)+0.1));
+
+				//print("Chosen: "+AP_GetTrueSkill(who, chosen));
+				temp := (AP_GetTrueSkill(who, chosen)+0.1);
+				//print("Chosen+0.1: "+temp);
+
+				///while ( CInt(temp*10.0) == CInt(GetAttributeBaseValue(who, chosen)) )
+				//	temp := temp+0.1;
+				//	sleepms(10);
+				//endwhile
+
+				AP_SetTrueSkill(who, chosen, temp);
+				sleep(2);
+			endfor
+
+			SetObjProperty(who, "lastprize", lastPrize + time);
+		else
+			if(lastprize > polcore().systime)
+				lastprize := polcore().systime;
+			endif
+			SetObjProperty(who, "lastprize", lastPrize);
+			SendSysMessage(who, "NotaRP 4: Sem tempo suficiente para outro UP passivo.");
+		endif
+	else
+		EraseObjProperty(who, "lastprize");
+	endif
 	return 1;
 endprogram
 

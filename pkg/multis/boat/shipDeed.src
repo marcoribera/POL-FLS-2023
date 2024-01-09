@@ -70,11 +70,11 @@ function BuildShip(who, deed)
 	foreach compo in (created.ship.weaponslot)
 		compo.color := deed.color;
 	endforeach
-	
+
     if((deed.name != "a toy boat") && (!deed.name["deed"]))
       ship.tillerman.name := deed.name;
     endif
-	
+
     if(DestroyItem(deed))
       ship.starboardplank.locked    := 1;
       ship.portplank.locked         := 1;
@@ -125,7 +125,7 @@ function CreateShipKeysAndBuiltDeed(who, shiptype, x, y, z, flags)
     PrintTextAbovePrivate(who, "My backpack is too full!", who);
     return 0;
   endif
-  var ship := CreateMultiAtLocation(x, y, z, shiptype, flags);
+  var ship := CreateMultiAtLocation(x, y, z, shiptype, flags, who.realm);
   SendSysMessage(who, "ship: " + ship);
   if(!ship)
     PrintTextAbovePrivate(who, "I can't place the ship there.", who);

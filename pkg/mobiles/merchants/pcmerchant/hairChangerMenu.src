@@ -45,11 +45,11 @@ const MAX_ITEM_PAG := 19;
 //const END_Y			:= 405;	  // nextpage
 
 //Gump Constants
-const BKGND_STONESLAB		:= 9200;  // Gray stone slab background
-const BKGND_BLUESLAB		:= 3600;  // Raised edge (blocky)
-const GF_STDCOLOR		:= 1890;
+//const BKGND_STONESLAB		:= 9200;  // Gray stone slab background
+//const BKGND_BLUESLAB		:= 3600;  // Raised edge (blocky)
+//const GF_STDCOLOR		:= 1890;
 
-const MOEDAS			:= 47715;
+//const MOEDAS			:= 47715;
 
 //var item_cfg := ReadConfigFile(":*:itemdesc");
 

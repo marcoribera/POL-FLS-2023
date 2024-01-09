@@ -26,7 +26,7 @@ program usekeg(who, item)
 			endif
 		elseif (bebida.type == "vinho fermantando")//escrevi errado :/
 			if ( polcore().systime > bebida.endtime)
-				bebida.+objtype := 0x09C7;
+				bebida.+objtype := 0xC878;
 				SendSysMessageEx(who, "O vinho  ja esta pronto.", SSM_INFO);
 				bebida.+doses := 80;
 				bebida.type := "";
@@ -137,7 +137,7 @@ program usekeg(who, item)
 			endif
 		elseif (bebida.type == "cidra fermentando")
 			if ( polcore().systime > bebida.endtime)
-				bebida.+objtype := 0x09c8;
+				bebida.+objtype := 0xC879;
 				SendSysMessageEx(who, "A cidra ja esta pronta.", SSM_INFO);
 				bebida.+doses := 40;
 				bebida.type := "";
@@ -152,7 +152,7 @@ program usekeg(who, item)
 			endif 
 		elseif (bebida.type == "cerveja fermentando")
 			if ( polcore().systime > bebida.endtime)
-				bebida.+objtype := 0x099F;
+				bebida.+objtype := 0xC877;
 				SendSysMessageEx(who, "A cerveja ja esta pronta.", SSM_INFO);
 				bebida.+doses := 40;
 				bebida.type := "";
@@ -189,7 +189,7 @@ function addDrink(who, item)
 	endif
 
 	//so pode por garrafas ou potions no keg
-	if ( (targ.graphic == 3849) || (targ.graphic == 0x09C7) || (targ.graphic == 0x099b) || (targ.graphic == 0x099F) || (targ.graphic == 0x09c8) || (targ.graphic == 0xC960)  ||
+	if ( (targ.graphic == 3849) || (targ.graphic == 0xC878) || (targ.graphic == 0xC876) || (targ.graphic == 0xC877) || (targ.graphic == 0xC879) || (targ.graphic == 0xC960)  ||
 	(targ.graphic == 0xC961) || (targ.graphic == 0xC962) || (targ.graphic == 0xC964) )
 		if (getobjproperty(targ, "fullness") != error)
 			SendSysMEssageEx(who, "Voce so pode armazenar garrafas cheias.", SSM_FAIL);

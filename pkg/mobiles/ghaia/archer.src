@@ -2,8 +2,9 @@ use uo;
 use npc;
 use cfgfile;
 
-include ":ghaia:generic";
-include ":ghaia:ghaia";
+include ":ghaia:genericspecial";
+include ":ghaia:ghaiaspecial";
+include ":ghaia:ghaiaspecial";
 
 var npccfgfile := ReadConfigFile( ":brainai:npcdesc" );
 var me := self();
@@ -19,7 +20,8 @@ var throwinfo;
 var propallies;
 
 program KillPlayers()
-	
+    Set_Script_Option(SCRIPTOPT_NO_RUNAWAY, 1); //Adicionado para diminuir a quantidade de logs no arquivo script.log
+
 	var ev;
 	var wanders;
 	propallies := dictionary;
@@ -31,10 +33,11 @@ program KillPlayers()
 	EnableMainEvents();
 
     	while(me)
-	
 
-			
-		look_around(); 
+		GrantPrivilege(me, "firewhilemoving");
+		me.enable("firewhilemoving");
+
+		look_around();
 		wander();
 		PlayIdleSound();
 
@@ -48,16 +51,9 @@ program KillPlayers()
 			ev := os::wait_for_event(10);
 		endif
 
-		//SLEEPING:
-			//ev := sleepmode();
-
-		//FIGHTING:
-		//	Fight(ev.source);
-	//	endcase
-
 		if(ev)
 			case(ev.type)
-				SYSEVENT_ENTEREDAREA:   
+				SYSEVENT_ENTEREDAREA:
 					if (CheckLineOfSight( me, ev.source ))
 						if(CanFight(me, ev.source, align)) //verifica se eh inimigo
 							wanders := 0;
@@ -69,17 +65,17 @@ program KillPlayers()
 				EVID_ALERT_ALLIES:	wanders := 0; Fight(ev.opponent, 1);
 				EVID_HERDING:		herd(ev);
 				EVID_TAUNT:
-							if(ev.source)
-								wanders := 0; Fight(ev.opponent);
-							endif
+						if(ev.source)
+							wanders := 0; Fight(ev.opponent);
+						endif
 				EVID_FLEE:
-							if (ev.source)
-								flee(ev.source);
-							endif
+						if (ev.source)
+							flee(ev.source);
+						endif
 
 			endcase
-		endif	
-		
+		endif
+		sleepms(100);
 	endwhile
 
 endprogram
@@ -93,7 +89,7 @@ function CloseDistance(opponent)
 	endif
 
 	var dist := CoordinateDistance(me.x, me.y, opponent.x, opponent.y);
-	
+
 	if (me.z > opponent.z +18) //checa se esta em cima de alguma torre
 		if (!CheckLineofSight(me, opponent)) //IA para torres: Verifica se tem visão do oponente
 			if (RandomInt(4) == 0 ) //se não tiver visão, tem 25% de mudar de alvo

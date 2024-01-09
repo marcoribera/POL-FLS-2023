@@ -24,7 +24,7 @@ program default_poison(params)
             sleep(2);
         endwhile
     else
-        while( IsBloodied(who) )
+        while( IsRaging(who) )
             if (who.dead)
                 break;
             endif

@@ -1,7 +1,7 @@
 
 function Hallucinate(who)
 // Removido temporariamente!
-  var graphicarray := {51, 42, 39, 31, 29, 28, 6, 5, 48, 7, 33, 30, 26, 24, 21, 17, 22, 18, 16, 15, 14, 13, 8, 47, 12, 10, 9, 5, 4, 3, 1, 2, 400, 401};
+  var graphicarray := {51, 42, 39, 31, 29, 28, 6, 5, 48, 7, 33, 30, 26, 24, 21, 17, 22, 18, 16, 15, 14, 13, 8, 47, 12, 10, 9, 5, 4, 3, 1, 2, 400, 401, 1828, 1829, 1830, 1831, 1832, 1833, 1834, 1835;
   var graphic := graphicarray[RandomInt(len(graphicarray)) + 1];
   var color := RandomInt(99) + 2;
   DrawGamePlayer(who, graphic, color);
@@ -63,7 +63,7 @@ function DrawObject(ktowhom, kobj, kgraphic, kcolor, keqitrandcolor := 0)
   PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(kobj.facing, 1);
   PacketHexStringPart2 := PacketHexStringPart2 + ConvertIntToHex(kcolor, 2);
   PacketHexStringPart2 := PacketHexStringPart2 +"0000";
-  if ((kobj.isa(POLCLASS_MOBILE)) and ((kobj.graphic == 400) or (kobj.graphic == 401)))
+  if ((kobj.isa(POLCLASS_MOBILE)) and ((kobj.graphic == 400) or (kobj.graphic == 401)|| (kobj.graphic == 1828) || (kobj.graphic == 1829) || (kobj.graphic == 1830) || (kobj.graphic == 1831) || (kobj.graphic == 1832) || (kobj.graphic == 1833) || (kobj.graphic == 1834) || (kobj.graphic == 1835)))
     var color;
     var graphic;
     foreach item in ListEquippedItems(kobj)

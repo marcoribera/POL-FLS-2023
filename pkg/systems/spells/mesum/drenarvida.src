@@ -70,6 +70,9 @@ program SpellScript(params)
 		if ( (who.x != oldx) || (who.y != oldy))
 			time:=10;
 			SendSysMessageEx(who, "Voce se moveu e cancelou a magia.", SSM_FAIL);
+		elseif ( who.frozen )
+			time:=10;
+			SendSysMessageEx(who, "Voce esta incapaz de se mover.", SSM_FAIL);
 		elseif (Distance(who, targ) >= 16)
 			time:=10;
 			SendSysMessageEx(who, "O alvo se distanciou muito.", SSM_FAIL);
@@ -81,6 +84,10 @@ program SpellScript(params)
                 PerformAction(who, ANIM_CAST_AREA);
 			endif
 			ApplyRawDamage( targ, amt );
+			targ.setAggro(who.serial, 150);
+			if(GetObjProperty(targ, "#sleep"))
+				EraseObjProperty(targ, "#sleep");
+			endif
 			PrintTextAbovePrivate(targ, "-"+amt + " Vida", who, 3, 38); // vermelho
 			HealDamage( who, amt);
 			PrintTextAbovePrivate(who, "+"+amt + " Vida", who, 3, 568); // verde

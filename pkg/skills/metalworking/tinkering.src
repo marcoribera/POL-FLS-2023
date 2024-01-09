@@ -75,7 +75,7 @@ function makeTinkeringItems(who, what, amt, tool)
 		return 0;
 	endif
 
-	if (what == 0x1085 || what == 0x1086 || what == 0x1087 || what == 0x1088 || what == 0x1089 || what == 0x108a || what == 0x2b6e || what == 0x2b6f || what == 0x2b70 || what ==  4001 || what == 0x376a /*|| what == 0xff97 ||  what == 0xff98 */)
+	if (what == 0x1085 || what == 0x1086 || what == 0xA349 || what == 0xCE3D || what == 0xCE3E || what == 0xCE3F || what == 0x1087 || what == 0x1088 || what == 0x1089 || what == 0x108a || what == 0x2b6e || what == 0x2b6f || what == 0x2b70 || what ==  4001 || what == 0x376a /*|| what == 0xff97 ||  what == 0xff98 */)
 		amt := 1;
 	endif
 
@@ -83,7 +83,7 @@ function makeTinkeringItems(who, what, amt, tool)
 
 	foreach theitem in (theitems)
 	
-		if ( (theitem.graphic == 0x1085) || (theitem.graphic == 0x1086) || (theitem.graphic == 0x1087) || (theitem.graphic == 0x1088) || (theitem.objtype == 0x1089) || (theitem.objtype == 0x108a) || (theitem.objtype == 0x2b6e) || (theitem.objtype == 0x2b6f) || (theitem.objtype == 0x2b70) )
+		if ( (theitem.graphic == 0x1085) || (theitem.graphic == 0x1086) ||(theitem.graphic == 0xCE3F)||(theitem.graphic == 0xCE3D) ||(theitem.graphic == 0xCE3E)|| (theitem.graphic == 0xA349) || (theitem.graphic == 0x1087) || (theitem.graphic == 0x1088) || (theitem.objtype == 0x1089) || (theitem.objtype == 0x108a) || (theitem.objtype == 0x2b6e) || (theitem.objtype == 0x2b6f) || (theitem.objtype == 0x2b70) )
 
 			var gem;
 			var gems := dictionary;

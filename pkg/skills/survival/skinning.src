@@ -73,12 +73,13 @@ program skinning(parms)
 				SetObjProperty(cadaver, "deathtime", polcore().systime);
 				SetName(cadaver, "Corpo Irreconhecivel");
 				SetObjProperty(cadaver, "morto",1);
-				
+                SetObjProperty(cadaver, "assassinado",1);
+
 				var region := GetRegionName(cadaver);
 				var tipo := "pk";
 				var coords := {cadaver.x, cadaver.y};
 				var nome := GetObjProperty(who, "nome_inicial");
-				var nome_ghost := GetObjProperty(cadaver, "nome_inicial"); 
+				var nome_ghost := GetObjProperty(cadaver, "nome_inicial");
 				//var serial_ghost := cadaver.serial;
 				var acct_ghost := GetObjProperty(cadaver, "account");
 				Start_script(":DiscordWebhook:discord", {tipo, nome, who.acctname, nome_ghost, region, coords, acct_ghost});
@@ -87,7 +88,7 @@ program skinning(parms)
 		endif
 		//DesmembreCorpse(cadaver);
 
-	elseif (((c_type == 400) || (c_type == 401)) && (GetObjProperty(cadaver, "morto")!=1))
+	elseif (((c_type == 400) || (c_type == 401) || (c_type == 1828) || (c_type == 1829) || (c_type == 1830) || (c_type == 1831) || (c_type == 1832) || (c_type == 1833) || (c_type == 1834) || (c_type == 1835)) && (GetObjProperty(cadaver, "morto")!=1))
 				DesmembreCorpse(cadaver);
 				PrintTextAbove( who, "*Corta a cabeca*", font := _DEFAULT_TEXT_FONT, color := _DEFAULT_TEXT_COLOR, journal_print := JOURNAL_PRINT_NAME);
 				SetObjProperty(cadaver, "morto",1);

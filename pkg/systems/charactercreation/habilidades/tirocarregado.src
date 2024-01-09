@@ -25,8 +25,9 @@ program tirocarregado(who)
 
 	var cfg:=ReadConfigFile(":combat:itemdesc");
 	var elem := FindConfigElem(cfg, who.weapon.objtype);
+	var distance_max := GetConfigInt(elem, "maxrange");
 
-	if (Distance(who, targ) > 15)
+	if (Distance(who, targ) > distance_max)
 		SendSysMessageEx(who, "O Alvo esta muito distante.", SSM_FAIL);
 		return 1;
 	elseif (IsBehind(who, targ.x, targ.y))

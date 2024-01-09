@@ -23,6 +23,14 @@ function HasPDGraphic(clicked)
 		402:	return 1; break; // Male ghost
 		403:	return 1; break; // Female ghost
 		987:	return 1; break; // GM robe
+		1828:	return 1; break; //anao F
+		1829:	return 1; break; //anao M
+		1830:	return 1; break; //elfo M
+		1831:	return 1; break; //elfo F
+		1832:	return 1; break; //orc M
+		1833:	return 1; break; //orc F
+		1834:	return 1; break; //lobo M
+		1835:	return 1; break; //lobo F
 	endcase
 	
 	if (clicked.race == 1)

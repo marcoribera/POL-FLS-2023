@@ -1,0 +1,174 @@
+use uo;
+use os;
+use polsys;
+
+include "include/client";
+include "include/sysEvent";
+include ":tn:tngumps";
+include "include/say";
+include ":attributes:attributes";
+include ":spells:tnmagery";
+include ":timeUtils:time";
+
+const SPELL_BTN := 200;
+
+program orderSpells(who, item)
+print("Entrei");
+   // GetObjProperty(who, "chardata").caracteristicas
+   if (GetObjProperty(who, "chardata").magia != "Shaman")
+      SendSysMessageEx(who, "Voce presta homenagem ao altar", SSM_INFO);
+      return;
+   endif
+   var mlore := cint(AP_GetSkill(who, MAGICLORE));
+   var cfg          := ReadConfigFile(":spells:config/shamanspells");
+   var cleric_slots := mlore / 5;
+//   if (who.Caracteristica("Dádiva de Anar'Niel"))
+//      cleric_slots += 1;
+//   endif
+
+   var shaman_list  := GetObjProperty(who, "shaman_list");
+   if (!shaman_list)
+      shaman_list := array{};
+   endif
+
+   var spell_list := array{};
+   var slots_used := 0;
+   foreach spell in (GetConfigIntKeys(cfg))
+        spell := FindConfigElem(cfg, spell);
+      sleepms(2);
+      WriteSpellInfo(spell, ":spells:config/shamanspells");
+      var spell_found := FindAllElemInArray(shaman_list, struct{ id := spell });
+      print("spell_found: "+spell_found);
+      print("spell.id: "+spell);
+      if (spell_found)
+         slots_used += cint(spell.circle * spell_found.size());
+         foreach i in spell_found
+            shaman_list[spell_found].circle := spell.circle;
+            sleepms(2);
+         endforeach
+      endif
+
+      if (spell.circle >  Cint(Ceil((mlore - 10) / 20))) // 10, 30, 50 , 70 , 90 habs pra castar
+         continue;
+      elseif (spell.type == "Auto")
+         continue;
+      endif
+      spell_list.append(spell);
+      sleepms(2);
+   endforeach
+
+   var available_slots := cleric_slots - slots_used;
+   var canceled := 0;
+   while (!canceled)
+      RemoveUsedSpells(who, shaman_list, available_slots);
+      var input := CreateClericGump(who, spell_list, available_slots);
+
+      if (input[0] >= 200)
+         if (TS_GetTimerInfo(who, "orderspell"))
+            return SendSysMessageEx(who, "Você deve aguardar um pouco antes de pedir por bençãos novamente.", SSM_FAIL);
+         endif
+         var spell := spell_list[input[0]-200];
+         var ret := StoreSpell(who, spell, shaman_list, available_slots);
+         if (ret)
+            item.graphic := 0x9DF2;
+            sleep(2);
+            item.graphic := 0x9E81;
+         endif
+         // play 0x9DF2
+      elseif (!input[0])
+         canceled := 1;
+      endif
+   endwhile
+endprogram
+
+function CreateClericGump(who, spell_list, available_slots)
+   var gump := GFCreateGump();
+   var size := spell_list.Size();
+   if (size >= 1)
+      size := size * 26;
+   else
+      size := 0;
+   endif
+	GFResizePic(gump, 17, 31, 9390, 359, 125+size);
+	// GFHtmlShadowed(gump, 115, 70, 192, 20, "#feb98e ", "<BASEFONT Size=5>Lista de Bençãos");
+	GFHTMLArea(gump, 114, 69, 192, 20, "<BASEFONT Size=5 Color=#999999 >Lista de Bençãos", 0, 0); //shadow
+	GFHTMLArea(gump, 116, 71, 192, 20, "<BASEFONT Size=5 Color=#999999 >Lista de Bençãos", 0, 0); //shadow
+	GFHTMLArea(gump, 115, 70, 192, 20, "<BASEFONT Size=5 Color=#ffffff >Lista de Bençãos", 0, 0);
+	GFGumpPic(gump, 63, 91, 1469);
+	GFGumpPic(gump, 80, 91, 1469);
+	GFTextLine(gump, 63, 100, 0, "Bençãos");
+	GFTextLine(gump, 259, 100, 0, "Slots");
+	GFTextLine(gump, 304, 100, 0, "Receber");
+	GFGumpPic(gump, 38, 103, 9773, 0);
+	GFGumpPic(gump, 296, 0, 9000, 0);
+
+   var y := 121;
+   foreach spell in spell_list
+//   print("spell: "+spell);
+//   print("spell.name"+spell.name);
+//   print("spell.circle"+spell.circle);
+//   print("spell.description"+spell.description);
+//   print("spell.desc"+spell.desc);
+      var color := "333300";
+      if (!spell.pericia["Cura"])
+         color := "a745a7";
+      endif
+      GFHTMLArea(gump, 63, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, spell.name), 1, 0);
+      GFToolTipText(gump, "<BASEFONT color=#{}>{}<br><BASEFONT color=#FFFFFF>{}".format(color, strreplace(spell.pericia, "_", " "), spell.description));
+      GFHTMLArea(gump, 259, y, 34, 24, "<center>{}".format(spell.Circle), 1, 0);
+      if (available_slots >= spell.circle)
+	      GFAddButton(gump, 319, y+4, 10006, 10006, GF_CLOSE_BTN, 200+_spell_iter);
+      else
+         GFGumpPic(gump, 319, y+5, 10006, 1891);
+      endif
+      sleepms(2);
+      y += 26;
+   endforeach
+
+   return GFSendGump(who, gump);
+endfunction
+
+function StoreSpell(who, spellinfo, byref shaman_list, byref available_slots)
+   if (available_slots-spellinfo.circle < 0)
+      SendSysMessageEx(who, "Sem slots suficientes para memorizar..", SSM_FAIL);
+      return 0;
+   elseif (!AP_ConsumeVital(who, MANA, 2))
+      SendSysMessageEx(who, "Você não consegue se concentrar em sua oração.", SSM_FAIL);
+      sleep(2);
+      return 0;
+   endif
+
+//   var roll := rollAttrDice(who, WISDOM) + GetSkillBonus(who, spellinfo.pericia);
+//   if (roll > 12+(spellinfo.circle*2))
+//      TS_StartCooldown(who, "orderspell", 2);
+//      SendSysMessageEx(who, "Você teve dificuldades em conseguir a benção de anar.", SSM_FAIL);
+//      return 1;
+//   endif
+
+   var new_spell := struct{
+      "id"         := spellinfo.id,
+      "powerwords" := spellinfo.powerwords,
+      "circle"     := spellinfo.circle,
+      "time"       := AddTimeTo(polcore().systime, 20, "minutes"),
+      "used"       := 0
+   };
+
+   available_slots -= spellinfo.circle;
+   shaman_list.append(new_spell);
+   SetObjProperty(who, "shaman_list", shaman_list);
+   SendSysMessageEx(who, "Obteu a benção de Grunntam.", SSM_INFO);
+   return 1;
+endfunction
+
+function RemoveUsedSpells(who, byref shaman_list, byref available_slots)
+   foreach spell in shaman_list
+      if (spell.used && polcore().systime > spell.time)
+         var index := FindInArray(shaman_list, spell);
+         shaman_list.Erase(index);
+         available_slots += spell.circle;
+      endif
+      sleepms(2);
+   endforeach
+
+   SetObjProperty(who, "shaman_list", shaman_list);
+endfunction

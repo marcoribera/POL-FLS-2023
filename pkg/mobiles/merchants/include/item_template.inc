@@ -8,12 +8,12 @@ function CreateItemTemplate(item)
 		temp.+errortext := "Error: CreateItemTemplate() -> Object passed is not an item.";
 		return temp;
 	endif
-	
+
 	var template := GetItemDescriptor(CInt(item.objtype));
 	if ( template == error )
 		return template;
 	endif
-	
+
 	template.+Amount;
 	foreach property in template
 		var item_property := item.get_member(Lower(CStr(_property_iter)));
@@ -79,6 +79,10 @@ function CreateItemTemplate(item)
 		template["dmg_mod"] := item.dmg_mod;
 	endif
 
+	if ( item.speed_mod != error)
+		template["speed_mod"] := item.speed_mod;
+	endif
+
 	if (item.hitscript != error )
 		template["hitscript"] := item.hitscript;
 	endif
@@ -87,7 +91,7 @@ function CreateItemTemplate(item)
 		template.CProps.insert(name, GetObjProperty(item, name));
 		sleepms(2);
 	endforeach
-	
+
 	if (item.isBook())
 		var bookinfo := item.extractInfo();
 		if (!item.isWritable())
@@ -95,7 +99,7 @@ function CreateItemTemplate(item)
 		else
 			bookinfo.+readonly := 0;
 		endif
-		
+
 		template.Cprops.insert("bookinfo", bookinfo);
 	endif
 
@@ -153,12 +157,9 @@ endfunction
 
 function CreateItemAtLocationFromTemplate(x, y, z, realm, selling)
 
-	purchase := CreateItemAtLocation(x, y, z, selling, selling.amount, realm);
+	var purchase := CreateItemAtLocation(x, y, z, selling, selling.amount, realm);
 	if ( purchase == error )
-		SendSysMessage(player, "Error - Unable to create item! ->"+purchase.errortext);
-	endif
-	if (selling.amount == 1)
-		SetName(purchase, selling.desc);
+		//SendSysMessage(player, "Error - Unable to create item! ->"+purchase.errortext);
 	endif
 	foreach prop in selling
 		//sendsysmessage(player, " " + _prop_iter + " "+ selling[_prop_iter]);
@@ -176,6 +177,9 @@ function CreateItemAtLocationFromTemplate(x, y, z, realm, selling)
 		var book_data_file := DFOpenDataFile(":sysbook:books", DF_CREATE);
 		var book_elem := DFFindElement(book_data_file, Hex(purchase.serial), DF_CREATE);
 		book_elem.SetProp("Contents", bookinfo.contents);
+	endif
+	if (selling.amount == 1)
+		SetName(purchase, selling.desc);
 	endif
 	purchase.movable := 1;
 endfunction

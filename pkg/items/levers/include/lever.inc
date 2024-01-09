@@ -4,6 +4,7 @@ include ":traps:traps";
 include "include/arrays";
 include ":tn:boss";
 include ":combat:hitscripts";
+include ":levers:efeitos";
 
 function ChangeLeverStatus(la, only_on_levers := 0)
    if (typeof(la) != "Array")
@@ -143,6 +144,9 @@ function normalusage(who, item)
       PrintTextAbove(who, "*Ativa*");
    else
       PrintTextAbove(who, "*Desativa*");
+			if ( GetObjProperty(item, "powerword"))
+				item.invisible := 1;
+			endif
    endif
 
    var lever_list := array{item.serial};
@@ -185,7 +189,10 @@ function normalusage(who, item)
    if(!msg)
       msg := "Você ouve algo se movendo...";
    endif
-   SendSysMessageEx(who, msg, SSM_INFO);
+   var chars := ListmobilesNearLocation(item.x, item.y, item.z, 10, item.realm);
+	foreach char in chars
+		SendSysMessageEx(char, msg, SSM_INFO);
+	endforeach
 
    if (opts.lights)
       lightswitch(item, opts);
@@ -204,8 +211,11 @@ function normalusage(who, item)
       moveObjects(item, opts);
    endif
    if (opts.teleport_to)
-      teleporter(item, opts);
+      teleporter(who, item, opts);
    endif
+   	if (opts.graphicarraysitem)
+		changegraphici(item, opts);
+	endif
 	if (opts.spawn_boss)
 		if (status == "off")
 			spawnBoss(item, opts);
@@ -215,6 +225,26 @@ function normalusage(who, item)
 			EraseObjProperty(item, "champ");
 		endif
 	endif
+	if (opts.tremor)
+		if (status == "off")
+			var config_tremor := GetObjProperty(item, "tremor_cfg");
+			var danobase := config_tremor[1];
+			var danoale := config_tremor[2];
+			var dif := config_tremor[3];
+			var range := config_tremor[4];
+			EfeitosTremor(item,danobase,danoale,dif,range);
+		endif
+	endif
+   if (opts.clima) //SEMPRE deixar essa opção para ativar por último, ela é mais longa
+		if (status == "off")
+			var config_clima := GetObjProperty(item, "clima_cfg");
+			var duration := config_clima[1];
+			var range := config_clima[2];
+			var options := GetObjProperty(item, "clima");
+			EfeitosClima (item, options, duration, range);
+		endif
+   endif
+
 endfunction
 
 function spawnBoss(item, opts)
@@ -225,6 +255,7 @@ function spawnBoss(item, opts)
  var creature;
 		if (GetObjProperty(item, "loc") ==1 )
 			creature := Createboss(cfg.boss, item.x, item.y, item.z, item.realm);
+			SetObjProperty(creature, "anchor", array{item.x, item.y, item.z});
 			sleepms(20);
 			if (!text_above)
 			else
@@ -235,6 +266,7 @@ function spawnBoss(item, opts)
 			var y := GetObjProperty(item, "y");
 			var z := GetObjProperty(item, "z");
 			creature := Createboss(cfg.boss, cint(x), cint(y), cint(z), item.realm);
+			SetObjProperty(creature, "anchor", array{item.x, item.y, item.z});
 			sleepms(20);
 			if (!text_above)
 			else
@@ -247,6 +279,27 @@ endfunction
 
 function changegraphiclever(item, opts)
   SetObjProperty(item, "#inuse", 1);
+  EraseObjProperty(item, "#inuse");
+endfunction
+
+function changegraphici(item, opts)
+  SetObjProperty(item, "#inuse", 1);
+
+  var serial;
+  
+  foreach serial in  (opts.graphicarraysitem)
+     serial := SystemFindObjectBySerial(CInt(serial));
+     var stat :=  GetObjProperty(item, "status");
+     if ( (stat == error) || (stat == "on"))
+        serial.graphic := GetObjProperty(serial, "graphicto");
+        //setobjproperty(item, "status", "unreleased");
+     else
+        serial.graphic := GetObjProperty(serial, "originalgraphic");
+        //setobjproperty(item, "status", "released");
+     endif
+    
+  endforeach
+
   EraseObjProperty(item, "#inuse");
 endfunction
 
@@ -282,11 +335,16 @@ function moveObjects(item, opts)
    EraseObjProperty(item, "#inuse");
 endfunction
 
-function teleporter(item, opts)
+function teleporter(who, item, opts)
    SetObjProperty(item, "#inuse", 1);
    Detach();
+ 
+   		var x := GetObjProperty(item, "x_tp");
+		var y := GetObjProperty(item, "y_tp");
+		var z := GetObjProperty(item, "z_tp");
    
-   ChangeLeverStatus(opts.linked_to);
+   MoveObjectToLocation(who, Cint(x), Cint(y), Cint(z), item.realm, MOVEOBJECT_FORCELOCATION);
+   //ChangeLeverStatus(opts.linked_to);
    EraseObjProperty(item, "#inuse");
 endfunction
 
@@ -343,7 +401,6 @@ function reset(item, force_reset := 0)
    if ( GetObjProperty(item, "status") != "on" || GetObjProperty(item, "#inuse"))
       return;
    endif
-
    var reset_cd := GetObjProperty(item, "reset_cd");
    if (reset_cd && reset_cd > polcore().systime && !force_reset)
       return;
@@ -401,6 +458,17 @@ function reset(item, force_reset := 0)
 //   	if (opts.spawn_boss)
 	//	spawnBoss(item, opts);
 	//endif
-
+	if (opts.graphicarraysitem)
+		  var serial;
+  foreach serial in  (opts.graphicarraysitem)
+     serial := SystemFindObjectBySerial(CInt(serial));
+         serial.graphic := GetObjProperty(serial, "originalgraphic");
+endforeach
+	endif
+	if (opts.spawn_boss)
+		  var boss :=  SystemFindObjectBySerial( GetObjProperty(item, "champ") );
+			ApplyDamage( boss, 20000);
+			EraseObjProperty(item, "champ");
+	endif
    SetRandomOrder(item);
 endfunction

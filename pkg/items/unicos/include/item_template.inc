@@ -2,18 +2,19 @@ use uo;
 use os;
 use polsys;
 
+/*
 function CreateItemTemplate(item)
 	if ( !item.IsA(POLCLASS_ITEM) )
 		var temp := error;
 		temp.+errortext := "Error: CreateItemTemplate() -> Object passed is not an item.";
 		return temp;
 	endif
-	
+
 	var template := GetItemDescriptor(CInt(item.objtype));
 	if ( template == error )
 		return template;
 	endif
-	
+
 	template.+Amount;
 	foreach property in template
 		var item_property := item.get_member(Lower(CStr(_property_iter)));
@@ -87,7 +88,7 @@ function CreateItemTemplate(item)
 		template.CProps.insert(name, GetObjProperty(item, name));
 		sleepms(2);
 	endforeach
-	
+
 	if (item.isBook())
 		template.Cprops.insert("bookinfo", item.extractInfo());
 	endif
@@ -163,3 +164,4 @@ function CreateItemAtLocationFromTemplate(x, y, z, realm, selling)
 
 	return purchase;
 endfunction
+*/

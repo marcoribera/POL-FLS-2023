@@ -13,6 +13,7 @@ var recipe_skill;
 var skillitens := array;
 // Gump backgrounds - Used in various functions - easier to use globally.
 var BKGND_SILVERTRIM := GFCfgConst("Defaults", "BackGround");
+const EL_BUG := "ERROR 666";
 
 // This function is the main backbone for building the Crafting Menu.
 function sendCraftGump(who, skill_name)
@@ -239,25 +240,25 @@ function GFCraftNewPage(who, byref gump, skill_config, MenuName, skill_name)
       				endif
       			endif
 
-			if (craft_config[objtype].difficulty <= (AP_GetSkill(who, craft_skill) + 15))
+			if ((craft_config[objtype].skill) <= AP_GetSkill(who, craft_skill)) //PARA O ITEM APARECER NA LISTA DO MENU DE CRAFT
 				if(ItemY >= 243)
-        				ItemY := 63;
-        				GFAddButton(gump, 370, 260, 4005, 4006, GF_PAGE_BTN, (PageNum+1));
-        				GFHTMLArea(gump, 405, 263, 100, 18, "<basefont color=#ffffff>Proxima Pagina");
-        				PageNum := PageNum+1;
-        				GFPage(gump, PageNum);
-        				GFAddButton(gump, 220, 260, 4014, 4015, GF_PAGE_BTN, (PageNum-1));
-        				GFHTMLArea(gump, 255, 263, 100, 20, "<basefont color=#ffffff>Pagina Anterior");
-      				endif
-      				GFHTMLArea(gump, ItemX, ItemY, 220, 18, ("<basefont color=#ffffff>"+itemdesc));
-      				GFAddButton(gump, ButtonX, (ItemY-3), 4005, 4006, GF_CLOSE_BTN, objtype);
-      				if( menu_config["Setup"].Info == 1 )
-        				GFAddButton(gump, ButtonX2, (ItemY-3), 4011, 4012, GF_CLOSE_BTN, arcnt);
-        				arinfo.append(objtype);
-        				arcnt := arcnt + 1;
-      				endif
-      				ItemY := ItemY + 20;
-      				sleepms(1);
+					ItemY := 63;
+					GFAddButton(gump, 370, 260, 4005, 4006, GF_PAGE_BTN, (PageNum+1));
+					GFHTMLArea(gump, 405, 263, 100, 18, "<basefont color=#ffffff>Proxima Pagina");
+					PageNum := PageNum+1;
+					GFPage(gump, PageNum);
+					GFAddButton(gump, 220, 260, 4014, 4015, GF_PAGE_BTN, (PageNum-1));
+					GFHTMLArea(gump, 255, 263, 100, 20, "<basefont color=#ffffff>Pagina Anterior");
+				endif
+				GFHTMLArea(gump, ItemX, ItemY, 220, 18, ("<basefont color=#ffffff>"+itemdesc));
+				GFAddButton(gump, ButtonX, (ItemY-3), 4005, 4006, GF_CLOSE_BTN, objtype);
+				if( menu_config["Setup"].Info == 1 )
+					GFAddButton(gump, ButtonX2, (ItemY-3), 4011, 4012, GF_CLOSE_BTN, arcnt);
+					arinfo.append(objtype);
+					arcnt := arcnt + 1;
+				endif
+				ItemY := ItemY + 20;
+				sleepms(1);
 			endif
     		endforeach
 
@@ -300,8 +301,12 @@ function GFCraftInfoPage(who, objtype, skill_config)
 
 		// Set the variables for skill required levels
 		skillreq  := elem.skill;
-		diff      := elem.difficulty;
+		diff      := skillreq + 10;
 		skillreqb := elem.skill2;
+		/* DEBUGS: 
+		PrintTextAbove(who, "DEBUG: SKILL ITEM: " +skillreq);
+		PrintTextAbove(who, "DEBUG: DIFICULDADE: " +diff);
+		*/
 		if(!skillreqb || skillreqb.errortext)
   			skillreqb  := 0;
 		endif
@@ -350,6 +355,17 @@ function GFCraftInfoPage(who, objtype, skill_config)
 		aid_skill := 0;
 	endif
 
+	if (TypeOf(elem.skill) == "String")
+		PrintTextAbove(who, EL_BUG); //Hehehe
+		schance := EL_BUG;
+		skillreq := 200; //Para nunca fazer
+	endif
+	/*	DEBUGS:
+
+	SendSysMessage(who, "DEBUG: CHANCE:" +schance);
+	SendSysMessage(who, "DEBUG: " +TypeOf(schance));
+	SendSysMessage(who, "DEBUG: REQUIRED:" +skillreq);
+	*/
 	// Below added for checking for parts. If parts are present, then create the part list
 	// instead.
 	var tmatname  := 0;
@@ -386,44 +402,44 @@ function GFCraftInfoPage(who, objtype, skill_config)
 	// Exception % chance wording.
 	var echance   := 0;
 	if(elem.Exceptional == 1)
-		echance := ExceptionalCraftChance(who, craft_skill, temp1, skillreq, thisitem);
+		echance := ExceptionalCraftChance(who, craft_skill, temp1, diff, thisitem);
 	endif
 
 	var gump := GFCreateGump(50, 25);
-	GFResizePic(gump, 2, 0, BKGND_SILVERTRIM, 521, 420);
+	GFResizePic(gump, 2, 0, BKGND_SILVERTRIM, 521, 470);
 	GFGumpPic(gump, 10, 10, 2624);
 	GFGumpPic(gump, 10, 205, 2624);
 	GFGumpPic(gump, 250, 10, 2624);
 	GFGumpPic(gump, 250, 205, 2624);
-	GFAddAlphaRegion(gump, 10, 10, 505, 400);
+	GFAddAlphaRegion(gump, 10, 10, 505, 450);
 	GFGumpPic(gump, 10, 30, 5055);
 	GFGumpPic(gump, 90, 30, 5055);
 	GFResizePic(gump, 160, 120, 5054, 356, 13);
 	GFGumpPic(gump, 10, 210, 5055);
 	GFGumpPic(gump, 90, 210, 5055);
-	GFGumpPic(gump, 10, 290, 5055);
-	GFGumpPic(gump, 90, 290, 5055);
-	GFGumpPic(gump, 10, 370, 5055);
-	GFGumpPic(gump, 90, 370, 5055);
+	GFGumpPic(gump, 10, 320, 5055);
+	GFGumpPic(gump, 90, 320, 5055);
+	GFGumpPic(gump, 10, 420, 5055);
+	GFGumpPic(gump, 90, 420, 5055);
 	GFHTMLArea(gump, 10, 27, 150, 18, "<basefont color=#ffffff>ITEM");
 	GFHTMLArea(gump, 170, 117, 150, 18, "<basefont color=#ffffff>SKILLS");
-	GFHTMLArea(gump, 10, 207, 150, 18, "<basefont color=#ffffff>MATERIAIS");
-	GFHTMLArea(gump, 10, 287, 150, 18, "<basefont color=#ffffff>DESCRICAO");
-	GFAddButton(gump, 15, 387, 4014, 4016, GF_CLOSE_BTN, 1);
-	GFHTMLArea(gump, 50, 390, 150, 18, "<basefont color=#ffffff>VOLTAR");
-	GFAddButton(gump, 270, 387, 4005, 4006, GF_CLOSE_BTN, CInt(objtype) );
-	GFHTMLArea(gump, 305, 390, 150, 18, "<basefont color=#ffffff>FAZER");
+	GFHTMLArea(gump, 10, 208, 150, 18, "<basefont color=#ffffff>MATERIAIS");
+	GFHTMLArea(gump, 10, 318, 150, 18, "<basefont color=#ffffff>DESCRICAO");
+	GFAddButton(gump, 15, 435, 4014, 4016, GF_CLOSE_BTN, 1);
+	GFHTMLArea(gump, 50, 438, 150, 18, "<basefont color=#ffffff>VOLTAR");
+	GFAddButton(gump, 270, 435, 4005, 4006, GF_CLOSE_BTN, CInt(objtype) );
+	GFHTMLArea(gump, 305, 438, 150, 18, "<basefont color=#ffffff>FAZER");
 	GFTilePic(gump, 20, 50, CInt(graphic), color);
 	//GFHTMLArea(gump, 430, 132, 150, 18, ("<basefont color=#ffffff>" + skillreq));
 
 	// Tooltip info from itemdesc.cfg appended in.
 	if(tooltip != "")
-		GFHTMLArea(gump, 170, 300, 340, 60, ("<basefont color=#ffffff>" + tooltip), 0, 1);
+		GFHTMLArea(gump, 170, 333, 340, 85, ("<basefont color=#ffffff>" + tooltip), 0, 1);
 	endif
 	// Material Required
-	GFHTMLArea(gump, 170, 219, 300, 80, ("<basefont color=#ffffff>" + matname));
+	GFHTMLArea(gump, 170, 205, 300, 90, ("<basefont color=#ffffff>" + matname));
 	if(material != 0)
-		GFHTMLArea(gump, 430, 219, 20, 80, ("<basefont color=#ffffff>" + material));
+		GFHTMLArea(gump, 430, 205, 20, 90, ("<basefont color=#ffffff>" + material));
 	endif
 	// Success Chance % text
 	GFTextLine(gump, 170, 80, 1153, "Chance de Sucesso:");

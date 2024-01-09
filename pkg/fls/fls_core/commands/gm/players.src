@@ -22,7 +22,7 @@ endprogram
 
 function PlayersGump(who)
 	var gump := GFCreateGump();
-	
+
 	GFResizePic(gump, 0, 0, 0x13BE, 570, 420);
 	GFResizePic(gump, 10, 10, /*0xBB8*/0x2486, 550, 400);
 	GFAddAlphaRegion(gump, 10, 10, 550, 400);
@@ -33,13 +33,13 @@ function PlayersGump(who)
 	GFTextLine(gump, 405, 20, 2100, "Freeze");
 	GFTextLine(gump, 465, 20, 2100, "Info");
 	GFTextLine(gump, 510, 20, 2100, "Ficharp");
-	
+
 	var acc_list := GetAccList(who);
 	var num_players := acc_list.size();
 	var counter := 0;
 	var page_num := 1;
 	var y_pos := 45;
-	
+
 	GFPage(gump, 1);
 	foreach acc in (acc_list.keys())
 		var name_color := 2100;
@@ -64,19 +64,19 @@ function PlayersGump(who)
 		counter := counter+1;
 
 		if ( counter >= 18 && _acc_iter < num_players )
-			GFAddButton(gump, 493, 385, 0xA92, 0xA93, GF_PAGE_BTN, page_num+1);
+			GFAddButton(gump, 523, 385, 0xA92, 0xA93, GF_PAGE_BTN, page_num+1);
 			page_num := page_num+1;
 			GFPage(gump, page_num);
-			GFAddButton(gump, 493, 40, 0xA90, 0xA91, GF_PAGE_BTN, page_num-1);
+			GFAddButton(gump, 523, 40, 0xA90, 0xA91, GF_PAGE_BTN, page_num-1);
 			counter := 0;
 			y_pos := 40;
 		endif
 		SleepMS(2);
 	endforeach
-	
+
 	var input := GFSendGump(who, gump);
 	input := input[0];
-	
+
 	if ( !input )
 		SendSysMessage(who, "Cancelado");
 		return 0;
@@ -88,7 +88,7 @@ function PlayersGump(who)
 		acc_list := acc_list.keys();
 		var nome := acc_list[input-200];
 		var plytarget := GetPersonByName(nome);
-		MoveObjectToLocation( who, plytarget.x, plytarget.y, plytarget.z, who.realm, MOVEOBJECT_FORCELOCATION);
+		MoveObjectToLocation( who, plytarget.x, plytarget.y, plytarget.z, plytarget.realm, MOVEOBJECT_FORCELOCATION);
 	elseif ( (input > 400) && (input < 600) )//summon
 		acc_list := acc_list.keys();
 		var nome := acc_list[input-400];
@@ -115,7 +115,7 @@ function PlayersGump(who)
 		//var find_plyr := SystemFindObjectBySerial(player.serial);
 		fichaRP(who, player);
 	endif
-	
+
 endfunction
 
 function GetPersonByName(name_text)
@@ -125,8 +125,8 @@ function GetPersonByName(name_text)
 				return player;
 		endif
 		SleepMS(2);
-	endforeach	
-	
+	endforeach
+
 	return 0;
 
 endfunction
@@ -141,7 +141,7 @@ function GetAccList(who)
 			endif
 		SleepMS(2);
 	endforeach
-	
+
 	return the_list;
 endfunction
 
@@ -153,26 +153,26 @@ function SendMessage(who, name_text, is_reply:=0)
 	elseif ( name_text in (GetAccList(who).keys()) )
 		can_msg := 1;
 	endif
-	
+
 	if ( !can_msg )
 		SendSysMessage(who, name_text+" nao esta online.");
 		return 0;
 	endif
-	
+
 	var message_txt := RequestInput(who, who.backpack, "Qual mensagem voce quer enviar para "+name_text+"? (esc para cancelar)");
 	if ( !message_txt )
 		SendSysMessage(who, "Cancelado.");
 		return 0;
 	endif
-	
+
 	foreach player in EnumerateOnlineCharacters()
 		if ( player.acctname == name_text )
 			SendSysMessage(player, "Mensagem da Staff: "+message_txt);
 			SendSysMessage(who, "Voce enviou uma mensagem para ["+player.name+"]: "+message_txt);
 		endif
-		
+
 		SleepMS(2);
-	endforeach		
+	endforeach
 endfunction
 
 function fichaRP(who, player)

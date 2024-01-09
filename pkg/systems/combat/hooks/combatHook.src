@@ -37,6 +37,8 @@ include ":tn:cooldown";
 include ":tn:combat";
 include ":timedscripts:timedScripts";
 include ":fls_core:packets";
+include ":faccao:faccao";
+include ":combat:include/mainHitScript";
 
 var item_cfg	:= ReadConfigFile(":combat:itemdesc");
 var strat_cfg	:= ReadConfigFile("combatlevel");
@@ -80,11 +82,11 @@ exported function Attack(attacker, defender)
 	wpn_a_elem := GetWpnCfgInfo(attacker, wpn_a);
 	wpn_d_elem := GetWpnCfgInfo(defender, wpn_d);
 
-var anim := wpn_a_elem.Anim;
+	var anim := wpn_a_elem.Anim;
 
-	if ( attacker.graphic != 400 || attacker.graphic != 401)
-       		anim := 0x0c;
-    	endif
+	if ( attacker.graphic != 400 && attacker.graphic != 401 && attacker.graphic != 1828 && attacker.graphic != 1829 && attacker.graphic != 1830 && attacker.graphic != 1831 && attacker.graphic != 1832 && attacker.graphic != 1833 && attacker.graphic != 1834 && attacker.graphic != 1835  )
+       	anim := 0x0c;
+    endif
 
 
 	if ( (attacker.paralyzed) || (attacker.frozen) )
@@ -170,8 +172,7 @@ var anim := wpn_a_elem.Anim;
 
 	var random := RandomInt(100)+1;
 
-	//PlayAttackAnimation(attacker);
-    PerformAction(attacker, anim); //substituida a função que tem no include. corrigir lá depois
+	PlayAttackAnimation(attacker);
 
 	EraseObjProperty(attacker, "insistencia");
 
@@ -188,8 +189,25 @@ var anim := wpn_a_elem.Anim;
 	endif
 
 	//ACERTOU
+	var dmg := 1;
 	if ( random < hit_chance )
 
+        if (getcooldown(attacker, "deathdance") > 0)
+            if (!IsBehind(attacker, defender.x, defender.y))
+                // Calculate the position behind the opponent
+                var behindX := defender.x + (defender.x - attacker.x);
+                var behindY := defender.y + (defender.y - attacker.y);
+
+                // Move the attacker to the calculated position
+                MoveObjectToLocation(attacker, behindX, behindY, defender.z, defender.realm, MOVEOBJECT_FORCELOCATION);
+
+                PlayObjectCenteredEffect(attacker, 0x3735, 7, 16);
+	            PlaySoundEffect(attacker, 0x35E4);
+                if (!IsFacing(attacker, defender.x, defender.y))
+			        TurnObjectToward(attacker, defender.x, defender.y);
+                endif
+	        endif
+        endif
 
 	    //testa possiveis esquivas
 	    if (getObjProperty(defender, "#desviarprojetil"))
@@ -229,6 +247,7 @@ var anim := wpn_a_elem.Anim;
 						var time := ReadGameClock();
 						var dmg := CalculateRawDamage(defender, defender.weapon);
 						var result := Run_Script_To_Completion(":combat:mainHitScript", array{defender, attacker, defender.weapon, armor, dmg, dmg});
+						SkillChecks(attacker, defender, wpn_a, dmg);
 					endif
 
 				EraseObjProperty(defender, "#atacandooportunidade");
@@ -252,6 +271,7 @@ var anim := wpn_a_elem.Anim;
 						var time := ReadGameClock();
 						var dmg := CalculateRawDamage(defender, defender.weapon);
 						var result := Run_Script_To_Completion(":combat:mainHitScript", array{defender, attacker, defender.weapon, armor, dmg, dmg});
+						SkillChecks(attacker, defender, wpn_a, dmg);
 					endif
 					EraseObjProperty(defender, "#atacandooportunidade");
 				endif
@@ -321,6 +341,7 @@ var anim := wpn_a_elem.Anim;
 					var time := ReadGameClock();
 					var dmg := CalculateRawDamage(defender, defender.weapon);
 					var result := Run_Script_To_Completion(":combat:mainHitScript", array{defender, attacker, defender.weapon, armor, dmg, dmg});
+					SkillChecks(attacker, defender, wpn_a, dmg);
 				endif
 				EraseObjProperty(defender, "#contraatacando");
 			endif
@@ -332,9 +353,10 @@ var anim := wpn_a_elem.Anim;
 		PlayHitSounds(attacker, defender);
 		var dmg := CalculateRawDamage(attacker, attacker.weapon);
 		var result := Run_Script_To_Completion(":combat:mainHitScript", array{attacker, defender, wpn_a, armor, dmg, dmg});
+		SkillChecks(attacker, defender, wpn_a, dmg);
 
 	else //ERROU O ATAQUE
-
+		SkillChecks(attacker, defender, wpn_a, dmg);
 		if (GetObjProperty(defender, "#contraataquepoderoso"))
 			SetObjProperty(defender, "#contraataquepoderoso", (GetObjProperty(defender, "#contraataquepoderoso")+1) );
 		endif
@@ -370,6 +392,7 @@ var anim := wpn_a_elem.Anim;
 						var time := ReadGameClock();
 						var dmg := CalculateRawDamage(defender, defender.weapon);
 						var result := Run_Script_To_Completion(":combat:mainHitScript", array{defender, attacker, defender.weapon, armor, dmg, dmg});
+						SkillChecks(attacker, defender, wpn_a, dmg);
 						oportunidade := 0;
 					endif
 
@@ -391,6 +414,7 @@ var anim := wpn_a_elem.Anim;
 						var time := ReadGameClock();
 						var dmg := CalculateRawDamage(defender, defender.weapon);
 						var result := Run_Script_To_Completion(":combat:mainHitScript", array{defender, attacker, defender.weapon, armor, dmg, dmg});
+						SkillChecks(attacker, defender, wpn_a, dmg);
 					endif
 
 					EraseObjProperty(defender, "#atacandooportunidade");
@@ -401,6 +425,7 @@ var anim := wpn_a_elem.Anim;
 		if (GetCooldown(defender, "RespostaDesesperada") > 0)
 			PlayHitSounds(attacker, defender);
 			DamageFLS(attacker, 5, DMG_FORCED, defender);
+			SkillChecks(attacker, defender, wpn_a, dmg);
 		endif
 
 		if (GetCooldown(attacker, "ataqueinfalivel") > 0)
@@ -411,7 +436,7 @@ var anim := wpn_a_elem.Anim;
 			var dmg := CalculateRawDamage(attacker, attacker.weapon);
 			dmg := dmg*0.33;
 			var result := Run_Script_To_Completion(":combat:mainHitScript", array{attacker, defender, wpn_a, armor, dmg, dmg});
-
+			SkillChecks(attacker, defender, wpn_a, dmg);
 		endif
 
 		if ( wpn_a_elem.ProjectileType )
@@ -484,6 +509,10 @@ function CalculateHitChance(attacker, defender)
 		hit_chance := hit_chance - 10;
 	endif
 
+    if (getcooldown(attacker, "blinded") > 0)
+		hit_chance := hit_chance - 20;
+	endif
+
 	if (TemHabilidade(attacker, "Postura Ofensiva"))
 		hit_chance := hit_chance + 10;
 	endif
@@ -509,6 +538,10 @@ function CalculateHitChance(attacker, defender)
 
 	if ( GetObjProperty(attacker, "armapreferida") == attacker.weapon.objtype )
 		hit_chance := hit_chance + 5;
+	endif
+
+    if ( GetObjProperty(attacker, "#aterrorizar") )
+		hit_chance := hit_chance + 20;
 	endif
 
 	if ( cint(GetObjProperty(attacker, "#attackbonus")) != 0 )
@@ -584,13 +617,21 @@ function CalculateHitChance(attacker, defender)
 		endif
 	endif
 
+    var dancer_bonus := CInt(AP_GetSkill(attacker, MAGICLORE) / 5);
+    if (TemHabilidade(attacker, "Danca das Sombras"))
+        hit_chance := hit_chance + dancer_bonus;
+	endif
+    if (GetCooldown(defender, "shadowdancer_blur") > 0)
+        hit_chance := hit_chance - dancer_bonus;
+    endif
+
 	if (hit_chance < 5.0)
 		hit_chance := 5.0;
 	endif
 
     var attacker_weapon := attacker.weapon.objtype;
     var ranged_weapons := array{ 0x13B2, 0xe137, 0x26CC, 0xe139, 0x2d2b, 0x2d2a, 0x27A5, 0x0f4f, 0x13fd };
-    
+
     if (GetCooldown(defender, "Desviar Disparos") > 0 && attacker_weapon in ranged_weapons)
         printtext(defender, "*desviar disparos*");
         hit_chance := 0;
@@ -734,9 +775,9 @@ function FacingChecks(attacker, defender)
 			endif
 		endif
 	elseif ( !IsFacing(defender, attacker.x, attacker.y) )
-		if ( defender.npctemplate )
-			TurnObjectToward(defender, attacker.x, attacker.y);
-		endif
+		//if ( defender.npctemplate )
+		//	TurnObjectToward(defender, attacker.x, attacker.y);
+		//endif
 	endif
 
 	return retval;

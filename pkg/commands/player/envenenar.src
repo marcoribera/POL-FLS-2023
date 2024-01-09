@@ -65,9 +65,10 @@ program do_poisoning(who)
 		0xbf02: poisonType:="staminaPoison"; difficulty := 60; points := 70;
 		0xbf03: poisonType:="paralyzePoison"; difficulty := 80; points := 100;
 		0xef54: poisonType :="manaPoison"; difficulty := 40; points := 70;
-		0xbf04: level := 3; difficulty := 80; points := 60; poisonType := "defaultPoison";
+		0xbf04: level := 4; difficulty := 80; points := 60; poisonType := "defaultPoison";
+        0x6072: level := 3; difficulty := 70; points := 50; poisonType := "defaultPoison";
 		0xdc04: level := 2; difficulty := 60; points := 40; poisonType := "defaultPoison";
-		0xbf05: level := 4; difficulty := 100; points := 100; poisonType := "defaultPoison";
+		0xbf05: level := 5; difficulty := 100; points := 100; poisonType := "defaultPoison";
 		default: difficulty := 0; points := 0; poisonType := "invalid";
 	endcase
 
@@ -127,11 +128,11 @@ program do_poisoning(who)
 		poisonInfo.+time := 40 + level*10;
 		if (temHabilidade(who, "Veneno Puro"))
 			poisonInfo.dosage := CInt(poisonInfo.dosage * 1.5);
-			poisonInfo.time := CInt(poisonInfo.time * 1.2);
+			poisonInfo.time := CInt(poisonInfo.time * 1.25);
 		endif
 		if ( the_item.graphic == 0x1bfb || the_item.graphic == 0xf3f  )
-			poisonInfo.dosage := 100;
-			poisonInfo.time := CInt(poisonInfo.dosage * 0.5);
+			poisonInfo.dosage := "infinito"; //Era 100 antes
+			poisonInfo.time := 50; //CInt(poisonInfo.dosage * 0.5);
 		endif
 		SetObjProperty(the_item, "poisonInfo", poisonInfo);
 		if (the_item.isA(POLCLASS_WEAPON))
@@ -174,6 +175,13 @@ program do_poisoning(who)
 			EraseObjProperty(the_poison, "doses");
 			CreateItemInBackpack(who, 0xf0e, 1);
 		endif
+	endif
+
+		var nome_antigo := the_item.name;
+	if ( the_item.graphic == 0xf3f ) 
+		the_item.name := nome_antigo+" envenenadas";
+	elseif( the_item.graphic == 0x1bfb )
+		the_item.name := nome_antigo+" envenenados";
 	endif
 
 endprogram

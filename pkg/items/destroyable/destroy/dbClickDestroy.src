@@ -2,7 +2,7 @@ use uo;
 use os;
 
 include "include/say";
-include ":unicos:item_template";
+include ":merchants:item_template";
 var itensnobarril;
 
 program dbDestroyable(who,item)
@@ -19,16 +19,16 @@ endprogram
 function dbclickbarril(who,item)
 
 	var itens:=array;
-	if(who.cmdlevel > 0) 
+	if(who.cmdlevel > 0)
 		if(item.graphic != 4014)
 			item.graphic:=4014;
 			SetName(item,"Barril Lacrado");
 			return 0;
 		endif
-	
+
 		SendSysMessage(who,"Selecione o item que deseja inserir no barril.");
 		var targ:= Target(who);
-	
+
 		if(targ==0)
 			SendSysMessage(who,"Cancelado.");
 			return 0;
@@ -46,7 +46,7 @@ function dbclickbarril(who,item)
 
 		var itemtemplate := CreateItemTemplate(targ);
 		itemtemplate.+amout := targ.amount;
-	
+
 		if(GetObjProperty(item,"itens")==error)
 			itens.append(itemtemplate);
 			SetObjProperty(item,"itens",itens);
@@ -72,12 +72,12 @@ endfunction
 function dbclickcaixa(who,item)
 
 	var itens:=array;
-	if(who.cmdlevel > 0) 
+	if(who.cmdlevel > 0)
 		if((item.objtype == 0xFF04) && (item.graphic == 3119))
 			item.graphic:=3645;
 			SetName(item,"Caixa Grande Lacrada");
 			return 0;
-	
+
 		elseif((item.objtype == 0xec27) && (item.graphic == 3119))
 			item.graphic:=2473;
 			SetName(item,"Caixa Pequena Lacrada");
@@ -87,10 +87,10 @@ function dbclickcaixa(who,item)
 			SetName(item,"Caixa Media Lacrada");
 			return 0;
 		endif
-	
+
 		SendSysMessage(who,"Selecione o item que deseja inserir na caixa.");
 		var targ:= Target(who);
-	
+
 		if(targ==0)
 			SendSysMessage(who,"Cancelado.");
 			return 0;
@@ -108,7 +108,7 @@ function dbclickcaixa(who,item)
 
 		var itemtemplate := CreateItemTemplate(targ);
 		itemtemplate.+amout := targ.amount;
-	
+
 		if(GetObjProperty(item,"itens")==error)
 			itens.append(itemtemplate);
 			SetObjProperty(item,"itens",itens);
@@ -134,8 +134,8 @@ endfunction
 function dbclickportas (who,item)
 
 
-	if(who.cmdlevel > 0) 
-	
+	if(who.cmdlevel > 0)
+
 		if((item.objtype == 0xec25) &&(item.graphic == 3119))
 			item.graphic:=1705;
 			SetName(item,"porta emperrada");

@@ -7,8 +7,6 @@ include ":gumps:gumps";
 include ":charactercreation:habilidades";
 
 function SpellYesNo(who, nome, targname)
-
-
 	var gump := GfCreateGump(140, 100);
 	GfResizePic(gump, 0, 0, 0x53 ,200, 140);
 	GfAddAlphaRegion(gump, 0, 0, 200, 140);
@@ -69,6 +67,8 @@ program spell(params)
 		id := 21;
 	elseif (name == "dmgreduction")
 		id := 34;
+    elseif (name == "dmgreturn")
+		id := 49;
 	endif
 
 
@@ -83,7 +83,7 @@ program spell(params)
 
 	if ( SpellYesNo(mage, spellname,  targ.name ) )
 	        if (!AP_ConsumeVital(mage, MANA, mana))
-		                SendSysMessageEx(mage, "Voce nao possui mana suficiente para manter esse encantamento.", SSM_FAIL);
+                    SendSysMessageEx(mage, "Voce nao possui mana suficiente para manter esse encantamento.", SSM_FAIL);
 				return 1;
 		endif
 

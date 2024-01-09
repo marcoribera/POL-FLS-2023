@@ -1,5 +1,7 @@
 use uo;
 
+include ":timedScripts:timedScripts";
+
 function ListTamablePetsNearLocation(x, y, z, range, realm := _DEFAULT_REALM)
 
 	var cfg := ReadConfigFile(":brainAI:npcdesc");
@@ -127,10 +129,14 @@ function ErasePet(who, myserial)
 	if ( tamed )
 		foreach serial in tamed
 			if ( myserial == serial )
+				var pet := SystemFindObjectBySerial(serial);
+				TS_LowerDuration(pet, "summon", -1);
 				MP_Unmount(who);
 				tamed.erase(_serial_iter);
 				SetObjProperty(who, "SummonedPets", tamed);
-				var pet := SystemFindObjectBySerial(serial);
+				var timer_num := GetObjProperty(pet, "slot");
+				var timer := "summon_"+timer_num;
+				TS_LowerDuration(who, timer, -1);				
 				break;
 			endif
 			sleepms(2);

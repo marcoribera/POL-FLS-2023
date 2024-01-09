@@ -4,29 +4,42 @@ include ":attributes:attributes";
 
 function CraftCheckSkill(who, craft_skill, difficulty, points, report:=0)
 
-  difficulty := CDbl(difficulty);
-  points := CDbl(points);
-  if(difficulty == error)
-    return 0;
+  //difficulty := CDbl(difficulty);
+  //points := CDbl(points);
+  //if(difficulty == error)
+  /*
   elseif(difficulty == 0.0)
     if (report)
       return 100;
     endif
     return 1;
   endif
-
-  var chance;
-  var effective := CDbl(AP_GetSkill(who, craft_skill));
+  */
+  
+  /*
   if(effective < 0)
     effective := 0.0;
   endif
-  chance :=  35.0 + (effective - difficulty);
+  */
+  //chance :=  35.0 + (effective - difficulty); //antigo craft
+  
+  /* EVILLINK CRAFT START 1.1 */
+  var chance;
+  var effective := CDbl(AP_GetSkill(who, craft_skill));
+  var itemskill := difficulty - 10; //QUANDO APARECE NO MENU
+  
+  chance := ((itemskill)-effective)*(-((difficulty+(40-itemskill))/10))+1;
+  var rolagem := RandomFloat(100);
+  //SendSysMessage(who, "DEBUG CHANCE: "+chance);
+  //SendSysMessage(who, "DEBUG ROLOU: "+rolagem);
+  /* EVILLINK CRAFT END */
 
   if(chance < 0)
     chance := 0;
   elseif(chance > 100)
     chance := 100;
   endif
+  //SendSysMessage(who, "DEBUG: VALORES: DIFFI" +difficulty+ "- EFFEC: " +effective+ "- CHANCE: " +chance);
 
   if(report)
     return Cdbl(chance);
@@ -38,10 +51,11 @@ function CraftCheckSkill(who, craft_skill, difficulty, points, report:=0)
   if(points > 0)
 //	CheckSkillAdvance(who, craft_skill, points, chance);
 	SkillCheck(who, craft_skill, difficulty, points);
+  //SendSysMessage(who, "DEBUG CHANCEUP: "+SkillCheck(who, craft_skill, difficulty, points));  
   endif
-  if(RandomInt(100) < chance)
+  if(rolagem < chance)
     if (report)
-	return 100;
+	    return 100;
     endif
     return 1;
   else

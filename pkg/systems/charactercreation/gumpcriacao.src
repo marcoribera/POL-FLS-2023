@@ -38,8 +38,8 @@ var gflayout := array{
 
 		"text 245 120 1153 0",
 
-		"Text  420 580 2103 10",
-		"Button 470 580 9903 9905 1 2 10",
+		"Text  420 580 2103 14",
+		"Button 470 580 9903 9905 1 2 14",
 
 		"page 1",
 
@@ -47,22 +47,30 @@ var gflayout := array{
 
 		"text 215 200 2105 8",
 
-		"text 265 240 2105 3",
-		"text 265 280 2105 4",
-		"text 265 320 2105 2",
-		"Radio 230 237 9726 9729 1 1", //asanita
-		"Radio 230 277 9726 9729 0 2", //thuriao
-		"Radio 230 317 9726 9729 0 3", //zharkiano
+		"text 265 220 2105 3",
+		"text 265 260 2105 4",
+		"text 265 300 2105 2",
+		"Radio 230 217 9726 9729 1 1", //asanita
+		"Radio 230 257 9726 9729 0 2", //thuriao
+		"Radio 230 297 9726 9729 0 3", //zharkiano
 
-		"text 215 360 2105 9",
+		"text 215 330 2105 9",
 
-		"text 265 400 2105 7",
-		"text 265 440 2105 6",
-		"text 265 480 2105 5",
-		"Radio 230 397 9726 9729 0 4", //aquilrano
-		"Radio 230 437 9726 9729 0 5", //numajene
-		"Radio 230 477 9726 9729 0 6" //vanirio
+		"text 265 360 2105 7",
+		"text 265 400 2105 6",
+		"text 265 440 2105 5",
+		"Radio 230 357 9726 9729 0 4", //aquilrano
+		"Radio 230 397 9726 9729 0 5", //numajene
+		"Radio 230 437 9726 9729 0 6" //vanirio
 
+		//"text 215 480 2105 13",
+
+        //"text 265 510 2105 10",
+		//"text 265 550 2105 11",
+        //"text 265 590 2105 12",
+		//"Radio 230 507 9726 9729 0 10", //Anao
+		//"Radio 230 547 9726 9729 0 11", //Drow
+        //"Radio 230 587 9726 9729 0 12" //Anao
 		};
 var gfdata := array{
 		"Forgotten Lore Shard", //0
@@ -75,7 +83,11 @@ var gfdata := array{
 		"Aquilrano", //7
 		"Humano", //8
 		"Elfo", //9
-		"Próximo"
+        "Anão", // 10
+        "Drow", // 11
+        "Orc", // 12
+        "Povos Originários", //13
+		"Próximo" // 14
 		};
 
 
@@ -99,7 +111,33 @@ var gfdata := array{
 	elseif (6 in ret.keys)
 		chardata.+raca := "Elfo";
 		chardata.+povo := "Vanirio";
+    elseif (10 in ret.keys)
+		chardata.+raca := "Humano";
+		chardata.+povo := "Anao";
+        if (who.graphic == 400)
+            who.graphic := 1828;
+        else 
+            who.graphic := 1829;
+        endif
+    elseif (11 in ret.keys)
+		chardata.+raca := "Elfo";
+		chardata.+povo := "Drow";
+    elseif (12 in ret.keys)
+		chardata.+raca := "Humano";
+		chardata.+povo := "Orc";
+        if (who.graphic == 400)
+            who.graphic := 1832;
+        else 
+            who.graphic := 1833;
+        endif
 	endif
+
+    if (who.graphic == 400 && chardata.raca == "Elfo")
+        who.graphic := 1830;
+    elseif(who.graphic == 401 && chardata.raca == "Elfo")
+        who.graphic := 1831;
+    endif
+
 endfunction
 
 
@@ -165,6 +203,14 @@ var gflayout := array{
             gfdata.append("Pacto com Asan");
 	    	gfdata.append("Asanitas são favorecidos pelo seu deus. + 2DP");
         endif
+        if (chardata.povo == "Anao")
+            gfdata.append("Constituicao Ana");
+	    	gfdata.append("Anões são um povo trabalhador e por isso recebem mais 10 de HP e mais 10 de stamina");
+        endif
+        if (chardata.povo == "Orc")
+            gfdata.append("Resistencia implacavel");
+	    	gfdata.append("Orcs são um povo forte, sempre que um golpe te deixar com 0 de hp, você fica com 1");
+        endif
 	elseif ( chardata.raca == "Elfo")
         gfdata.append("Sabedoria dos Antigos");
         gfdata.append("Elfos são mais antigos que os outros povos e aprenderam a dar mais valor ao conhecimento. Habilidades terciárias podem ir até 50%");
@@ -177,6 +223,9 @@ var gflayout := array{
         elseif (chardata.povo == "Aquilrano")
             gfdata.append("Agilidade");
 	    	gfdata.append("Aquilranos confiam muito em sua agilidade natural. + 20 reflexos");
+        elseif (chardata.povo == "Drow")
+            gfdata.append("Toxina natural");
+	    	gfdata.append("Sua alimentação baseada em fungos, fez com que desenvolvessem uma resistencia natural a venenos");
         endif
 	endif
 
@@ -190,6 +239,10 @@ var gflayout := array{
 			chardata.+vantagemracial := "Resiliente";
         elseif (2 in ret.keys && chardata.povo == "Asanita")
 			chardata.+vantagemracial := "Pacto com Asan";
+        elseif (2 in ret.keys && chardata.povo == "Anao")
+			chardata.+vantagemracial := "Constituicao Ana";
+        elseif (2 in ret.keys && chardata.povo == "Orc")
+			chardata.+vantagemracial := "Resistencia implacavel";
 		endif
 	else
 		if (1 in ret.keys)
@@ -200,6 +253,8 @@ var gflayout := array{
 			chardata.+vantagemracial := "Aliado da Natureza";
         elseif (2 in ret.keys && chardata.povo == "Aquilrano")
 			chardata.+vantagemracial := "Agilidade";
+        elseif (2 in ret.keys && chardata.povo == "Drow")
+			chardata.+vantagemracial := "Toxina natural";
 		endif
 	endif
 
@@ -298,17 +353,28 @@ function buyskillsgump(who, byref chardata)
 		repeatGump := GumpSkills(who, chardata, skillspoints);
 	endwhile
 
+	//APLICA BONUS DE HERANÇA NAS SKILLS
+	var pri_bonus := 0;
+	var sec_bonus := 0;
+	var ter_bonus := 0;
+
+	var heir_skills := FindAccount(who.acctname).getprop("herdeiro");
+	if (heir_skills != error)
+		pri_bonus := heir_skills.bonus_primarias;
+		sec_bonus := heir_skills.bonus_secundarias;
+		ter_bonus := heir_skills.bonus_terciarias;
+	endif
 	var value;
 	var skillsmap := chardata.Skills;
 	var skillsArray := skillsmap.keys();
 	foreach skill in skillsArray
 		value := 0;
 		if ( chardata.Skills[skill] == 3)
-			value := 40;
+			value := 40 + pri_bonus;
 		elseif (chardata.Skills[skill] == 2)
-			value := 20;
+			value := 20 + sec_bonus;
 		else
-			value := 0;
+			value := 0 + ter_bonus;
 		endif
 		if ( AP_GetTrueSkill(who, skill) == 0)
 			AP_SetTrueSkill(who, skill, value);
@@ -1318,14 +1384,27 @@ program createchar(who)
 		SetObjProperty(who, "bonus_tempo", 1);
 	endif
 	*/
+
+	//ADICIONA OS BONUS DA HERANÇA PARA CAP DAS SKILL
+	var tempo_agora := polcore().systime;
 	var heir_skills := FindAccount(who.acctname).getprop("herdeiro");
-	if (heir_skills)
-		privalue := heir_skills.bonus_primarias + 40.0;
-		secvalue := heir_skills.bonus_secundarias + 20;
-		tercvalue := heir_skills.bonus_terciarias;
-        FindAccount(who.acctname).setprop("herdado", 1);
+	if (heir_skills != error)
+        var dias_herdados := FindAccount(who.acctname).getprop("heir_days");
+	    if (dias_herdados != error)
+	    	SetObjProperty(who, "heir_days", dias_herdados); //24horas*60minutos*60segundos = 86400 segundos
+	    	SetObjProperty(who, "createdate", (tempo_agora-(dias_herdados*86400))); //24horas*60minutos*60segundos = 86400 segundos
+	    else
+	    	SetObjProperty(who, "heir_days", 0); //24horas*60minutos*60segundos = 86400 segundos
+	        SetObjProperty(who, "createdate", tempo_agora);
+	    endif
+		FindAccount(who.acctname).setprop("herdado", dias_herdados);
+	else
+		SetObjProperty(who, "heir_days", 0); //24horas*60minutos*60segundos = 86400 segundos
+		SetObjProperty(who, "createdate", tempo_agora);
 	endif
-    
+    //FIM DA APLICAÇÃO DE BENEFICIOS DA HERANÇA
+
+/*
 	foreach primaria in primarias
 		AP_setTrueSkill(who, primaria, privalue);
 	endforeach
@@ -1337,7 +1416,7 @@ program createchar(who)
 	foreach terciaria in terciarias
 		AP_setTrueSkill(who, terciaria, tercvalue);
 	endforeach
-
+*/
 	if (chardata.povo == "Asanita")
 		SetObjProperty(who, "dpmod", 10);
 	endif
@@ -1348,6 +1427,15 @@ program createchar(who)
 
     if (chardata.povo == "Aquilrano")
         AP_SetTrueStat(who, DEXTERITY, chardata.dex+10);
+	endif
+
+    if (chardata.povo == "Drow")
+        AP_SetTrueStat(who, DEXTERITY, chardata.dex+5);
+        AP_SetTrueStat(who, INTELLIGENCE, chardata.int+5);
+	endif
+
+    if (chardata.povo == "Orc")
+        AP_SetTrueStat(who, INTELLIGENCE, chardata.int+10);
 	endif
 
 	//SETA O KIT
@@ -1457,14 +1545,13 @@ program createchar(who)
 					SetObjProperty(p1, "spellinfo", spellinfo);
 					ganheispell := 1;
 				endif
-        elseif (chardata.povo == "Zharkiano")
+        elseif (chardata.povo == "Zharkiano" || chardata.povo == "Drow" && who.graphic == 1831 || chardata.povo == "Anao")
             if (ganheispell == 0)
                 chardata.magia := "Sacerdote";
                 var malhoecinzel := CreateItemInBackpack(who, 0xf40, 1);
-                var robe := CreateItemInBackpack(who, 0x9945, 1); //bodysash
-                SetObjProperty(robe, "description", "Robe com bordado do simbolo do clero de Zharkia");
-                SetObjProperty(robe, "cannotdye", 1);
-                SetObjProperty(robe, "descmod", "Acólito de Zhark");
+                //var simbolo_sagrado := CreateItemInBackpack(who, 0xB888, 1); //Simbolo Sagrado
+				//SetName(simbolo_sagrado, "Símbolo Sagrado");
+                //SetObjProperty(simbolo_sagrado, "descmod", "Acólito de Zhark");
                 createiteminbackpack(who, "runaarmasagrada");
                 createiteminbackpack(who, "runacuraleve");
                 createiteminbackpack(who, "runadescanso");
@@ -1540,7 +1627,7 @@ function ExibeGumpAparencia(who, chardata)
 
     escolherCabelo(who, disfarce, chardata.povo);
     escolheCorCabelo(who, disfarce, 0, chardata.povo, 1);
-    if (chardata.raca != "Elfo")
+    if (chardata.raca == "Humano" && chardata.povo != "Orc")
         escolherBarba(who, disfarce);
     endif
     SkinGump(who, disfarce, chardata.povo, 1);

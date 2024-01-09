@@ -11,6 +11,12 @@
 //
 // Last modification: 11/16/2000
 //
+const EVID_ALERT_ALLIES := 0x42213; //0x00000013 <-- sobrando
+const EVID_OPPONENTHEALED := 0x4228;
+const EVID_CHECK_NUMBER := 0x42214;
+const EVID_BLINDED    := 0x915;
+
+const EVID_DOOBJECTIVE := 0x4226;
 
 const SYSEVENT_SPEECH               := 0x00000001;
 

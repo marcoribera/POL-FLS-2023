@@ -555,7 +555,7 @@ endfunction
 
 function GetMobDesc(who, mobile)
 
-if ((mobile.graphic == 400) || (mobile.graphic == 401))
+if ((mobile.graphic == 400) || (mobile.graphic == 401) || (mobile.graphic == 1828) || (mobile.graphic == 1829) || (mobile.graphic == 1830) || (mobile.graphic == 1831 ) || (mobile.graphic == 1832) || (mobile.graphic == 1833) || (mobile.graphic == 1834) || (mobile.graphic == 1835))
 	var itemonmobile := ListEquippedItems( mobile );
 	foreach item in itemonmobile
 		if (item.graphic == 5903)

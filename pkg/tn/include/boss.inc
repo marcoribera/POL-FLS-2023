@@ -4,7 +4,7 @@ use vitals;
 include "include/say";
 include ":gumps:requestGump";
 include ":gumps:yesNo";
-include ":unicos:item_template";
+include ":merchants:item_template";
 include ":attributes:attributes";
 include ":tn:tngumps";
 include ":tn:questevent";
@@ -526,7 +526,7 @@ function SetBoss(npc, boss)
 	SetName(npc, boss.name);
 	npc.color := boss.color;
 	npc.truecolor := boss.color;
-	SetObjProperty(npc, "descmod", Cstr(boss.descmod));
+	SetObjProperty(npc, "descmodboss", Cstr(boss.descmod));
 	SetObjProperty(npc, "dmgbonus", Cdbl(boss.dmg));
 
 	if (boss.trueboss)
@@ -889,7 +889,7 @@ function CombatEventsOptions(who, state)
 			state.+z := loc.z;
 		elseif ( opt == "TimedScript")
 			state.+target := RadioGump(who, 200, 180, "Quem vai realizar a action?", array{"Self", "Opponent", "All Opponents"});
-			var timername := RadioGump(who, 270, 580, "Escolha o timedscript", array{"defaultPoison", "hallucination", "Paralyze", "clumsy", "feeblemind", "weaken", "atrasarmagias", "fugademana", "staminaPoison", "manaPoison", "bleed", "darkborer", "agility", "strength", "invisibilidade", "desviarprojetil", "dmgreduction", "evasao", "precisao", "phmod", "fimod", "comod", "pomod", "enmod"});
+			var timername := RadioGump(who, 270, 580, "Escolha o timedscript", array{"defaultPoison", "hallucination", "paralysis", "clumsy", "feeblemind", "weaken", "atrasarmagias", "fugademana", "staminaPoison", "manaPoison", "bleed", "darkborer", "agility", "strength", "invisibilidade", "desviarprojetil", "dmgreduction", "evasao", "precisao", "phmod", "fimod", "comod", "pomod", "enmod"});
 			state.+timername := timername;
 			state.+timerduration := cint(RequestGump(who, "Qual a duracao do timer?", "Nunca mais de 120s", "", 1));
 			state.+level := cint(RequestGump(who, "Qual o level do timer?", "", "", 1));

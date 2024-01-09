@@ -157,9 +157,9 @@ else
           //couroreptiliano
             prod_type := 0xc603;
             break;
-          0xc604:
+          0xeefe:
           //courohidra
-            prod_type := 0xeefe;
+            prod_type := 0xACE5;
             break;
           default:
              SendSysMessage(who,"Voce so pode usar couro aqui");

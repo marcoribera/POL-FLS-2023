@@ -114,6 +114,7 @@ function GetResist(who, resist)
 
 		// Aplica modificadores de vantagens raciais
 		if (vantagem == "Vontade de Ferro")
+		//if (vantagem == "Vontade de Ferro" || who.npctemplate)
 			valor := valor + 20; // +200% do VALOR_REFERENCIA
 		endif
 
@@ -164,6 +165,18 @@ function CheckResist(who, resist, dif, mod := 0)
 		dado := RandomInt(40) + 1;
 		if (dado + valor + mod >= dif)
 			SendSysMessageEx(who, "Zharkia esta do seu lado!", SSM_INFO);
+			return 1;
+		endif
+    elseif((GetObjProperty(who, "chardata")).vantagemracial == "Toxina Natural" && resist == FORTITUDE)
+        mod += 30;
+		if (dado + valor + mod >= dif)
+			SendSysMessageEx(who, "Seu organismo drow expurga o veneno", SSM_INFO);
+			return 1;
+		endif
+    elseif((GetObjProperty(who, "chardata")).povo == "Anao" && resist == VONTADE)
+        mod += 30;
+		if (dado + valor + mod >= dif)
+			SendSysMessageEx(who, "Sua constituicao ana o salvou da magia", SSM_INFO);
 			return 1;
 		endif
 

@@ -105,6 +105,35 @@ function GetSoundEffect(who, input)
 	  resultado[1] := 0x41A;
 	  resultado[2] := "*Ah*";
 
+	1828:
+	  resultado[1] := 0x41A;
+	  resultado[2] := "*Ah*";
+
+	1829:
+	  resultado[1] := 0x30B;
+	  resultado[2] := "*Ah*";
+
+	1830:
+	  resultado[1] := 0x41A;
+	  resultado[2] := "*Ah*";
+
+	1831:
+	  resultado[1] := 0x30B;
+	  resultado[2] := "*Ah*";
+	1832:
+	  resultado[1] := 0x41A;
+	  resultado[2] := "*Ah*";
+
+	1833:
+	  resultado[1] := 0x30B;
+	  resultado[2] := "*Ah*";
+	1834:
+	  resultado[1] := 0x41A;
+	  resultado[2] := "*Ah*";
+
+	1835:
+	  resultado[1] := 0x30B;
+	  resultado[2] := "*Ah*";
 	225:
 	  resultado[1] := 0x0E6;
 
@@ -128,6 +157,37 @@ function GetSoundEffect(who, input)
 	  resultado[1] := 0x41B ;
 	  resultado[2] := "*Ahha*";
 
+	1828:
+	  resultado[1] := 0x41B ;
+	  resultado[2] := "*Ahha*";
+
+	1829:
+	  resultado[1] := 0x30C ;
+	  resultado[2] := "*Ahha*";
+
+	1830:
+	  resultado[1] := 0x41B ;
+	  resultado[2] := "*Ahha*";
+
+	1831:
+	  resultado[1] := 0x30C ;
+	  resultado[2] := "*Ahha*";
+
+	1832:
+	  resultado[1] := 0x41B ;
+	  resultado[2] := "*Ahha*";
+
+	1833:
+	  resultado[1] := 0x30C ;
+	  resultado[2] := "*Ahha*";
+
+	1834:
+	  resultado[1] := 0x41B ;
+	  resultado[2] := "*Ahha*";
+
+	1835:
+	  resultado[1] := 0x30C ;
+	  resultado[2] := "*Ahha*";
 	225:
 	  resultado[1] := 0x0E7 ;
 
@@ -151,6 +211,39 @@ function GetSoundEffect(who, input)
 	  resultado[1] := 0x41C ;
 	  resultado[2] := "*Aplausos*";
 
+	1828:
+	  resultado[1] := 0x41C ;
+	  resultado[2] := "*Aplausos*";
+
+	1829:
+	  resultado[1] := 0x30D ;
+	  resultado[2] := "*Aplausos*";
+
+	1830:
+	  resultado[1] := 0x41C ;
+	  resultado[2] := "*Aplausos*";
+
+	1831:
+	  resultado[1] := 0x30D ;
+	  resultado[2] := "*Aplausos*";
+
+	1832:
+	  resultado[1] := 0x41C ;
+	  resultado[2] := "*Aplausos*";
+
+	1833:
+	  resultado[1] := 0x30D ;
+	  resultado[2] := "*Aplausos*";
+
+	1834:
+	  resultado[1] := 0x41C ;
+	  resultado[2] := "*Aplausos*";
+
+	1835:
+	  resultado[1] := 0x30D ;
+	  resultado[2] := "*Aplausos*";
+
+
 	225:
 	  resultado[1] := 0x0E8 ;
 
@@ -172,6 +265,38 @@ function GetSoundEffect(who, input)
 
 	400:
 	  resultado[1] := 0x41D ;
+	  resultado[2] := "*Assoando o nariz*";
+
+	1828:
+	  resultado[1] := 0x41D ;
+	  resultado[2] := "*Assoando o nariz*";
+
+	1829:
+	  resultado[1] := 0x30E ;
+	  resultado[2] := "*Assoando o nariz*";
+
+	1830:
+	  resultado[1] := 0x41D ;
+	  resultado[2] := "*Assoando o nariz*";
+
+	1831:
+	  resultado[1] := 0x30E ;
+	  resultado[2] := "*Assoando o nariz*";
+
+	1832:
+	  resultado[1] := 0x41D ;
+	  resultado[2] := "*Assoando o nariz*";
+
+	1833:
+	  resultado[1] := 0x30E ;
+	  resultado[2] := "*Assoando o nariz*";
+
+	1834:
+	  resultado[1] := 0x41D ;
+	  resultado[2] := "*Assoando o nariz*";
+
+	1835:
+	  resultado[1] := 0x30E ;
 	  resultado[2] := "*Assoando o nariz*";
 
 	225:
@@ -197,6 +322,38 @@ function GetSoundEffect(who, input)
 	  resultado[1] := 0x41F ;
 	  resultado[2] := "*Comemorando*";
 
+	1828:
+	  resultado[1] := 0x41F ;
+	  resultado[2] := "*Comemorando*";
+
+	1829:
+	  resultado[1] := 0x310 ;
+	  resultado[2] := "*Comemorando*";
+
+	1830:
+	  resultado[1] := 0x41F ;
+	  resultado[2] := "*Comemorando*";
+
+	1831:
+	  resultado[1] := 0x310 ;
+	  resultado[2] := "*Comemorando*";
+
+	1832:
+	  resultado[1] := 0x41F ;
+	  resultado[2] := "*Comemorando*";
+
+	1833:
+	  resultado[1] := 0x310 ;
+	  resultado[2] := "*Comemorando*";
+
+	1834:
+	  resultado[1] := 0x41F ;
+	  resultado[2] := "*Comemorando*";
+
+	1835:
+	  resultado[1] := 0x310 ;
+	  resultado[2] := "*Comemorando*";
+
 	225:
 	  resultado[1] := 0x0EA ;
 
@@ -218,6 +375,32 @@ function GetSoundEffect(who, input)
 	400:
 	  resultado[1] := 0x420 ;
 	  resultado[2] := "*Limpa a garganta*";
+
+	1828:
+	  resultado[1] := 0x420 ;
+	  resultado[2] := "*Limpa a garganta*";
+	1829:
+	  resultado[1] := 0x311 ;
+	  resultado[2] := "*Limpa a garganta*";
+	1830:
+	  resultado[1] := 0x420 ;
+	  resultado[2] := "*Limpa a garganta*";
+	1831:
+	  resultado[1] := 0x311 ;
+	  resultado[2] := "*Limpa a garganta*";
+	1832:
+	  resultado[1] := 0x420 ;
+	  resultado[2] := "*Limpa a garganta*";
+	1833:
+	  resultado[1] := 0x311 ;
+	  resultado[2] := "*Limpa a garganta*";
+	1834:
+	  resultado[1] := 0x420 ;
+	  resultado[2] := "*Limpa a garganta*";
+	1835:
+	  resultado[1] := 0x311 ;
+	  resultado[2] := "*Limpa a garganta*";
+
 	  endcase
 	endif
 	if ( (input[7]==1) )
@@ -228,6 +411,32 @@ function GetSoundEffect(who, input)
 	400:
 	  resultado[1] := 0x421 ;
 	  resultado[2] := "*Tossindo*";
+	1828:
+	  resultado[1] := 0x421 ;
+	  resultado[2] := "*Tossindo*";
+	1829:
+	  resultado[1] := 0x312 ;
+	  resultado[2] := "*Tossindo*";
+	1830:
+	  resultado[1] := 0x421 ;
+	  resultado[2] := "*Tossindo*";
+	1831:
+	  resultado[1] := 0x312 ;
+	  resultado[2] := "*Tossindo*";
+	1832:
+	  resultado[1] := 0x421 ;
+	  resultado[2] := "*Tossindo*";
+	1833:
+	  resultado[1] := 0x312 ;
+	  resultado[2] := "*Tossindo*";
+	1834:
+	  resultado[1] := 0x421 ;
+	  resultado[2] := "*Tossindo*";
+	1835:
+	  resultado[1] := 0x312 ;
+	  resultado[2] := "*Tossindo*";
+
+
 	  endcase
 	endif
 	if ( (input[8]==1) )
@@ -238,6 +447,34 @@ function GetSoundEffect(who, input)
 	400:
 	  resultado[1] := 0x422 ;
 	  resultado[2] := "*Tossindo*";
+
+	1828:
+	  resultado[1] := 0x422 ;
+	  resultado[2] := "*Tossindo*";
+	1829:
+	  resultado[1] := 0x313 ;
+	  resultado[2] := "*Tossindo*";
+	1830:
+	  resultado[1] := 0x422 ;
+	  resultado[2] := "*Tossindo*";
+	1831:
+	  resultado[1] := 0x313 ;
+	  resultado[2] := "*Tossindo*";
+	1832:
+	  resultado[1] := 0x422 ;
+	  resultado[2] := "*Tossindo*";
+	1833:
+	  resultado[1] := 0x313 ;
+	  resultado[2] := "*Tossindo*";
+	1834:
+	  resultado[1] := 0x422 ;
+	  resultado[2] := "*Tossindo*";
+	1835:
+	  resultado[1] := 0x313 ;
+	  resultado[2] := "*Tossindo*";
+
+
+
 	  endcase
 	endif
 	if ( (input[9]==1) )
@@ -248,223 +485,872 @@ function GetSoundEffect(who, input)
 	400:
 	  resultado[1] := 0x423 ;
 	  resultado[2] := "*Chorando*";
+	1828:
+	  resultado[1] := 0x423 ;
+	  resultado[2] := "*Chorando*";
+	1829:
+	  resultado[1] := 0x314 ;
+	  resultado[2] := "*Chorando*";
+	1830:
+	  resultado[1] := 0x423 ;
+	  resultado[2] := "*Chorando*";
+	1831:
+	  resultado[1] := 0x314 ;
+	  resultado[2] := "*Chorando*";
+	1832:
+	  resultado[1] := 0x423 ;
+	  resultado[2] := "*Chorando*";
+	1833:
+	  resultado[1] := 0x314 ;
+	  resultado[2] := "*Chorando*";
+	1834:
+	  resultado[1] := 0x423 ;
+	  resultado[2] := "*Chorando*";
+	1835:
+	  resultado[1] := 0x314 ;
+	  resultado[2] := "*Chorando*";
+
 	  endcase
 	endif
 	if ( (input[10]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x31A ;
 	  resultado[2] := "*Arfando*";
-	else
+	400:
 	  resultado[1] := 0x42A ;
 	  resultado[2] := "*Arfando*";
-	endif
+	1828:
+	  resultado[1] := 0x42A ;
+	  resultado[2] := "*Arfando*";
+	1829:
+	  resultado[1] := 0x31A ;
+	  resultado[2] := "*Arfando*";
+	1830:
+	  resultado[1] := 0x42A ;
+	  resultado[2] := "*Arfando*";
+	1831:
+	  resultado[1] := 0x31A ;
+	  resultado[2] := "*Arfando*";
+	1832:
+	  resultado[1] := 0x42A ;
+	  resultado[2] := "*Arfando*";
+	1833:
+	  resultado[1] := 0x31A ;
+	  resultado[2] := "*Arfando*";
+	1834:
+	  resultado[1] := 0x42A ;
+	  resultado[2] := "*Arfando*";
+	1835:
+	  resultado[1] := 0x31A ;
+	  resultado[2] := "*Arfando*";
+
+	endcase
 	endif
 	if ( (input[11]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x31B ;
 	  resultado[2] := "*Rindo*";
-	else
+	400:
 	  resultado[1] := 0x42B ;
 	  resultado[2] := "*Rindo*";
-	endif
+	1828:
+	  resultado[1] := 0x42B ;
+	  resultado[2] := "*Rindo*";
+	1829:
+	  resultado[1] := 0x31B ;
+	  resultado[2] := "*Rindo*";
+	1830:
+	  resultado[1] := 0x42B ;
+	  resultado[2] := "*Rindo*";
+	1831:
+	  resultado[1] := 0x31B ;
+	  resultado[2] := "*Rindo*";
+	1832:
+	  resultado[1] := 0x42B ;
+	  resultado[2] := "*Rindo*";
+	1833:
+	  resultado[1] := 0x31B ;
+	  resultado[2] := "*Rindo*";
+	1834:
+	  resultado[1] := 0x42B ;
+	  resultado[2] := "*Rindo*";
+	1835:
+	  resultado[1] := 0x31B ;
+	  resultado[2] := "*Rindo*";
+
+endcase
 	endif
 	if ( (input[12]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x31C ;
 	  resultado[2] := "*Gemendo*";
-	else
+	400:
 	  resultado[1] := 0x42C ;
 	  resultado[2] := "*Gemendo*";
-	endif
+	1828:
+	  resultado[1] := 0x42C ;
+	  resultado[2] := "*Gemendo*";
+	1829:
+	  resultado[1] := 0x31C ;
+	  resultado[2] := "*Gemendo*";
+	1830:
+	  resultado[1] := 0x42C ;
+	  resultado[2] := "*Gemendo*";
+	1831:
+	  resultado[1] := 0x31C ;
+	  resultado[2] := "*Gemendo*";
+	1832:
+	  resultado[1] := 0x42C ;
+	  resultado[2] := "*Gemendo*";
+	1833:
+	  resultado[1] := 0x31C ;
+	  resultado[2] := "*Gemendo*";
+	1834:
+	  resultado[1] := 0x42C ;
+	  resultado[2] := "*Gemendo*";
+	1835:
+	  resultado[1] := 0x31C ;
+	  resultado[2] := "*Gemendo*";
+
+endcase
 	endif
 	if ( (input[13]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x31D ;
 	  resultado[2] := "*Rosnando*";
-	else
+	400:
 	  resultado[1] := 0x42D ;
 	  resultado[2] := "*Rosnando*";
-	endif
+	1828:
+	  resultado[1] := 0x42D ;
+	  resultado[2] := "*Rosnando*";
+	1829:
+	  resultado[1] := 0x31D ;
+	  resultado[2] := "*Rosnando*";
+	1830:
+	  resultado[1] := 0x42D ;
+	  resultado[2] := "*Rosnando*";
+	1831:
+	  resultado[1] := 0x31D ;
+	  resultado[2] := "*Rosnando*";
+	1832:
+	  resultado[1] := 0x42D ;
+	  resultado[2] := "*Rosnando*";
+	1833:
+	  resultado[1] := 0x31D ;
+	  resultado[2] := "*Rosnando*";
+	1834:
+	  resultado[1] := 0x42D ;
+	  resultado[2] := "*Rosnando*";
+	1835:
+	  resultado[1] := 0x31D ;
+	  resultado[2] := "*Rosnando*";
+
+
+
+endcase
 	endif
 	if ( (input[14]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x31E ;
 	  resultado[2] := "*Hey*";
-	else
+	400:
 	  resultado[1] := 0x42E ;
 	  resultado[2] := "*Hey*";
-	endif
+	1828:
+	  resultado[1] := 0x42E ;
+	  resultado[2] := "*Hey*";
+	1829:
+	  resultado[1] := 0x31E ;
+	  resultado[2] := "*Hey*";
+	1830:
+	  resultado[1] := 0x42E ;
+	  resultado[2] := "*Hey*";
+	1831:
+	  resultado[1] := 0x31E ;
+	  resultado[2] := "*Hey*";
+	1832:
+	  resultado[1] := 0x42E ;
+	  resultado[2] := "*Hey*";
+	1833:
+	  resultado[1] := 0x31E ;
+	  resultado[2] := "*Hey*";
+	1834:
+	  resultado[1] := 0x42E ;
+	  resultado[2] := "*Hey*";
+	1835:
+	  resultado[1] := 0x31E ;
+	  resultado[2] := "*Hey*";
+
+endcase
 	endif
 	if ( (input[15]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x31F ;
 	  resultado[2] := "*Solucando*";
-	else
+	400:
 	  resultado[1] := 0x42F ;
 	  resultado[2] := "*Solucando*";
-	endif
+	1828:
+	  resultado[1] := 0x42F ;
+	  resultado[2] := "*Solucando*";
+	1829:
+	  resultado[1] := 0x31F ;
+	  resultado[2] := "*Solucando*";
+	1830:
+	  resultado[1] := 0x42F ;
+	  resultado[2] := "*Solucando*";
+	1831:
+	  resultado[1] := 0x31F ;
+	  resultado[2] := "*Solucando*";
+	1832:
+	  resultado[1] := 0x42F ;
+	  resultado[2] := "*Solucando*";
+	1833:
+	  resultado[1] := 0x31F ;
+	  resultado[2] := "*Solucando*";
+	1834:
+	  resultado[1] := 0x42F ;
+	  resultado[2] := "*Solucando*";
+	1835:
+	  resultado[1] := 0x31F ;
+	  resultado[2] := "*Solucando*";
+
+endcase
 	endif
 	if ( (input[16]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x320 ;
 	  resultado[2] := "*Huh?*";
-	else
+	400:
 	  resultado[1] := 0x430 ;
 	  resultado[2] := "*Huh?*";
-	endif
+	1828:
+	  resultado[1] := 0x430 ;
+	  resultado[2] := "*Huh?*";
+	1829:
+	  resultado[1] := 0x320 ;
+	  resultado[2] := "*Huh?*";
+	1830:
+	  resultado[1] := 0x430 ;
+	  resultado[2] := "*Huh?*";
+	1831:
+	  resultado[1] := 0x320 ;
+	  resultado[2] := "*Huh?*";
+	1832:
+	  resultado[1] := 0x430 ;
+	  resultado[2] := "*Huh?*";
+	1833:
+	  resultado[1] := 0x320 ;
+	  resultado[2] := "*Huh?*";
+	1834:
+	  resultado[1] := 0x430 ;
+	  resultado[2] := "*Huh?*";
+	1835:
+	  resultado[1] := 0x320 ;
+	  resultado[2] := "*Huh?*";
+
+
+endcase
 	endif
 	if ( (input[17]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x321 ;
 	  resultado[2] := "*Beijando*";
-	else
+	400:
 	  resultado[1] := 0x431 ;
 	  resultado[2] := "*Beijando*";
-	endif
+	1828:
+	  resultado[1] := 0x431 ;
+	  resultado[2] := "*Beijando*";
+	1829:
+	  resultado[1] := 0x321 ;
+	  resultado[2] := "*Beijando*";
+	1830:
+	  resultado[1] := 0x431 ;
+	  resultado[2] := "*Beijando*";
+	1831:
+	  resultado[1] := 0x321 ;
+	  resultado[2] := "*Beijando*";
+	1832:
+	  resultado[1] := 0x431 ;
+	  resultado[2] := "*Beijando*";
+	1833:
+	  resultado[1] := 0x321 ;
+	  resultado[2] := "*Beijando*";
+	1834:
+	  resultado[1] := 0x431 ;
+	  resultado[2] := "*Beijando*";
+	1835:
+	  resultado[1] := 0x321 ;
+	  resultado[2] := "*Beijando*";
+
+endcase
 	endif
 	if ( (input[18]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x322 ;
 	  resultado[2] := "*Rindo*";
-	else
+	400:
 	  resultado[1] := 0x432 ;
 	  resultado[2] := "*Rindo*";
-	endif
+	1828:
+	  resultado[1] := 0x432 ;
+	  resultado[2] := "*Rindo*";
+	1829:
+	  resultado[1] := 0x322 ;
+	  resultado[2] := "*Rindo*";
+	1830:
+	  resultado[1] := 0x432 ;
+	  resultado[2] := "*Rindo*";
+	1831:
+	  resultado[1] := 0x322 ;
+	  resultado[2] := "*Rindo*";
+	1832:
+	  resultado[1] := 0x432 ;
+	  resultado[2] := "*Rindo*";
+	1833:
+	  resultado[1] := 0x322 ;
+	  resultado[2] := "*Rindo*";
+	1834:
+	  resultado[1] := 0x432 ;
+	  resultado[2] := "*Rindo*";
+	1835:
+	  resultado[1] := 0x322 ;
+	  resultado[2] := "*Rindo*";
+
+
+endcase
 	endif
 	if ( (input[19]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x323 ;
 	  resultado[2] := "*Negando*";
-	else
+	400:
 	  resultado[1] := 0x433 ;
 	  resultado[2] := "*Negando*";
-	endif
+	1828:
+	  resultado[1] := 0x433 ;
+	  resultado[2] := "*Negando*";
+	1829:
+	  resultado[1] := 0x323 ;
+	  resultado[2] := "*Negando*";
+	1830:
+	  resultado[1] := 0x433 ;
+	  resultado[2] := "*Negando*";
+	1831:
+	  resultado[1] := 0x323 ;
+	  resultado[2] := "*Negando*";
+	1832:
+	  resultado[1] := 0x433 ;
+	  resultado[2] := "*Negando*";
+	1833:
+	  resultado[1] := 0x323 ;
+	  resultado[2] := "*Negando*";
+	1834:
+	  resultado[1] := 0x433 ;
+	  resultado[2] := "*Negando*";
+	1835:
+	  resultado[1] := 0x323 ;
+	  resultado[2] := "*Negando*";
+
+
+
+
+endcase
 	endif
 	if ( (input[20]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x324 ;
 	  resultado[2] := "*Oh*";
-	else
+	400:
 	  resultado[1] := 0x434 ;
 	  resultado[2] := "*Oh*";
-	endif
+	1828:
+	  resultado[1] := 0x434 ;
+	  resultado[2] := "*Oh*";
+	1829:
+	  resultado[1] := 0x324 ;
+	  resultado[2] := "*Oh*";
+	1830:
+	  resultado[1] := 0x434 ;
+	  resultado[2] := "*Oh*";
+	1831:
+	  resultado[1] := 0x324 ;
+	  resultado[2] := "*Oh*";
+	1832:
+	  resultado[1] := 0x434 ;
+	  resultado[2] := "*Oh*";
+	1833:
+	  resultado[1] := 0x324 ;
+	  resultado[2] := "*Oh*";
+	1834:
+	  resultado[1] := 0x434 ;
+	  resultado[2] := "*Oh*";
+	1835:
+	  resultado[1] := 0x324 ;
+	  resultado[2] := "*Oh*";
+endcase
 	endif
 	if ( (input[21]==1) )
-	if (who.graphic == 401)
+	case(who.graphic)
+	401:
 	  resultado[1] := 0x32C ;
 	  resultado[2] := "*Oooh*";
-	else
+	400:
 	  resultado[1] := 0x43E ;
 	  resultado[2] := "*Oooh*";
-	endif
+	1828:
+	  resultado[1] := 0x43E ;
+	  resultado[2] := "*Oooh*";
+	1829:
+	  resultado[1] := 0x32C ;
+	  resultado[2] := "*Oooh*";
+	1830:
+	  resultado[1] := 0x43E ;
+	  resultado[2] := "*Oooh*";
+	1831:
+	  resultado[1] := 0x32C ;
+	  resultado[2] := "*Oooh*";
+	1832:
+	  resultado[1] := 0x43E ;
+	  resultado[2] := "*Oooh*";
+	1833:
+	  resultado[1] := 0x32C ;
+	  resultado[2] := "*Oooh*";
+	1834:
+	  resultado[1] := 0x43E ;
+	  resultado[2] := "*Oooh*";
+	1835:
+	  resultado[1] := 0x32C ;
+	  resultado[2] := "*Oooh*";
+endcase
 	endif
 	if ( (input[22]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x32D ;
 	  resultado[2] := "*Oops*";
-	else
+	400:
 	  resultado[1] := 0x43F ;
 	  resultado[2] := "*Oops*";
-	endif
+	1828:
+	  resultado[1] := 0x43F ;
+	  resultado[2] := "*Oops*";
+	1829:
+	  resultado[1] := 0x32D ;
+	  resultado[2] := "*Oops*";
+	1830:
+	  resultado[1] := 0x43F ;
+	  resultado[2] := "*Oops*";
+	1831:
+	  resultado[1] := 0x32D ;
+	  resultado[2] := "*Oops*";
+	1832:
+	  resultado[1] := 0x43F ;
+	  resultado[2] := "*Oops*";
+	1833:
+	  resultado[1] := 0x32D ;
+	  resultado[2] := "*Oops*";
+	1834:
+	  resultado[1] := 0x43F ;
+	  resultado[2] := "*Oops*";
+	1835:
+	  resultado[1] := 0x32D ;
+	  resultado[2] := "*Oops*";
+endcase
 	endif
 	if ( (input[23]==1) )
-	if (who.graphic == 401)
+	case(who.graphic)
+	401:
 	  resultado[1] := 0x32F ;
 	  resultado[2] := "*Gritando*";
-	else
+	400:
 	  resultado[1] := 0x441 ;
 	  resultado[2] := "*Gritando*";
-	endif
+	1828:
+	  resultado[1] := 0x441 ;
+	  resultado[2] := "*Gritando*";
+	1829:
+	  resultado[1] := 0x32F ;
+	  resultado[2] := "*Gritando*";
+	1830:
+	  resultado[1] := 0x441 ;
+	  resultado[2] := "*Gritando*";
+	1831:
+	  resultado[1] := 0x32F ;
+	  resultado[2] := "*Gritando*";
+	1832:
+	  resultado[1] := 0x441 ;
+	  resultado[2] := "*Gritando*";
+	1833:
+	  resultado[1] := 0x32F ;
+	  resultado[2] := "*Gritando*";
+	1834:
+	  resultado[1] := 0x441 ;
+	  resultado[2] := "*Gritando*";
+	1835:
+	  resultado[1] := 0x32F ;
+	  resultado[2] := "*Gritando*";
+endcase
 	endif
 	if ( (input[24]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x330 ;
 	  resultado[2] := "*SHHH*";
-	else
+	400:
 	  resultado[1] := 0x442 ;
 	  resultado[2] := "*SHHH*";
-	endif
+	1828:
+	  resultado[1] := 0x442 ;
+	  resultado[2] := "*SHHH*";
+	1829:
+	  resultado[1] := 0x330 ;
+	  resultado[2] := "*SHHH*";
+	1830:
+	  resultado[1] := 0x442 ;
+	  resultado[2] := "*SHHH*";
+	1831:
+	  resultado[1] := 0x330 ;
+	  resultado[2] := "*SHHH*";
+	1832:
+	  resultado[1] := 0x442 ;
+	  resultado[2] := "*SHHH*";
+	1833:
+	  resultado[1] := 0x330 ;
+	  resultado[2] := "*SHHH*";
+	1834:
+	  resultado[1] := 0x442 ;
+	  resultado[2] := "*SHHH*";
+	1835:
+	  resultado[1] := 0x330 ;
+	  resultado[2] := "*SHHH*";
+endcase
 	endif
 	if ( (input[25]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x331 ;
 	  resultado[2] := "*Suspirando*";
-	else
+	400:
 	  resultado[1] := 0x443 ;
 	  resultado[2] := "*Suspirando*";
-	endif
+	1828:
+	  resultado[1] := 0x443 ;
+	  resultado[2] := "*Suspirando*";
+	1829:
+	  resultado[1] := 0x331 ;
+	  resultado[2] := "*Suspirando*";
+	1830:
+	  resultado[1] := 0x443 ;
+	  resultado[2] := "*Suspirando*";
+	1831:
+	  resultado[1] := 0x331 ;
+	  resultado[2] := "*Suspirando*";
+	1832:
+	  resultado[1] := 0x443 ;
+	  resultado[2] := "*Suspirando*";
+	1833:
+	  resultado[1] := 0x331 ;
+	  resultado[2] := "*Suspirando*";
+	1834:
+	  resultado[1] := 0x443 ;
+	  resultado[2] := "*Suspirando*";
+	1835:
+	  resultado[1] := 0x331 ;
+	  resultado[2] := "*Suspirando*";
+
+
+endcase
 	endif
 	if ( (input[26]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x332 ;
 	  resultado[2] := "*Espirrando*";
-	else
+	400:
 	  resultado[1] := 0x444 ;
 	  resultado[2] := "*Espirrando*";
-	endif
+	1828:
+	  resultado[1] := 0x444 ;
+	  resultado[2] := "*Espirrando*";
+	1829:
+	  resultado[1] := 0x332 ;
+	  resultado[2] := "*Espirrando*";
+	1830:
+	  resultado[1] := 0x444 ;
+	  resultado[2] := "*Espirrando*";
+	1831:
+	  resultado[1] := 0x332 ;
+	  resultado[2] := "*Espirrando*";
+	1832:
+	  resultado[1] := 0x444 ;
+	  resultado[2] := "*Espirrando*";
+	1833:
+	  resultado[1] := 0x332 ;
+	  resultado[2] := "*Espirrando*";
+	1834:
+	  resultado[1] := 0x444 ;
+	  resultado[2] := "*Espirrando*";
+	1835:
+	  resultado[1] := 0x332 ;
+	  resultado[2] := "*Espirrando*";
+
+endcase
 	endif
 	if ( (input[27]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x333 ;
 	  resultado[2] := "*Sniff*";
-	else
+	400:
 	  resultado[1] := 0x445 ;
 	  resultado[2] := "*Sniff*";
-	endif
+	1828:
+	  resultado[1] := 0x445 ;
+	  resultado[2] := "*Sniff*";
+	1829:
+	  resultado[1] := 0x333 ;
+	  resultado[2] := "*Sniff*";
+	1830:
+	  resultado[1] := 0x445 ;
+	  resultado[2] := "*Sniff*";
+	1831:
+	  resultado[1] := 0x333 ;
+	  resultado[2] := "*Sniff*";
+	1832:
+	  resultado[1] := 0x445 ;
+	  resultado[2] := "*Sniff*";
+	1833:
+	  resultado[1] := 0x333 ;
+	  resultado[2] := "*Sniff*";
+	1834:
+	  resultado[1] := 0x445 ;
+	  resultado[2] := "*Sniff*";
+	1835:
+	  resultado[1] := 0x333 ;
+	  resultado[2] := "*Sniff*";
+endcase
 	endif
 	if ( (input[28]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x334 ;
 	  resultado[2] := "*Roncando*";
-	else
+	400:
 	  resultado[1] := 0x446 ;
 	  resultado[2] := "*Roncando*";
-	endif
+	1828:
+	  resultado[1] := 0x446 ;
+	  resultado[2] := "*Roncando*";
+	1829:
+	  resultado[1] := 0x334 ;
+	  resultado[2] := "*Roncando*";
+	1830:
+	  resultado[1] := 0x446 ;
+	  resultado[2] := "*Roncando*";
+	1831:
+	  resultado[1] := 0x334 ;
+	  resultado[2] := "*Roncando*";
+	1832:
+	  resultado[1] := 0x446 ;
+	  resultado[2] := "*Roncando*";
+	1833:
+	  resultado[1] := 0x334 ;
+	  resultado[2] := "*Roncando*";
+	1834:
+	  resultado[1] := 0x446 ;
+	  resultado[2] := "*Roncando*";
+	1835:
+	  resultado[1] := 0x334 ;
+	  resultado[2] := "*Roncando*";
+endcase
 	endif
 	if ( (input[29]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x335 ;
 	  resultado[2] := "*Cuspindo*";
-	else
+	400:
 	  resultado[1] := 0x447 ;
 	  resultado[2] := "*Cuspindo*";
-	endif
+	1828:
+	  resultado[1] := 0x447 ;
+	  resultado[2] := "*Cuspindo*";
+	1829:
+	  resultado[1] := 0x335 ;
+	  resultado[2] := "*Cuspindo*";
+	1830:
+	  resultado[1] := 0x447 ;
+	  resultado[2] := "*Cuspindo*";
+	1831:
+	  resultado[1] := 0x335 ;
+	  resultado[2] := "*Cuspindo*";
+	1832:
+	  resultado[1] := 0x447 ;
+	  resultado[2] := "*Cuspindo*";
+	1833:
+	  resultado[1] := 0x335 ;
+	  resultado[2] := "*Cuspindo*";
+	1834:
+	  resultado[1] := 0x447 ;
+	  resultado[2] := "*Cuspindo*";
+	1835:
+	  resultado[1] := 0x335 ;
+	  resultado[2] := "*Cuspindo*";
+
+endcase
 	endif
 	if ( (input[30]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x336 ;
 	  resultado[2] := "*Assobiando*";
-	else
+	400:
 	  resultado[1] := 0x448 ;
 	  resultado[2] := "*Assobiando*";
-	endif
+	1828:
+	  resultado[1] := 0x448 ;
+	  resultado[2] := "*Assobiando*";
+	1829:
+	  resultado[1] := 0x336 ;
+	  resultado[2] := "*Assobiando*";
+	1830:
+	  resultado[1] := 0x448 ;
+	  resultado[2] := "*Assobiando*";
+	1831:
+	  resultado[1] := 0x336 ;
+	  resultado[2] := "*Assobiando*";
+	1832:
+	  resultado[1] := 0x448 ;
+	  resultado[2] := "*Assobiando*";
+	1833:
+	  resultado[1] := 0x336 ;
+	  resultado[2] := "*Assobiando*";
+	1834:
+	  resultado[1] := 0x448 ;
+	  resultado[2] := "*Assobiando*";
+	1835:
+	  resultado[1] := 0x336 ;
+	  resultado[2] := "*Assobiando*";
+
+endcase
 	endif
 	if ( (input[31]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x337 ;
 	  resultado[2] := "*Bocejando*";
-	else
+	400:
 	  resultado[1] := 0x449 ;
 	  resultado[2] := "*Bocejando*";
-	endif
+	1828:
+	  resultado[1] := 0x449 ;
+	  resultado[2] := "*Bocejando*";
+	1829:
+	  resultado[1] := 0x337 ;
+	  resultado[2] := "*Bocejando*";
+	1830:
+	  resultado[1] := 0x449 ;
+	  resultado[2] := "*Bocejando*";
+	1831:
+	  resultado[1] := 0x337 ;
+	  resultado[2] := "*Bocejando*";
+	1832:
+	  resultado[1] := 0x449 ;
+	  resultado[2] := "*Bocejando*";
+	1833:
+	  resultado[1] := 0x337 ;
+	  resultado[2] := "*Bocejando*";
+	1834:
+	  resultado[1] := 0x449 ;
+	  resultado[2] := "*Bocejando*";
+	1835:
+	  resultado[1] := 0x337 ;
+	  resultado[2] := "*Bocejando*";
+endcase
 	endif
 	if ( (input[32]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x338 ;
 	  resultado[2] := "*Yeah*";
-	else
+	400:
 	  resultado[1] := 0x44A ;
 	  resultado[2] := "*Yeah*";
-	endif
+	1828:
+	  resultado[1] := 0x44A ;
+	  resultado[2] := "*Yeah*";
+	1829:
+	  resultado[1] := 0x338 ;
+	  resultado[2] := "*Yeah*";
+	1830:
+	  resultado[1] := 0x44A ;
+	  resultado[2] := "*Yeah*";
+	1831:
+	  resultado[1] := 0x338 ;
+	  resultado[2] := "*Yeah*";
+	1832:
+	  resultado[1] := 0x44A ;
+	  resultado[2] := "*Yeah*";
+	1833:
+	  resultado[1] := 0x338 ;
+	  resultado[2] := "*Yeah*";
+	1834:
+	  resultado[1] := 0x44A ;
+	  resultado[2] := "*Yeah*";
+	1835:
+	  resultado[1] := 0x338 ;
+	  resultado[2] := "*Yeah*";
+
+endcase
 	endif
 	if ( (input[33]==1) )
-	if (who.graphic == 401)
+	case (who.graphic)
+	401:
 	  resultado[1] := 0x339 ;
 	  resultado[2] := "*Gritando*";
-	else
+	400:
 	  resultado[1] := 0x44B ;
 	  resultado[2] := "*Gritando*";
-	endif
+	1828:
+	  resultado[1] := 0x44B ;
+	  resultado[2] := "*Gritando*";
+	1829:
+	  resultado[1] := 0x339 ;
+	  resultado[2] := "*Gritando*";
+	1830:
+	  resultado[1] := 0x44B ;
+	  resultado[2] := "*Gritando*";
+	1831:
+	  resultado[1] := 0x339 ;
+	  resultado[2] := "*Gritando*";
+	1832:
+	  resultado[1] := 0x44B ;
+	  resultado[2] := "*Gritando*";
+	1833:
+	  resultado[1] := 0x339 ;
+	  resultado[2] := "*Gritando*";
+	1834:
+	  resultado[1] := 0x44B ;
+	  resultado[2] := "*Gritando*";
+	1835:
+	  resultado[1] := 0x339 ;
+	  resultado[2] := "*Gritando*";
+
+endcase
 	endif
 
 	return resultado;

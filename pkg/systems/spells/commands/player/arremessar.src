@@ -91,21 +91,6 @@ program arremesso(params)
     endif
 
 	AP_ConsumeVital(who, "Stamina", 20);
-/*
-    Apenas quem tem hab brigador de taverna poderá arremessar pessoas // feito
-    Se for arma, a distância é forca / 10. Mais que isso, falha. // feito
-    Se for pessoa, a distancia é forca / 20.  // feito
-    Se acertar uma pessoa em outra pessoa. O dano é 20% da força da pessoa arremessada (ou baseado no hp?). // feito
-    A pessoa arremessada também sofre parte do dano. // feito
-   >>> Depois de arremessada, o arremessador perde stam baseado no dano. <<< tirei isso
-    Pra conseguir arremessar uma pessoa, precisa ser mais forte q ela. // feito
-    Pra acertar é uma chance 100 < Reflexos do cara. Se o cara tem 53 de Reflexos, então tem 47% de chance de ser acertado. // feito
-    Se acertou, calcula uma chance baseada no parry // feito
-    Se o arremesso for uma arma, entra o dano da arma arremessada. // feito
-    Se tiver espionagem, pode arremessar escondido. Se não tiver furtividade aprimorada, revela // feito
-    Se a arma arremessada tiver veneno, aplica o poison // feito
-    Arremessar gastar stamina // feito
-*/
 
 	var to_miss_chance := 50;
     if (alvo.isA(POLCLASS_MOBILE))
@@ -142,9 +127,23 @@ program arremesso(params)
 		else
             var poisonInfo := GetObjProperty(targ, "poisonInfo");
             var poison_amt := poisonInfo.dosage;
+            var poisonLvl := poisonInfo.level;
+            // Sempre que for mexer nesse timer, mexer também  no hitscript ou criar funcao e chamar em ambos
+            var poisonDuration := Cint(AP_GetSkill(who, ALCHEMY) / 20);
+            if (poisonDuration < 2)
+                poisonDuration := 2;
+            endif
+            if (temHabilidade(who, "Veneno Puro"))
+                poisonDuration := poisonDuration * 2;
+            endif
             if (poisonInfo)
                 poison_amt--;
-                TS_StartTimer(alvo, poisonInfo.name, 60, poisonInfo.level, targ);
+                if (!CheckResist(alvo, FORTITUDE, 15,-20*poisonLvl))
+                    TS_StartTimer(alvo, poisonInfo.name, poisonDuration, poisonInfo.level, targ);
+                else
+                    SendSysMessage(alvo, "Voce resistiu ao veneno", SSM_INFO);
+                    SendSysMessage(who, "O alvo resistiu ao veneno", SSM_INFO);
+                endif
             endif
             PlayMovingEffect( who, alvo, 0x22C6, 10);
             DamageFLS(alvo, dmg, DMG_PHYSICAL, who);

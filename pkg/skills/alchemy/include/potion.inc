@@ -42,7 +42,7 @@ endfunction
 function GetReagName(item)
   if (item.objtype ==  0xf7a)
      return "perola negra";
-  elseif (item.objtype == 0xf7b )
+  elseif (item.objtype == 0xf7b)
     return "musgo do sangue";
   elseif (item.objtype == 0xf84)
     return "alho";

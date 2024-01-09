@@ -13,6 +13,17 @@ include ":traps:traps";
 
 program useScript(mobile, door)
 
+	var time := Cint(GetObjProperty(door, "time"));
+	if (time) //se eh uma porta de dungeon
+		var locktime := Cint(GetObjProperty(door, "locktime"));
+		if (locktime) //se foi aberta
+			if (polcore().systime > (locktime+time)) //se o tempo atual for maior 
+				door.locked := 1; //tranca a porta novamente
+				EraseObjProperty(door, "locktime");
+			endif
+		endif
+	endif
+
 	if ( GetObjProperty(door, "TrapList") != error)
 		RunTraps(door, mobile);
 		return 0;

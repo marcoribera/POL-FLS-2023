@@ -39,7 +39,11 @@ program runScript_CharProfileRequest( params )
 	var chr := SystemFindObjectBySerial(id);
 
 	if(chr.serial == who.serial) //Verifica se o jogador clicou no profile dele ou de outro jogador.
-		
+		if(who.name == "Desconhecido" || who.name == "Incognito")
+			SendSysMessage(who, "Voce esta incognito");
+			return;
+		endif
+
 		var gump := GFCreateGump(0, 0, 640, 480);
 		GFDisposable(gump, 0);
 		GFResizePic(gump, 0, 0, 9200, 342, 319);
@@ -48,8 +52,8 @@ program runScript_CharProfileRequest( params )
 		GFResizePic(gump, 11, 34, 9270, 308, 55);
 
 		var url_txt :=  GetObjProperty(who, "url");
-		if( !url_txt) //Se não tiver a url ou descrição, deixa em branco
-			url_txt := " ";
+		if( url_txt == error || url_txt == "") //Se não tiver a url ou descrição, deixa em branco
+			url_txt := "";
 		endif
 		var txt_1 := GFTextEntry(gump, 10, 36, 311, 53, 500, url_txt, 0);
 
@@ -58,7 +62,7 @@ program runScript_CharProfileRequest( params )
 
 		var descricao_txt := GetObjProperty(who, "descricao");
 		if( !descricao_txt)
-			descricao_txt := " ";
+			descricao_txt := "";
 		endif
 		var txt_2 := 	GFTextEntry(gump, 13, 123, 302, 143,500, descricao_txt, 0);
 
@@ -77,6 +81,9 @@ program runScript_CharProfileRequest( params )
 			var descricao := GFExtractData(input, txt_2);
 
 			SendSysMessage(who, url + " " + descricao);
+			If(url == error || url == "")//Default profile picture
+				url := "https://media.discordapp.net/attachments/621351501511524353/1186245051953725450/image.png";
+			endif
 			SetObjProperty( who, "url", url);
 			SetObjProperty( who, "descricao", descricao);
 
@@ -124,8 +131,9 @@ program runScript_CharProfileRequest( params )
 
 		endif
 	elseif (chr.serial != who.serial)
-		if (chr.name == "Incognito" || chr.name == "Desconhecido")
-			var incognito_url := "https://i.ibb.co/xC4mB6Q/desconhecido.jpg";
+		var isIncognito := GetObjProperty(chr, "Incognito");
+		if (isIncognito)
+			var incognito_url := "https://th.bing.com/th/id/OIG.0XmfkJZCmPd.wGE6C9x_?pid=ImgGn&w=1024&h=1024&rs=1";
 			var incognito_descricao := "A fisionomia desse indvíduo é difícil de discernir.";
 			
 			var gump2 := GFCreateGump();
@@ -137,7 +145,7 @@ program runScript_CharProfileRequest( params )
 			GFResizePic(gump2, 4, 3, 9270, 267, 383);
 			
 			//Profile Picture
-			GFHTMLArea(gump2, 37, 41, 200, 200,"<img src=\"" + incognito_url + "\" width=\"200\" height=\"200\" >");
+			GFHTMLArea(gump2, 37, 41, 200, 200,"<img src=\"" + incognito_url + "\" width=\"200\" height=\"200\" x=\"0\" y=\"0\">");
 			
 			//Description
 			GFHTMLArea(gump2, 20, 273, 236, 100, incognito_descricao, 1, 1);

@@ -14,15 +14,16 @@ use os;
 use uo;
 use util;
 
-//include "include/findCity";
-//include "include/www";
+include ":keys:key";
 include ":containers:containers";
 include "include/say";
 include ":gumps:yesNo";
 include ":architect:include/architect";
 include ":architect:include/systemclock";
+include ":charactercreation:habilidades";
 
 const SIGENA:= 0;
+const BLOCK_OF_STONE := 0x5001;
 
 /*if (SIGENA)
   include ":mrhousing:include/housing";
@@ -40,16 +41,15 @@ var staffmode:= 0;
 var undo:= array{};
 
 program architect_gump(who)
-var arquiteto := GetObjProperty(who, "arquiteto") == 1; //PODE SER O TEM HABILIDADE, pra players q tiverem isso pra poder usar
-  if (who.cmdlevel < STAFFMODELEVEL)
-		if(!arquiteto)
-		return 0;
-		else
-	endif
-  else
-    staffmode:= 1;
-    SendSysMessage (who, "*running in staff mode*");
-  endif
+    if (who.cmdlevel < STAFFMODELEVEL)
+        if(!TemHabilidade(who, "Arquiteto")) //Habilidade de construcao necessaria para executar o comando
+            SendSysMessageEx(who, "Voce nao tem habilidade de arquiteto.", SSM_INFO);
+            return 0;
+        endif
+    else
+        staffmode := 1;
+        SendSysMessage(who, "*running in staff mode*");
+    endif
 
   if (!staffmode)
     if (GetGlobalProperty ("#architect"))
@@ -112,30 +112,27 @@ var arquiteto := GetObjProperty(who, "arquiteto") == 1; //PODE SER O TEM HABILID
 
     // create construction site borders
     for (x:= startloc[1] + 1; x <= startloc[1] + SITESIZE - 1; x:= x + 1)
-      dummy:= CreateItemAtLocation (x, startloc[2], GetWorldHeight (x, startloc[2], who.realm), 52, 1);
+      dummy:= CreateItemAtLocation (x, startloc[2], GetWorldHeight (x, startloc[2], who.realm), 52, 1, who.realm);
       dummy.saveonexit:= 0;
-      dummy:= CreateItemAtLocation (x, startloc[2] + SITESIZE, GetWorldHeight (x, startloc[2] + SITESIZE, who.realm), 52, 1);
+      dummy:= CreateItemAtLocation (x, startloc[2] + SITESIZE, GetWorldHeight (x, startloc[2] + SITESIZE, who.realm), 52, 1, who.realm);
       dummy.saveonexit:= 0;
     endfor
 
     for (y:= startloc[2] + 1; y <= startloc[2] + SITESIZE - 1; y:= y + 1)
-      dummy:= CreateItemAtLocation (startloc[1], y, GetWorldHeight (startloc[1], y), 53, 1);
+      dummy:= CreateItemAtLocation (startloc[1], y, GetWorldHeight (startloc[1], y), 53, 1, who.realm);
       dummy.saveonexit:= 0;
-      dummy:= CreateItemAtLocation (startloc[1] + SITESIZE, y, GetWorldHeight (startloc[1] + SITESIZE, y, who.realm), 53, 1);
+      dummy:= CreateItemAtLocation (startloc[1] + SITESIZE, y, GetWorldHeight (startloc[1] + SITESIZE, y, who.realm), 53, 1, who.realm);
       dummy.saveonexit:= 0;
     endfor
 
-    dummy:= CreateItemAtLocation (startloc[1], startloc[2], GetWorldHeight (startloc[1], startloc[2], who.realm), 54, 1);
+    dummy:= CreateItemAtLocation (startloc[1], startloc[2], GetWorldHeight (startloc[1], startloc[2], who.realm), 54, 1, who.realm);
     dummy.saveonexit:= 0;
     dummy:= CreateItemAtLocation (startloc[1] + SITESIZE, startloc[2], GetWorldHeight (startloc[1] + SITESIZE, startloc[2]), 52, 1, who.realm);
     dummy.saveonexit:= 0;
     dummy:= CreateItemAtLocation (startloc[1], startloc[2] + SITESIZE, GetWorldHeight (startloc[1], startloc[2] + SITESIZE), 53, 1, who.realm);
     dummy.saveonexit:= 0;
-    dummy:= CreateItemAtLocation (startloc[1] + SITESIZE, startloc[2] + SITESIZE, GetWorldHeight (startloc[1], startloc[2] + SITESIZE, who.realm), 51, 1);
+    dummy:= CreateItemAtLocation (startloc[1] + SITESIZE, startloc[2] + SITESIZE, GetWorldHeight (startloc[1], startloc[2] + SITESIZE, who.realm), 51, 1, who.realm);
     dummy.saveonexit:= 0;
-
-    // teleport player
-    var jogador := MoveObjectToLocation(who, startloc[1] + 1, startloc[2] + 1, GetWorldHeight(startloc[1] + 1, startloc[2] + 1, who.realm), who.realm, MOVEOBJECT_FORCELOCATION);
   endif
 
   // check for sub groups too large to fit in the gump
@@ -151,7 +148,7 @@ var arquiteto := GetObjProperty(who, "arquiteto") == 1; //PODE SER O TEM HABILID
   endforeach
 
   if (!choice)
-    choice:= array {0, "Walls", "Bricks", 51, 0, 0, 0, 0};
+    choice:= array {0, "Walls", "BambooWall", 527, 0, 0, 0, 0};
   endif
 
   if (!gpos)
@@ -939,11 +936,16 @@ var arquiteto := GetObjProperty(who, "arquiteto") == 1; //PODE SER O TEM HABILID
           endif
 
           foreach element in tbd
-            if (GetObjProperty (element, "#built_by_architect") != who.serial)
-              SendSysMessage (who, lang["delete_err"]);
+            if(staffmode) //Se for staff, pode deletar qualquer coisa
+                undo.append (array{2, element.objtype, element.x, element.y, element.z});
+                DestroyItem (element);
             else
-              undo.append (array{2, element.objtype, element.x, element.y, element.z});
-              DestroyItem (element);
+                if (GetObjProperty (element, "#built_by_architect") != who.serial)
+                  SendSysMessage (who, lang["delete_err"]);
+                else
+                  undo.append (array{2, element.objtype, element.x, element.y, element.z});
+                  DestroyItem (element);
+                endif
             endif
           endforeach
 
@@ -1223,11 +1225,11 @@ var arquiteto := GetObjProperty(who, "arquiteto") == 1; //PODE SER O TEM HABILID
           if (!staffmode)
             SendSysMessage (who, lang["end_confirm"]);
 
-            if (!yesNo(who, array{"Quit Architect", "without saving?"}))
+            if (!yesNo(who, array{"Sair do sistema de arquitetura", "sem salvar?"}))
               choice[1]:= 0;
               break;
             endif
-
+            //Ele sempre move o player e nao entendi, deixei assim
             MoveObjectToLocation (who, playerloc[1], playerloc[2], playerloc[3], who.realm, MOVEOBJECT_FORCELOCATION);
             EraseGlobalProperty ("#architect");
 
@@ -1449,14 +1451,17 @@ function check_coords(who, coords)
     return 1;
   endif
 
-  if ((coords.x <= startloc[1]) ||
-      (coords.x >= startloc[1] + SITESIZE))
-    SendSysMessage (who, lang["outofbounds"]);
-    return 0;
+  //Retorna a localizacao de onde esta a pessoa
+  var where := GetResidenciasRegion(who.x, who.y);
+
+  var df := opendatafile(":architect:areas");
+  if (df == error)
+      df :=  createdatafile(":architect:areas");
   endif
 
-  if ((coords.y <= startloc[2]) ||
-      (coords.y >= startloc[2] + SITESIZE))
+  var elem := df.FindElement(where);
+  //Se nao tiver a prop Name, ele da um erro para nao conseguir construir fora do contexto da area
+  if(!elem.GetProp("Name"))
     SendSysMessage (who, lang["outofbounds"]);
     return 0;
   endif
@@ -1476,37 +1481,57 @@ endfunction
 */
 function create_marked(who, x, y, z, type)
     var prop := dictionary;
-    var custo := 10; //Pedras necessarias para criar uma parede
-    var objtype := GetObjTypeByName("rock");
-    prop["objtype"] := objtype;
-    var total_rocks := AmountInContainer(who.backpack, prop);
+    var custo := 10; //Quantidade de recursos necessarios para criar uma estrutura
+    var objtype;
 
-  if (who.cmdlevel < STAFFMODELEVEL) //para staff não precisar das pedras
-  else
-    staffmode:= 1;
-  endif
+    if (who.cmdlevel > STAFFMODELEVEL) //para staff não precisar dos recursos
+        staffmode := 1;
+    endif
 
-    if (total_rocks < custo && !staffmode)
-        SendSysMessageEx(who, "Voce nao tem pedras suficientes.", SSM_INFO);
+   prop["objtype"] := get_objtype(type);
+   var total_recursos := AmountInContainer(who.backpack, prop);
+
+    if (total_recursos < custo && !staffmode)
+        SendSysMessageEx(who, "Voce nao tem recursos suficientes.", SSM_INFO);
         return;
     else
         foreach item in EnumerateItemsInContainer(who.backpack)
-            if(item.objtype == objtype)
-                DestroyItem(item);
-                custo := custo - 1;
-
-                if(custo == 0)
-                    break;
-                endif
+            if(item.objtype == prop["objtype"])
+                SubtractAmount(item, custo);
+                break;
             endif
         endforeach
 
-        SendSysMessageEx(who, "Voce usou a(s) pedra(s).", SSM_INFO);
-        var created:= CreateItemAtLocation (x, y, z, type);
+        SendSysMessageEx(who, "Voce usou o(s) recursos(s).", SSM_INFO);
+        var created:= CreateItemAtLocation (x, y, z, type, 1, who.realm);
         created.movable:= 0;
-        //  created.saveonexit:= 0;
-        //  created.usescript:= ":architect:cantuse";
+
         SetObjProperty (created, "#built_by_architect", who.serial);
+
+        if (KP_IsLockable(created))
+          var fechadura := YesNo(who, "Voce deseja por uma fechadura nesse item?");
+          if (fechadura)
+            SendSysMessageEx(who, "Escolha a fechadura para por neste item.", SSM_REQUEST);
+            var targ := Target(who);
+            if (targ)
+              if (targ.objtype == 4001)
+                if (!created.isDoor())
+                  var lvl := Cint(GetObjProperty(targ, "level"));
+                  if (!lvl)
+                    lvl := 1;
+                  endif
+                  SetObjProperty(created, "level", lvl);
+                endif
+                var lockid := CInt(GetObjProperty(targ, "LockId"));
+                SetObjProperty(created, "LockId", lockid);
+                DestroyItem(targ);
+                SendSysMessageEx(who, "Voce instalou a fechadura com sucesso.", SSM_INFO);
+              else
+                SendSysMessageEx(who, "Isto nao parece uma fechadura.", SSM_FAIL);
+              endif
+            endif
+          endif
+        endif
 
         return created;
     endif
@@ -1587,4 +1612,44 @@ function clear_site(who)
 
   return 1;
 
+endfunction
+
+function get_objtype(type)
+    var madeira_ranges := {
+    {6, 25},
+    {166, 196},
+    {541, 559},
+    {144, 165},
+    {527, 538},
+    {1685, 1732},
+    {1520, 1534},
+    {1414, 1428},
+    {1444, 1458},
+    {1474, 1519},
+    {1535, 1652},
+    {1749, 1780},
+    {2105, 2139},
+    {2150, 2168},
+    {820, 835},
+    {947, 950},
+    {2140, 2149},
+    {2186, 2187},
+    {1291, 1292},
+    {1217, 1249},
+    {1189, 1216},
+    {1185, 1188},
+    {1824, 1871},
+    {1981, 1992},
+    {1993, 2001},
+    {2170, 2173}
+    }; //Todas itens do tipo madeira
+
+    // Verifique se o valor está em algum dos intervalos de madeira
+    foreach range in madeira_ranges
+        if (type >= range[1] && type <= range[2])
+            return GetObjTypeByName("logs");
+        endif
+    endforeach
+
+    return GetObjTypeByName("Stone");
 endfunction

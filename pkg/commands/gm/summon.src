@@ -6,6 +6,7 @@ include ":gumps:gumps_ex";
 include ":gumps:requestGump";
 include ":ghaia:ghaia";
 include ":gumps:yesNo";
+include ":tn:tngumps";
 
 program gumpspawn(who, text)
 

@@ -32,3 +32,29 @@ const STAFFMODELEVEL:= 1;         // min level for staff mode
 var startloc:= array{1510, 1242, 0};
 var websites:= dictionary {"DEU" -> "http://www.uosigena.de/wiki/index.php/architect",
                            "ENG" -> "http://www.uosigena.de/wiki/index.php/architect_english"};
+
+function GetResidenciasRegion(x, y)
+
+  var df := opendatafile(":architect:areas");
+  foreach elem in (df.Keys())
+
+    var region := df.FindElement(elem);
+    var rect := region.getProp("Rect");
+    if (inrect(x, y, SplitWords(rect)))
+      return elem;
+    endif
+
+  endforeach
+
+  return "Whole_World";
+
+endfunction
+
+function InRect(x_pos, y_pos, rect)
+	var x1 := CInt(rect[1]);
+	var y1 := CInt(rect[2]);
+	var x2 := CInt(rect[3]);
+	var y2 := CInt(rect[4]);
+
+	return ( (x_pos >= x1 && x_pos <= x2) && (y_pos >= y1 && y_pos <= y2) );
+endfunction

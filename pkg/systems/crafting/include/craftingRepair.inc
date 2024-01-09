@@ -19,12 +19,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //include "include/OLD/sound";
+use os;
+include "include/imersao";
 
 function repair_item(character, what, craft_skill)
 
 var cfg;
 var reparos:=0;
 var ver_reparos:=0;
+var repairdelay:=3;
 
 
 if (craft_skill == METALWORKING)
@@ -73,12 +76,16 @@ if (cint(hisskill)>=cint(item_skill))
 
   if((what.hp <= 0) || (what.quality <= 0.1) || (!what.quality))
     SendSysMessage(character, "O fragil material quebrou quando voce manipulou ele.");
+    Imersao(character, "susto");
+    Imersao(what, "vidro");
     DestroyItem(what);
     return;
   endif
 
   if(what.quality <= damageamount)
     SendSysMessage(character, "O fragil material quebrou quando voce manipulou ele.");
+    Imersao(character, "susto");
+    Imersao(what, "vidro");
     DestroyItem(what);
     return;
   endif
@@ -86,6 +93,8 @@ if (cint(hisskill)>=cint(item_skill))
 
   if((what.hp <= 0) || (what.quality <= 0.1) || (!what.quality))
     SendSysMessage(character, "O fragil material quebrou quando voce manipulou ele.");
+    Imersao(character, "susto");
+    Imersao(what, "vidro");
     DestroyItem(what);
     return;
   endif
@@ -102,16 +111,20 @@ if (cint(hisskill)>=cint(item_skill))
     if (thehp + repaired_amount > what.maxhp)
       what.hp := what.maxhp;
       EraseObjProperty(what, "swings");
+      AnimRepair(character, craft_skill, repairdelay);
       SendSysMessage(character, "Voce consertou o item completamente.");
     else
       what.hp := thehp + repaired_amount;
+      AnimRepair(character, craft_skill, repairdelay);
       SendSysMessage(character, "Voce consertou o item.");
     endif
 
     if ((what.hp <= 0) || (what.quality <= 0.1) || (!what.quality))
       SendSysMessage(character, "O fragil material quebrou quando voce manipulou ele.");
       DestroyItem(what);
-      return;
+      Imersao(character, "susto", 1,0,1);
+      Imersao(character, "vidro");
+    return;
     endif
 
   else
@@ -120,6 +133,8 @@ if (cint(hisskill)>=cint(item_skill))
     if (thehp <= damage_amount)
       DestroyItem(what);
       SendSysMessage(character, "Voce falhou e destruiu o item.");
+      Imersao(character, "susto", 1,0,1);
+      Imersao(character, "vidro");
     endif
 
     thehp := thehp - damage_amount;
@@ -132,6 +147,8 @@ if (cint(hisskill)>=cint(item_skill))
     if(thehp <= 0)
       DestroyItem(what);
       SendSysMessage(character, "Voce falhou e destruiu o item.");
+      Imersao(character, "susto", 1,0,1);
+      Imersao(character, "vidro");
     else
       SendSysMessage(character, "Voce falhou e danificou o item.");
     endif
@@ -139,6 +156,8 @@ if (cint(hisskill)>=cint(item_skill))
     if ((what.hp <= 0) || (what.quality <= 0.1) || (!what.quality))
       SendSysMessage(character, "O fragil material quebrou quando voce manipulou ele.");
       DestroyItem(what);
+      Imersao(character, "susto", 1,0,1);
+      Imersao(character, "vidro");
       return;
     endif
 endif
@@ -161,6 +180,17 @@ else
 	SendSysMessage(character, "Este item nao pode ser reparado: " + GetObjProperty(what,"reparos") + " ponto(s) de reparo restante(s).");
 endif
 
+endfunction
+
+function AnimRepair(who, skill, delay)
+  for i:=1 to delay
+    case (craft_skill)
+      METALWORKING: Imersao(who, "mw"); break;
+      DomesticWork: Imersao(who, "dw"); break;
+      WOODWORKING: Imersao(who, "ww"); break;
+    endcase
+    sleep(2);
+  endfor
 endfunction
 
 function CreateRepairDeed(who, scroll, craft_skill)

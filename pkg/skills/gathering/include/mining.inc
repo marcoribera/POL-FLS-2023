@@ -5,27 +5,33 @@ include ":attributes:attributes";
 include "include/client";
 include "include/say";
 include ":chestspawn:treasurechest";
+include ":timedScripts:timedScripts";
 
 const MAX_RESOURCE_AMOUNT := 10;
 
 function Garimpeiro(who)
-	var rand := randomint(200);
+	var rand := RandomFloat(200);
 	if(rand < 2)
-		var cfg := ReadConfigFile(":gems:itemdesc");
-		var keys := GetConfigStringKeys( cfg );
-		SendSysMessageEx(who, "Voce achou uma pedra preciosa!", SSM_INFO);
-		CreateItemInBackPack(who, keys[RandomInt(keys.size()+1)], 1);
-		PrinttextAbove(who, "*encontra algo reluzente*");
-		SkillCheck(who, GATHERING, -1);
+		EncontraGema(who);
 	elseif(TemHabilidade(who, "Minerador Talentoso") && rand < 10)
-		var cfg := ReadConfigFile(":gems:itemdesc");
-		var keys := GetConfigStringKeys( cfg );
-		SendSysMessageEx(who, "So alguem talentoso acharia essa pedra preciosa!", SSM_INFO);
-		CreateItemInBackPack(who, keys[RandomInt(keys.size()+1)], 1);
-		PrinttextAbove(who, "*encontra algo reluzente*");
-		SkillCheck(who, GATHERING, -1);
+		EncontraGema(who);
+		SendSysMessageEx(who, "So um minerador talentoso acharia essa pedra preciosa!", SSM_INFO);
 	endif
 	return 1;
+endfunction
+
+function EncontraGema(who)
+	var cfg := ReadConfigFile(":gems:itemdesc");
+	var keys := GetConfigStringKeys( cfg );
+	var gema := keys[RandomInt(keys.size())];
+	while (!gema)
+		gema := keys[RandomInt(keys.size())];
+	endwhile
+	SendSysMessageEx(who, "Voce achou uma pedra preciosa!", SSM_INFO);
+	CreateItemInBackPack(who, gema, 1);
+	PrintTextAbove(who, "*encontra algo reluzente*");
+	SkillCheck(who, GATHERING, -1);
+	return;
 endfunction
 
 function GetMapsInBackpack(who)
@@ -107,7 +113,7 @@ var chestz := who.z;
 	else
 		who.frozen := 1;
 		PrintTextAbove(who, "*Comeca a cavar o tesouro*");
-		SendSysMessage(who, "NÃO DESLOGUE, A ANIM DEMORA UM POUCO, aguarde o boneco terminar de cavar!", SSM_INFO);
+		SendSysMessageEx(who, "NAO DESLOGUE, A ANIM DEMORA UM POUCO, aguarde o boneco terminar de cavar!", SSM_INFO);
 		var i := 1;
 		var mex := who.x;
 		var mey := who.y;
@@ -244,19 +250,24 @@ var chestz := who.z;
 		elseif (maplevel == 5)
 			CreateNpcFromTemplate(":brainai:Dracolich", who.x, who.y, who.z, 0, who.realm);
         endif
-
-		chest.movable := 1;
+		chest.movable := 0;
+			//SetObjProperty(item, "#DestroyAt", ReadGameClock() + 60); 
       		EraseObjProperty(map, "level");
       		EraseObjProperty(map, "chestx");
       		EraseObjProperty(map, "chesty");
       		SetObjProperty(map, "Solved", 1);
       		map.name := "Mapa de tesouro [Completado por " + who.name + "]";
-
+			//TS_StartTimer(chest, "treasure_chest_destroy", 600);
+			detach();
+			ChestDestroy (chest);
     endif
 
+endfunction
 
-
-
+function ChestDestroy( chest )
+sleep(600);
+DestroyItem(chest);
+print("o chest foi destruido");
 endfunction
 
 function GetRange( who );

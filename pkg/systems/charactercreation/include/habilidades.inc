@@ -398,6 +398,11 @@ function comprarHabilidade(who, item, nv:=-1)
 		if (!temRequisito(who, escolhida))
 			return 0;
 		endif
+        if (escolhida == "Visao verdadeira" && who.graphic != 1831 && GetObjProperty(who, "chardata").povo != "Drow")
+            SendSysMessageEx(who, "Apenas drows femeas podem comprar essa habilidade.", SSM_FAIL);			
+            return 0;
+        endif
+
 		SendSysMessageEx(who, "Voce comprou a habilidade: " + escolhida, SSM_INFO);
 		if (escolhida == "Grande Fortitude")
 			var hitsmod := cint(GetObjProperty(who, "hitsmod"));
@@ -431,6 +436,15 @@ function comprarHabilidade(who, item, nv:=-1)
 		elseif (escolhida == "Inimigo Predileto")
 			var inimigo := RadioGump(who, 300, 380, "Escolha seu Inimigo Predileto", array{"Dragon","Undead","Giants","GiantAnimal","EvilHuman","Goblin"});
 			SetObjProperty(who, "InimigoPredileto", inimigo);
+		elseif (escolhida == "Inventario Ferreiro")
+			var inventario := RadioGump(who, 300, 380, "Selecione a especialidade", array{"Armas","Escudos","Armaduras"});
+			Start_Script(":charactercreation:habilidades/inventario", {who, "ferreiro", inventario});
+		elseif (escolhida == "Inventario Carpinteiro")
+			var inventario := RadioGump(who, 300, 380, "Selecione a especialidade", array{"Equipamentos","Mobilia"});
+			Start_Script(":charactercreation:habilidades/inventario", {who, "carpinteiro", inventario});
+		elseif (escolhida == "Inventario Costureiro")
+			var inventario := RadioGump(who, 300, 380, "Selecione a especialidade", array{"Couro","Tecido"});
+			Start_Script(":charactercreation:habilidades/inventario", {who, "costureiro", inventario});
 		elseif (escolhida == "Senso da Natureza")
 			setObjProperty(who, "empatiacomanimais", 1);
 		elseif(escolhida == "Protecao Elemental Kitahne")
@@ -438,7 +452,7 @@ function comprarHabilidade(who, item, nv:=-1)
 			who.resist_cold_mod  := who.resist_cold_mod + 25;
 			who.resist_poison_mod  := who.resist_poison_mod + 25;
 			who.resist_energy_mod  := who.resist_energy_mod + 25;
-		elseif(escolhida == "Aura de Corrupcao" || escolhida == "Devocao")
+		elseif(escolhida == "Senhor do Medo" || escolhida == "Devocao")
             var equips := EnumeratePhysicalItemsInMobile(who);
             //foreach para pegar todos os equips no corpo e remover as penalidades
             foreach equip in equips
@@ -453,7 +467,7 @@ function comprarHabilidade(who, item, nv:=-1)
 		habs[nivel] := 2;
 		SetObjProperty(who, "buyhab", habs);
 		SetObjProperty(who, "myhabs", myhabs);
-		return 1;
+		//return 1;
 	else
 		SendSysMessageEx(who, "Falta comprar a habilidade level 4 ou esse nivel ainda nao tem habilidades.", SSM_FAIL);
 	endif

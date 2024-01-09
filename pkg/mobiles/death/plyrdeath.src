@@ -43,6 +43,7 @@ program core_chrDeath(params)
 		endif
 	endif
 
+	SetObjProperty(corpse, "url", GetObjProperty(corpse, "old_url"));//Ajuste no portrait
 
 	var corpse_name := corpse.desc;
 	corpse_name["A corpse of"] := "corpo de";
@@ -98,24 +99,21 @@ endfunction
 
 function WakeUp(ghost, corpse)
 	var serialC := ghost.serial;
-	if ( !MoveObjectToLocation(ghost, corpse.x, corpse.y, corpse.z, corpse.realm, MOVEOBJECT_FORCELOCATION) )
-		SendSysMessage(ghost, "Ocorreu algum problema ao retornar seu personagem para o corpo. Solicite ajude da Staff");
-
-		if (!CInt(GetObjProperty(corpse, "morto")) && !CInt(GetObjProperty(ghost, "morto")))
-			//Seta a prop para caso dê algum erro para o player acordar
-			SetObjProperty(corpse, "erro_retornar_corpo", 1);
-			//Seta o decay para nunca = 0
-			corpse.decayat := 0;
-
-			foreach item in EnumerateItemsInContainer(corpse)
-				if (item.container == corpse)
-					item.decayat := 0;
-				endif
-			endforeach
-
-			return;
-		endif
-	endif
+	//Aqui ele tenta mover o fantasma para revier, ele vai tentar 10 vezes
+	var tentativas := 1;
+    for(tentativas := 1; tentativas <= 11; tentativas := tentativas + 1)
+        var result := MoveObjectToLocation(ghost, corpse.x, corpse.y, corpse.z, corpse.realm, MOVEOBJECT_FORCELOCATION);
+        if (result) //Caso de sucesso, sai do for e continua a vida, ou morte
+            break;
+        else
+            if(tentativas == 11) //Caso esteja na 11 tentativa, ele vai mover o corpo para o lugar dos mortos e reviver o char la mesmo
+                MoveObjectToLocation(corpse, 4216, 1849, 1);
+                MoveObjectToLocation(ghost, corpse.x, corpse.y, corpse.z, corpse.realm, MOVEOBJECT_FORCELOCATION);
+                break;
+            endif
+        endif
+        MoveObjectToLocation(corpse, corpse.x + tentativas, corpse.y + tentativas, corpse.z, corpse.realm, MOVEOBJECT_FORCELOCATION);
+    endfor
 
 	Resurrect(ghost);
 	var ressrobe := GetEquipmentByLayer(ghost, 0x16);

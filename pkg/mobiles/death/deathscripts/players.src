@@ -15,6 +15,8 @@ include ":charactercreation:habilidades";
 include ":attributes:advanceCheck";
 include ":charactercreation:resists";
 include ":charactercreation:createchar";
+include ":containers:storageAreas";
+include ":keys:key";
 
 program death(params)
 
@@ -87,6 +89,7 @@ program death(params)
 			//if (getCoolDown(ghost, "deathtime") == 0 )
 			if (killer.npctemplate && killer.script  == ":ghaia:tamed")  //se for tamed nao tira dp
 			else
+				EraseObjProperty(ghost, "#Casting");
 				AP_ConsumeVital(ghost, "DP", 10);
 				SendSysMessage(ghost, "Voce perdeu 1 DP e agora tem " + AP_GetVital(ghost, "DP")/10);
 			endif
@@ -126,33 +129,37 @@ program death(params)
 				var tipo := "morreu";
 				var coords := {corpse.x, corpse.y};
 				var nome := GetObjProperty(ghost, "nome_inicial");
-				Start_script(":DiscordWebhook:discord", {tipo, nome, ghost.acctname, killer.name, region, coords});			
+				ProcurarItensQuarto(ghost);
+				Start_script(":DiscordWebhook:discord", {tipo, nome, ghost.acctname, killer.name, region, coords});
+				SetCooldown(corpse, "morto_recentemente", 300);
 				SetObjProperty(corpse, "morto", 1);
 				SetObjProperty(ghost, "morto", 1);
 				SetObjProperty(corpse, "deathtimer", polcore().systime);
-				//var dias := GetObjProperty(ghost, "createdate");			
+				//var dias := GetObjProperty(ghost, "createdate");
                 var dias := idadeCharInDays(ghost);
-                print("dias: " + dias);
-                if (dias < 2 || dias == error || dias > 1000) // byte hell, char recriado muitas vzes tava vindo com 19k+ dias 
+                if (dias < 2 || dias == error || dias > 1000) // byte hell, char recriado muitas vzes tava vindo com 19k+ dias
                     dias := 2;
                 endif
-				SendSysMessage(ghost, "Seu proximo char comecara com " + Cint((dias / 2)) + " dias de cap.");
-			    dias := Cint((dias / 2)) * 86400; // 24h em segundos
-				dias := (polcore().systime - dias);
+	            SendSysMessage(ghost, "Seu proximo char comecara com " + Cint((dias / 2)) + " dias de cap.");
+	            FindAccount(ghost.acctname).setprop("heir_days", CInt(dias/2));
+    	    	SetObjProperty(ghost, "heir_days", CInt(dias/2)); //24horas*60minutos*60segundos = 86400 segundos //esse é só pra ver se foi calculado certo
+
+	            var skill_heir := get_heir_skills(ghost);
+
+	            FindAccount(ghost.acctname).setprop("herdeiro", skill_heir);
+	            if(FindAccount(ghost.acctname).getprop("herdado")) //limpa a variavel caso exista
+		            FindAccount(ghost.acctname).eraseprop("herdado");
+		        endif
+				//dias := (polcore().systime - dias);
                 //if (dias == error)
                 //    dias := polcore().systime;
                 //endif
-                print("dias: " + dias);
-                print("time_now: " + polcore().systime);
-				var logs := FindAccount(ghost).getprop("mortelog");
-				if (logs == error || logs < dias)
-					logs := dias;
-				endif
-				FindAccount(ghost.acctname).setprop("mortelog", logs);
-                FindAccount(ghost.acctname).setprop("heir_days", dias);
-                var skill_heir := get_heir_skills(ghost);
-                FindAccount(ghost.acctname).setprop("herdeiro", skill_heir);
-                
+
+				//var logs := FindAccount(ghost).getprop("mortelog");
+				//if (logs == error || logs < dias)
+				//	logs := dias;
+				//endif
+				//FindAccount(ghost.acctname).setprop("mortelog", logs);
 				sleep(5);
 				return 1;
 			endif
@@ -164,7 +171,7 @@ program death(params)
         var tipo := "pvp";
         var coords := {corpse.x, corpse.y};
         var nome := GetObjProperty(killer, "nome_inicial");
-        var nome_ghost := GetObjProperty(ghost, "nome_inicial"); 
+        var nome_ghost := GetObjProperty(ghost, "nome_inicial");
         Start_script(":DiscordWebhook:discord", {tipo, nome, killer.acctname, nome_ghost, region, coords, ghost.acctname});
     endif
         SendSysMessage(ghost, "Voce desmaiou.");
@@ -215,21 +222,31 @@ program death(params)
 			SetObjProperty(corpse, "morto", 1);
 			SetObjProperty(ghost, "morto", 1);
 			SetObjProperty(corpse, "deathtimer", polcore().systime);
+			SetCooldown(corpse, "morto_recentemente", 300);
+			ProcurarItensQuarto(ghost);
             var dias := idadeCharInDays(ghost);
-            print("dias: " + dias);
-            if (dias < 2 || dias == error || dias > 1000) // byte hell, char recriado muitas vzes tava vindo com 19k+ dias 
+            if (dias < 2 || dias == error || dias > 1000) // byte hell, char recriado muitas vzes tava vindo com 19k+ dias
                 dias := 2;
             endif
             SendSysMessage(ghost, "Seu proximo char comecara com " + Cint((dias / 2)) + " dias de cap.");
-            dias := Cint((dias / 2)) * 86400; // 24h em segundos
-			var logs := FindAccount(ghost).getprop("mortelog");
-            if (logs == error || logs < dias)
-                logs := dias;
-            endif
-            FindAccount(ghost.acctname).setprop("mortelog", logs);
-            FindAccount(ghost.acctname).setprop("heir_days", dias);
+            FindAccount(ghost.acctname).setprop("heir_days", CInt(dias/2));
+	    	SetObjProperty(ghost, "heir_days", CInt(dias/2)); //24horas*60minutos*60segundos = 86400 segundos //esse é só pra ver se foi calculado certo
+
             var skill_heir := get_heir_skills(ghost);
+
             FindAccount(ghost.acctname).setprop("herdeiro", skill_heir);
+            if(FindAccount(ghost.acctname).getprop("herdado")) //limpa a variavel caso exista
+	            FindAccount(ghost.acctname).eraseprop("herdado");
+	        endif
+
+            //dias := Cint((dias / 2)) * 86400; // 24h em segundos
+            //dias := (polcore().systime - dias);
+
+			//var logs := FindAccount(ghost).getprop("mortelog");
+            //if (logs == error || logs < dias)
+            //    logs := dias;
+            //endif
+            //FindAccount(ghost.acctname).setprop("mortelog", logs);
 			return 1;
 		endif
 		tempo := tempo - 1;
@@ -403,7 +420,7 @@ function get_heir_skills(who)
     if (chardata.kit == "Sabe-Tudo")
         primarias_sum *= 2;
     endif
-    var bonus_primarias := (primarias_sum - 80) / 4;
+    var bonus_primarias := (primarias_sum - 80) / 4; //metade da media de pontos upados acima de 40 nas primarias
 
     var secundarias := GetSecundarias(who);
     var count := 0;
@@ -413,7 +430,7 @@ function get_heir_skills(who)
         count++;
         secundarias_sum += Cint(AP_GetTrueSkill(who, skill));
     endforeach
-    var bonus_secundarias := (secundarias_sum - (count * 20)) / (count * 2);
+    var bonus_secundarias := (secundarias_sum - (count * 20)) / (count * 2); //metade da media de pontos upados acima de 20 nas secundárias
 
     var terciarias := GetTerciarias(who);
     var terciarias_sum := 0;
@@ -422,7 +439,7 @@ function get_heir_skills(who)
         count++;
         terciarias_sum += Cint(AP_GetTrueSkill(who, skill));
     endforeach
-    var bonus_terciarias := (terciarias_sum / (count * 2));
+    var bonus_terciarias := (terciarias_sum / (count * 2)); //metade da media de pontos upados acima de 0 ns terciárias
 
     var skills_bonus := struct;
     skills_bonus.+bonus_primarias := bonus_primarias;
@@ -437,4 +454,89 @@ function idadeCharInDays(character)// para 10000 deu 292 segundos 300
     var tempoDevida:= tempoAgora - criadoEm;
     var dias := cint(tempoDevida/(86400));//24horas*60minutos*60segundos = 86400 segundos
     return dias;
+endfunction
+
+function MoverItensQuartoParaNpc(x, y, z, r, player, npc)
+	var objects := ListItemsNearLocation( x, y, z, 10, r);
+	var backpack;
+	if (player && player != error)
+		backpack := CreateItemAtLocation( x, y, z, hex(3701), 1, r);
+		backpack.desc := player.name;
+	endif
+	foreach obj in objects
+		if (CheckLosBetween( x, y, z, obj.x, obj.y, obj.z, r))
+			if (GetObjProperty(obj, "crafterserial"))
+				if (player && player != error)
+					obj.movable := 1;
+					MoveItemToContainer( obj, backpack);
+				else
+					DestroyItem(obj);
+				endif
+
+
+			elseif (obj.IsA(POLCLASS_CONTAINER))
+				var container := EnumerateItemsInContainer( obj, ENUMERATE_IGNORE_LOCKED );
+				foreach item in container
+				if (player && player != error)
+					item.movable := 1;
+					MoveItemToContainer( item, backpack);
+				else
+					DestroyItem(item);
+				endif
+					sleepms(20);
+				endforeach
+			endif
+		endif
+		sleepms(20);
+	endforeach
+	if (player && player != error)
+		if ( !npc.backpack )
+			Set_Critical(1);
+			var newpack := CreateItemAtLocation(npc.x, npc.y, npc.z, "backpack", 1, npc.realm);
+			if ( !EquipItem(npc, newpack) )
+				DestroyItem(newpack);
+				return 0;
+			endif
+		endif
+		MoveItemToContainer( backpack, npc.backpack);
+	endif
+	return 1;
+endfunction
+
+function ProcurarItensQuarto(who)
+	var innkeepers := getglobalproperty("InnKeeper");
+
+	if (innkeepers[1] == error)
+		return 1;
+	endif
+
+	var x := 1;
+	while (x <= innkeepers.size())
+		var npc := SystemFindObjectBySerial(cint(innkeepers[x]));
+		if (npc.errortext)
+			innkeepers.erase(x);
+			SetGlobalProperty("InnKeeper", innkeepers);
+		endif
+
+		var quartos := GetObjProperty(npc, "quartos");
+
+		var i := 1;
+		while (i <= quartos.size())
+			if (quartos[i].inquilino == who.serial)
+				var quarto := quartos[i];
+				var cent := quarto.centro;
+				if (cent[1])
+					MoverItensQuartoParaNpc(cent[1], cent[2], cent[3], npc.realm, who, npc);
+					if (cent[4])
+						MoverItensQuartoParaNpc(cent[4], cent[5], cent[6], npc.realm, who, npc);
+					endif
+				endif
+			endif
+			i := i + 1;
+			sleepms(20);
+		endwhile
+
+		x := x+1;
+		sleepms(20);
+	endwhile
 endfunction

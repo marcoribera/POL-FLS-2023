@@ -99,14 +99,14 @@ function MiningLoop(who, scoop, my_x, my_y, my_facing, location_name)
 		if (resource_amount < 0)
 			resource_amount := 0;
 		endif
-		if(amt>1)
+		/*if(amt>1)
 			SendSysMessageEx(who, "Voce pegou "+amt+" porcoes de areia.", SSM_INFO);
 		else
 			SendSysMessageEx(who, "Voce pegou uma porcao de areia.", SSM_INFO);
-		endif
+		endif*/
+		SendSysMessageEx(who, "Voce pegou {} porcao de areia.".format(amt), SSM_INFO);
 		SetResource(resource_type, location_elem, resource_amount); //diminui a quantidade de areia disponivel no local
-CreateItemInBackPack(who, SCOOP_OF_SAND, amt);
-SendSysMessageEx(who, "Voce pegou um pouco de areia.", SSM_INFO);
+		CreateItemInBackPack(who, SCOOP_OF_SAND, amt);
 		return 1;
 	else
 		SendSysMessageEx(who, "Voce e incapaz de pegar areia aqui.", SSM_FAIL);

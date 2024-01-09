@@ -48,7 +48,7 @@ function Boss1Fight(opponent, alerted := 0)
 				var end := ReadGameClock() + 10;
 				while (CoordinateDistance(me.x, me.y, corpo.x, corpo.y) < areasize + 5 && end > ReadGameClock())
 					RunAwayFromLocation(corpo.x, corpo.y);
-					sleepms(100);
+					sleepms(3);
 				endwhile
 			endif
 			break;
@@ -77,6 +77,7 @@ function Boss1Fight(opponent, alerted := 0)
 
 		if (hasSpecial(me))
 			DoSpecial(me);
+			sleep(100);
 		endif
 
 		if (!GetCooldown(me, "flamewave"))

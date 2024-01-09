@@ -45,6 +45,11 @@ program SpellStarter(params)
 		endif
 	endif
 
+    if (GetCooldown(mobile, "silence"))
+        SendSysMessageEx(mobile, "Voce esta silenciado e nao pode usar magias.");
+        return 1;
+    endif
+
 	//se magia nao for de swordmage e tiver kit de swordmage, retorna.
 	if ( (spellinfo.spelltype != "Swordmage") && (TemHabilidade(mobile, "Concentracao Aprimorada")))
 		SendSysMessageEx(mobile, "Voce nao pode utilizar essas magias.", SSM_FAIL);
@@ -104,7 +109,7 @@ program SpellStarter(params)
 		FailSpell(mobile);
 		EraseObjProperty(mobile, "#Casting");
 		return 0;
-	elseif ( !EquipmentCheck(mobile) && !mobile.npctemplate && !(TemHabilidade(mobile, "Aura de Corrupcao") || !TemHabilidade(mobile, "Devocao") || !TemHabilidade(mobile, "Concentracao Aprimorada")) )
+	elseif ( !EquipmentCheck(mobile) && !mobile.npctemplate && !(TemHabilidade(mobile, "Senhor do Medo") || !TemHabilidade(mobile, "Devocao") || !TemHabilidade(mobile, "Concentracao Aprimorada")) )
 		SendSysMessageEx(mobile, "Suas maos precisam estar livres para gesticular os componentes gestuais necessarios para a magia.", SSM_FAIL);
 		mobile.frozen := 0;
 		EraseObjProperty(mobile, "#medding");
@@ -174,7 +179,7 @@ program SpellStarter(params)
 
 		while(cycles)
 			// If mobile is injured and does not have the protection spell on, fail the spell
-			if ( (orig_hp > AP_GetVital(mobile, "Hits") &&  !TemHabilidade(mobile, "Concentracao Aprimorada")) )
+			if ( (orig_hp > AP_GetVital(mobile, "Hits") &&  (!TemHabilidade(mobile, "Concentracao Aprimorada") || !TemHabilidade(mobile, "Concentracao Macabra"))) )
 				SendSysMessageEx(mobile, "Voce nao conseguiu se concentrar o suficiente para invocar esta magia.", SSM_FAIL);
 				FailSpell(mobile);
 				if (TemHabilidade(mobile, "Mago Precavido"))
@@ -228,7 +233,7 @@ program SpellStarter(params)
 
 		while ( delay > 0 )
 			// If mobile is injured and does not have the protection spell on, fail the spell
-			if ( (orig_hp > AP_GetVital(mobile, "Hits") && !TemHabilidade(mobile, "Concentracao Aprimorada") ) )
+			if ( (orig_hp > AP_GetVital(mobile, "Hits") && (!TemHabilidade(mobile, "Concentracao Aprimorada") || !TemHabilidade(mobile, "Concentracao Macabra")) ) )
 				SendSysMessageEx(mobile, "Voce nao conseguiu se concentrar o suficiente para invocar esta magia.", SSM_FAIL);
 				FailSpell(mobile);
                 if (!GetObjProperty(mobile, "#magiasilenciosa"))
@@ -277,7 +282,7 @@ program SpellStarter(params)
 
 		mobile.frozen := 0;
 		if(TemHabilidade(mobile, "Sensibilidade Profana"))
-		attribute := MECHANICALAPITUDE;
+		    attribute := MECHANICALAPITUDE;
 		endif
 
 		var skill_check := SkillCheck(mobile, attribute, difficulty);
@@ -289,7 +294,8 @@ program SpellStarter(params)
 					SubtractAmount(scroll, 1);
 				else
 					var chance := RandomIntMinMax(0,100);
-					if (chance > attribute)
+                    var attrib_value := AP_GetTrueSkill(mobile, attribute);
+					if (chance > attrib_value) // Mais alta skill, maior a dificuldade de subtrair o scroll
 						SubtractAmount(scroll, 1);
 					endif
 				endif

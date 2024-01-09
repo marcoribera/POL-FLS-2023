@@ -122,7 +122,7 @@ function HairColor(who, byref chardata)
 	//endif
 
 	//se for mulher tira a barba
-	if ( who.graphic == 401 )
+	if ( who.graphic == 401 || who.graphic == 1829 || who.graphic == 1831 || who.graphic == 1833 || who.graphic == 1835 )
 		var barba := GetEquipmentByLayer(who, LAYER_BEARD);
 		DestroyItem(barba);
 	endif

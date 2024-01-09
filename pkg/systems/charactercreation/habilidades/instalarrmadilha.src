@@ -25,7 +25,7 @@ program instalararmadilha(who)
 	    return 0;
     endif
 
-    if ((!trap.objtype == 0x6076) || (!trap.objtype == 0xff97))
+    if ((!trap.objtype == 0x6076) || (!trap.objtype == 0xff97) || (!trap.objtype == 0x1BE6))
         SendSysMessageEx(who, "Isto nao e uma armadilha.", SSM_FAIL);
         return 0;
     endif

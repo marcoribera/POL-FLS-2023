@@ -6,7 +6,7 @@ include "include/say";
 include ":charactercreation:habilidades";
 
 program reset(params)
-
+print("Inicio");
 	var who := params[2];
 	var npc := params[1];
 	var habs := GetObjProperty(who, "myhabs");
@@ -30,7 +30,7 @@ program reset(params)
 		GFTextLine(gump, 50, y, 1153, hab);
 		var requisitos := retornaRequisitos( hab);
 		foreach req in requisitos
-		print("" + SubStr(req, 1, 3));
+		//print("" + SubStr(req, 1, 3));
 			if (SubStr(req, 1, 3)!="kit")
 			y := y + 20;
 			GFTextLine(gump, 70, y, SSM_REQUEST, req);
@@ -80,6 +80,10 @@ program reset(params)
 			endforeach
 		endforeach
 	
+			if ("Inventario" in remover)
+			SendSysMessage(who, "ATENCAO: Ao apagar essa hab TODAS as recipes suas serao apagadas!");
+		endif
+	
 		var classe := GetObjProperty(who, "classe");
 		var resethab := cint(GetObjProperty(who, "resethab"));
 		resethab := resethab + 1;
@@ -91,7 +95,7 @@ program reset(params)
 		if (!targ)
 			SendSysMessage(who, "Cancelado.", SSM_FAIL);
 			return;
-		endif
+		endif		
 		if (targ.objtype == 47715)
 			if ( targ.amount < custo )
 				SendSysMessageEx(who, "Voce nao tem moedas suficientes.", SSM_INFO);
@@ -109,6 +113,9 @@ program reset(params)
 		endif
 		SetObjProperty(who, "resethab", resethab);
 
+if ("Inventario" in remover)
+EraseobjProperty(who, "recipes");
+endif
 
 		foreach dep in remover
 			var nvl := cint(NivelHabilidade(dep, classe))*2;

@@ -12,13 +12,30 @@ include ":tn:cooldown";
 program taunt(who)
 
 	PrintText(who, "*urra*");
-	if (who.graphic == 401)
+	case (who.graphic)
+    401:
 		PlaySoundEffect( who, 0x339 );
-	else
+    400:
 		PlaySoundEffect( who, 0x44B );
-	endif
+    1828:
+		PlaySoundEffect( who, 0x44B );
+    1829:
+		PlaySoundEffect( who, 0x339 );
+    1830:
+		PlaySoundEffect( who, 0x44B );
+    1831:
+		PlaySoundEffect( who, 0x339 );
+    1832:
+		PlaySoundEffect( who, 0x44B );
+    1833:
+		PlaySoundEffect( who, 0x339 );
+    1834:
+		PlaySoundEffect( who, 0x44B );
+    1835:
+		PlaySoundEffect( who, 0x339 );
+	endcase
 	PerformAction(who, ANIM_HIT);
-        var nearby := ListMobilesNearLocation( who.x ,who.y, who.z, 8);
+        var nearby := ListMobilesNearLocation( who.x ,who.y, who.z, 8, who.realm);
         var provoke_times := cint(AP_GetSkill(who, PARRY)/20);
         var i := 0;
         while(i < provoke_times)

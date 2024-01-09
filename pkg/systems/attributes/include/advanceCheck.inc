@@ -97,7 +97,7 @@ function CheckStatAdvancement(mobile, stat_name, stat_mult)
 	if ( chance < 1.0 )
 		chance := 1.0;
 	endif
-	SkillDbgMsg(mobile, "Chance: "+chance);
+	SkillDbgMsg(mobile, "Chance Stat: "+chance);
 	SkillDbgMsg(mobile, "---");
 	var random := RandomFloat(100.0);
 	SkillDbgMsg(mobile, "Check %age: "+random);
@@ -184,6 +184,15 @@ function CheckSkillAdvance(mobile, skill_name, award_diff, pass_chance)
 				return;
 			endif
 		endif
+	endif
+
+    if (!GetObjProperty(mobile, "fichaRP"))
+		var chardata := GetObjProperty(mobile, "chardata");
+			if (chardata != error)
+				SkillDbgMsg(mobile,"nao tem ficharp!");
+				SendSysMessage(mobile, "FACA sua ficharp para poder upar!");
+				return;
+			endif
 	endif
 
 	if ( GetObjProperty(mobile, "NoGains") ) //se tiver sem upar skill

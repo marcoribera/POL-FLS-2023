@@ -188,9 +188,13 @@ function CalculateDamage(defender, type, dmg)
 			resist := resist + (AP_GetTrueSkill(defender,PARRY)/1000); // Ganha até +10% de bonus
 		endif
 		if (IsRaging(defender) && TemHabilidade(defender, "Pele de Rocha"))
-			if (resist < 0.5)
-				resist := 0.5;
+			if (resist < 0.6)
+				resist := 0.6;
 			endif
+        elseif (TemHabilidade(defender, "Pele de Rocha"))
+            if (resist < 0.3)
+                resist := 0.3;
+            endif
 		endif
 	endif
 
@@ -305,7 +309,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 			SkillCheck(who, SURVIVAL, -1);
 		endif
 	else
-		tatics := CDbl(AP_GetSkill(who, TACTICS))/200.0; //Armazena o valor da skill que afeta dano
+		tatics := CDbl(AP_GetSkill(who, TACTICS))/100.0; //Armazena o valor da skill que afeta dano
 	endif
 
 	//Bonus STR
@@ -453,7 +457,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 		endif
 		if (temHabilidade(who, "Furia Primitiva"))
 			if (GetObjProperty(who, "metamorfose") != error)
-				other:= other + 0.5; //50% de bonus - balanceamento depois da mudanca de calculo do dano
+				other:= other + 1.0; //50% de bonus - balanceamento depois da mudanca de calculo do dano
 				PrintText(who, "*enfurecido*");
 			endif
 		endif
@@ -463,7 +467,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 			other := other + 0.15*inimigos; //15% de bonus - balanceamento depois da mudanca de calculo do dano
 		endif
 		if (GetCooldown(who, "furiamortal"))
-			var bonus := AP_GetVitalMaximumValue(who, HITS) / AP_GetVital(who, HITS)*1.5;
+			var bonus := (AP_GetVitalMaximumValue(who, HITS) - AP_GetVital(who, HITS))/150.0;
 			other := other + bonus;
 		endif
 	endif
@@ -514,7 +518,8 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 
 	//Multiplicador de tactics X multiplicador de força X multiplicadores de habilidades e itens X Multiplicador de buff X multiplicador de Debuff
 	//dmg := CInt(dmg*(1.0+(2*tatics))*(1.0+str)*(1.0+(weapon+other))*(inimigo_predileto)*(1.0+blessbonus)*(1.0-reducao_dano));
-	dmg := CInt(dmg*Pow(1.0+tatics,2.0)*(1.0+str)*(1.0+(weapon+other))*(inimigo_predileto)*(1.0+blessbonus)*(1.0-reducao_dano));
+	//dmg := CInt(dmg*Pow(1.0+tatics,1.5)*(1.0+str)*(1.0+(weapon+other))*(inimigo_predileto)*(1.0+blessbonus)*(1.0-reducao_dano));
+	dmg := CInt(dmg * (Pow(1.0+tatics,1.5) + str) * (1.0+(weapon+other+blessbonus)) * (inimigo_predileto) * (1.0-reducao_dano));
 	if (dmg < 1)
 		dmg := 1;
 	endif
