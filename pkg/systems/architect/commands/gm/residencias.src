@@ -22,9 +22,9 @@ program ConfigArchitect(who)
 	endif
 
 	var i := 1;
-	foreach mina in (areasdf.keys())
+	foreach area in (areasdf.keys())
 		y := y+ 15;
-		GFTextLine(gump, 35, y, 1153, ""+mina);
+		GFTextLine(gump, 35, y, 1153, ""+area);
 		GFAddButton(gump, 20, y+2, 2117, 2118, 1, 400+i);
 		i := i + 1;
 	endforeach
@@ -35,11 +35,13 @@ program ConfigArchitect(who)
 	if (input == 100)
 
 		var  nome := RequestGump(who, "Escolha o nome da area");
-		var rect :=  RequestGump(who, "Qual o rect da area?");
+		var rect :=  RequestGump(who, "Qual o rect da area (x1 y1 x2 y2 realm)?");
+		SendSysMessage(who, "Atencao!!! x1 e y1 tem que ser menor que x2 e y2");
+		SendSysMessage(who, "O jogador deve seguir essas regras para conseguir construir.");
 
-		var mina := areasdf.createelement(""+nome);
-		mina.setprop("Name", nome);
-		mina.setprop("Rect", rect);
+		var area := areasdf.createelement(""+nome);
+		area.setprop("Name", nome);
+		area.setprop("Rect", rect);
 
 	elseif(input >= 400)
 
@@ -64,7 +66,9 @@ program ConfigArchitect(who)
 			SendSysMessage(who, "Area deletada.");
 		elseif (input2 == 200)
 			var  nome := RequestGump(who, "Escolha o nome da area", "",elem.getprop("Name"));
-			var rect :=  RequestGump(who, "Qual o rect da area?","", elem.getprop("Rect"));
+			var rect :=  RequestGump(who, "Qual o rect da area (x1 y1 x2 y2 realm)?","", elem.getprop("Rect"));
+			SendSysMessage(who, "Atencao!!! x1 e y1 tem que ser menor que x2 e y2");
+			SendSysMessage(who, "O jogador deve seguir essas regras para conseguir construir.");
 
 			elem.setprop("Name", nome);
 			elem.setprop("Rect", rect);

@@ -7,6 +7,6 @@ include "include/say";
 program manobra(attacker)
 
 	SendSysMessageEx(attacker, "Voce virou um fantasma!", SSM_INFO);
-	TS_StartTimer(attacker, "ghost", 600);
+	TS_StartTimer(attacker, "ghost", 60);
 
 endprogram  

@@ -621,7 +621,7 @@ function CalculateHitChance(attacker, defender)
     if (TemHabilidade(attacker, "Danca das Sombras"))
         hit_chance := hit_chance + dancer_bonus;
 	endif
-    if (GetCooldown(defender, "spectre") > 0)
+    if (GetCooldown(defender, "shadowdancer_blur") > 0)
         hit_chance := hit_chance - dancer_bonus;
     endif
 

@@ -337,3 +337,49 @@ function RemoveFromArray(the_array, delete_what)
 
 	return the_array;
 endfunction
+
+/*
+ * FindAllElemInArray(byref the_array, find_what)
+ *
+ * Purpose
+ * Finds the all instances of something in an array.
+ *
+ * Parameters
+ * the_array:   Array to search.
+ * find_what:   What to look for.
+ *
+ * Return value
+ * Returns all elem of what its searching
+ * Returns 0 if 'find_what' was not found.
+ *
+ */
+function FindAllElemInArray(byref the_array, find_what, return_index := 0)
+    if ( Lower(TypeOf(the_array)) != "array" )
+        return error{"errortext":="Object passed was not an array."};
+    endif
+
+    var to_return := array{};
+    foreach index in ( the_array )
+        if ((TypeOf(find_what) == "Struct" || TypeOf(index) == "Struct") || (TypeOf(index) == "Dictionary" || TypeOf(find_what) == "Dictionary"))
+            foreach key in (find_what.Keys())
+                if (index.Exists(key) && find_what[key] == index[key])
+					if (return_index)
+                   		to_return.append(_index_iter);
+					else
+                   		to_return.append(index);
+					endif
+                endif
+                sleepms(2);
+            endforeach
+        elseif ( index == find_what )
+			   to_return.append(index);
+        endif
+        sleepms(2);
+    endforeach
+
+	if (to_return.size() >= 1)
+		return to_return;
+	endif
+	
+    return 0;
+endfunction

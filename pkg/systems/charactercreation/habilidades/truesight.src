@@ -14,18 +14,18 @@ program truesight(who)
         Return 0;
     endif
 
-    var nearby := ListMobilesNearLocation( who.x ,who.y, who.z, range, who.realm);
+    var nearby := ListMobilesNearLocationEx( who.x ,who.y, who.z, range,LISTEX_FLAG_HIDDEN + LISTEX_FLAG_CONCEALED, who.realm);
     foreach char in nearby
-        if (char.hidden || char.concealed && char.cmdlevel < 1)
+        if (char.hidden == 1 || char.concealed == 1 && char.cmdlevel < 2)
             char.hidden := 0;
             char.concealed := 0;
             
             var duration := cint(AP_GetSkill(who, MAGICLORE)/10);
             TS_StartTimer(char, "paralysis", duration);
 
-            PlayObjectCenteredEffect(char, 0x6D4B, 5, 50);
+            PlayObjectCenteredEffect(char, 0x6D4B, 10, 10);
             PrintTextAbove(char, "*revelado*");
-            sleepms(500);
+            sleepms(20);
         endif
     endforeach
 

@@ -27,7 +27,7 @@ program SpawnThatStuff( me, region )
         var spawnregion := reagspawn[ i ];
         var spawngroups := GetConfigStringArray( spawnregion, "group" );
         var realm := cstr(GetConfigString( spawnregion, "realm" ));
-        print("realm: "+realm);
+
         foreach spawngroup in spawngroups
             var groupstring := splitwords(spawngroup);
             var groupname := groupstring[1];

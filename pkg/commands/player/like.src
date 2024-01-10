@@ -20,7 +20,7 @@ program like(who, param)
     endif
 
     if(param == "ver")
-        SendSysMessage(who, "Voce tem " + GetObjProperty(who, "#likes"));
+        SendSysMessage(who, "Voce tem " + GetObjProperty(who, "likes") + " likes");
         return;
     endif
 
@@ -37,16 +37,16 @@ program like(who, param)
         return;
     endif
 
-    if (GetObjProperty(targ, "#likes") == error)
-        SetObjProperty(targ, "#likes", 1);
+    if (GetObjProperty(targ, "likes") == error)
+        SetObjProperty(targ, "likes", 1);
         SendSysMessage(who, "Voce deu um like em outro jogador.");
-        SendSysMessage(targ, "Voce ganhou um like por seu rp! Seu total agora e " + GetObjProperty(targ, "#likes") + " likes");
+        SendSysMessage(targ, "Voce ganhou um like por seu rp! Seu total agora e " + GetObjProperty(targ, "likes") + " likes");
     else
-        var likes := GetObjProperty(targ, "#likes");
+        var likes := GetObjProperty(targ, "likes");
 
-        SetObjProperty(targ, "#likes", likes + 1 );
+        SetObjProperty(targ, "likes", likes + 1 );
         SendSysMessage(who, "Voce deu um like em outro jogador.");
-        SendSysMessage(targ, "Voce ganhou um like por seu rp! Seu total agora e " + GetObjProperty(targ, "#likes") + " likes");
+        SendSysMessage(targ, "Voce ganhou um like por seu rp! Seu total agora e " + GetObjProperty(targ, "likes") + " likes");
     endif
 
 endprogram

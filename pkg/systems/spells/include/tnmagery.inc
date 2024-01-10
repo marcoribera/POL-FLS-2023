@@ -639,6 +639,7 @@ function WritespellInfo(who, byref spellinfo)
 	spellinfo.+name := GetConfigString( elem, "Name" );
 	spellinfo.+powerwords := GetConfigString( elem, "PowerWords" );
 	spellinfo.+prayer := GetConfigStringArray( elem, "Prayer" );
+    spellinfo.+circle := GetConfigStringArray( elem, "Circle" );
 	spellinfo.+alvo := GetConfigString( elem, "Target" );
 	spellinfo.+type := "Outro";
 	spellinfo.+range := GetConfigString( elem, "Range" );

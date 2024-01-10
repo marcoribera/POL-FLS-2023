@@ -6,18 +6,33 @@ include "include/client";
 include "include/say";
 include "include/dungeons";
 include ":tn:cooldown";
+include ":taming:taming";
 
 program truesight(who)
     var range := cint(AP_GetSkill(who, MAGICLORE)/5);
 	var festa := who.party;
 
     var nearby := ListMobilesNearLocation( who.x ,who.y, who.z, range, who.realm);
+    var pets := ListPetsNear(who, range);
+    var tamed;
+    var summoned;
+    //var masterserial := getObjProperty(mobile, "owner");
+    //var master := SystemFindObjectBySerial(masterserial);
+    PerformAction(who, ANIM_CAST_AREA);
+
+    foreach member in festa
+        if (member.serial != who.serial)
+            tamed := GetObjProperty(member, "TamedPets");
+            summoned := GetObjProperty(member, "SummonedPets");
+        endif
+    endforeach
     foreach char in nearby
-        if (!(char in (festa.members)))
-            if (char != who)
+        var char_owner := GetObjProperty(char, "owner");
+        if (!(char in (festa.members) || char == who))
+            if (!(char.serial in tamed) && !(char in pets) && !(char.serial in summoned) && !(char in who.party.members) && !(char_owner == who.serial))
                 var duration := cint(AP_GetSkill(who, MAGICLORE)/8);
                 TS_StartTimer(char, "paralysis", duration);
-
+                PlayObjectCenteredEffect(char, 0x54F7, 10, 30);
                 // todo Play animation sparkles pra ficar bonito
                 PrintTextAbove(char, "*atormentado*");
 

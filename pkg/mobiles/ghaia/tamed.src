@@ -484,6 +484,22 @@ endif
 		tameinfo := "* " +me.name+" "+GetHappy(happy)+"*";
 		PrintTextAbove(me, tameinfo);
 		return;
+	elseif(ev.item.graphic == 3701 || ev.item.graphic == 2482)
+		if ((EnumerateItemsInContainer(ev.item)).size() > 0)
+			SendSysMessage(ev.source, "Voce precisa esvaziar a mochila antes de coloca-la na montaria.");
+			return;
+		endif
+		if ( me.graphic == 228 )
+			SetObjProperty(me, "beforepack", me.graphic);
+			me.graphic := 291;
+			DestroyItem(ev.item);
+			PrintText(ev.source,"*prende uma mochila no cavalo*");
+		elseif ( me.graphic == 220)
+			SetObjProperty(me, "beforepack", me.graphic);
+			me.graphic := 292;
+			DestroyItem(ev.item);
+			PrintText(ev.source,"*prende uma mochila na llama*");
+		endif
 	else
 		SendSysMessage(ev.source, "Nao pode comer isso!");
 		return;
@@ -491,30 +507,6 @@ endif
 
 //endif
 
-if ( ev.item.objtype IN {2482, 3701} && !(me.graphic in pack_animals) ) //usar backpack em montaria para transformar em animal de carga
-		if ((EnumerateItemsInContainer(ev.item)).size() > 0)
-			SendSysMessage(ev.source, "Voce precisa esvaziar a mochila antes de coloca-la na montaria.");
-			return;
-		endif
-		if ( me.npctemplate == ":brainai:Horse3" )
-			SetObjProperty(me, "beforepack", me.graphic);
-			me.graphic := 291;
-			DestroyItem(ev.item);
-			PrintText(ev.source,"*prende uma mochila no cavalo*");
-		elseif ( me.npctemplate == ":brainai:Llama" )
-			SetObjProperty(me, "beforepack", me.graphic);
-			me.graphic := 292;
-			DestroyItem(ev.item);
-			PrintText(ev.source,"*prende uma mochila na llama*");
-		endif
-		//if(IsMountable(me.graphic))
-			//mount := 1;
-		//else
-			//mount := 0;
-		//endif
-//else
-		//SendSysMessage(ev.source, "Nao pode dar esse item BURRO!");
-endif
 endfunction
 
 
@@ -774,7 +766,6 @@ function ProcessDoubleClick(ev)
 				me.graphic := GetObjProperty(me, "beforepack");
 				CreateItemInBackpack(ev.source, "backpack");
 				EraseObjProperty(me, "beforepack");
-
 			endif
 		elseif (targ.mobile)
 			var gump := GFCreateGump(220, 70);
