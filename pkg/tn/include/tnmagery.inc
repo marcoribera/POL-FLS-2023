@@ -613,68 +613,116 @@ function GetSpellDuration(skill)
 
 endfunction
 
-function WritespellInfo(who, scroll, byref spellinfo)
-	var cfg;	
+//function WritespellInfo(who, scroll, byref spellinfo)
+//	var cfg;	
 
-	//scrolls mesmo
-	if (scroll.isa(POLCLASS_ITEM))
-		if (scroll.objtype == 0x6117)
-			cfg := ReadConfigFile(":spells:config/necrospells");
-			spellinfo.+type := "necro";
-		elseif (scroll.objtype == 0x6116)
-			cfg := ReadConfigFile(":spells:config/tnspells");
-			spellinfo.+type := "mage";
-		elseif (scroll.objtype == 0x6118)
-			cfg := ReadConfigFile(":spells:config/swordmagespells");
-			spellinfo.+type := "swordmage";
-		elseif (scroll.objtype == 24832)
-			cfg := ReadConfigFile(":spells:config/tnspells");
-			spellinfo.+type := "mage";
-		elseif (scroll.objtype == 24833)
-			cfg := ReadConfigFile(":spells:config/necrospells");
-			spellinfo.+type := "necro";
-		endif
-	else
-		//varinhas
-		if ( scroll == 999) //wand
-			cfg := ReadConfigFile(":spells:config/tnspells");
-			spellinfo.+type := "mage";
-		else 
-			var cfgname := GetBookScripts(scroll);
-			//sendsysmessage(who, "cfgname " + cfgname);
-			cfg := ReadConfigFile(cfgname);
-			spellinfo.+spelltype := scroll;
-		endif
-	endif
+//	//scrolls mesmo
+//	if (scroll.isa(POLCLASS_ITEM))
+//		if (scroll.objtype == 0x6117)
+//			cfg := ReadConfigFile(":spells:config/necrospells");
+//			spellinfo.+type := "necro";
+//		elseif (scroll.objtype == 0x6116)
+//			cfg := ReadConfigFile(":spells:config/tnspells");
+//			spellinfo.+type := "mage";
+//		elseif (scroll.objtype == 0x6118)
+//			cfg := ReadConfigFile(":spells:config/swordmagespells");
+//			spellinfo.+type := "swordmage";
+//		elseif (scroll.objtype == 24832)
+//			cfg := ReadConfigFile(":spells:config/tnspells");
+//			spellinfo.+type := "mage";
+//		elseif (scroll.objtype == 24833)
+//			cfg := ReadConfigFile(":spells:config/necrospells");
+//			spellinfo.+type := "necro";
+//		endif
+//	else
+//		//varinhas
+//		if ( scroll == 999) //wand
+//			cfg := ReadConfigFile(":spells:config/tnspells");
+//			spellinfo.+type := "mage";
+//		else 
+//			var cfgname := GetBookScripts(scroll);
+//			//sendsysmessage(who, "cfgname " + cfgname);
+//			cfg := ReadConfigFile(cfgname);
+//			spellinfo.+spelltype := scroll;
+//		endif
+//	endif
 	
-	//sendsysmessage(who, "cfg" + cfg + " " + spellinfo.id);
+//	//sendsysmessage(who, "cfg" + cfg + " " + spellinfo.id);
 	
+//	if (!cfg)
+//	//	SendSysMessageEx(who, "spell.cfg nao encontrado", SSM_FAIL);
+//		return;
+//	endif
+//	var elem := FindConfigElem(cfg, spellinfo.id);
+//	//sendsysmessage(who, "elem " + elem);
+//	if (elem == error)
+//	//	SendSysMessageEx(who, "spellid nao encontrado " + spellinfo.id, SSM_FAIL);
+//		return;
+//	endif
+
+//	spellinfo.+name := GetConfigString( elem, "Name" );
+//	spellinfo.+powerwords := GetConfigString( elem, "PowerWords" );
+//	spellinfo.+alvo := GetConfigString( elem, "Target" );
+//	spellinfo.+type := "Outro";
+//	spellinfo.+range := GetConfigString( elem, "Range" );
+//	spellinfo.+targtype := GetConfigString( elem, "TargetType" );
+//	spellinfo.+mana := GetConfigInt( elem, "Mana" );
+//	spellinfo.+delay := GetConfigInt( elem, "Delay" );
+//	spellinfo.+difficulty := GetConfigInt( elem, "Difficulty" );
+//	spellinfo.+description := GetConfigString( elem, "Desc" );
+//	spellinfo.+script := GetConfigString( elem, "SpellScript" );
+//	spellinfo.+reagents := GetConfigStringDictionary(elem, "RegCost");
+
+//	//sendsysmessage(who, " " + spellinfo.script);
+
+//endfunction
+
+function WritespellInfo(byref spellinfo, cfg := ":magery:config/mage")
+	cfg := ReadConfigFile(cfg);
 	if (!cfg)
-	//	SendSysMessageEx(who, "spell.cfg nao encontrado", SSM_FAIL);
-		return;
+		return 0;
 	endif
-	var elem := FindConfigElem(cfg, spellinfo.id);
-	//sendsysmessage(who, "elem " + elem);
+
+	var spell_id := spellinfo;
+	if(TypeOf(spell_id) == TypeOf( struct{} ) )
+		spell_id := spellinfo.id;
+	endif
+	
+	var elem := FindConfigElem(cfg, spell_id);
 	if (elem == error)
-	//	SendSysMessageEx(who, "spellid nao encontrado " + spellinfo.id, SSM_FAIL);
-		return;
+		return 0;
 	endif
 
-	spellinfo.+name := GetConfigString( elem, "Name" );
-	spellinfo.+powerwords := GetConfigString( elem, "PowerWords" );
-	spellinfo.+alvo := GetConfigString( elem, "Target" );
-	spellinfo.+type := "Outro";
-	spellinfo.+range := GetConfigString( elem, "Range" );
-	spellinfo.+targtype := GetConfigString( elem, "TargetType" );
-	spellinfo.+mana := GetConfigInt( elem, "Mana" );
-	spellinfo.+delay := GetConfigInt( elem, "Delay" );
-	spellinfo.+difficulty := GetConfigInt( elem, "Difficulty" );
+	spellinfo := struct{};
+	spellinfo.+id 				:= spell_id;
+	spellinfo.+name        := GetConfigString( elem, "Name" );
+	spellinfo.+powerwords  := GetConfigStringArray( elem, "PowerWords" );
+	spellinfo.+alvo        := GetConfigString( elem, "Target" );
+	spellinfo.+type        := GetConfigString( elem, "Type" );
+	spellinfo.+range       := GetConfigString( elem, "Range" );
+	spellinfo.+mana        := GetConfigInt( elem, "Mana" );
+	spellinfo.+delay       := GetConfigInt( elem, "Delay" );
+	spellinfo.+difficulty  := GetConfigInt( elem, "Difficulty" );
 	spellinfo.+description := GetConfigString( elem, "Desc" );
-	spellinfo.+script := GetConfigString( elem, "SpellScript" );
-	spellinfo.+reagents := GetConfigStringDictionary(elem, "RegCost");
+	spellinfo.+script      := GetConfigString( elem, "SpellScript" );
+	spellinfo.+reagents    := GetConfigStringDictionary(elem, "RegCost");
+	spellinfo.+align       := GetConfigStringDictionary(elem, "Align");
+	spellinfo.+flavortext  := GetConfigString( elem, "FlavorText" );
+	spellinfo.+cycles      := GetConfigInt( elem, "Cycles" );
+	spellinfo.+cooldown    := GetConfigInt( elem, "Cooldown" );
+	spellinfo.+circle      := GetConfigInt( elem, "Circle" );
+	spellinfo.+charges     := GetConfigInt( elem, "Charges" );
+	spellinfo.+radius      := GetConfigInt( elem, "Radius" );
+	spellinfo.+powered_move      := GetConfigInt( elem, "PoweredMove" );
+	spellinfo.+pericia     := StrReplace(GetConfigString( elem, "Pericia"), " ", "_");
+	spellinfo.+targettype     := GetConfigString( elem, "TargetType" );
+	if (spellinfo.flavortext == error)
+		spellinfo.flavortext := "";
+	else
+		spellinfo.flavortext := "<I> "  + spellinfo.flavortext + " </I>";
+	endif
 
-	//sendsysmessage(who, " " + spellinfo.script);
-
+	return 1;
 endfunction
 
 function WriteSpelldescription(who, byref spellinfo)

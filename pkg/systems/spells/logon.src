@@ -22,6 +22,11 @@ program Logon(who)
 	if (e == error)
 		Printtextabove(who, " " + e);
 	endif
+    var magia := GetObjProperty(who, "chardata").magia;
+   if (magia == "Shaman" && !GetProcess(GetObjProperty(who, "#clericpid")))
+        print("Entrei logon spellssss");
+      Start_Script(":spells:powerWords", array{who});
+   endif
 
 	return 1;
 endprogram

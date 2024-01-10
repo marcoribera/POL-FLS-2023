@@ -240,7 +240,6 @@ function CalculateResearchTime(byref spellinfo)
 endfunction
 
 function CastSpell(mobile, spellinfo, targ)
-
 	//sendsysmessage(mobile, " " + spellinfo.script);
 	//se for um spell com script (ou seja o novo sistema) executa o script e retorna, caso o contrario executa o de magias custom
 	if (spellinfo.script != error)
@@ -623,6 +622,10 @@ function WritespellInfo(who, byref spellinfo)
 	//scrolls mesmo
 	cfg := ReadConfigFile(":spells:config/allspells");
 
+    if (GetObjProperty(who, "chardata").magia == "Shaman")
+        cfg := ReadConfigFile(":spells:config/shamanspells");
+        spellinfo.used := 1;
+    endif
 	//sendsysmessage(who, "cfg" + cfg + " " + spellinfo.id);
 
 	if (!cfg)

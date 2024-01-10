@@ -15,7 +15,7 @@ include ":gumps:yesNo";
 program PlantSeed(who, seed)
 
 	var canplant := 0;
-	foreach item in ListItemsNearLocation(who.x, who.y, who.z, 0)
+	foreach item in ListItemsNearLocation(who.x, who.y, who.z, 0, who.realm)
 		if ( item.objtype == 0x31F4 ) //dirtpatch
 			canplant := 1;
 		endif
@@ -27,7 +27,7 @@ program PlantSeed(who, seed)
 		return 1;
 	endif
 
-	foreach item in ListItemsNearLocation(who.x, who.y, who.z, 0)
+	foreach item in ListItemsNearLocation(who.x, who.y, who.z, 0, who.realm)
 		if ( item.IsPlant() )
 			SendSysMessage(who, "Ja existe uma planta crescendo aqui.");
 			return;
@@ -49,7 +49,7 @@ program PlantSeed(who, seed)
 	endif
 
 	if ( SkillCheck(who, DomesticWork, difficulty, award_diff) > 0 )
-		var grower := CreateItemAtLocation(who.x, who.y, who.z+1, GROWTH_UNIT, 1);
+		var grower := CreateItemAtLocation(who.x, who.y, who.z+1, GROWTH_UNIT, 1, who.realm);
 		grower.SetGrowerType(seed.objtype);
 		SendSysMessage(who, "Voce plantou a semente.");
 		grower.SetWaterAmount(100);
