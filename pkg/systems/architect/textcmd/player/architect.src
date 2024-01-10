@@ -1452,7 +1452,7 @@ function check_coords(who, coords)
   endif
 
   //Retorna a localizacao de onde esta a pessoa
-  var where := GetResidenciasRegion(who.x, who.y);
+  var where := GetResidenciasRegion(who);
 
   var df := opendatafile(":architect:areas");
   if (df == error)
