@@ -1452,7 +1452,7 @@ function check_coords(who, coords)
   endif
 
   //Retorna a localizacao de onde esta a pessoa
-  var where := GetResidenciasRegion(who.x, who.y);
+  var where := GetResidenciasRegion(who);
 
   var df := opendatafile(":architect:areas");
   if (df == error)
@@ -1503,7 +1503,11 @@ function create_marked(who, x, y, z, type)
         endforeach
 
         SendSysMessageEx(who, "Voce usou o(s) recursos(s).", SSM_INFO);
-        var created:= CreateItemAtLocation (x, y, z, type, 1, who.realm);
+        var z_real := z;
+        if(who.realm == "britannia_alt") //O mapa novo tem uma diferenca de -60 no Z, por isso tem esse tratamento
+          z_real := z - 60;
+        endif
+        var created:= CreateItemAtLocation (x, y, z_real, type, 1, who.realm);
         created.movable:= 0;
 
         SetObjProperty (created, "#built_by_architect", who.serial);
