@@ -52,7 +52,7 @@ program UsePlough(who, plough)
 endprogram
 
 function FoundPlant(targ)
-	foreach item in ListItemsAtLocation(targ.x, targ.y, targ.z)
+	foreach item in ListItemsAtLocation(targ.x, targ.y, targ.z, targ.realm)
 		if ( item.IsPlant() )
 			if ( !GetObjProperty(item, "gmplant") )
 				return item;
@@ -79,7 +79,7 @@ endfunction
 function PloughDirt(who, targ)
 		if ( SkillCheck(who, DomesticWork, 30) > 0 )
 		SendSysMessage(who, "Voce conseguiu arar a terra com sucesso.");
-		CreateItemAtLocation(targ.x, targ.y, GetWorldHeight(targ.x,targ.y), "dirt", 1);
+		CreateItemAtLocation(targ.x, targ.y, GetWorldHeight(targ.x,targ.y), "dirt", 1, targ.realm);
 	else
 		SendSysMessage(who, "Voce e incapaz de continuar utilizando essa ferramenta bem para arar a terra.");
 	endif
@@ -97,7 +97,7 @@ function CanPlough(targ)
 		var config := ReadConfigFile(":farming:config/plough");
 		config := config["Valid"];
 		print(" " + config);
-		var land_scape := CStr(GetMapInfo(targ.x, targ.y).landtile);
+		var land_scape := CStr(GetMapInfo(targ.x, targ.y, targ.realm).landtile);
 		if ( targ.objtype )
 			if ( CStr(targ.objtype) in GetConfigStringArray(config, "static") )
 		 		return 1;
