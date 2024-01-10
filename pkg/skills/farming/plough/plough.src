@@ -79,7 +79,7 @@ endfunction
 function PloughDirt(who, targ)
 		if ( SkillCheck(who, DomesticWork, 30) > 0 )
 		SendSysMessage(who, "Voce conseguiu arar a terra com sucesso.");
-		CreateItemAtLocation(targ.x, targ.y, GetWorldHeight(targ.x,targ.y), "dirt", 1, targ.realm);
+		CreateItemAtLocation(targ.x, targ.y, GetWorldHeight(targ.x,targ.y, targ.realm), "dirt", 1, targ.realm);
 	else
 		SendSysMessage(who, "Voce e incapaz de continuar utilizando essa ferramenta bem para arar a terra.");
 	endif
