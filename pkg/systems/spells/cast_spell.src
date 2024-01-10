@@ -33,7 +33,6 @@ program SpellStarter(params)
 	var targ := params[4];
 	var sens := TemHabilidade(mobile, "Sensibilidade Profana");
 
-
 	if (spellinfo.id != error) //le o cfg pra escrever a info
 		writeSpellInfo(mobile, spellinfo);
 	endif
@@ -146,7 +145,7 @@ program SpellStarter(params)
 		//EraseObjProperty(mobile, "#Medding");
 		if (!mobile.npctemplate)
 			if (spellinfo.powerwords ) //checa powerwords
-				if (GetObjProperty(mobile, "#magiasilenciosa") == error)
+				if (GetObjProperty(mobile, "#magiasilenciosa") == error || scroll == "Shaman")
 					PrintText(mobile, spellinfo.powerwords);
 				endif
 			endif

@@ -7,24 +7,24 @@ include "include/sysEvent";
 include ":tn:tngumps";
 include "include/say";
 include ":attributes:attributes";
-include ":spells:tnmagery";
+//include ":spells:tnmagery";
+include "include/tnmagery";
 include ":timeUtils:time";
 
 const SPELL_BTN := 200;
 
 program orderSpells(who, item)
-print("Entrei");
-   // GetObjProperty(who, "chardata").caracteristicas
-   if (GetObjProperty(who, "chardata").magia != "Shaman")
-      SendSysMessageEx(who, "Voce presta homenagem ao altar", SSM_INFO);
-      return;
+   var magia := GetObjProperty(who, "chardata").magia;
+   if (GetObjProperty(who, "chardata").povo == "Orc" && magia != "Shaman")
+        SendSysMessageEx(who, "Você presta homenagens a Gruntam", SSM_INFO);
+        return;
+    elseif (magia != "Shaman")
+        SendSysMessageEx(who, "Voce sente uma energia ate um pouco pesada desse altar", SSM_INFO);
+        return;
    endif
    var mlore := cint(AP_GetSkill(who, MAGICLORE));
    var cfg          := ReadConfigFile(":spells:config/shamanspells");
-   var cleric_slots := mlore / 5;
-//   if (who.Caracteristica("Dádiva de Anar'Niel"))
-//      cleric_slots += 1;
-//   endif
+   var cleric_slots := Cint(mlore / 5);
 
    var shaman_list  := GetObjProperty(who, "shaman_list");
    if (!shaman_list)
@@ -38,16 +38,13 @@ print("Entrei");
       sleepms(2);
       WriteSpellInfo(spell, ":spells:config/shamanspells");
       var spell_found := FindAllElemInArray(shaman_list, struct{ id := spell });
-      print("spell_found: "+spell_found);
-      print("spell.id: "+spell);
       if (spell_found)
-         slots_used += cint(spell.circle * spell_found.size());
+         slots_used += cint(spell.circle);
          foreach i in spell_found
             shaman_list[spell_found].circle := spell.circle;
             sleepms(2);
          endforeach
       endif
-
       if (spell.circle >  Cint(Ceil((mlore - 10) / 20))) // 10, 30, 50 , 70 , 90 habs pra castar
          continue;
       elseif (spell.type == "Auto")
@@ -64,13 +61,13 @@ print("Entrei");
       var input := CreateClericGump(who, spell_list, available_slots);
 
       if (input[0] >= 200)
-         if (TS_GetTimerInfo(who, "orderspell"))
-            return SendSysMessageEx(who, "Você deve aguardar um pouco antes de pedir por bençãos novamente.", SSM_FAIL);
+         if (TS_GetTimerInfo(who, "orderspell")) // TODO
+            return SendSysMessageEx(who, "Voce deve aguardar um pouco antes de pedir por bencaos novamente.", SSM_FAIL);
          endif
          var spell := spell_list[input[0]-200];
          var ret := StoreSpell(who, spell, shaman_list, available_slots);
          if (ret)
-            item.graphic := 0x9DF2;
+            item.graphic := 0x9DF2; // TODO achar o da caveira
             sleep(2);
             item.graphic := 0x9E81;
          endif
@@ -96,7 +93,7 @@ function CreateClericGump(who, spell_list, available_slots)
 	GFHTMLArea(gump, 115, 70, 192, 20, "<BASEFONT Size=5 Color=#ffffff >Lista de Bençãos", 0, 0);
 	GFGumpPic(gump, 63, 91, 1469);
 	GFGumpPic(gump, 80, 91, 1469);
-	GFTextLine(gump, 63, 100, 0, "Bençãos");
+	GFTextLine(gump, 63, 100, 0, "Rituais Xamânicos");
 	GFTextLine(gump, 259, 100, 0, "Slots");
 	GFTextLine(gump, 304, 100, 0, "Receber");
 	GFGumpPic(gump, 38, 103, 9773, 0);
@@ -104,18 +101,13 @@ function CreateClericGump(who, spell_list, available_slots)
 
    var y := 121;
    foreach spell in spell_list
-//   print("spell: "+spell);
-//   print("spell.name"+spell.name);
-//   print("spell.circle"+spell.circle);
-//   print("spell.description"+spell.description);
-//   print("spell.desc"+spell.desc);
       var color := "333300";
-      if (!spell.pericia["Cura"])
-         color := "a745a7";
-      endif
+    //  if (!spell.pericia["Cura"])
+    //     color := "a745a7";
+    //  endif
       GFHTMLArea(gump, 63, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, spell.name), 1, 0);
-      GFToolTipText(gump, "<BASEFONT color=#{}>{}<br><BASEFONT color=#FFFFFF>{}".format(color, strreplace(spell.pericia, "_", " "), spell.description));
-      GFHTMLArea(gump, 259, y, 34, 24, "<center>{}".format(spell.Circle), 1, 0);
+      GFToolTipText(gump, "<BASEFONT color=#{}>{}<br><BASEFONT color=#FFFFFF>{}".format(color, spell.desc));
+      GFHTMLArea(gump, 259, y, 34, 24, "<center>{}".format(spell.circle), 1, 0);
       if (available_slots >= spell.circle)
 	      GFAddButton(gump, 319, y+4, 10006, 10006, GF_CLOSE_BTN, 200+_spell_iter);
       else
@@ -132,21 +124,14 @@ function StoreSpell(who, spellinfo, byref shaman_list, byref available_slots)
    if (available_slots-spellinfo.circle < 0)
       SendSysMessageEx(who, "Sem slots suficientes para memorizar..", SSM_FAIL);
       return 0;
-   elseif (!AP_ConsumeVital(who, MANA, 2))
-      SendSysMessageEx(who, "Você não consegue se concentrar em sua oração.", SSM_FAIL);
+   elseif (!AP_ConsumeVital(who, MANA, 5*spellinfo.circle))
+      SendSysMessageEx(who, "Voce nao consegue se concentrar em sua oracao.", SSM_FAIL);
       sleep(2);
       return 0;
    endif
 
-//   var roll := rollAttrDice(who, WISDOM) + GetSkillBonus(who, spellinfo.pericia);
-//   if (roll > 12+(spellinfo.circle*2))
-//      TS_StartCooldown(who, "orderspell", 2);
-//      SendSysMessageEx(who, "Você teve dificuldades em conseguir a benção de anar.", SSM_FAIL);
-//      return 1;
-//   endif
-
    var new_spell := struct{
-      "id"         := spellinfo.id,
+      "id"         := spellinfo.SpellId,
       "powerwords" := spellinfo.powerwords,
       "circle"     := spellinfo.circle,
       "time"       := AddTimeTo(polcore().systime, 20, "minutes"),
@@ -156,7 +141,7 @@ function StoreSpell(who, spellinfo, byref shaman_list, byref available_slots)
    available_slots -= spellinfo.circle;
    shaman_list.append(new_spell);
    SetObjProperty(who, "shaman_list", shaman_list);
-   SendSysMessageEx(who, "Obteu a benção de Grunntam.", SSM_INFO);
+   SendSysMessageEx(who, "Obteve a bencao de Grunntam.", SSM_INFO);
    return 1;
 endfunction
 
