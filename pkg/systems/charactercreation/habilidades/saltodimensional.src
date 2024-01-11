@@ -1,0 +1,49 @@
+use uo;
+use util;
+
+include "include/damage";
+include "include/client";
+include "include/sounds";
+include ":charactercreation:resists";
+include ":survival:fishingFunctions";
+
+program HitScript(who)
+	//PlayObjectCenteredEffect(defender, 0xAFED, 7, 16);
+	//PlaySoundEffect(defender, 0x358);
+	var targ := TargetCoordinates(who);
+    var dist := Distance(who, targ);
+    var mlore := Cint(AP_GetSkill(who, MAGICLORE));
+    if (dist > (mlore/ 5))
+        SendSysMessage(who, "O alvo esta muito distante");
+        return 0;
+    endif
+
+	var locinfo:= GetMapInfo( targ.x, targ.y, who.realm );
+	if(!IsWater(targ, locinfo))
+        SendSysMessage(who, "Voce nao pode clicar na agua");
+        return 0;
+    endif
+
+	if ( !targ )
+		SendSysMessage(who, "Cancelled.");
+		return 0;
+	endif
+
+    who.concealed := 1;
+    who.frozen := 1;
+
+    SendSysMessage(who, "Voce nao pode pescar aqui!");
+
+    // Play Cast animation
+    // PlayObject Centered nele atual no who
+	MoveObjectToLocation(who, targ.x, targ.y, targ.z, who.realm, MOVEOBJECT_FORCELOCATION);
+    sleep(3);
+    // Play Object centered no target
+    who.concealed := 0;
+    who.frozen := 0;
+	
+	//PlaySoundEffect(who, SFX_TELEPORT, who);
+	//PlayObjectCenteredEffect(who, GFX_SMOKE, 0, 5);
+
+	return 1;
+endprogram
