@@ -37,9 +37,9 @@ program orderSpells(who, item)
       spell := FindConfigElem(cfg, spell);
       sleepms(2);
       WriteSpellInfo(spell, ":spells:config/shamanspells");
-      var spell_found := FindAllElemInArray(shaman_list, struct{ id := spell.SpellId });
+      var spell_found := FindAllElemInArray(shaman_list, struct{ id := spell.SpellId }, 1);
       if (spell_found)
-         slots_used += cint(spell.circle);
+         slots_used += cint(spell.circle * spell_found.size());
          foreach i in spell_found
             shaman_list[spell_found].circle := spell.circle;
             sleepms(2);

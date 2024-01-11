@@ -23,22 +23,19 @@ program clericPowerWords(parms)
       if ( event && !who.dead && event.source ==  who && event.type == SYSEVENT_SPEECH)
          var shaman_list := GetObjProperty(who, "shaman_list");
          if (!shaman_list) shaman_list := array{}; endif;
-        // var auto := 1;
-        // WriteSpellInfo(auto, ":spells:config/shamanspells");
-        // shaman_list := array{auto} + shaman_list;
          if (shaman_list.size() < 1 || GetObjProperty(who, "#Casting"))
             continue;
          endif
 
-         var spell_id := 0;
+         var spell_id := 1;
          foreach spell in shaman_list
             var verified := 0;
-            if (!spell.powerwords[1] || spell.used)
+            if (!spell.powerwords || spell.used == 1)
+                spell_id++;
                continue;
             endif
             var text := Lower(event.text);
-
-            // Check if powerwords passed
+            
             foreach powerword in splitwords((spell.powerwords))
                if (Lower(text).find(Lower(powerword)))
                   verified += 1;
@@ -46,16 +43,13 @@ program clericPowerWords(parms)
                sleepms(2);
             endforeach
 
-            // if all passed, set the spell_id
-            spell_id++;
             if (verified == splitwords(spell.powerwords).size())
                Start_Script(":spells:cast_spell", {who, spell, "Shaman"});
-               print("shaman_list: "+shaman_list);
-               print("spell_id: "+spell_id);
                shaman_list[spell_id].used := 1;
-                SetObjProperty(who, "shaman_list", shaman_list);
+               SetObjProperty(who, "shaman_list", shaman_list);
                break;
             endif
+            spell_id++;
             sleepms(2);
          endforeach
       endif

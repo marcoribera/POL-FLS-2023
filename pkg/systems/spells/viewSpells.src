@@ -76,7 +76,6 @@ function CreateClericGump(who, shaman_list, available_slots)
    
    var y := 116;
    foreach spell in shaman_list
-        print("spell: "+spell);
       var not_empty := isNotEmpty(spell);
       var spellname := "<basefont Size= 1>Empty";
       var powerwords := "";
@@ -85,7 +84,7 @@ function CreateClericGump(who, shaman_list, available_slots)
          spellname := spell.name;
          powerwords := ", ".join(splitwords(spell.powerwords));
       endif
-      
+
       var color := "";
       if (not_empty == 3 || not_empty == 1)
          color := "<BASEFONT color=#b20000>";
