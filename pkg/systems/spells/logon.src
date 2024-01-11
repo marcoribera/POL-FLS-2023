@@ -24,7 +24,6 @@ program Logon(who)
 	endif
     var magia := GetObjProperty(who, "chardata").magia;
    if (magia == "Shaman" && !GetProcess(GetObjProperty(who, "#clericpid")))
-        print("Entrei logon spellssss");
       Start_Script(":spells:powerWords", array{who});
    endif
 

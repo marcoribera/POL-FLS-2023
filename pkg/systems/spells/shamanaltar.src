@@ -16,10 +16,10 @@ const SPELL_BTN := 200;
 program orderSpells(who, item)
    var magia := GetObjProperty(who, "chardata").magia;
    if (GetObjProperty(who, "chardata").povo == "Orc" && magia != "Shaman")
-        SendSysMessageEx(who, "Você presta homenagens a Gruntam", SSM_INFO);
+        SendSysMessageEx(who, "Voce presta homenagens a Gruntam", SSM_INFO);
         return;
     elseif (magia != "Shaman")
-        SendSysMessageEx(who, "Voce sente uma energia ate um pouco pesada desse altar", SSM_INFO);
+        SendSysMessageEx(who, "O altar parece te observar de volta", SSM_INFO);
         return;
    endif
    var mlore := cint(AP_GetSkill(who, MAGICLORE));
@@ -34,12 +34,12 @@ program orderSpells(who, item)
    var spell_list := array{};
    var slots_used := 0;
    foreach spell in (GetConfigIntKeys(cfg))
-        spell := FindConfigElem(cfg, spell);
+      spell := FindConfigElem(cfg, spell);
       sleepms(2);
       WriteSpellInfo(spell, ":spells:config/shamanspells");
-      var spell_found := FindAllElemInArray(shaman_list, struct{ id := spell });
+      var spell_found := FindAllElemInArray(shaman_list, struct{ id := spell.SpellId }, 1);
       if (spell_found)
-         slots_used += cint(spell.circle);
+         slots_used += cint(spell.circle * spell_found.size());
          foreach i in spell_found
             shaman_list[spell_found].circle := spell.circle;
             sleepms(2);
@@ -88,9 +88,9 @@ function CreateClericGump(who, spell_list, available_slots)
    endif
 	GFResizePic(gump, 17, 31, 9390, 359, 125+size);
 	// GFHtmlShadowed(gump, 115, 70, 192, 20, "#feb98e ", "<BASEFONT Size=5>Lista de Bençãos");
-	GFHTMLArea(gump, 114, 69, 192, 20, "<BASEFONT Size=5 Color=#999999 >Lista de Bençãos", 0, 0); //shadow
-	GFHTMLArea(gump, 116, 71, 192, 20, "<BASEFONT Size=5 Color=#999999 >Lista de Bençãos", 0, 0); //shadow
-	GFHTMLArea(gump, 115, 70, 192, 20, "<BASEFONT Size=5 Color=#ffffff >Lista de Bençãos", 0, 0);
+	GFHTMLArea(gump, 114, 69, 192, 20, "<BASEFONT Size=5 Color=#999999 >Ukshar", 0, 0); //shadow
+	GFHTMLArea(gump, 116, 71, 192, 20, "<BASEFONT Size=5 Color=#999999 >Ukshar", 0, 0); //shadow
+	GFHTMLArea(gump, 115, 70, 192, 20, "<BASEFONT Size=5 Color=#ffffff >Ukshar", 0, 0);
 	GFGumpPic(gump, 63, 91, 1469);
 	GFGumpPic(gump, 80, 91, 1469);
 	GFTextLine(gump, 63, 100, 0, "Rituais Xamânicos");
@@ -101,12 +101,9 @@ function CreateClericGump(who, spell_list, available_slots)
 
    var y := 121;
    foreach spell in spell_list
-      var color := "333300";
-    //  if (!spell.pericia["Cura"])
-    //     color := "a745a7";
-    //  endif
+      var color := "a745a7";
       GFHTMLArea(gump, 63, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, spell.name), 1, 0);
-      GFToolTipText(gump, "<BASEFONT color=#{}>{}<br><BASEFONT color=#FFFFFF>{}".format(color, spell.desc));
+      GFToolTipText(gump, "<BASEFONT color=#{}>{}<br><BASEFONT color=#FFFFFF>".format(color, spell.desc));
       GFHTMLArea(gump, 259, y, 34, 24, "<center>{}".format(spell.circle), 1, 0);
       if (available_slots >= spell.circle)
 	      GFAddButton(gump, 319, y+4, 10006, 10006, GF_CLOSE_BTN, 200+_spell_iter);
@@ -132,6 +129,7 @@ function StoreSpell(who, spellinfo, byref shaman_list, byref available_slots)
 
    var new_spell := struct{
       "id"         := spellinfo.SpellId,
+      "name"       := spellinfo.name,
       "powerwords" := spellinfo.powerwords,
       "circle"     := spellinfo.circle,
       "time"       := AddTimeTo(polcore().systime, 20, "minutes"),

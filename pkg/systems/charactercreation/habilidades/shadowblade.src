@@ -43,7 +43,12 @@ program vacuodemana(params)
 	var total := cint(CalculateTotalDamage(defender, basedamage, attacker, dmgList));
 	DamageFLS(defender, total, DMG_FORCED, attacker);
 	DamageFLS(defender, mlore, DMG_FORCED, attacker);
+    PlaySoundEffect(defender, 0X51F);
+    sleep(1);
 
+    PlayObjectCenteredEffectHuefx(defender, 0x54b3, 10, 20, 1254, 1);
+    PlaySoundEffect(defender, 0x1FB);
+    
     Setcooldown(defender, "silence", mlore/5);
     return 1;
 endprogram 
