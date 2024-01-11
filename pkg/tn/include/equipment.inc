@@ -80,10 +80,10 @@ function SetEquipmentMods(who, item)
 
 	//magery
 	penalty := CInt(itemdesc[item.objtype].MageryPenalty);
-	if (!(TemHabilidade(who, "Senhor do Medo") || TemHabilidade(who, "Devocao")))
+	if (!(TemHabilidade(who, "Senhor do Medo") || TemHabilidade(who, "Devocao") || TemHabilidade(who, "Colheita de Almas")))
         AP_ModifySkillMod(who, MAGERY, penalty);
     endif
-
+    
 	//verifica se eh magico
 	var mods := GetObjProperty(item, "equip");
 //	SendSysMessage(who, " " + mods + " " + mods.keys().size());
@@ -254,7 +254,7 @@ function RemoveEquipmentMods(who, item)
   	AP_ModifySkillMod(who, AWARENESS, (-1)*penalty);
 
 	penalty := CInt(itemdesc[item.objtype].MageryPenalty);
-	if (!(TemHabilidade(who, "Senhor do Medo") || TemHabilidade(who, "Devocao")))
+	if (!(TemHabilidade(who, "Senhor do Medo") || TemHabilidade(who, "Devocao") || TemHabilidade(who, "Colheita de Almas")))
 	  	AP_ModifySkillMod(who, MAGERY, (-1)*penalty);
 	endif
 

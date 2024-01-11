@@ -48,7 +48,7 @@ program SpellStarter(params)
 		FailSpell(mobile);
 		EraseObjProperty(mobile, "#Casting");
 		return 0;
-	elseif ( !EquipmentCheck(mobile) && !mobile.npctemplate && !(TemHabilidade(mobile, "Senhor do Medo") || !TemHabilidade(mobile, "Devocao") || !TemHabilidade(mobile, "Concentracao Aprimorada")))
+	elseif ( !EquipmentCheck(mobile) && !mobile.npctemplate && !(TemHabilidade(mobile, "Senhor do Medo") || !TemHabilidade(mobile, "Devocao") || !TemHabilidade(mobile, "Concentracao Aprimorada") || !TemHabilidade(mobile, "Colheita de Almas")))
 		SendSysMessageEx(mobile, "Suas maos precisam estar livres para gesticular os componentes gestuais necessarios para a magia.", SSM_FAIL);
 		FailSpell(mobile);
 		EraseObjProperty(mobile, "#Casting");
