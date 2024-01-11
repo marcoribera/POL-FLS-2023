@@ -625,6 +625,8 @@ function WritespellInfo(who, byref spellinfo)
     if (GetObjProperty(who, "chardata").magia == "Shaman")
         cfg := ReadConfigFile(":spells:config/shamanspells");
         spellinfo.used := 1;
+	elseif(GetObjProperty(who, "chardata").magia == "kitahster")
+        cfg := ReadConfigFile(":spells:config/sangriaspells");
     endif
 	//sendsysmessage(who, "cfg" + cfg + " " + spellinfo.id);
 

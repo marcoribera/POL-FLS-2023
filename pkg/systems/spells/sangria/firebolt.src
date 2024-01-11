@@ -1,0 +1,39 @@
+use uo;
+use os;
+use util;
+
+program cast_firebolt(caster, target)
+    var damage = 15; // Dano causado pela magia
+
+    if (!ValidateTarget(caster, target))
+        return 0;
+    endif
+
+    // Criar e lançar o projétil
+    LaunchProjectile(caster, target, "firebolt_effect", damage);
+
+    // Efeitos visuais e de som podem ser adicionados aqui
+endprogram
+
+function ValidateTarget(caster, target)
+    // Verificar se o alvo é válido (não é o próprio lançador, está ao alcance, etc.)
+    if (caster == target || !IsWithinLineOfSight(caster, target) || GetDistance(caster, target) > 10)
+        // Mensagem de erro ou som de falha
+        return false;
+    endif
+    return true;
+endfunction
+
+function LaunchProjectile(caster, target, effect, damage)
+    // Esta função simula o lançamento de um projétil
+    // Pode incluir animações, efeitos sonoros e a lógica de movimento do projétil
+    // Aqui está uma representação simplificada
+
+    // Efeito visual do projétil
+    PlayEffectAtLocation("0x3709", target.x, target.y, target.z);
+
+    // Causar dano quando o projétil atingir o alvo
+    DealDamage(target, damage);
+
+    // Efeitos sonoros, etc.
+endfunction

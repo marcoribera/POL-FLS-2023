@@ -1,0 +1,36 @@
+use uo;
+use os;
+
+include ":attributes:attributes";
+include ":timedscripts:timedScripts";
+include ":magery:spells";
+include "include/client";
+include "include/sounds";
+include "include/damage";
+
+program SpellScript(params)
+	var who := params[1];
+	var info := params[2];
+	params := 0; // No longer needed
+
+	var targ := MS_Target(who, info.targ, "Selecione o alvo.", TGTOPT_CHECK_LOS+TGTOPT_HARMFUL);
+	if ( !targ.IsA(POLCLASS_MOBILE) )
+		SendSysMessage(who, "Alvo invalido.");
+		return 0;
+	endif
+
+    if (!targ)
+		SendSysMessageEx(who, "Cancelado", SSM_FAIL);
+		return 0;
+	endif
+
+    For (i := 1; i <= cint(AP_GetSkill(who, MAGICLORE) / 20); i += 1)
+        PlayMovingEffectXYZHued(who, targ, 0xf42, 10, 1643, 0);
+        PlaySoundEffect(who, SFX_MAGIC_ARROW);
+
+        var dmg := cint(AP_GetSkill(who, MAGICLORE))/8 + RandomDiceRoll("1d4");
+        DamageFLS(targ, cint(dmg), DMG_FORCED, who);
+        SleepMS(500);
+    EndFor
+	return 1;
+endprogram

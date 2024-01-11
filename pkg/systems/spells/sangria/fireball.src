@@ -1,0 +1,34 @@
+use uo;
+include "include/magic";
+include "include/sound";
+include "include/tileEffects";
+include ":attributes:attributes";
+include ":magery:reflect";
+
+
+program spell_fireball(parms)
+    var caster := params[1];
+    var info := params[2];
+	params := 0; // No longer needed
+    var cast_on;
+
+    cast_on := MS_Target(caster, info.targ, "Selecione um alvo.", TGTOPT_CHECK_LOS+TGTOPT_HARMFUL);
+    if (!cast_on) // If no cast_on then get cast_on from parms[4]. Used mostly for NPC casting.
+        cast_on := parms[4];
+    endif
+    if (!cast_on)
+        SendSysMessage (caster, "cancelado.", color := 33);
+        return 0;
+    endif
+
+    if ( !MS_MobileCheck(caster, cast_on) )
+        return 0;
+    endif
+
+    PlayMovingEffect(caster, castOn, FX_FIREBALL, 5, 1);
+    PlaySoundEffect(caster, 0x15f);
+    var dmg := cint(AP_GetSkill(caster, MAGICLORE))/8 + RandomDiceRoll("8d6");
+
+    ApplySpellDamageEX(cast_on, dmg, DMG_FIRE, caster, info.circle, "Fireball");
+endprogram
+
