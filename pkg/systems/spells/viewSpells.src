@@ -25,33 +25,11 @@ program clericPowerWords(who)
 
    var shaman_list  := GetObjProperty(who, "shaman_list");
    if (!shaman_list) shaman_list := array{}; endif
-   // shaman_list := array{ struct{ "id":= 1, "used" := 0, "time" := 0} } + shaman_list;
    var slots_used := 0;
-   var cfg          := ReadConfigFile(":spells:config/shamanspells");
-
-   foreach spell in shaman_list
-        //print("spell: "+spell);
-        //print("spell.id"+ spell.id);
-        //print("spell.SpellId"+spell.SpellId);
-      var new_spell := spell.id;
-     WriteSpellInfo(new_spell, ":spells:config/shamanspells");
-      new_spell.+used := spell.used;
-      new_spell.+time := spell.time;
-    //  new_spell.+powerwords := spell.PowerWords;
-    //  print("new_spell.powerwords: "+new_spell.powerwords);
-      shaman_list.Erase(_spell_iter);
-      shaman_list.Insert(_spell_iter, new_spell);
-        //print("new_spell.desc: "+new_spell.desc);
-        //print("new_spell.description"+new_spell.description);
-      if (new_spell != 1)
-         slots_used += cint(new_spell.circle);
-      endif
-
-      sleepms(2);
-   endforeach
-    //print("SHAMAN: "+shaman_list);
+    foreach spell in shaman_list
+        slots_used += cint(spell.circle);
+    endforeach
    var available_slots := cleric_slots - slots_used;
-
    var canceled := 0;
    while (!canceled)
       var input := CreateClericGump(who, shaman_list, available_slots);
@@ -70,9 +48,10 @@ program clericPowerWords(who)
 endprogram
 
 function CreateClericGump(who, shaman_list, available_slots)
-	var gump := GFCreateGump();
-   
-   var size := shaman_list.Size() + available_slots;
+	var gump := GFCreateGump(); 
+ 
+   var size := shaman_list.Size();
+
    if (size >= 1)
       size := size * 26;
    else
@@ -91,26 +70,22 @@ function CreateClericGump(who, shaman_list, available_slots)
 	GFTextLine(gump, 56, 95, 1445, "Ritos");
 	GFTextLine(gump, 255, 96, 1445, "Palavras de Poder");
 
-   for i := 1 to available_slots
-      shaman_list.append(struct{});
-   endfor
+//   for i := 1 to available_slots
+//      shaman_list.append(struct{});
+//   endfor
    
    var y := 116;
    foreach spell in shaman_list
-        
+        print("spell: "+spell);
       var not_empty := isNotEmpty(spell);
-      print("NOT_EMPTY: "+not_empty);
       var spellname := "<basefont Size= 1>Empty";
       var powerwords := "";
-      print("spell: "+spell);
-      print("spell.used: "+spell.used);
-      print("spell.SpellId: "+spell.SpellId);
-      print("POWER: "+ spell.powerwords);
+
       if (spell)
          spellname := spell.name;
          powerwords := ", ".join(splitwords(spell.powerwords));
       endif
-
+      
       var color := "";
       if (not_empty == 3 || not_empty == 1)
          color := "<BASEFONT color=#b20000>";
@@ -140,14 +115,13 @@ function CreateClericGump(who, shaman_list, available_slots)
 endfunction
 
 function isNotEmpty(spell)
-    print("!spell"+spell);
-//   if (spell.id == 1 || !spell.time)
-//      return 2; //cannot remove
-//   elseif(spell.time < polcore().systime && spell.used)
-//      return 3; // can remove and already used
-//   elseif (spell.time < polcore().systime)
-//      return 0; //can remove
-    if(spell.used)
+   if (spell.id == 1 || !spell.time)
+      return 2; //cannot remove
+   elseif(spell.time < polcore().systime && spell.used)
+      return 3; // can remove and already used
+   elseif (spell.time < polcore().systime)
+      return 0; //can remove
+   elseif(spell.used)
       return 1; // already used
    endif
 

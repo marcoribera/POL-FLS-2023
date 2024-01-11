@@ -23,9 +23,9 @@ program clericPowerWords(parms)
       if ( event && !who.dead && event.source ==  who && event.type == SYSEVENT_SPEECH)
          var shaman_list := GetObjProperty(who, "shaman_list");
          if (!shaman_list) shaman_list := array{}; endif;
-         var auto := 1;
-         WriteSpellInfo(auto, ":spells:config/shamanspells");
-         shaman_list := array{auto} + shaman_list;
+        // var auto := 1;
+        // WriteSpellInfo(auto, ":spells:config/shamanspells");
+        // shaman_list := array{auto} + shaman_list;
          if (shaman_list.size() < 1 || GetObjProperty(who, "#Casting"))
             continue;
          endif
@@ -50,10 +50,10 @@ program clericPowerWords(parms)
             spell_id++;
             if (verified == splitwords(spell.powerwords).size())
                Start_Script(":spells:cast_spell", {who, spell, "Shaman"});
+               print("shaman_list: "+shaman_list);
+               print("spell_id: "+spell_id);
                shaman_list[spell_id].used := 1;
-                SetObjPRoperty(who, "shaman_list", shaman_list);
-                print("SHAMAN_LIST: "+shaman_list);
-                //print("shaman_list_spell_id"+shaman_list[spell_id]);
+                SetObjProperty(who, "shaman_list", shaman_list);
                break;
             endif
             sleepms(2);
