@@ -452,7 +452,7 @@ function comprarHabilidade(who, item, nv:=-1)
 			who.resist_cold_mod  := who.resist_cold_mod + 25;
 			who.resist_poison_mod  := who.resist_poison_mod + 25;
 			who.resist_energy_mod  := who.resist_energy_mod + 25;
-		elseif(escolhida == "Senhor do Medo" || escolhida == "Devocao")
+		elseif(escolhida == "Senhor do Medo" || escolhida == "Devocao" || escolhida == "Colheita de Almas")
             var equips := EnumeratePhysicalItemsInMobile(who);
             //foreach para pegar todos os equips no corpo e remover as penalidades
             foreach equip in equips
