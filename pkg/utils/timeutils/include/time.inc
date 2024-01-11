@@ -332,3 +332,4 @@ function AddTimeTo(time, amount, type := "days")
 	var result := time + amount;
 	return result;
 endfunction
+

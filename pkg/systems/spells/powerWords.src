@@ -1,0 +1,64 @@
+
+use uo;
+use os;
+
+include "include/client";
+include "include/sysEvent";
+include "include/say";
+include "include/tnmagery";
+include ":fls_core:fls_characters";
+
+program clericPowerWords(parms)
+   detach();
+   var who := parms[1];
+   var pid := GetPid();
+   SetObjProperty(who, "#clericpid", pid);
+
+   RegisterForSpeechEvents( who, 3 );
+   EnableEvents( SYSEVENT_SPEECH, 1 );
+   
+   var event;
+   while(who.connected)
+      event := wait_for_event( 120 );
+      if ( event && !who.dead && event.source ==  who && event.type == SYSEVENT_SPEECH)
+         var shaman_list := GetObjProperty(who, "shaman_list");
+         if (!shaman_list) shaman_list := array{}; endif;
+         var auto := 1;
+         WriteSpellInfo(auto, ":spells:config/shamanspells");
+         shaman_list := array{auto} + shaman_list;
+         if (shaman_list.size() < 1 || GetObjProperty(who, "#Casting"))
+            continue;
+         endif
+
+         var spell_id := 0;
+         foreach spell in shaman_list
+            var verified := 0;
+            if (!spell.powerwords[1] || spell.used)
+               continue;
+            endif
+            var text := Lower(event.text);
+
+            // Check if powerwords passed
+            foreach powerword in splitwords((spell.powerwords))
+               if (Lower(text).find(Lower(powerword)))
+                  verified += 1;
+               endif
+               sleepms(2);
+            endforeach
+
+            // if all passed, set the spell_id
+            spell_id++;
+            if (verified == splitwords(spell.powerwords).size())
+               Start_Script(":spells:cast_spell", {who, spell, "Shaman"});
+               shaman_list[spell_id].used := 1;
+                SetObjPRoperty(who, "shaman_list", shaman_list);
+                print("SHAMAN_LIST: "+shaman_list);
+                //print("shaman_list_spell_id"+shaman_list[spell_id]);
+               break;
+            endif
+            sleepms(2);
+         endforeach
+      endif
+      sleepms(10);
+   endwhile
+endprogram 
