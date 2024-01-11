@@ -17,6 +17,9 @@ program earthquake( parms )
     var range := Cint(AP_GetSKill(caster, MAGICLORE)/5) + 2;
 	foreach mob in (ListMobilesNearLocation( caster.x, caster.y, caster.z, range, caster.realm ))
 		if (mob.serial != caster.serial)
+            if(GetObjProperty(mob,"owner"))
+                continue;
+            endif
 			if (!(mob in caster.party.members)) 
                 SendSysMessageEx(mob, "Voce sente o chao tremer com extrema violencia.", SSM_FAIL);
                 PlayObjectCenteredEffect(mob, GFX_RED_SPARKLES, 7, 7);

@@ -23,6 +23,9 @@ program SpellScript(params)
     var mobs := ListMobilesNearLocation(caster.x, caster.y, caster.z, 8, caster.realm);
 
     foreach mob in mobs
+        if(GetObjProperty(mob,"owner") || ((mob in caster.party.members)) )
+            continue;
+        endif
         if (IsTargetInFront(caster, mob, maxAngle))
             DamageFLS(mob, cint(damage), DMG_FIRE, caster);
         endif
