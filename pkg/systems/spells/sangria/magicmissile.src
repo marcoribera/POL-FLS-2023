@@ -24,6 +24,7 @@ program SpellScript(params)
 		return 0;
 	endif
 
+	var i := 1;
     For (i := 1; i <= cint(AP_GetSkill(who, MAGICLORE) / 20); i += 1)
         PlayMovingEffectXYZHued(who, targ, 0xf42, 10, 1643, 0);
         PlaySoundEffect(who, SFX_MAGIC_ARROW);

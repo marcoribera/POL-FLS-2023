@@ -2,38 +2,35 @@ use uo;
 use os;
 use util;
 
-program cast_firebolt(caster, target)
-    var damage = 15; // Dano causado pela magia
+include ":attributes:attributes";
+include ":timedscripts:timedScripts";
+include ":magery:spells";
+include "include/client";
+include "include/sounds";
+include "include/damage";
 
-    if (!ValidateTarget(caster, target))
-        return 0;
-    endif
+program cast_firebolt(params)
+    var caster := params[1];
+	var info := params[2];
+	params := 0; // No longer needed
 
-    // Criar e lançar o projétil
-    LaunchProjectile(caster, target, "firebolt_effect", damage);
+	var targ := MS_Target(caster, info.targ, "Selecione o alvo.", TGTOPT_CHECK_LOS+TGTOPT_HARMFUL);
+	if ( !targ.IsA(POLCLASS_MOBILE) )
+		SendSysMessage(caster, "Alvo invalido.");
+		return 0;
+	endif
 
-    // Efeitos visuais e de som podem ser adicionados aqui
+    if (!targ)
+		SendSysMessageEx(caster, "Cancelado", SSM_FAIL);
+		return 0;
+	endif
+
+    LaunchProjectile(caster, targ, "firebolt_effect");
 endprogram
 
-function ValidateTarget(caster, target)
-    // Verificar se o alvo é válido (não é o próprio lançador, está ao alcance, etc.)
-    if (caster == target || !IsWithinLineOfSight(caster, target) || GetDistance(caster, target) > 10)
-        // Mensagem de erro ou som de falha
-        return false;
-    endif
-    return true;
-endfunction
-
-function LaunchProjectile(caster, target, effect, damage)
-    // Esta função simula o lançamento de um projétil
-    // Pode incluir animações, efeitos sonoros e a lógica de movimento do projétil
-    // Aqui está uma representação simplificada
-
-    // Efeito visual do projétil
-    PlayEffectAtLocation("0x3709", target.x, target.y, target.z);
-
-    // Causar dano quando o projétil atingir o alvo
-    DealDamage(target, damage);
-
-    // Efeitos sonoros, etc.
+function LaunchProjectile(caster, targ, effect)
+    PlaySoundEffect(caster, SFX_MAGIC_ARROW);
+    PlayMovingEffectXYZHued(caster, targ, 0xf42, 10, 1643, 0);
+    var dmg := cint(AP_GetSkill(caster, MAGICLORE))/8 + RandomDiceRoll("1d6");
+    DamageFLS(targ, cint(dmg), DMG_FORCED, caster);
 endfunction
