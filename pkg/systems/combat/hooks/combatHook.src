@@ -208,6 +208,11 @@ exported function Attack(attacker, defender)
                 endif
 	        endif
         endif
+        var shaman_bonus := CInt(AP_GetSkill(attacker, MAGICLORE) / 5);
+        if (Getcooldown(attacker, "bloodlust") > 0)
+            PlayObjectCenteredEffectHuefx(attacker, GFX_BLUE_SPARKLE_GROUND, 0, 60, 2676, 0);
+            HealFLS(attacker, shaman_bonus);
+        endif
 
 	    //testa possiveis esquivas
 	    if (getObjProperty(defender, "#desviarprojetil"))

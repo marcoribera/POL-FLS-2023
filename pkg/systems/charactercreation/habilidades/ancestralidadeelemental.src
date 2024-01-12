@@ -9,6 +9,7 @@ include ":fls_core:packets";
 include "include/say";
 include "include/client";
 include ":timedScripts:timedScripts";
+include "include/dungeons";
 
 program controleclima(who)
 
@@ -17,19 +18,23 @@ program controleclima(who)
 	//sendsysmessage(who, "op " + options);
 
 	var type;
-	var duration := 20;
+    var mlore := Cint(AP_GetSkill(who, MAGICLORE));
+	var duration := Cint(mlore / 10);
 	var som := 0;
 	var bolt := 0;
     var shaman_souls := Cint(getobjProperty(who, "shaman_souls"));
     if (!shaman_souls)
         var shaman_souls := 0;
     endif
+    if (InDungeon(who))
+        SendSysMessageEx(who, "Voce precisa estar fora de cavernas.", SSM_INFO);
+        return;
+    endif
 
     type := 0; // chuva
-    var mlore := Cint(AP_GetSkill(who, MAGICLORE));
 	if (shaman_souls > 0)
 		type := 1;
-		duration := Cint(mlore / 5);
+		duration := Cint(mlore / 10);
 		som := 1;
 		bolt := 1;
 	endif
@@ -58,6 +63,7 @@ program controleclima(who)
 		PerformAction(who, ANIM_CAST_AREA);
 
 		if( (origx != who.x) || (origy != who.y))
+        	SetObjProperty(who, "shaman_souls", 0);
 			SendSysMEssage(who, "Voce parou a tempestade.", SSM_FAIL);
 			break;
 		endif
@@ -81,7 +87,7 @@ program controleclima(who)
             foreach mob in mobs
                 if (mob in enemies)
                 else
-                    HealFLS(mob, Cint(mlore/10));
+                    HealFLS(mob, Cint(mlore/5));
                 endif
             endforeach
 			SetWeatherForPlayer(mob, type, 50 );
@@ -89,7 +95,7 @@ program controleclima(who)
 				if (distance(mob, who) < 20)
 					SetWeatherForPlayer(mob, type, 50 );
 					if (bolt)
-						if (RandomInt(100) < Cint(mlore/5))
+						if (RandomInt(100) < mlore)
 							PlayLightningBoltEffect( mob );
 							ApplyDamageEX(mob, RandomDiceRoll("1d10")+40, DMG_ENERGY);
 							SendSysMessageEx(mob, "Voce foi atingido por um raio!", SSM_INFO);
@@ -112,7 +118,7 @@ program controleclima(who)
 		sleep(5);
 		i:= i + 1;
 	endwhile
-	
+
 	foreach mob in enemies
         EraseObjProperty(mob, "molhado");
 		SetWeatherForPlayer(mob, 0xFF, 1 );
@@ -120,6 +126,7 @@ program controleclima(who)
 		SetWeatherForPlayer(mob, 0xFF, 1 );
 		moveobjecttolocation(mob, mob.x, mob.y, mob.z, mob.realm);
 	endforeach
+	SetObjProperty(who, "shaman_souls", 0);
 
 endprogram 
 
