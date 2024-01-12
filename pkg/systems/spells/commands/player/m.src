@@ -14,6 +14,10 @@ program magia(who, spellname)
 	SendSysMessage(who, "Iniciando magia");
 	var cfg := ReadConfigFile(":spells:allspells");
 
+	if(GetObjProperty(who, "chardata").magia == "kitahster")
+        cfg := ReadConfigFile(":spells:config/sangriaspells");
+    endif
+
 	var elem;
 	var id := 1;
 	var achou := 0;
@@ -52,8 +56,8 @@ program magia(who, spellname)
 		endif
 	endforeach
 
-	var kitahster_cantrip_spells := array{101, 102, 103, 104};
-	if ( !spellbook && GetObjProperty(who, "advclass") != "kitahster" && !(id in kitahster_cantrip_spells))
+	var circle_spell := cint(GetConfigString(elem, "Circle"));
+	if ( !spellbook && GetObjProperty(who, "advclass") != "kitahster" && circle_spell != 0)
 		SendSysMessageEx(who, "Voce nao possui a magia " + spellname + " nos seu grimorio.", SSM_FAIL);
 		return;
 	endif
