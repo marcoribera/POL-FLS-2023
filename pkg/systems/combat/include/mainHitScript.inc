@@ -28,6 +28,8 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 		skillUsedForCritical := MAGICLORE;
 	elseif(GetObjProperty(attacker, "kit") == "Medico de Combate")
 		skillUsedForCritical := MEDICINE;
+	elseif(temHabilidade(attacker, "Lobo Solitario"))
+		skillUsedForCritical := SURVIVAL;
 	endif
 	//Testa se é possivel ganhar skill com o NPC alvo
 	var skillAttacker := AP_GetSkill(attacker, attacker.weapon.attribute);
