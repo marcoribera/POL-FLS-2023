@@ -6,6 +6,7 @@ include ":brainAI:npcUtil";
 include ":charactercreation:habilidades";
 include ":timedscripts:timedScripts";
 include ":food:include/hunger";
+include ":attributes:skills";
 
 program Install()
 	print("INSTALLING: Exported Vital - RegenRate and MaxValue functions ...");
@@ -44,7 +45,7 @@ exported function GetHitsMaximumValue(mobile)
     if (GetObjProperty(mobile, "kit") == "Corpulento")
         vital_points := vital_points + 2000;
     endif
-    if (GetObjProperty(who, "chardata")).povo == "Anao")
+    if (GetObjProperty(mobile, "chardata").povo == "Anao")
         vital_points := vital_points + 1000;
     endif
 
@@ -76,6 +77,10 @@ exported function GetManaRegenRate(mobile)
 
 	if (TemHabilidade(mobile, "Mente Tranquila"))
 		base_regen := base_regen + base_regen;
+	endif
+
+	if (TemHabilidade(mobile, "Estudioso da Sangria"))
+		base_regen := (base_regen + base_regen) + (cint(AP_GetSkill(mobile, MAGICLORE)) * 10);
 	endif
 
 	if (TemHabilidade(mobile, "Fluxo Divino"))
@@ -137,7 +142,7 @@ exported function GetStaminaMaximumValue(mobile)
 		if (GetObjProperty(mobile, "kit") == "Agil")
 			vital_points := vital_points + 2000;
 		endif
-        if (GetObjProperty(who, "chardata")).povo == "Anao")
+        if (GetObjProperty(mobile, "chardata").povo == "Anao")
 			vital_points := vital_points + 1000;
 		endif
 	endif

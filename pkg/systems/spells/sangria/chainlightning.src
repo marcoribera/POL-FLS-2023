@@ -30,13 +30,13 @@ program chainLightning( params )
     var victims := ListMobilesNearLocationEx( caster.x, caster.y, caster.z, range, 0x03, caster.realm);
 
     foreach mobile in victims
-        if((CheckLineOfSight(mobile, caster)) and (mobile.cmdlevel < 2))
-        SetObjProperty(mobile, "LastHit", {caster.name, caster.serial, "chain lightning"});
-        PlayLightningBoltEffect( mobile );
-        PlaySoundEffect(mobile, SFX_SPELL_LIGHTNING);
-        var dmg := cint(AP_GetSkill(caster, MAGICLORE))/2 + RandomDiceRoll("4d6");
-        DamageFLS(mobile, cint(dmg), DMG_ENERGY, caster);
-        sleepms(600);
+        if((CheckLineOfSight(mobile, caster)) && (mobile.cmdlevel < 2))
+            SetObjProperty(mobile, "LastHit", {caster.name, caster.serial, "chain lightning"});
+            PlayLightningBoltEffect( mobile );
+            PlaySoundEffect(mobile, SFX_SPELL_LIGHTNING);
+            var dmg := cint(AP_GetSkill(caster, MAGICLORE))/2 + RandomDiceRoll("4d6");
+            DamageFLS(mobile, cint(dmg), DMG_ENERGY, caster);
+            sleepms(600);
         endif
     endforeach
 endprogram
