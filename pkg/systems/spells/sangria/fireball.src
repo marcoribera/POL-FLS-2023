@@ -69,8 +69,8 @@ program spell_fireball(params)
     PlaySoundEffect(cast_on, 0x208);
     
     var alreadydamaged := array{};
-    var dmg := cint(AP_GetSkill(caster, MAGICLORE))/5 + RandomDiceRoll("4d10");
-	var range := cint(AP_GetSkill(caster, MAGICLORE))/20;
+    var dmg := cint(AP_GetSkill(caster, MAGICLORE))/5 + RandomDiceRoll("6d10");
+	var range := cint(AP_GetSkill(caster, MAGICLORE))/10;
     var mobiles := ListMobilesNearLocation(caster.x, caster.y, caster.z, range, caster.realm);
     var pets := ListPetsNear(caster, range);
     foreach mobile in mobiles

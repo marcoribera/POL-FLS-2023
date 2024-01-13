@@ -19,8 +19,11 @@ program SpellScript(params)
     endif
 	SendSysMessageEx(who, "Voce passa a enxergar no escuro", SSM_INFO);
 
+	var duration := AP_GetSkill(who, MAGICLORE) * 10;
+
     if (GetObjProperty(who, "chardata").povo != "Drow")
-		who.setlightlevel(0, AP_GetSkill(who, MAGICLORE) * 10);
+		TS_StartTimer(who, "awabuff", duration);
+		who.setlightlevel(0, duration);
 	endif
 
 	if (GetObjProperty(who, "#magiasilenciosa"))
