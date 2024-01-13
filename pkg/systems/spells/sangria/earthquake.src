@@ -20,7 +20,7 @@ program earthquake( parms )
 
     PlaySoundEffect( caster, SFX_220 );
 
-    var range := Cint(AP_GetSKill(caster, MAGICLORE)/5) + 2;
+    var range := Cint(AP_GetSKill(caster, MAGICLORE)/10) + 2;
 
     var alreadydamaged := array{};
     var dmg := cint(AP_GetSkill(caster, MAGICLORE))/2 + RandomDiceRoll("10d6");
