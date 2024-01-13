@@ -1,0 +1,42 @@
+ use uo;
+use os;
+use util;
+use cfgfile;
+
+include ":attributes:attributes";
+include ":timedscripts:timedScripts";
+include ":magery:spells";
+include "include/client";
+include "include/sounds";
+include "include/damage";
+include "include/tileEffects";
+
+program chainLightning( params )
+    var caster := params[1];
+    var info := params[2];
+
+    var targ := MS_Target(caster, info.targ, "Selecione o alvo.", TGTOPT_CHECK_LOS);
+
+    if (!targ)
+        SendSysMessageEx(caster, "Voce cancelou.", SSM_FAIL);
+        return 0;
+    endif
+    if ( !CheckLosAt(caster, caster.x, caster.y, caster.z) )
+            SendSysMessageEx(caster, "Voce nao enxerga o alvo.", SSM_FAIL);
+            return 0;
+    endif
+
+    var range := cint(AP_GetSkill(caster, MAGICLORE))/20;
+    var victims := ListMobilesNearLocationEx( caster.x, caster.y, caster.z, range, 0x03, caster.realm);
+
+    foreach mobile in victims
+        if((CheckLineOfSight(mobile, caster)) and (mobile.cmdlevel < 2))
+        SetObjProperty(mobile, "LastHit", {caster.name, caster.serial, "chain lightning"});
+        PlayLightningBoltEffect( mobile );
+        PlaySoundEffect(mobile, SFX_SPELL_LIGHTNING);
+        var dmg := cint(AP_GetSkill(caster, MAGICLORE))/2 + RandomDiceRoll("4d6");
+        DamageFLS(mobile, cint(dmg), DMG_ENERGY, caster);
+        sleepms(600);
+        endif
+    endforeach
+endprogram

@@ -13,6 +13,7 @@ program cria(item)
 	//pega o level do scroll
 	var scrollcfg := ReadConfigFile(":spells:itemdesc");
 	var lvl :=  GetConfigInt(FindconfigElem(scrollcfg, item.objtype), "Circle" );
+	var spelltype_item :=  GetConfigInt(FindconfigElem(scrollcfg, item.objtype), "SpellType" );
 
 	if (!lvl)
 		lvl := 1;
@@ -20,12 +21,21 @@ program cria(item)
 
 	//pega todas magias do cfg com esse level e armazena no array
 	var spellcfg := ReadConfigFile(":spells:config/allspells");
+	if(spelltype_item == "Sangria")
+		spellcfg := ReadConfigFile(":spells:config/sangriaspells");
+	endif	
+	
 	var keys := GetConfigIntKeys(spellcfg);
 	var randomspells := array;
 	foreach key in keys
 		var spelllvl := GetConfigInt( FindconfigElem(spellcfg, key), "Circle" );
 		var spelltype := GetConfigString( FindconfigElem(spellcfg, key), "Type" );
 		if ( (spelllvl == lvl) && ( spelltype == "Mesum")) //so mesum tem scroll
+			var unico := GetConfigInt( FindConfigElem(spellcfg, key), "Unico" );
+			if (!unico)
+				randomspells.append(key);
+			endif
+		elseif( (spelllvl == lvl) && ( spelltype == "Sangria"))
 			var unico := GetConfigInt( FindConfigElem(spellcfg, key), "Unico" );
 			if (!unico)
 				randomspells.append(key);

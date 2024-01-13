@@ -1,0 +1,71 @@
+use uo;
+use os;
+use util;
+use math;
+
+include ":attributes:attributes";
+include ":timedscripts:timedScripts";
+include ":fls_magery:spells";
+include ":fls_magery:spellSounds";
+include "include/client";
+include "include/sounds";
+include "include/damage";
+
+const CONST_PI := 3.141592;
+
+program SpellScript(params)
+	var caster := params[1];
+	var info := params[2];
+    var range := 3; // Alcance do cone de fogo
+    var maxAngle := 45; // Ângulo máximo para o cone
+    var damage := cint(AP_GetSkill(caster, MAGICLORE))/8 + RandomDiceRoll("3d6");
+    
+    var mobs := ListMobilesNearLocation(caster.x, caster.y, caster.z, 8, caster.realm);
+
+    foreach mob in mobs
+        if(GetObjProperty(mob,"owner") || ((mob in caster.party.members)) )
+            continue;
+        endif
+        if (IsTargetInFront(caster, mob, maxAngle))
+            DamageFLS(mob, cint(damage), DMG_FIRE, caster);
+        endif
+    endforeach
+endprogram
+
+function CalculateAngleToTarget(caster, alvo)
+    var deltaX := alvo.x - caster.x;
+    var deltaY := alvo.y - caster.y;
+
+    if (deltaX == 0)
+        if (deltaY > 0)
+            return 90;
+        else
+            return 270;
+        endif
+    endif
+
+    var angle := ATan(deltaY / deltaX) * 180 / CONST_PI;
+
+    // Ajustar o ângulo com base no quadrante
+    if (deltaX > 0 && deltaY >= 0)
+        return angle; // Primeiro quadrante
+    elseif (deltaX < 0)
+        return 180 + angle; // Segundo e terceiro quadrantes
+    else // Quarto quadrante
+        return 360 + angle;
+    endif
+endfunction
+
+function IsTargetInFront(caster, alvo, maxAngleParam)
+    var casterFacing := caster.facing;
+    var angleToTarget := CalculateAngleToTarget(caster, alvo);
+
+    // Normalizar os ângulos
+    casterFacing := (casterFacing + 360) % 360;
+    angleToTarget := (angleToTarget + 360) % 360;
+
+    var minAngle := casterFacing - maxAngleParam;
+    var maxAngle := casterFacing + maxAngleParam;
+
+    return (angleToTarget >= minAngle) && (angleToTarget <= maxAngle);
+endfunction
