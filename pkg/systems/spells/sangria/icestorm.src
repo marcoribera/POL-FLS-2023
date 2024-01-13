@@ -1,0 +1,80 @@
+use uo;
+use os;
+use util;
+
+include ":attributes:attributes";
+include ":magery:spells";
+include "include/client";
+include "include/sounds";
+include "include/damage";
+
+program icestorm(parms)
+	var caster := parms[1];
+	var info := parms[2];
+	var cast_on := parms[4]; // If NPC casting there'll be something here.
+	if (!cast_on) // If no cast_on then this is being cast by a player.
+		cast_on := MS_TargetCoordinates(caster, info.targ, "Seleciona um local.");
+	endif
+	if (!cast_on)
+		SendSysMessage (caster, "Cancelado.", color := 33);
+		return 0;
+	endif
+	if ( !CheckLosAt(caster, cast_on.x, cast_on.y, cast_on.z) )
+		return 0;
+	endif
+
+	var i := cint(AP_GetSkill(caster, MAGICLORE))/10;
+	var targ := CreateItemAtLocation(cast_on.x, cast_on.y, cast_on.z, 0xeed, 1, cast_on.realm);
+	targ.graphic := 1;
+	var newtarg;
+	var x, y;
+
+	Detach();
+	PlaySoundEffect(caster, 0x231);
+
+	while (i > 0)
+		x := targ.x + RandomInt(11) - 5;
+		y := targ.y + RandomInt(11) - 5;
+		newtarg := CreateItemAtLocation(x, y, targ.z, 0xeed, 1, targ.realm);
+		newtarg.graphic := 1;
+		if (CheckLineOfSight(targ, newtarg) )
+			PlayMovingEffectXYZ( newtarg.x, newtarg.y, (newtarg.z + 80), newtarg.x, newtarg.y, newtarg.z, 0x17cd, 0x08, 0x10, 0, newtarg.realm);
+			RainDamage(newtarg, caster, info);
+			i := i - 1;
+			DestroyItem(newtarg);
+			sleepms(200);
+		else
+			DestroyItem(newtarg);
+		endif
+	endwhile
+
+	DestroyItem(targ);
+
+endprogram
+
+
+function RainDamage(targ, byref caster, info)
+
+	var victims := ListMobilesNearLocationEx(targ.x, targ.y, targ.z, 1, 0x3, targ.realm);
+	var dmg;
+
+	foreach targ in victims
+        if(GetObjProperty(targ,"owner") || ((targ in caster.party.members)) )
+            continue;
+        endif
+		if (AP_GetVital(targ, HITS))
+			PlayObjectCenteredEffect(targ, 0x375a, 7, 0x10);
+			PlaySoundEffect(targ, 0x042);
+			var dmg := cint(AP_GetSkill(caster, MAGICLORE)) + RandomDiceRoll("6d8");
+            DamageFLS(targ, cint(dmg), DMG_COLD, caster);
+		endif
+	endforeach
+
+	victims := ListMobilesNearLocationEx(targ.x, targ.y, targ.z, 2, 0x3, targ.realm);
+	foreach targ in victims
+	if ( (AP_GetVital(targ, HITS)) && (!targ.paralyzed) )
+		start_script(":sorcery:effects/tempfreeze", {targ, CInt(AP_GetSkill(caster, MAGICLORE) / 3) } );
+	endif
+	endforeach
+
+endfunction
