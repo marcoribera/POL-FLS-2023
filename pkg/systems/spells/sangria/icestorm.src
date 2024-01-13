@@ -7,14 +7,19 @@ include ":magery:spells";
 include "include/client";
 include "include/sounds";
 include "include/damage";
+include "include/shapes";
+include ":timedScripts:timedScripts";
+include "include/sysEvent";
+include "include/client";
+include "include/say"; 
+include ":taming:taming";
 
 program icestorm(parms)
 	var caster := parms[1];
 	var info := parms[2];
-	var cast_on := parms[4]; // If NPC casting there'll be something here.
-	if (!cast_on) // If no cast_on then this is being cast by a player.
-		cast_on := MS_TargetCoordinates(caster, info.targ, "Seleciona um local.");
-	endif
+
+	var cast_on := MS_TargetCoordinates(caster, info.targ, "Seleciona um local.");
+
 	if (!cast_on)
 		SendSysMessage (caster, "Cancelado.", color := 33);
 		return 0;
@@ -56,25 +61,21 @@ endprogram
 function RainDamage(targ, byref caster, info)
 
 	var victims := ListMobilesNearLocationEx(targ.x, targ.y, targ.z, 1, 0x3, targ.realm);
-	var dmg;
 
-	foreach targ in victims
-        if(GetObjProperty(targ,"owner") || ((targ in caster.party.members)) )
-            continue;
-        endif
-		if (AP_GetVital(targ, HITS))
+	var alreadydamaged := array{};
+    var dmg := cint(AP_GetSkill(caster, MAGICLORE)) + RandomDiceRoll("6d8");
+    var mobiles := ListMobilesNearLocation(caster.x, caster.y, caster.z, 1, caster.realm);
+    var pets := ListPetsNear(caster, 8);
+    foreach mobile in mobiles
+        if (!(mobile.serial in alreadydamaged) && (mobile != caster) && !(mobile in caster.party.members) && !(mobile in pets ))
+			if ( (AP_GetVital(targ, HITS)) && (!targ.paralyzed) )
+				start_script(":sorcery:effects/tempfreeze", {targ, CInt(AP_GetSkill(caster, MAGICLORE) / 3) } );
+			endif
 			PlayObjectCenteredEffect(targ, 0x375a, 7, 0x10);
 			PlaySoundEffect(targ, 0x042);
-			var dmg := cint(AP_GetSkill(caster, MAGICLORE)) + RandomDiceRoll("6d8");
-            DamageFLS(targ, cint(dmg), DMG_COLD, caster);
-		endif
-	endforeach
-
-	victims := ListMobilesNearLocationEx(targ.x, targ.y, targ.z, 2, 0x3, targ.realm);
-	foreach targ in victims
-	if ( (AP_GetVital(targ, HITS)) && (!targ.paralyzed) )
-		start_script(":sorcery:effects/tempfreeze", {targ, CInt(AP_GetSkill(caster, MAGICLORE) / 3) } );
-	endif
-	endforeach
-
+            alreadydamaged.Append(mobile.serial);
+            DamageFLS(mobile, cint(dmg), DMG_COLD, caster);
+        endif
+        sleepms(20);
+    endforeach
 endfunction
