@@ -1639,10 +1639,10 @@ program createchar(who)
                     grimorio.newbie := 1;
 					var spellinfo := struct;
 					var p1 := createiteminbackpack(who, "pergaminhosangria1");
-					spellinfo.+id := 105;
+					spellinfo.+id := 5;
 					SetObjProperty(p1, "spellinfo", spellinfo);
 					p1 := createiteminbackpack(who, "pergaminhosangria1");
-					spellinfo.id := 106;
+					spellinfo.id := 6;
 					SetObjProperty(p1, "spellinfo", spellinfo);
 					ganheispell := 1;
                 endif            
