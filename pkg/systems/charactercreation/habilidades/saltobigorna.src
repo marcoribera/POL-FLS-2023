@@ -29,13 +29,21 @@ program animateSword(params)
    if (moved)
 	   MoveObjectToLocation( who, who.x, who.y, who.z-15, who.realm);
    endif
-   PLayStationaryEffect(who, who.x, who.y, 0x6d67, 0, 30);
+   sleepms(500);
+//   PlayStationaryEffect( x, y, z, effect, speed, loop := 0, explode := 0, realm := _DEFAULT_REALM )
+   PLayStationaryEffect(who.x+2, who.y+2, who.z, 0x6C9B, 0, 10, 0, who.realm);
+   PlaySoundEffect(who, 0x221);
     var duration := cint(AP_GetSkill(who, MAGICLORE)/10);
-    var nearby := ListMobilesNearLocation(who.x, who.y, who.z, duration , who.realm );
+    sleepms(500);
+    var nearby := ListMobilesNearLocation(who.x, who.y, who.z, 2 , who.realm );
     foreach char in nearby
-      TS_StartTimer(char, "tombar", duration);
-      TS_StartTimer(char, "lentidao", duration, who);
-      TS_StartTimer(char, "Paralysis", duration, who);
+        if (char != who)
+            PlayObjectCenteredEffect( char, 0x6d67, 0, 10);
+
+            TS_StartTimer(char, "tombar", duration);
+            TS_StartTimer(char, "lentidao", duration*2);
+            TS_StartTimer(char, "paralysis", duration);
+        endif
     endforeach
 
 	return 1;

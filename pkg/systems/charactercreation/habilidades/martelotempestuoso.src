@@ -19,7 +19,7 @@ program vacuodemana(params)
     endif
 	
     var dist := Distance(attacker, defender);
-    if (dist > 10)
+    if (dist > 6)
         SendSysMessage(attacker, "O alvo esta muito distante");
         return 1;
     endif
@@ -34,10 +34,12 @@ program vacuodemana(params)
     endif
     //PlayAttackAnimation(attacker); // animacao de overhead 2h 
     PerformAction(attacker, 12);
+    PlaymovingEffect(attacker, defender, 0x379f, 0, 40);
+    sleep(2);
+    PlaymovingEffect(defender, attacker, 0x379f, 0, 40);
 
     var duration := cint(AP_GetSkill(attacker, MAGICLORE)/10);
     TS_StartTimer(defender, "paralysis", duration);
-    PlaySoundEffect(attacker, 0x685);
 
 	var dmgList := dictionary;
 	dmgList := getNewDamageList(attacker);
@@ -48,6 +50,15 @@ program vacuodemana(params)
 	DamageFLS(defender, total, DMG_PHYSICAL, attacker);
 	DamageFLS(defender, dano_mlore, DMG_ENERGY, attacker);
     PlayLightningBoltEffect(defender);
+	PlayLightningSoundEffect(defender);
 
     return 1;
 endprogram 
+
+function PlayLightningSoundEffect(mobile)
+
+	var lightning := {41, 42, 519};
+
+	playsoundeffect(mobile, lightning[(randomint(3)+1)]);
+
+endfunction

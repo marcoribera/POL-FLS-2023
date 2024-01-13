@@ -108,3 +108,47 @@ function GetRawDmg(attacker)
     endif
 
 endfunction
+
+function checkGender(object)
+	var gender := 0;
+	if (object.graphic)
+		case (object.graphic)
+			400:
+			605: // elf
+				gender := 1;
+			401:
+			606: // elf
+				gender := 2;
+		endcase
+	elseif (object.corpsetype)
+		case (object.graphic)
+			400:
+			605: // elf
+			403:
+			607: // elf
+				gender := 1;
+			401:
+			606: // elf
+			404:
+			608: // elf
+				gender := 2;
+		endcase
+	elseif (object.gender)
+		if (gender == 0)
+			gender := 1;
+		else
+			gender := 2;
+		endif
+	endif
+
+	return gender;
+endfunction
+
+function PlayHurtSound(defender)
+	if ( defender.IsA(POLCLASS_NPC) )
+      var damaged_sound := NPC_GetNPCConfig(defender).HurtSound;
+		if ( damaged_sound && RandomInt(2) == 2)
+			PlaySoundEffect(defender, damaged_sound);
+		endif
+	endif
+endfunction
