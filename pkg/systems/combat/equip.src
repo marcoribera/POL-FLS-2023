@@ -89,6 +89,16 @@ program equipweapon(who, item)
 			endif
 	endif
 
+    var is_bone_armor := array{0x144e, 0x144f, 0x1450, 0x1451, 0xF0C9, 0xF0CC, 0xF0CB, 0xF0CD, 0x1452};
+    if (TemHabilidade(who, "Colheita de Almas") && item.isA(POLCLASS_ARMOR))
+        var cfg := ReadConfigFile(":combat:itemdesc");
+	    var elem := FindConfigElem(cfg, item.objtype);
+        if (!(item.objtype in is_bone_armor) && elem.TipoProtecao) 
+            SendSysMessageEx(who, "Como Shaman voce se recusa a usar armaduras que nao sejam de ossos", SSM_FAIL);
+            return 0;
+        endif
+	endif
+
 	if ( !GetCooldown(item, "blessweapon") && GetObjProperty(item, "armaSagradaOriginalColor") != error )
 		item.color := Cint(GetObjProperty(item, "armaSagradaOriginalColor"));
 		EraseObjProperty(item, "armaSagradaOriginalColor");

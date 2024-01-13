@@ -56,15 +56,15 @@ function TabelaMaterialResistMod(item) //objtype do material: return {FISICO, FI
         "0xef22": return {2,0,0,0,2,20}; //ANFIBIO
 
         //TIER 3
-        "0xc601": return {3,3,0,0,0,30}; //OGRO
+        "0xc601": return {3,3,0,0,0,30}; //courorobusto
         "0xc602": return {3,0,3,0,0,30}; //MARINHO
-        "0xc603": return {3,0,0,3,0,30}; //REPTILIANO
-        "0xc604": return {3,0,0,0,3,30}; //HIDRA
+        "0xc603": return {3,0,0,3,0,30}; //couroescamosoduro
+        "0xc604": return {3,0,0,0,3,30}; //LAMELAR
 
         //TIER 4
         "0xed29": return {4,4,0,0,0,40}; //DRACONIANO
-        "0xef25": return {4,0,4,0,0,40}; //TROLL
-        "0xef28": return {4,0,0,4,0,40}; //TERATHAN
+        "0xef25": return {4,0,4,0,0,40}; //courocinzento
+        "0xef28": return {4,0,0,4,0,40}; //courorijo
         "0xef27": return {4,0,0,0,4,40}; //GIGANTE
 
         //TIER 5
@@ -86,7 +86,7 @@ function TabelaMaterialResistMod(item) //objtype do material: return {FISICO, FI
 
         //TIER 4
         "0xef3a": return {4,4,0,0,0,40}; //GIGANTE
-        "0xef3b": return {4,0,4,0,0,40}; //TERATHAN
+        "0xef3b": return {4,0,4,0,0,40}; //courorijo
 
         //TIER 5
         "0xef29": return {5,0,0,5,5,50}; //DEMONÍACO
@@ -192,15 +192,15 @@ function TabelaMaterialDamageMod(item) //objtype do material: return {FISICO, FI
         "0xef22": return {0,0,0,0,0}; //ANFIBIO
 
         //TIER 3
-        "0xc601": return {0,0,0,0,0}; //OGRO
+        "0xc601": return {0,0,0,0,0}; //courorobusto
         "0xc602": return {0,0,0,0,0}; //MARINHO
-        "0xc603": return {0,0,0,0,0}; //REPTILIANO
-        "0xc604": return {0,0,0,0,0}; //HIDRA
+        "0xc603": return {0,0,0,0,0}; //couroescamosoduro
+        "0xc604": return {0,0,0,0,0}; //LAMELAR
 
         //TIER 4
         "0xed29": return {0,0,0,0,0}; //DRACONIANO
-        "0xef25": return {0,0,0,0,0}; //TROLL
-        "0xef28": return {0,0,0,0,0}; //TERATHAN
+        "0xef25": return {0,0,0,0,0}; //courocinzento
+        "0xef28": return {0,0,0,0,0}; //courorijo
         "0xef27": return {0,0,0,0,0}; //GIGANTE
 
         //TIER 5
@@ -330,15 +330,15 @@ function TabelaMaterialMod(item) //objtype do material: return {FISICO, FIRE, CO
         "0xef22": //ANFIBIO
 
         //TIER 3
-        "0xc601": //OGRO
+        "0xc601": //courorobusto
         "0xc602": //MARINHO
-        "0xc603": //REPTILIANO
-        "0xc604": //HIDRA
+        "0xc603": //couroescamosoduro
+        "0xc604": //LAMELAR
 
         //TIER 4
         "0xed29": //DRACONIANO
-        "0xef25": //TROLL
-        "0xef28": //TERATHAN
+        "0xef25": //courocinzento
+        "0xef28": //courorijo
         "0xef27": //GIGANTE
 
         //TIER 5

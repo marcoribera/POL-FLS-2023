@@ -118,6 +118,31 @@ program core_npcDeath(params)
 		PlaySoundEffect(necro, 383);
 	endif*/
 
+    if (GetObjProperty(corpse, "soulharvest"))
+        var shamanserial := getobjProperty(corpse, "soulharvest");
+        var shaman := SystemFindObjectBySerial(shamanserial);
+        var shaman_reap_bonus := Cint(AP_GetSkill(shaman, MAGICLORE));
+
+        var shaman_souls := Cint(getobjProperty(shaman, "shaman_souls"));
+        if (!shaman_souls)
+            var shaman_souls := 0;
+        endif
+
+        if (shaman_souls < Cint(shaman_reap_bonus / 5))
+            shaman_souls := shaman_souls + 1;
+            PerformAction (shaman, ANIM_SALUTE);
+            sleep(1);
+            PlayObjectCenteredEffectHuefx(corpse, 0x6C6F, 0, 60, 2394, 1);
+            PlaySoundEffect(shaman, 0x653);
+
+            SendSysMessage(shaman, "Voce colhe uma alma.");
+        else
+            SendSysMessage(shaman, "Voce nao consegue conduzir mais almas.");
+        endif
+
+        SetobjProperty(shaman, "shaman_souls", shaman_souls);
+    endif
+
 	foreach mob in (ListMobilesNearLocation(corpse.x, corpse.y, corpse.z, 5, corpse.realm))
 		//printtextabove(corpse, "procurando mobs " + mob.name);
 		if (cint(GetObjProperty(mob, "#satisfacaosadica")))
@@ -133,7 +158,16 @@ program core_npcDeath(params)
 				recalcvitals(mob);
 			endif
 		endif
-		
+        
+        var shaman_reap_bonus := Cint(AP_GetSkill(mob, MAGICLORE));
+
+        // HABILIDADES SHAMAN
+        if (TemHabilidade(mob, "Sede de sangue"))
+            HealFLS(mob, Cint(shaman_reap_bonus / 10));
+            // colocar o efeito roxinho
+       endif
+        // FIM HABILIDADES SHAMAN
+
 		if ( (GetObjProperty(mob, "#presenteespiritual") != error) )
 			if (GetObjProperty(mob, "#presenteespiritual") > readgameclock())
 				var souls := Cint(getobjProperty(mob, "souls"));

@@ -1568,6 +1568,11 @@ program createchar(who)
 		        ganheispell:=1;
 		        chardata.+magia := "Totemista";
             endif
+        elseif (chardata.povo == "Orc")
+            if (ganheispell == 0)
+		        ganheispell:=1;
+		        chardata.+magia := "Shaman";
+            endif
         elseif (chardata.povo == "Vanirio")
             if (ganheispell == 0)
 				var gump4 := GFCreateGump();

@@ -72,7 +72,7 @@ program SpellStarter(params)
 		SendSysMessage(mobile, "Voce precisa falar devido os componentes verbais da magia.");
 		FailSpell(mobile);
 		return 0;
-	elseif ( !EquipmentCheck(mobile) && (!TemHabilidade(mobile, "Senhor do Medo") || !TemHabilidade(mobile, "Devocao") || !TemHabilidade(mobile, "Concentracao Aprimorada")))
+	elseif ( !EquipmentCheck(mobile) && (!TemHabilidade(mobile, "Senhor do Medo") || !TemHabilidade(mobile, "Devocao") || !TemHabilidade(mobile, "Concentracao Aprimorada") || !TemHabilidade(mobile, "Colheita de Almas")))
 		SendSysMessage(mobile, "Suas maos precisam estar livres para gesticular os componentes gestuais necessarios para a magia.");
 		FailSpell(mobile);
 		return 0;

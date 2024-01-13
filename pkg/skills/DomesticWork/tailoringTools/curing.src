@@ -122,7 +122,7 @@ else
             prod_type := 0xef24;
             break;
           0xef16:
-          //courotroll
+          //courocinzento
             prod_type := 0xef25;
             break;
           0xef17:
@@ -134,7 +134,7 @@ else
             prod_type := 0xef27;
             break;
           0xef19:
-          //couroterathan
+          //courorijo
             prod_type := 0xef28;
             break;
           0xed20:
@@ -142,7 +142,7 @@ else
             prod_type := 0xed29;
             break;
           0xef01:
-          //couroogro
+          //courorobusto
             prod_type := 0xc601;
             break;
           0xeefd:
@@ -154,11 +154,11 @@ else
             prod_type := 0xc602;
             break;
           0xeeff:
-          //couroreptiliano
+          //couroescamosoduro
             prod_type := 0xc603;
             break;
           0xeefe:
-          //courohidra
+          //courolamelar
             prod_type := 0xACE5;
             break;
           default:

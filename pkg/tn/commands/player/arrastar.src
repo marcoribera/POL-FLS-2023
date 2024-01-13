@@ -79,7 +79,7 @@ program Test(who)
 			SendSysMessage(who, "Voce solta o corpo");
 			break;
 		endif
-		MoveObjectToLocation(targ, who.x, who.y, who.z);
+		MoveObjectToLocation(targ, who.x, who.y, who.z, who.realm);
 		var mob := SystemFindObjectBySerial(targ.ownerserial);
 
 		ConsumeVital (who, "Stamina", desgaste);

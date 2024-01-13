@@ -298,7 +298,7 @@ function repair_this(who, craft_skill := METALWORKING)
    endif
   else
     if(is_weapon_armor(use_on.objtype))
-      var near_items := ListItemsNearLocation(who.x, who.y, who.z,2);
+      var near_items := ListItemsNearLocation(who.x, who.y, who.z,2, who.realm);
       foreach item in near_items
         if ((item.objtype == UOBJ_ANVIL1) || (item.objtype == UOBJ_ANVIL2))
           repair_item( who, use_on, craft_skill);
@@ -359,7 +359,7 @@ endfunction
 
 function resmelt(who, the_attribute)
 
-	var near_items := ListItemsNearLocation(who.x, who.y, who.z, 3);
+	var near_items := ListItemsNearLocation(who.x, who.y, who.z, 3, who.realm);
 	var forge_near := 0;
 	foreach forge in near_items
 		if((forge.objtype == 0xfb1) || ((forge.objtype >= 0x197a) && (forge.objtype <= 0x19a9)))
