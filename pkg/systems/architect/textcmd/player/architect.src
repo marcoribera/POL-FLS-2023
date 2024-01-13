@@ -1637,6 +1637,7 @@ function get_objtype(type)
     {820, 835},
     {947, 950},
     {2140, 2149},
+    {2965, 2979},
     {2186, 2187},
     {1291, 1292},
     {1217, 1249},
@@ -1645,7 +1646,11 @@ function get_objtype(type)
     {1824, 1871},
     {1981, 1992},
     {1993, 2001},
-    {2170, 2173}
+    {2170, 2173},
+    {3023, 3082},
+    {7976, 7977},
+    {4758, 4766},
+    {2981, 3086}
     }; //Todas itens do tipo madeira
 
     // Verifique se o valor está em algum dos intervalos de madeira
