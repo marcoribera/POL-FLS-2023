@@ -121,12 +121,6 @@ function mark_portal(player, portal_number)
         SendSysMessage(player, "Qual local deseja marcar seu portal?");
         var targ := TargetCoordinateS(player);
         var portalName := "portal" + Cstr(portal_number);
-        //print("Portals: "+portals);
-        //print("portalName: "+portals[portalName]);
-        //print("r: "+portals[portalName].r);
-        //print("x: "+portals[portalName].x);
-        //print("y: "+portals[portalName].y);
-        //print("z: "+portals[portalName].z);
         if (targ)
             portals[portalName].x := targ.x;
             portals[portalName].y := targ.y;
@@ -137,7 +131,7 @@ function mark_portal(player, portal_number)
             portals[portalName].desc := name;
 
             SetObjProperty(player, "portals", portals);
-            PlayStationaryEffect(targ.x, targ.y, targ.z, 0x6DF1, 0, 20,0, player.realm);
+            PlayStationaryEffect(targ.x, targ.y, targ.z, 0x6D70, 0, 40,0, player.realm);
             PlaySoundEffect(player, 0x1f0);
         else
             SendSysMessage(player, "Voce nao marcou nenhuma localizacao");

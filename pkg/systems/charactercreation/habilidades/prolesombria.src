@@ -42,6 +42,7 @@ program summonSkeletaSteed(params)
     endwhile
     who.frozen := 0;
 	PlaySoundEffect(targ, SFX_SPELL_SUMMON_ELEMENTAL);
+    PlaySoundEffect(who, 0x686);
 
 	var mount := summon(template, targ, who);
 	var duracao := 120 + 180 * AP_GetSkill(who, MAGICLORE)/ 100;
