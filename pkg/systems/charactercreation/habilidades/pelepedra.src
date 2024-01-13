@@ -1,0 +1,32 @@
+use uo;
+
+include ":attributes:attributes";
+include ":timedScripts:timedScripts";
+include "include/say";
+include ":tn:cooldown";
+
+program manobra(who)
+
+    var targ := Target(who);
+    if (!targ || !targ.isA(POLCLASS_MOBILE))
+        SendsysMessageEx(who, "Alvo invalido");
+        return 0;
+    endif
+
+    var duration := Cint(AP_GetSkill(who, MAGICLORE) / 10);
+    var i := 0;
+    PLaySoundEffect(who, 0x216);
+    PlayObjectCenteredEffect(targ, 0xc679, 10, 80);
+	while (i < Cint(duration / 3))
+        GrantPrivilege(targ, "invul");
+        targ.enable("invul");
+
+		PlayObjectCenteredEffect(targ, 0x6CE8, 10, 80);
+		sleep(3);
+        i++;
+	endwhile
+
+    RevokePrivilege(targ, "invul");
+	targ.disable("invul");	
+
+endprogram    

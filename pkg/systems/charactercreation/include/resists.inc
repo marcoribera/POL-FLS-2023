@@ -54,6 +54,9 @@ function GetResist(who, resist)
 	if (resist == FORTITUDE)
 		if (TemHabilidade(who, "Grande Fortitude"))
 			valor := valor + 30;
+        endif
+        if (TemHabilidade(who, "Campeao das Montanhas"))
+            valor := valor + 20;
 		endif
 
 		// Aplica os bonus base do Caminho para a resistência
@@ -123,6 +126,8 @@ function GetResist(who, resist)
 			valor := valor + 40; // +400% do VALOR_REFERENCIA
 		elseif (temHabilidade(who, "Devocao")) // Habilidade passiva
 			valor := valor + 40; // +400% do VALOR_REFERENCIA
+        elseif (TemHabilidade(who, "Campeao das Montanhas"))
+            valor := valor + 20;
 		endif
 	endif
 
