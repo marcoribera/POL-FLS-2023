@@ -67,11 +67,10 @@ program orderSpells(who, item)
          var spell := spell_list[input[0]-200];
          var ret := StoreSpell(who, spell, shaman_list, available_slots);
          if (ret)
-            item.graphic := 0xA06B; // TODO achar o da caveira
+            item.graphic := 0xA06B;
             sleep(2);
             item.graphic := 0xA06A;
          endif
-         // play 0x9DF2
       elseif (!input[0])
          canceled := 1;
       endif
