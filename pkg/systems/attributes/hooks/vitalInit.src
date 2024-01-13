@@ -44,7 +44,7 @@ exported function GetHitsMaximumValue(mobile)
     if (GetObjProperty(mobile, "kit") == "Corpulento")
         vital_points := vital_points + 2000;
     endif
-    if (GetObjProperty(mobile, "chardata").vantagemracial == "Constituicao Ana")
+    if (GetObjProperty(who, "chardata")).povo == "Anao")
         vital_points := vital_points + 1000;
     endif
 
@@ -137,7 +137,7 @@ exported function GetStaminaMaximumValue(mobile)
 		if (GetObjProperty(mobile, "kit") == "Agil")
 			vital_points := vital_points + 2000;
 		endif
-        if (GetObjProperty(mobile, "chardata").vantagemracial == "Constituicao Ana")
+        if (GetObjProperty(who, "chardata")).povo == "Anao")
 			vital_points := vital_points + 1000;
 		endif
 	endif

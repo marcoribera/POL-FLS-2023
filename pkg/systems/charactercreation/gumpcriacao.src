@@ -205,7 +205,7 @@ var gflayout := array{
         endif
         if (chardata.povo == "Anao")
             gfdata.append("Constituicao Ana");
-	    	gfdata.append("Anões são um povo trabalhador e por isso recebem mais 10 de HP e mais 10 de stamina");
+	    	gfdata.append("Anões são mais resistentes a magia naturalmente.");
         endif
         if (chardata.povo == "Orc")
             gfdata.append("Resistencia implacavel");
