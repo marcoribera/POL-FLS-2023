@@ -10,7 +10,7 @@ include "include/dungeons";
 
 program summonSkeletaSteed(params)
 	var who := params[1];
-	var targ := params[2];
+	var targ := TargetCoordinates(who);
 
 	var template := ":brainai:MonstrodaPoeira";
     var lvl := Cint(AP_GetSkill(who, MAGICLORE));
