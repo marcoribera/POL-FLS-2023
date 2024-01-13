@@ -10,24 +10,36 @@ include ":fls_magery:spellSounds";
 include "include/client";
 include "include/sounds";
 include "include/damage";
+include ":taming:taming";
 
 const CONST_PI := 3.141592;
 
 program SpellScript(params)
 	var caster := params[1];
 	var info := params[2];
-    var range := 3; // Alcance do cone de fogo
+    var range := cint(AP_GetSkill(caster, MAGICLORE))/8;
     var maxAngle := 45; // Ângulo máximo para o cone
-    var damage := cint(AP_GetSkill(caster, MAGICLORE))/8 + RandomDiceRoll("3d6");
+
+    SendSysMessageEx(caster, "Uma fina camada de chamas brota das pontas dos seus dedos estendidos.", SSM_INFO);
     
-    var mobs := ListMobilesNearLocation(caster.x, caster.y, caster.z, 8, caster.realm);
+    var mobs := ListMobilesNearLocation(caster.x, caster.y, caster.z, range, caster.realm);
 
     foreach mob in mobs
-        if(GetObjProperty(mob,"owner") || ((mob in caster.party.members)) )
-            continue;
-        endif
         if (IsTargetInFront(caster, mob, maxAngle))
+            var pets := ListPetsNear(caster, range+10);
+            if((mob in caster.party.members) && (mob in pets ))
+                continue;
+            endif
+            var damage := cint(AP_GetSkill(caster, MAGICLORE))/8 + RandomDiceRoll("3d6");
+            PlaySoundEffect( mob, SFX_226 );
+            sleepms(100);
+            PlaySoundEffect( mob, SFX_227 );
+            sleepms(100);
+            PlaySoundEffect( mob, SFX_228 );
+            sleepms(100);
+            SendSysMessageEx(mob, "As chamas queimam voce.", SSM_FAIL);
             DamageFLS(mob, cint(damage), DMG_FIRE, caster);
+            sleepms(100);         
         endif
     endforeach
 endprogram

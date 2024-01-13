@@ -80,7 +80,7 @@ exported function GetManaRegenRate(mobile)
 	endif
 
 	if (TemHabilidade(mobile, "Estudioso da Sangria"))
-		base_regen := (base_regen + base_regen) + (cint(AP_GetSkill(mobile, MAGICLORE)) * 10);
+		base_regen := (base_regen + base_regen) + (cint(AP_GetSkill(mobile, MAGICLORE)) * 20);
 	endif
 
 	if (TemHabilidade(mobile, "Fluxo Divino"))

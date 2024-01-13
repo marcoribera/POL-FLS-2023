@@ -24,12 +24,13 @@ program SpellScript(params)
 		return 0;
 	endif
 
+	SendSysMessageEx(who, "Misseis magicos saem de sua mao", SSM_INFO);
 	var i := 1;
     For (i := 1; i <= cint(AP_GetSkill(who, MAGICLORE) / 20); i += 1)
         PlayMovingEffectXYZHued(who, targ, 0xf42, 10, 1643, 0);
         PlaySoundEffect(who, SFX_MAGIC_ARROW);
 
-        var dmg := cint(AP_GetSkill(who, MAGICLORE))/8 + RandomDiceRoll("1d4");
+        var dmg := cint(AP_GetSkill(who, MAGICLORE))/4 + RandomDiceRoll("4d4");
         DamageFLS(targ, cint(dmg), DMG_FORCED, who);
         SleepMS(500);
     EndFor
