@@ -213,7 +213,7 @@ program fireweapons(who, item)
     elseif (is_handcannon)
         min_dist := 2;
     endif
-    if (GetObjProperty(player, "Cano Serrado"))
+    if (GetObjProperty(who, "Cano Serrado"))
         min_dist -= 1;
     endif
 
