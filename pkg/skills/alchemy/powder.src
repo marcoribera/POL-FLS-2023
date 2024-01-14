@@ -33,7 +33,7 @@ program textcmd_openPack(who, item)
         endforeach
     endif
 
-    if (AP_GetSkill(who, ALCHEMY) < 50)
+    if (AP_GetSkill(who, ALCHEMY) < 50 || !TemHabilidade(who, "Artilheiro Preparado"))
         SendSysMessageEx(who, "Voce nao sabe o que fazer com isso", SSM_FAIL);
         return 0;
     endif

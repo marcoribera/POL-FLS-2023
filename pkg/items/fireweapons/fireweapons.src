@@ -83,7 +83,7 @@ program fireweapons(who, item)
                 powder_amt := 2;
             endif
 
-            if (TemHabilidade(who, "Otimizacao da Polvora") && powder_amt > 2)
+            if (TemHabilidade(who, "Municiador Experiente") && powder_amt > 2)
                 powder_amt := 2;
             endif
             while (who.x == current_x && who.y == current_y)
@@ -120,7 +120,7 @@ program fireweapons(who, item)
                     elseif (is_musket)
                         reload_time := 8;
                     endif
-                    if (TemHabilidade(who, "Recarregador profissional"))
+                    if (TemHabilidade(who, "Municiador Experiente"))
                         reload_time /= 2;
                     endif
                     // Toca os sons de recarregar

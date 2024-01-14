@@ -462,6 +462,8 @@ function comprarHabilidade(who, item, nv:=-1)
                     AP_ModifySkillMod(who, MAGERY, (-1)*penalty);
                 endif
             endforeach
+        elseif(escolhida == "Artilheiro Preparado")
+            who.carrying_capacity_mod := 50;
 		endif
 		myhabs[nivel] := escolhida;
 		habs[nivel] := 2;
