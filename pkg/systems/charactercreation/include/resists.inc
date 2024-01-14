@@ -54,6 +54,9 @@ function GetResist(who, resist)
 	if (resist == FORTITUDE)
 		if (TemHabilidade(who, "Grande Fortitude"))
 			valor := valor + 30;
+        endif
+        if (TemHabilidade(who, "Campeao das Montanhas"))
+            valor := valor + 20;
 		endif
 
 		// Aplica os bonus base do Caminho para a resistência
@@ -123,6 +126,8 @@ function GetResist(who, resist)
 			valor := valor + 40; // +400% do VALOR_REFERENCIA
 		elseif (temHabilidade(who, "Devocao")) // Habilidade passiva
 			valor := valor + 40; // +400% do VALOR_REFERENCIA
+        elseif (TemHabilidade(who, "Campeao das Montanhas"))
+            valor := valor + 20;
 		endif
 	endif
 
@@ -173,8 +178,8 @@ function CheckResist(who, resist, dif, mod := 0)
 			SendSysMessageEx(who, "Seu organismo drow expurga o veneno", SSM_INFO);
 			return 1;
 		endif
-    elseif((GetObjProperty(who, "chardata")).povo == "Anao" && resist == VONTADE)
-        mod += 30;
+    elseif(GetObjProperty(who, "chardata").vantagemracial == "Constituicao Ana" && resist == VONTADE)
+        mod += 30; 
 		if (dado + valor + mod >= dif)
 			SendSysMessageEx(who, "Sua constituicao ana o salvou da magia", SSM_INFO);
 			return 1;

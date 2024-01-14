@@ -15,6 +15,9 @@ program manobra(attacker)
 	var barreira := struct;
 	barreira.+blocker := attacker.serial;
 	barreira.+chance := cint(AP_GetSkill(attacker, PARRY)/4);
+    if (TemHabilidade(attacker, "Parede de Escudos"))
+        barreira.chance := cint(AP_GetSkill(attacker, MAGICLORE)/4);
+    endif
 	party.setprop("BarreiraDeEscudos", barreira);
 	SetCooldown(attacker, "BarreiraDeEscudos", 60);
 	

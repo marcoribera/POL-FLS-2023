@@ -19,6 +19,7 @@ program truesight(who)
     //var masterserial := getObjProperty(mobile, "owner");
     //var master := SystemFindObjectBySerial(masterserial);
     PerformAction(who, ANIM_CAST_AREA);
+    PlaySoundEffect(who, 0x684);
 
     foreach member in festa
         if (member.serial != who.serial)

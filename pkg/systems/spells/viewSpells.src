@@ -60,7 +60,7 @@ function CreateClericGump(who, shaman_list, available_slots)
 
    GFSetId(gump, GUMPID_CLERICSPELL);
 	GFClosable(gump, 1);
-	GFResizePic(gump, 10, 26, 9390, 476, 120+size);
+	GFResizePic(gump, 10, 26, 9390, 476, 140+size);
 	GFHTMLArea(gump, 180, 65, 192, 20, "<BASEFONT Size=5 Color=#666666 >Lista de Rituais", 0, 0); //shadow
 	GFHTMLArea(gump, 182, 67, 192, 20, "<BASEFONT Size=5 Color=#666666 >Lista de Rituais", 0, 0);
 	GFHTMLArea(gump, 181, 66, 192, 20, "<BASEFONT Size=5 Color=#ffffff >Lista de Rituais", 0, 0); //shadow
@@ -105,6 +105,10 @@ function CreateClericGump(who, shaman_list, available_slots)
          GFAddButton(gump, 442, y+2, 22150, 22151, GF_CLOSE_BTN, SPELL_BTN+_spell_iter);
          GFToolTipText(gump, "Esquecer ritual");
       endif
+        var shaman_souls := GetObjProperty(who, "shaman_souls");
+        if (shaman_souls)
+        	GFTextLine(gump, 52, y+35, 1445, "Colheita: {} almas".format(shaman_souls));
+        endif
 
       y += 26;
       sleepms(2);

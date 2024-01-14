@@ -12,6 +12,7 @@ program sanctuary(params)
 
     var duration := Cint(AP_GetSkill(who, MAGICLORE) / 5);
     if (TemHabilidade(who, "Caminhar nas sombras"))
+        PlaySoundEffect(who, 0x688);
         if(InDarkness(who))
             TS_StartTimer(who, "velocidade", duration);
         endif

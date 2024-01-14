@@ -10,9 +10,9 @@ include "include/dungeons";
 
 program summonSkeletaSteed(params)
 	var who := params[1];
-	var targ := params[2];
+	var targ := TargetCoordinates(who);
 
-	var template := ":brainai:GiantSpider";
+	var template := ":brainai:MonstrodaPoeira";
     var lvl := Cint(AP_GetSkill(who, MAGICLORE));
 
     if (template == error)
@@ -39,7 +39,7 @@ program summonSkeletaSteed(params)
 
 	TS_StartTimer(mount, "summon", duracao ); //inicio do timedScripts no summon
 
-    PlayObjectCenteredEffect(mount, 0x37C4, 10, 20);
+    PlayObjectCenteredEffect(mount, 0x6d57, 10, 20);
     printtextabove(mount, "ADAR KOR DOOM!");
     SendSysMessageEx(who, "Xali'Gijak. PELA HORDA!");
 	return 1;

@@ -223,6 +223,11 @@ program MainHitScript( params )
 		endif
 
 		total := CalculateTotalDamage(defender, basedamage, attacker, dmgList);
+        var shaman_bonus := CInt(AP_GetSkill(attacker, MAGICLORE) / 5);
+        if (Getcooldown(attacker, "bloodlust") > 0)
+            PlayObjectCenteredEffectHuefx(attacker, GFX_BLUE_SPARKLE_GROUND, 0, 60, 2676, 0);
+            HealFLS(attacker, total * shaman_bonus/100);
+        endif
 		if (GetObjProperty(attacker, "#ignorardefesas") >= 1);
 			var ignr := getObjPRoperty(attacker, "#ignorardefesas");
 			ignr := ignr - 1;
@@ -425,6 +430,8 @@ function SkillChecks(attacker, defender, weapon, rawdamage)
 		skillUsedForCritical := MAGICLORE;
 	elseif(GetObjProperty(attacker, "kit") == "Medico de Combate")
 		skillUsedForCritical := MEDICINE;
+	elseif(temHabilidade(attacker, "Lobo Solitario"))
+		skillUsedForCritical := SURVIVAL;
 	endif
 	//Testa se é possivel ganhar skill com o NPC alvo
 	var skillAttacker, skillDefender;
@@ -767,6 +774,8 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 		skillUsedForCritical := MAGICLORE;
 	elseif(GetObjProperty(attacker, "kit") == "Medico de Combate")
 		skillUsedForCritical := MEDICINE;
+	elseif(temHabilidade(attacker, "Lobo Solitario"))
+		skillUsedForCritical := SURVIVAL;
 	endif
 	var autoCritical := 0;
 	if (GetObjProperty(attacker, "#nextcritical"))
@@ -790,14 +799,16 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 	elseif (GetObjProperty(attacker, "kit") == "Medico de Combate")
 		skillCriticalBonus := CInt(AP_GetSkill(attacker, MEDICINE)/20); //Aplica bonus de medicine na chance de critico quando é Medico de Combate
 	elseif (GetObjProperty(attacker, "kit") == "Ranger")
-		skillCriticalBonus := CInt(AP_GetSkill(attacker, TACTICS)/20); //Aplica bonus de tactics na chance de critico quando não é nenhum caso específico
+	//skillCriticalBonus := CInt(AP_GetSkill(attacker, TACTICS)/20); Aplica bonus de tactics na chance de critico quando não é nenhum caso específico
 		if(categoriaDefender == "GiantAnimal" || categoriaDefender == "Animal" || categoriaDefender == "EvilAnimal" || categoriaDefender == "Snow" || categoriaDefender == "Mount" || categoriaDefender == "Plantas" || categoriaDefender == "Terathan" || categoriaDefender == "Dragon")
 			skillCriticalBonus := skillCriticalBonus + CInt(AP_GetSkill(attacker, SURVIVAL)/20); //Aplica bonus de Survival se forem criaturas selvagens ou dragões
 		endif
 	else
 		skillCriticalBonus := CInt(AP_GetSkill(attacker, TACTICS)/20); //Aplica bonus de magiclore na chance de critico quando é Mago de Combate
 	endif
-
+	if(temHabilidade(attacker, "Lobo Solitario"))
+		skillCriticalBonus :=CInt(AP_GetSkill(attacker, SURVIVAL/20)); // Aplica bonus de survival quando é classe Caçador
+	endif
 	//critico base da arma, critico extra da CProp da da arma, critico extra do CProp do personagem, critico extra da skill do personagem, critico extra de Habilidade especial do personagem
 	var chance := Cint( Cint(GetObjProperty(weapon, "CriticalChance")) + Cint(GetObjProperty(attacker, "CriticalChance")) + Cint((item_cfg[weapon.objtype]).CriticalChance )) + skillCriticalBonus + Cint(GetObjProperty(attacker, "#CriticalChance"));	//Limpa a CProp de bonus critico para o próximo ataque
 	EraseObjProperty(attacker, "#CriticalChance");

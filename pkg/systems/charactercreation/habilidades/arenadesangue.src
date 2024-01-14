@@ -1,5 +1,7 @@
 use uo;
+use os;
 
+include "include/client";
 include ":fls_core:packets";
 include ":combat:combat";
 include ":blood:blood";
@@ -25,8 +27,11 @@ program vacuodemana(params)
     if (!shaman_souls)
         var shaman_souls := 0;
     else
+        PerformAction(attacker, ANIM_CAST_DIR);
         TS_StartTimer(defender, "paralysis", duration);
         SetCooldown(defender, "horrify", shaman_souls+duration);
+        PlaySoundEffect(defender, 0x654);
+        PlayObjectCenteredEffectHuefx(defender, 0x6c91, 1, 30, 2731, 0);
         SendSysMEssage(defender, "Voce esta aterrorizado com visoes de morte");
     endif
 
@@ -35,9 +40,8 @@ program vacuodemana(params)
 	dmgList := getNewDamageList(attacker);
 
 	var total := cint(CalculateTotalDamage(defender, basedamage, attacker, dmgList));
-    var dano_mlore := cint(AP_GetSkill(attacker, MAGICLORE));
+    var dano_mlore := cint(AP_GetSkill(attacker, MAGICLORE) + (shaman_souls * 5));
 	DamageFLS(defender, dano_mlore, DMG_POISON, attacker);
-
     SetObjProperty(attacker, "shaman_souls", 0);
     
     return 1;

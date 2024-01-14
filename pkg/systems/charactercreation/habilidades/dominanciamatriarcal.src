@@ -32,6 +32,7 @@ program vacuodemana(params)
 
     var duration := cint(AP_GetSkill(attacker, MAGICLORE)/10);
     if (InDarkness(attacker))
+        PlaySoundEffect(attacker, 0x685);
         TS_StartTimer(defender, "paralysis", duration);
     endif
 

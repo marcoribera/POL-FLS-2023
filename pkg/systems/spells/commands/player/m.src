@@ -4,6 +4,7 @@ use cfgfile;
 
 include "include/say";
 include ":spells:spellbooks";
+include ":charactercreation:habilidades";
 
 program magia(who, spellname)
 	if ( GetObjProperty(who, "#Casting") )
@@ -12,6 +13,10 @@ program magia(who, spellname)
 	endif
 	SendSysMessage(who, "Iniciando magia");
 	var cfg := ReadConfigFile(":spells:allspells");
+
+	if(GetObjProperty(who, "chardata").magia == "kitahster")
+        cfg := ReadConfigFile(":spells:config/sangriaspells");
+    endif
 
 	var elem;
 	var id := 1;
@@ -51,7 +56,8 @@ program magia(who, spellname)
 		endif
 	endforeach
 
-	if ( !spellbook)
+	var circle_spell := cint(GetConfigString(elem, "Circle"));
+	if ( !spellbook && GetObjProperty(who, "advclass") != "kitahster" && circle_spell != 0)
 		SendSysMessageEx(who, "Voce nao possui a magia " + spellname + " nos seu grimorio.", SSM_FAIL);
 		return;
 	endif
@@ -59,12 +65,9 @@ program magia(who, spellname)
 
 	var spellinfo := struct;
 	spellinfo.+id := id;
-        var script := Start_Script(":spells:cast_spell", {who, spellinfo, booktype});
-        if ( script.errortext )
-                         SendSysMessage(who, "Error - Could not start spell starter ->"+script.errortext);
-	                 return 0;
+	var script := Start_Script(":spells:cast_spell", {who, spellinfo, booktype});
+	if ( script.errortext )
+		SendSysMessage(who, "Error - Could not start spell starter ->"+script.errortext);
+		return 0;
 	endif
-
-
-
 endprogram
