@@ -205,13 +205,16 @@ program fireweapons(who, item)
 	var dist := distance(who, targ);
 
     // Calcula distancia minima de acordo com a arma
-    var min_dist := 0;
+    var min_dist := 1;
     if (is_musket)
         min_dist := 4;
     elseif (is_carabine)
         min_dist := 3;
     elseif (is_handcannon)
         min_dist := 2;
+    endif
+    if (GetObjProperty(player, "Cano Serrado"))
+        min_dist -= 1;
     endif
 
     if (dist < min_dist)
@@ -231,14 +234,14 @@ program fireweapons(who, item)
         dmg := 140;
     endif
 
-    if (TemHabilidade(who, "Municao Explosiva"))
+    if (GetObjProperty(who, "Municao Explosiva"))
         dmg += 40;
     endif
     
     // Cálculo de dano baseado na distância
     // TODO: Transformar numa função
     var max_range := 6;
-    if (TemHabilidade(who, "Mira telescopica"))
+    if (GetObjProperty(who, "Mira Telescopica"))
         max_range += 4;
     endif
     if (is_pistol)
