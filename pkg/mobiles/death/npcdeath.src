@@ -168,6 +168,12 @@ program core_npcDeath(params)
        endif
         // FIM HABILIDADES SHAMAN
 
+        // GOLEM MAKER
+        if (Getobjproperty(mob, "golem_maker"))
+            EraseObjProperty(mob, "golem_maker");
+        endif
+        // FIM GOLEM MAKER
+
 		if ( (GetObjProperty(mob, "#presenteespiritual") != error) )
 			if (GetObjProperty(mob, "#presenteespiritual") > readgameclock())
 				var souls := Cint(getobjProperty(mob, "souls"));
