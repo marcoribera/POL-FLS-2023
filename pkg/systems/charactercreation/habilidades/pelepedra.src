@@ -17,7 +17,7 @@ program manobra(who)
     var i := 0;
     PLaySoundEffect(who, 0x216);
     PlayObjectCenteredEffect(targ, 0x6C79, 0, 25);
-    PlaySoundEffect(targ, 0x65b)
+    PlaySoundEffect(targ, 0x65b);
 	while (i < Cint(duration / 3))
         GrantPrivilege(targ, "invul");
         targ.enable("invul");
