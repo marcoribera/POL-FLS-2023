@@ -1,6 +1,7 @@
 use uo;
 use cfgfile;
 use util;
+use os;
 
 program cria(item)
 
@@ -12,17 +13,22 @@ program cria(item)
 
 	//pega o level do scroll
 	var scrollcfg := ReadConfigFile(":spells:itemdesc");
-	var lvl :=  GetConfigInt(FindconfigElem(scrollcfg, item.objtype), "Circle" );
-	var spelltype_item :=  GetConfigInt(FindconfigElem(scrollcfg, item.objtype), "SpellType" );
+	var lvl :=  scrollcfg[item.objtype].Circle;
+	var spelltype_item := scrollcfg[item.objtype].SpellType;
 
 	if (!lvl)
 		lvl := 1;
 	endif
 
 	//pega todas magias do cfg com esse level e armazena no array
-	var spellcfg := ReadConfigFile(":spells:config/allspells");
+	var spellcfg;
 	if(spelltype_item == "Sangria")
 		spellcfg := ReadConfigFile(":spells:config/sangriaspells");
+	elseif(spelltype_item == "Mage")
+		spellcfg := ReadConfigFile(":spells:config/allspells");
+	else
+		Syslog("Erro ao criar pergaminho");
+		return 0;
 	endif	
 	
 	var keys := GetConfigIntKeys(spellcfg);
@@ -30,44 +36,19 @@ program cria(item)
 	foreach key in keys
 		var spelllvl := GetConfigInt( FindconfigElem(spellcfg, key), "Circle" );
 		var spelltype := GetConfigString( FindconfigElem(spellcfg, key), "Type" );
-		if ( (spelllvl == lvl) && ( spelltype == "Mesum")) //so mesum tem scroll
+		if ( (spelllvl == lvl) && ( spelltype == "Mesum"))
 			var unico := GetConfigInt( FindConfigElem(spellcfg, key), "Unico" );
 			if (!unico)
 				randomspells.append(key);
 			endif
 		elseif( (spelllvl == lvl) && ( spelltype == "Sangria"))
-			var unico := GetConfigInt( FindConfigElem(spellcfg, key), "Unico" );
-			if (!unico)
-				randomspells.append(key);
-			endif
+			randomspells.append(key);
 		endif
 	endforeach
 
-
-	spellinfo.+id := randomspells[RandomInt(randomspells.size())+1];
+	var random_spell_id := RandomInt(randomspells.size())+1;
+	spellinfo.+id := randomspells[random_spell_id];
 	SetObjProperty(item, "spellinfo", spellinfo);
 
-
-	return 1;	
-
-	//isso aqui eh so pra lemmbrar como era =[
-	if (item.objtype == 63892)
-		spellinfo.+name := "Teia";
-		spellinfo.+powerwords := "Cress Orbb";
-		spellinfo.+alvo := "Unico";
-		spellinfo.+type := "Outro";
-		spellinfo.+range := "Distancia";
-		spellinfo.+targtype := "Animados";
-		spellinfo.+power := 3;
-		spellinfo.+mana := Cint(spellinfo.power)*10;
-		spellinfo.+delay := Cint(spellinfo.power)*300;
-		spellinfo.+difficulty := 50;
-		spellinfo.+description := "Dizem que esta magia foi ensinada diretamente por Loth para os elfos negros. Outros dizem que essa magia foi criada por civilizacoes aracnideas inteligentes. Seu efeito faz com que uma teia pegajosa seja criada onde o alvo esta impedindo seus movimentos.";
-		SetObjProperty(item, "spellinfo", spellinfo);
-		return 1;
-	endif
-
-
-			
-
+	return 1;
 endprogram
