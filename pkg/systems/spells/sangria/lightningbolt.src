@@ -14,7 +14,8 @@ program cast_lightningbolt(params)
 	var info := params[2];
 	params := 0; // No longer needed
 
-	var targ := MS_Target(caster, info.targ, "Selecione o alvo.", TGTOPT_CHECK_LOS+TGTOPT_HARMFUL);
+	SendSysMessage(caster, "Selecione o alvo.");
+	var targ := Target(caster);
 	if ( !targ.IsA(POLCLASS_MOBILE) )
 		SendSysMessage(caster, "Alvo invalido.");
 		return 0;

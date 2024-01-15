@@ -18,7 +18,8 @@ program spell_meteorSwarm( parms )
     var caster := parms[1];
     var info := parms[2];
 
-    var targ := MS_Target(caster, info.targ, "Selecione o alvo.", TGTOPT_CHECK_LOS);
+    SendSysMessage(caster, "Selecione o alvo.");
+	var targ := Target(caster);
 
     if (!targ)
         SendSysMessageEx(caster, "Cancelado", SSM_FAIL);
