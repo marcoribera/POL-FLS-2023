@@ -12,10 +12,12 @@ program magia(who, spellname)
 		return 0;
 	endif
 	SendSysMessage(who, "Iniciando magia");
-	var cfg := ReadConfigFile(":spells:allspells");
+	var cfg;
 
 	if(GetObjProperty(who, "chardata").magia == "kitahster")
         cfg := ReadConfigFile(":spells:config/sangriaspells");
+	else
+		cfg := ReadConfigFile(":spells:allspells");
     endif
 
 	var elem;
