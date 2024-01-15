@@ -61,16 +61,16 @@ var gflayout := array{
 		"text 265 440 2105 5",
 		"Radio 230 357 9726 9729 0 4", //aquilrano
 		"Radio 230 397 9726 9729 0 5", //numajene
-		"Radio 230 437 9726 9729 0 6", //vanirio
+		"Radio 230 437 9726 9729 0 6" //vanirio
 
-		"text 215 480 2105 13",
+		//"text 215 480 2105 13",
 
-        "text 265 510 2105 10",
-		"text 265 550 2105 11",
-        "text 265 590 2105 12",
-		"Radio 230 507 9726 9729 0 10", //Anao
-		"Radio 230 547 9726 9729 0 11", //Drow
-        "Radio 230 587 9726 9729 0 12" //Anao
+        //"text 265 510 2105 10",
+		//"text 265 550 2105 11",
+        //"text 265 590 2105 12",
+		//"Radio 230 507 9726 9729 0 10", //Anao
+		//"Radio 230 547 9726 9729 0 11", //Drow
+        //"Radio 230 587 9726 9729 0 12" //Anao
 		};
 var gfdata := array{
 		"Forgotten Lore Shard", //0
