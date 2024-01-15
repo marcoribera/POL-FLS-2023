@@ -1,0 +1,33 @@
+/*
+ * $Id$
+ *
+ */
+
+use uo;
+use os;
+
+include ":attributes:attributes";
+include ":timedscripts:timedScripts";
+include ":magery:spells";
+include "include/client";
+include "include/sounds";
+
+program SpellScript(params)
+	var who := params[1];
+	var info := params[2];
+	params := 0; // No longer needed
+    var targ := Target(who);
+    
+    if (!targ.isA(POLCLASS_MOBILE))
+        SendSysMessage(who, "Precisa ser uma pessoa ou criatura");
+    endif
+
+    var duration := (CInt(AP_GetSkill(who, MAGICLORE)) / 10);
+    foreach mob in ListMobilesNearLocation(who.x, who.y, who.z, 3, who.ream)
+        PlayObjectCenteredEffect(mob, 0x6cb7, 7, 30);
+
+        TS_StartTimer(mob, "lentidao", duration);
+    endforeach
+		
+	return 1;
+endprogram
