@@ -622,7 +622,7 @@ function WritespellInfo(who, byref spellinfo)
     if (GetObjProperty(who, "chardata").magia == "Shaman")
         cfg := ReadConfigFile(":spells:config/shamanspells");
         spellinfo.used := 1;
-	elseif(GetObjProperty(who, "chardata").magia == "kitahster")
+	elseif(GetObjProperty(who, "chardata").magia == "kitahster" || spellinfo.path_magic == "Sangria")
         cfg := ReadConfigFile(":spells:config/sangriaspells");
 	else
 		cfg := ReadConfigFile(":spells:config/allspells");
