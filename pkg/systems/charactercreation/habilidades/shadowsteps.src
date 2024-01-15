@@ -22,6 +22,7 @@ program sanctuary(params)
         if(InDarkness(who))
             var duration_shadowdancer := cint(AP_GetSkill(who, MAGICLORE)/2.5);
             Setcooldown(who, "shadowdancer_blur", duration_shadowdancer);
+            TS_StartTimer(who, "spectralform", duration_shadowdancer);
         endif
     endif
 

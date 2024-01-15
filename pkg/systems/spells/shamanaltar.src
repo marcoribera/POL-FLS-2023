@@ -33,6 +33,25 @@ program orderSpells(who, item)
 
    var spell_list := array{};
    var slots_used := 0;
+
+   // Adiciona cantrips
+   var cantrips := array{};
+   if (!GetObjProperty(who, "cantrips"))
+        var new_spell := struct{};
+        foreach spell in (GetConfigIntKeys(cfg))
+            spell := FindConfigElem(cfg, spell);
+            WriteSpellInfo(spell, ":spells:config/shamanspells");
+            sleepms(2);
+            if (spell.circle == 0) 
+                new_spell.+id := spell.SpellId;
+                new_spell.+name := spell.name;
+                new_spell.+powerwords := spell.powerwords;
+                cantrips.Append(new_spell);
+            endif
+        endforeach
+        SetObjPRoperty(who, "cantrips", cantrips);
+    endif
+    
    foreach spell in (GetConfigIntKeys(cfg))
       spell := FindConfigElem(cfg, spell);
       sleepms(2);
