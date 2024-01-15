@@ -35,11 +35,11 @@ program orderSpells(who, item)
    var slots_used := 0;
 
    // Adiciona cantrips
-   var cantrips := array{};
-   if (!GetObjProperty(who, "cantrips"))
-        var new_spell := struct{};
+    if (!GetObjProperty(who, "cantrips"))
+        var cantrips := array{};
         foreach spell in (GetConfigIntKeys(cfg))
             spell := FindConfigElem(cfg, spell);
+            var new_spell := struct{};
             WriteSpellInfo(spell, ":spells:config/shamanspells");
             sleepms(2);
             if (spell.circle == 0) 
@@ -49,8 +49,9 @@ program orderSpells(who, item)
                 cantrips.Append(new_spell);
             endif
         endforeach
-        SetObjPRoperty(who, "cantrips", cantrips);
+        SetObjProperty(who, "cantrips", cantrips);
     endif
+
     
    foreach spell in (GetConfigIntKeys(cfg))
       spell := FindConfigElem(cfg, spell);
@@ -100,7 +101,7 @@ function CreateClericGump(who, spell_list, available_slots)
    var gump := GFCreateGump();
    var size := spell_list.Size();
    if (size >= 1)
-      size := size * 26;
+      size := size * 26 - (8 * 26); // Cantrips
    else
       size := 0;
    endif
@@ -120,16 +121,18 @@ function CreateClericGump(who, spell_list, available_slots)
    var y := 121;
    foreach spell in spell_list
       var color := "a745a7";
-      GFHTMLArea(gump, 63, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, spell.name), 1, 0);
-      GFToolTipText(gump, "<BASEFONT color=#{}>{}<br><BASEFONT color=#FFFFFF>".format(color, spell.desc));
-      GFHTMLArea(gump, 259, y, 34, 24, "<center>{}".format(spell.circle), 1, 0);
-      if (available_slots >= spell.circle)
-	      GFAddButton(gump, 319, y+4, 10006, 10006, GF_CLOSE_BTN, 200+_spell_iter);
-      else
-         GFGumpPic(gump, 319, y+5, 10006, 1891);
+      if (spell.circle != 0)
+        GFHTMLArea(gump, 63, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, spell.name), 1, 0);
+        GFToolTipText(gump, "<BASEFONT color=#{}>{}<br><BASEFONT color=#FFFFFF>".format(color, spell.desc));
+        GFHTMLArea(gump, 259, y, 34, 24, "<center>{}".format(spell.circle), 1, 0);
+        if (available_slots >= spell.circle)
+            GFAddButton(gump, 319, y+4, 10006, 10006, GF_CLOSE_BTN, 200+_spell_iter);
+        else
+            GFGumpPic(gump, 319, y+5, 10006, 1891);
+        endif
+        sleepms(2);
+        y += 26;
       endif
-      sleepms(2);
-      y += 26;
    endforeach
 
    return GFSendGump(who, gump);
@@ -151,6 +154,7 @@ function StoreSpell(who, spellinfo, byref shaman_list, byref available_slots)
       "powerwords" := spellinfo.powerwords,
       "circle"     := spellinfo.circle,
       "time"       := AddTimeTo(polcore().systime, 20, "minutes"),
+      "flavortext" := spellinfo.flavortext,
       "used"       := 0
    };
 

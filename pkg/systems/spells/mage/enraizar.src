@@ -24,8 +24,9 @@ program SpellScript(params)
 	endif
 	
 	var duration := (CInt(AP_GetSkill(who, MAGICLORE)) / 10);
-	
-	PlayObjectCenteredEffect(targ, 0X6D01 , 7, 20);
+    //PlayStationaryEffect( x, y, z, effect, speed, loop := 0, explode := 0, realm := _DEFAULT_REALM );
+
+	PlayStationaryEffect(targ.x, targ.y, targ.z-5, 0X6D01 , 7, 40, 0, targ.realm);
 	TS_StartTimer(targ, "paralysis", duration);
     
 

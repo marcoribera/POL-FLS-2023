@@ -92,10 +92,11 @@ function CreateClericGump(who, shaman_list, available_slots)
       endif
 
       GFHTMLArea(gump, 52, y, 192, 24, "{}{}".format(color, spellname), 1, 0);
+      GFToolTipText(gump, "<BASEFONT color=#{}>{}<br><BASEFONT color=#FFFFFF>".format("A020F0", spell.flavortext));
       if (spell.time)
          var time := GetTimeBetween(polcore().systime, spell.time, "minutes");
          if (time > 0)
-            GFToolTipText(gump, "Pode esquecer em: {} minuto(s)".format());
+            GFToolTipText(gump, "<BASEFONT color=#{}>Pode esquecer em: {} minuto(s)".format("b20000",time));
          endif
       endif
 
