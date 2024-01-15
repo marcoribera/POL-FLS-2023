@@ -619,14 +619,13 @@ endfunction
 function WritespellInfo(who, byref spellinfo)
 	var cfg;
 
-	//scrolls mesmo
-	cfg := ReadConfigFile(":spells:config/allspells");
-
     if (GetObjProperty(who, "chardata").magia == "Shaman")
         cfg := ReadConfigFile(":spells:config/shamanspells");
         spellinfo.used := 1;
 	elseif(GetObjProperty(who, "chardata").magia == "kitahster")
         cfg := ReadConfigFile(":spells:config/sangriaspells");
+	else
+		cfg := ReadConfigFile(":spells:config/allspells");
     endif
 	//sendsysmessage(who, "cfg" + cfg + " " + spellinfo.id);
 
