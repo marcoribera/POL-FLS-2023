@@ -71,7 +71,7 @@ program SpellStarter(params)
 			EraseObjProperty(mobile, "#Casting");
 			return 0;
 		else
-			if(!TemHabilidade(mobile, "Concentracao Aprimorada") || !TemHabilidade(mobile, "Concentracao Macabra"))
+			if(!TemHabilidade(mobile, "Concentracao Aprimorada"))
 			mobile.frozen := 1;
 			endif
 		endif
@@ -178,7 +178,7 @@ program SpellStarter(params)
 
 		while(cycles)
 			// If mobile is injured and does not have the protection spell on, fail the spell
-			if ( (orig_hp > AP_GetVital(mobile, "Hits") &&  (!TemHabilidade(mobile, "Concentracao Aprimorada") || !TemHabilidade(mobile, "Concentracao Macabra"))) )
+			if ( (orig_hp > AP_GetVital(mobile, "Hits") &&  !TemHabilidade(mobile, "Concentracao Aprimorada") ))
 				SendSysMessageEx(mobile, "Voce nao conseguiu se concentrar o suficiente para invocar esta magia.", SSM_FAIL);
 				FailSpell(mobile);
 				if (TemHabilidade(mobile, "Mago Precavido"))
@@ -232,7 +232,7 @@ program SpellStarter(params)
 
 		while ( delay > 0 )
 			// If mobile is injured and does not have the protection spell on, fail the spell
-			if ( (orig_hp > AP_GetVital(mobile, "Hits") && (!TemHabilidade(mobile, "Concentracao Aprimorada") || !TemHabilidade(mobile, "Concentracao Macabra")) ) )
+			if ( (orig_hp > AP_GetVital(mobile, "Hits") && (!TemHabilidade(mobile, "Concentracao Aprimorada")) ) )
 				SendSysMessageEx(mobile, "Voce nao conseguiu se concentrar o suficiente para invocar esta magia.", SSM_FAIL);
 				FailSpell(mobile);
                 if (!GetObjProperty(mobile, "#magiasilenciosa"))
