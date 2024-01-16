@@ -37,9 +37,6 @@ program chainLightning( params )
     var pets := ListPetsNear(caster, range);
     foreach mobile in mobiles
         if (!(mobile.serial in alreadydamaged) && (mobile != caster) && !(mobile in caster.party.members) && !(mobile in pets ))
-			if ( (AP_GetVital(targ, HITS)) && (!targ.paralyzed) )
-				start_script(":sorcery:effects/tempfreeze", {targ, CInt(AP_GetSkill(caster, MAGICLORE) / 3) } );
-			endif
 			SetObjProperty(mobile, "LastHit", {caster.name, caster.serial, "chain lightning"});
             PlayLightningBoltEffect( mobile );
             PlaySoundEffect(mobile, SFX_SPELL_LIGHTNING);
