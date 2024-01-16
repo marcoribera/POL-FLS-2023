@@ -12,8 +12,6 @@ var food_objtypes := array{
     0x09D0,
     0x172C,
     0x09D1,
-    0x0976,
-    0x0977,
     0x1608,
     0x09F2
 };
