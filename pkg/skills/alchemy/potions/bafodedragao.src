@@ -82,7 +82,7 @@ program use_explosion(who, potion)
 		sleepms(105);
 	endforeach
 
-	foreach coord in GetCoordsInTriangle(cast_on.x, cast_on.y, 5)
+	foreach coord in GetCoordsInSquare(cast_on.x, cast_on.y, 5)
 		if ( RandomInt(2) != 1 ) // Don't place a fire field
 			continue;
 		endif

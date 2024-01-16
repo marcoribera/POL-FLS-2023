@@ -26,13 +26,13 @@ program SpellScript(params)
     // Ajustando o nível de luz com base no MAGICLORE
     var light_level;
     if (magiclore_skill >= 100) // 100% ou mais
-        light_level := -1; // Tudo claro
+        light_level := 9000; // Tudo claro
     elseif (magiclore_skill >= 80) // 80% ou mais
-        light_level := 1; // Tocha beeemm maior
+        light_level := 300; // Tocha beeemm maior
     elseif (magiclore_skill >= 60) // 60% ou mais
-        light_level := 2; // Tocha maior
+        light_level := 90; // Tocha maior
     else // Menos que 60%
-        light_level := 3; // Feito uma tocha
+        light_level := 30; // Feito uma tocha
     endif
 	who.setlightlevel(light_level, duration);
 
