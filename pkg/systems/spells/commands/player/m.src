@@ -43,7 +43,7 @@ program magia(who, spellname)
 	var booktype;
 	var donoGrimorio;
 	foreach item in ( EnumerateItemsInContainer(who.backpack) )
-		if ( item.objtype == 24832)
+		if ( item.objtype == 24832 || item.objtype == 24835) //livros livro das maldicoes ou livro da sangria
 			donoGrimorio := GetObjProperty(item, "serialDono");
 			if (donoGrimorio == who.serial)
 				var spells := GetObjProperty(item, "spells");
@@ -59,7 +59,7 @@ program magia(who, spellname)
 	endforeach
 
 	var circle_spell := cint(GetConfigString(elem, "Circle"));
-	if ( !spellbook && GetObjProperty(who, "advclass") != "kitahster" && circle_spell != 0)
+	if ( !spellbook && !(GetObjProperty(who, "advclass") == "kitahster" && circle_spell == 0))
 		SendSysMessageEx(who, "Voce nao possui a magia " + spellname + " nos seu grimorio.", SSM_FAIL);
 		return;
 	endif
