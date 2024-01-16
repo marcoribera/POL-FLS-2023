@@ -10,7 +10,7 @@ program magia(who, spellname)
 		SendSysMessageEx(who, "Voce nao pode invocar um encanto agora.", SSM_FAIL);
 		return 0;
 	endif
-	SendSysMessage(who, "Iniciando magia");
+
 	var cfg := ReadConfigFile(":spells:allspells");
 
 	var elem;
