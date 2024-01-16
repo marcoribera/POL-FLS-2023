@@ -27,7 +27,7 @@ program SpellScript(params)
 		SendSysMessageEx(who, "Voce nao esta sendo atacado.", SSM_FAIL);
 		return 0;
 	else
-        var cfg  :=  ReadConfigFile(":spells:allspells");
+        var cfg  := ReadConfigFile(":spells:config/sangriaspells");
         var elem := FindConfigElem(cfg, spellid);
         var template := getConfigString(elem, "npcTemplate");
 
@@ -35,12 +35,14 @@ program SpellScript(params)
             SendSysMessage(who, "Erro ao ler o template" + template);
             return;
         endif
+
+        var magiclore_skill := AP_GetSkill(who, MAGICLORE);
         
         var globodeluz :=   summon(template, who, who);
-        SetObjProperty(globodeluz,"hitsmod",1000);
+        var hitsmod := CInt(magiclore_skill * 10);
+        SetObjProperty(globodeluz, "hitsmod", hitsmod);
 
-        var duracao:= 10;
-        //var duracao := GetSpellDuration(AP_GetSkill(who, MAGICLORE))/3;
+        var duracao := CInt(magiclore_skill/3);
 
         foreach hostile in hostiles
             if (GetObjProperty(hostile,"raca")==error)
@@ -52,7 +54,7 @@ program SpellScript(params)
         PlaySoundEffect(who, SFX_SPELL_STRENGTH);
         PlayStationaryEffect(who.x, who.y, who.z, FX_SPARK_EFFECT, 2, 2);
         SendSysMessageEx(targ, "A luz ofuscou a visao dos seus inimigos.", SSM_INFO);
-        var level := (CInt(AP_GetSkill(who, MAGICLORE))/5)+5;
-		TS_StartTimer(globodeluz, "summon", duracao,level);
+        var level := (CInt(magiclore_skill)/5)+5;
+		TS_StartTimer(globodeluz, "summon", duracao, level);
 	endif
 endprogram   

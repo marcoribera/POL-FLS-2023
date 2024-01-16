@@ -11,11 +11,10 @@ include "include/damage";
 
 program cast_lightningbolt(params)
     var caster := params[1];
-	var info := params[2];
+	var targ := params[2];
 	params := 0; // No longer needed
 
 	SendSysMessage(caster, "Selecione o alvo.");
-	var targ := Target(caster);
 	if ( !targ.IsA(POLCLASS_MOBILE) )
 		SendSysMessage(caster, "Alvo invalido.");
 		return 0;

@@ -21,16 +21,16 @@ program SpellScript(params)
 	SendSysMessageEx(who, "Voce passa a enxergar no escuro", SSM_INFO);
 
 	var magiclore_skill := AP_GetSkill(who, MAGICLORE);
-    var duration := magiclore_skill * 5;
+    var duration := CInt(magiclore_skill * 5);
 
     // Ajustando o nível de luz com base no MAGICLORE
     var light_level;
     if (magiclore_skill >= 100) // 100% ou mais
-        light_level := 9000; // Tudo claro
+        light_level := 1; // Tudo claro
     elseif (magiclore_skill >= 80) // 80% ou mais
-        light_level := 300; // Tocha beeemm maior
+        light_level := 10; // Tocha beeemm maior
     elseif (magiclore_skill >= 60) // 60% ou mais
-        light_level := 90; // Tocha maior
+        light_level := 20; // Tocha maior
     else // Menos que 60%
         light_level := 30; // Feito uma tocha
     endif
