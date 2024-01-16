@@ -11,7 +11,7 @@ include "include/say";
 program wall_of_fire( parms )
   var caster := parms[1];
   var info := parms[2];
-    SendSysMessage(who, "Selecione o alvo.");
+    SendSysMessage(caster, "Selecione o alvo.");
 	var cast_on := Target(caster);
     if (!cast_on) // If no cast_on then get cast_on from parms[4]. Used mostly for NPC casting.
         cast_on := parms[4];

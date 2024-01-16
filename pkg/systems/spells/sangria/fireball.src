@@ -12,12 +12,11 @@ include ":taming:taming";
 
 program spell_fireball(params)
     var caster := params[1];
-    var info := params[2];
+    var cast_on := params[2];
 	params := 0; // No longer needed
-    var cast_on;
 
     SendSysMessage(caster, "Selecione o alvo.");
-	var cast_on := Target(caster);
+	//var cast_on := Target(caster);
     if (!cast_on) // If no cast_on then get cast_on from parms[4]. Used mostly for NPC casting.
         cast_on := params[4];
     endif

@@ -33,7 +33,7 @@ program SpellScript(params)
         light_level := 2; // Tocha maior
     else // Menos que 60%
         light_level := 3; // Feito uma tocha
-
+    endif
 	who.setlightlevel(light_level, duration);
 
 	if (GetObjProperty(who, "#magiasilenciosa"))
