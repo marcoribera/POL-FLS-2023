@@ -37,10 +37,6 @@ program SpellScript(params)
 
    foreach mob in mobs
         if (InPosition(caster, mob.x, mob.y, FACE_POS_INFRONT))
-            var pets := ListPetsNear(caster, range+10);
-            if((mob in caster.party.members) && (mob in pets ))
-                continue;
-            endif
             var damage := cint(AP_GetSkill(caster, MAGICLORE))/8 + RandomDiceRoll("3d6");
             PlaySoundEffect( mob, SFX_226 );
             sleepms(100);
