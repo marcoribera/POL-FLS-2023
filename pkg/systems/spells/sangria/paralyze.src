@@ -14,7 +14,8 @@ program SpellScript(params)
 	var info := params[2];
 	params := 0; // No longer needed
 	
-	var targ := MS_Target(who, info.targ, "Escolha um alvo.", TGTOPT_CHECK_LOS+TGTOPT_HARMFUL);
+	SendSysMessage(who, "Selecione o alvo.");
+	var targ := Target(who);
 	if ( !targ.IsA(POLCLASS_MOBILE) )
 		SendSysMessage(who, "Cancelado.");
 		return 0;
@@ -26,8 +27,6 @@ program SpellScript(params)
 			SendSysMessageEx(targ, "Voce resistiu a magia.", SSM_INFO);
 
 			return 1;
-		else
-			TS_StartTimer(targ, "paralysis", CINT(AP_GetSkill(who, MAGICLORE)/3), who);
 		endif
 	else
 		if (CheckResist(targ, VONTADE, 30, -CInt(AP_GetSkill(who, MAGICLORE)/2.5)))
@@ -35,10 +34,10 @@ program SpellScript(params)
 			SendSysMessageEx(targ, "Voce resistiu a magia.", SSM_INFO);
 
 			return 1;
-		else
-			TS_StartTimer(targ, "paralysis", CINT(AP_GetSkill(who, MAGICLORE)/3), who);
 		endif
 	endif
+
+	TS_StartTimer(targ, "paralysis", CINT(AP_GetSkill(who, MAGICLORE)/3), who);
 	
 
 	if (!GetObjProperty(who, "#magiasilenciosa"))

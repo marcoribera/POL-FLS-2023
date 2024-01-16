@@ -14,7 +14,8 @@ program cast_firebolt(params)
 	var info := params[2];
 	params := 0; // No longer needed
 
-	var targ := MS_Target(caster, info.targ, "Selecione o alvo.", TGTOPT_CHECK_LOS+TGTOPT_HARMFUL);
+	SendSysMessage(caster, "Selecione o alvo.");
+	var targ := Target(caster);
 	if ( !targ.IsA(POLCLASS_MOBILE) )
 		SendSysMessage(caster, "Alvo invalido.");
 		return 0;
@@ -30,7 +31,7 @@ endprogram
 
 function LaunchProjectile(caster, targ, effect)
     PlaySoundEffect(caster, SFX_MAGIC_ARROW);
-    PlayMovingEffectXYZHued(caster, targ, 0xf42, 10, 1643, 0);
+    PlayMovingEffectXYZHued(caster, targ, FX_MAGIC_ARROW, 10, 1643, 0);
     var dmg := cint(AP_GetSkill(caster, MAGICLORE))/8 + RandomDiceRoll("1d6");
     DamageFLS(targ, cint(dmg), DMG_FORCED, caster);
 endfunction
