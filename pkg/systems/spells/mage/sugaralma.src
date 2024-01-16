@@ -27,9 +27,9 @@ program SpellScript(params)
 
 	//who.frozen := 1;
 
-	var amt := Cint(AP_GetSkill(who, MAGICLORE));
+	var amt := Cint(AP_GetSkill(who, MAGICLORE)/ 10);
 
-	Corromper(who, 9, targ);
+	//Corromper(who, 9, targ);
 
 	//if(TemHabilidade(who, "Vontade Esmagadora"))
 	//	if (CheckResist(targ, VONTADE, 70, -CInt(AP_GetSkill(who, MAGICLORE)/2.5))) // Muito mais Difícil de resistir

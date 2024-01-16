@@ -35,13 +35,14 @@ program chainLightning( params )
     var dmg := cint(AP_GetSkill(caster, MAGICLORE))/2 + RandomDiceRoll("8d6");
     var mobiles := ListMobilesNearLocation(targ.x, targ.y, targ.z, range, targ.realm);
     var pets := ListPetsNear(caster, range);
+    var casterThenNextMobile := caster;
     foreach mobile in mobiles
         if (!(mobile.serial in alreadydamaged) && (mobile != caster) && !(mobile in caster.party.members) && !(mobile in pets ))
-			if ( (AP_GetVital(targ, HITS)) && (!targ.paralyzed) )
-				start_script(":sorcery:effects/tempfreeze", {targ, CInt(AP_GetSkill(caster, MAGICLORE) / 3) } );
-			endif
 			SetObjProperty(mobile, "LastHit", {caster.name, caster.serial, "chain lightning"});
-            PlayLightningBoltEffect( mobile );
+            //PlayLightningBoltEffect( mobile );
+            PlayMovingEffect(casterThenNextMobile, mobile , 0x379f, 0, 20 );
+            //ChainEffect(casterThenNextMobile, mobile);
+            casterThenNextMobile := mobile;
             PlaySoundEffect(mobile, SFX_SPELL_LIGHTNING);
             alreadydamaged.Append(mobile.serial);
             DamageFLS(mobile, cint(dmg), DMG_ENERGY, caster);
@@ -49,3 +50,16 @@ program chainLightning( params )
         sleepms(600);
     endforeach
 endprogram
+
+//function ChainEffect(who, cast_on)
+////PlayStationaryEffect( x, y, z, effect, speed, loop := 0, explode := 0, realm := _DEFAULT_REALM )
+//	var coord_list := GetCoordsInLine(who.x, who.y, cast_on.x, cast_on.y);
+//	foreach coord in coord_list
+//		if ( _coord_iter < 4 ) // Dont make one where its standing
+//			continue;
+//		endif
+//		PlayStationaryEffect(coord.x, coord.y, who.z, 0x379f, 0, 15, 0, who.realm);
+//		//sleepms(50);
+//	endforeach
+
+//endfunction

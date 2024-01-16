@@ -23,7 +23,7 @@ program SpellScript(params)
 		return;
 	endif
 
-	var amt :=  cint( AP_GetSkill(who, MAGICLORE)*0.5);
+	var amt :=  cint( AP_GetSkill(who, MAGICLORE)*0.4);
 	//var time := (AP_GetSkill(who, MAGERY) + AP_GetSkill(who, MAGICLORE))*2;
 	//printtextabove(who, "maic lore " + AP_GetSkill(who, MAGICLORE)); 
 	TS_StartTimer(targ, "strength", GetSpellDuration(AP_GetSkill(who, MAGICLORE)), amt, who, 1 );
