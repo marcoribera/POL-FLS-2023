@@ -13,31 +13,39 @@ include "include/damage";
 include ":taming:taming";
 include "include/facings";
 include "include/shapes";
+include ":magery:fields";
 
 
 program SpellScript(params)
 	var caster := params[1];
 	var info := params[2];
     var range := cint(AP_GetSkill(caster, MAGICLORE))/20;
-    var maxAngle := 45; // Ângulo máximo para o cone
+
     SendSysMessage(caster, "Escolha a direcao para onde expandira a magia");
     var targ := TargetCoordinates(caster);
+    if (!targ)
+        SendSysMessageEx(caster, "Voce cancelou.", SSM_FAIL);
+        return 0;
+    endif
+
     SendSysMessageEx(caster, "Uma fina camada de chamas brota das pontas dos seus dedos estendidos.", SSM_INFO);
-    SysLog("Entrei");
-    print("Entrei");
-    var mobs := ListMobilesNearLocation(caster.x, caster.y, caster.z, range, caster.realm);
+    
     TurnObjectToward(caster, targ.x, targ.y);
     var adjusted_coords := AdjustTriangleCoordinates(caster.x, caster.y, targ.x, targ.y, range);
-    print("adjusted_coords: "+adjusted_coords);
 	foreach coord in GetCoordsInTriangle(adjusted_coords[3].x, adjusted_coords[3].y, adjusted_coords[2].x, adjusted_coords[2].y, adjusted_coords[1].x, adjusted_coords[1].y)
         PlayStationaryEffect(coord.x, coord.y, caster.z, 0x6d70  , 10, 30, 0, caster.realm);
         PlayStationaryEffect(coord.x, coord.y, caster.z, 0x6d70  , 10, 30, 0, caster.realm);
         PlayStationaryEffect(coord.x, coord.y, caster.z, 0x6d70  , 10, 30, 0, caster.realm);
     endforeach
 
-   foreach mob in mobs
+    var mobs := ListMobilesNearLocation(caster.x, caster.y, caster.z, range, caster.realm);
+    foreach mob in mobs
         if (InPosition(caster, mob.x, mob.y, FACE_POS_INFRONT))
-            var damage := cint(AP_GetSkill(caster, MAGICLORE))/8 + RandomDiceRoll("3d6");
+            if (mob == caster)
+                continue;
+            endif
+
+            var damage := cint(AP_GetSkill(caster, MAGICLORE)/8) + RandomDiceRoll("3d6");
             PlaySoundEffect( mob, SFX_226 );
             sleepms(100);
             PlaySoundEffect( mob, SFX_227 );
