@@ -61,16 +61,16 @@ var gflayout := array{
 		"text 265 440 2105 5",
 		"Radio 230 357 9726 9729 0 4", //aquilrano
 		"Radio 230 397 9726 9729 0 5", //numajene
-		"Radio 230 437 9726 9729 0 6" //vanirio
+		"Radio 230 437 9726 9729 0 6", //vanirio
 
-		//"text 215 480 2105 13",
+		"text 215 480 2105 13",
 
-        //"text 265 510 2105 10",
+        "text 265 510 2105 10",
 		//"text 265 550 2105 11",
         //"text 265 590 2105 12",
-		//"Radio 230 507 9726 9729 0 10", //Anao
+		"Radio 230 507 9726 9729 0 10" //Anao
 		//"Radio 230 547 9726 9729 0 11", //Drow
-        //"Radio 230 587 9726 9729 0 12" //Anao
+        //"Radio 230 587 9726 9729 0 12" //Orc
 		};
 var gfdata := array{
 		"Forgotten Lore Shard", //0
@@ -1582,14 +1582,14 @@ program createchar(who)
                 GFTextLine(gump4, 45, 50, 1153, "Escolha o caminho");
 
                 GFTextLine(gump4, 40, 70, 1153, "Kitah");
-				if(who.cmdlevel >= 1) //TODO Deixei para o gump aparecer para cmdlevel igual ao acima do 2 para conseguirem testar
+				//if(who.cmdlevel >= 1) //TODO Deixei para o gump aparecer para cmdlevel igual ao acima do 2 para conseguirem testar
                 	GFTextLine(gump4, 40, 90, 1153, "Viajante Planar");
-				endif
+				//endif
 
                 GfAddButton(gump4, 20, 73, 2117, 2118, GF_CLOSE_BTN,  10);
-				if(who.cmdlevel >= 1) //TODO Deixei para o gump aparecer para cmdlevel igual ao acima do 2 para conseguirem testar
+				//if(who.cmdlevel >= 1) //TODO Deixei para o gump aparecer para cmdlevel igual ao acima do 2 para conseguirem testar
                 	GfAddButton(gump4, 20, 94 , 2117, 2118, GF_CLOSE_BTN,  20);
-				endif
+				//endif
 
                 var input4 := GFSendGump(who, gump4);
                 input4 := input4[0];
@@ -1641,9 +1641,9 @@ program createchar(who)
 					var p1 := createiteminbackpack(who, "pergaminhosangria1");
 					spellinfo.+id := 5;
 					SetObjProperty(p1, "spellinfo", spellinfo);
-					p1 := createiteminbackpack(who, "pergaminhosangria1");
-					spellinfo.id := 6;
-					SetObjProperty(p1, "spellinfo", spellinfo);
+					//p1 := createiteminbackpack(who, "pergaminhosangria1");
+					//spellinfo.id := 6;
+					//SetObjProperty(p1, "spellinfo", spellinfo);
 					ganheispell := 1;
                 endif            
             endif
