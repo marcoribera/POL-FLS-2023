@@ -112,7 +112,7 @@ var gfdata := array{
 		chardata.+raca := "Elfo";
 		chardata.+povo := "Vanirio";
     elseif (10 in ret.keys)
-		chardata.+raca := "Humano";
+		chardata.+raca := "Anao";
 		chardata.+povo := "Anao";
         if (who.graphic == 400)
             who.graphic := 1828;
@@ -120,10 +120,10 @@ var gfdata := array{
             who.graphic := 1829;
         endif
     elseif (11 in ret.keys)
-		chardata.+raca := "Elfo";
+		chardata.+raca := "Drow";
 		chardata.+povo := "Drow";
     elseif (12 in ret.keys)
-		chardata.+raca := "Humano";
+		chardata.+raca := "Orc";
 		chardata.+povo := "Orc";
         if (who.graphic == 400)
             who.graphic := 1832;
@@ -188,7 +188,7 @@ var gflayout := array{
 		"Escolha uma vantagem racial:" //2
 		};
 
-	if (chardata.raca == "Humano")
+	if (chardata.raca == "Humano" || chardata.raca == "Anao"  || chardata.raca == "Orc")
 		gfdata.append("Versatilidade");
 		gfdata.append("Homens são movidos pela curiosidade, o que faz com que explorem várias áreas de conhecimento. Começa com +2 pontos de skills.");
         if (chardata.povo == "Zharkiano")
@@ -211,7 +211,7 @@ var gflayout := array{
             gfdata.append("Resistencia implacavel");
 	    	gfdata.append("Orcs são um povo forte, sempre que um golpe te deixar com 0 de hp, você fica com 1");
         endif
-	elseif ( chardata.raca == "Elfo")
+	elseif ( chardata.raca == "Elfo" || chardata.raca == "Drow")
         gfdata.append("Sabedoria dos Antigos");
         gfdata.append("Elfos são mais antigos que os outros povos e aprenderam a dar mais valor ao conhecimento. Habilidades terciárias podem ir até 50%");
         if (chardata.povo == "Vanirio")
@@ -1472,26 +1472,26 @@ program createchar(who)
 	if (chardata.kit == "Corpulento")
         if (chardata.povo == "Thuriao")
             AP_SetTrueStat(who, STRENGTH, chardata.str+30);
-            AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
-            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
+            AP_SetTrueStat(who, DEXTERITY, chardata.dex-5);
+            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-5);
         else
             AP_SetTrueStat(who, STRENGTH, chardata.str+20);
-            AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
-            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
+            AP_SetTrueStat(who, DEXTERITY, chardata.dex-5);
+            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-5);
         endif
 	elseif (chardata.kit == "Genio")
 		AP_SetTrueStat(who, INTELLIGENCE, chardata.int+20);
-		AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
-		AP_SetTrueStat(who, STRENGTH, chardata.str-10);
+		AP_SetTrueStat(who, DEXTERITY, chardata.dex-5);
+		AP_SetTrueStat(who, STRENGTH, chardata.str-5);
 	elseif (chardata.kit == "Agil")
         if (chardata.povo == "Aquilrano")
             AP_SetTrueStat(who, DEXTERITY, chardata.dex+30);
-		    AP_SetTrueStat(who, STRENGTH, chardata.str-10);
-            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
+		    AP_SetTrueStat(who, STRENGTH, chardata.str-5);
+            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-5);
         else
             AP_SetTrueStat(who, DEXTERITY, chardata.dex+20);
-		    AP_SetTrueStat(who, STRENGTH, chardata.str-10);
-            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-10);
+		    AP_SetTrueStat(who, STRENGTH, chardata.str-5);
+            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-5);
         endif
     elseif (chardata.kit == "Afogado em Mana")
 		AP_SetTrueStat(who, DEXTERITY, chardata.dex-30);
