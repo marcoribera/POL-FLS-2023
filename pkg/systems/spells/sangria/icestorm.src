@@ -43,9 +43,6 @@ function RainDamage(targ, byref caster, info)
     var pets := ListPetsNear(caster, 8);
     foreach mobile in mobiles
         if (!(mobile.serial in alreadydamaged) && (mobile != caster) && !(mobile in caster.party.members) && !(mobile in pets ))
-			if ( (AP_GetVital(targ, HITS)) && (!targ.paralyzed) )
-				start_script(":sorcery:effects/tempfreeze", {targ, CInt(AP_GetSkill(caster, MAGICLORE) / 3) } );
-			endif
 			SendSysMessageEx(mobile, "pedacos de gelo comecam a cair em cima de voce", SSM_FAIL);
 			PlayObjectCenteredEffect(targ, 0x375a, 7, 0x10);
 			PlaySoundEffect(targ, 0x042);

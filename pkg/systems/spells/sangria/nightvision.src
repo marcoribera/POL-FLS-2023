@@ -23,18 +23,7 @@ program SpellScript(params)
 	var magiclore_skill := AP_GetSkill(who, MAGICLORE);
     var duration := CInt(magiclore_skill * 5);
 
-    // Ajustando o nível de luz com base no MAGICLORE
-    var light_level;
-    if (magiclore_skill >= 100) // 100% ou mais
-        light_level := 1; // Tudo claro
-    elseif (magiclore_skill >= 80) // 80% ou mais
-        light_level := 10; // Tocha beeemm maior
-    elseif (magiclore_skill >= 60) // 60% ou mais
-        light_level := 20; // Tocha maior
-    else // Menos que 60%
-        light_level := 30; // Feito uma tocha
-    endif
-	who.setlightlevel(light_level, duration);
+	who.setlightlevel(1, duration);
 
 	if (GetObjProperty(who, "#magiasilenciosa"))
         SendSysMessageEx(who,  "O efeito da magia silenciosa acabou.", SSM_INFO);
