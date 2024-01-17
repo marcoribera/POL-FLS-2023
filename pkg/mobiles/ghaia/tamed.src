@@ -179,8 +179,9 @@ var fideliz := (GetObjProperty(me, "NeverRelease") == 1);
 			//skill := skill - 0.1;
 
 			//SetTrueSkill(owner, "Taming", skill);
-
-			SendSysMessageEX(owner, me.name+" esta infeliz e o proximo comando sera o ultimo!", SSM_INFO_IC);
+            if (owner.cmdlevel < 2)
+			    SendSysMessageEX(owner, me.name+" esta infeliz e o proximo comando sera o ultimo!", SSM_INFO_IC);
+            endif
 			SetCooldown(me, "aviso", 4);
 
 
