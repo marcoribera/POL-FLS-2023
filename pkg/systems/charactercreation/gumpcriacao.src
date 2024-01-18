@@ -1588,6 +1588,11 @@ program createchar(who)
             if (ganheispell == 0)
 		        ganheispell:=1;
 		        chardata.+magia := "Shaman";
+                CreateItemInBackpack(who, 0x1452, 1);
+                CreateItemInBackpack(who, 0x1451, 1);
+                CreateItemInBackpack(who, 0x1450, 1);
+                CreateItemInBackpack(who, 0x144f, 1);
+                CreateItemInBackpack(who, 0x144e, 1);
             endif
         elseif (chardata.povo == "Vanirio")
             if (ganheispell == 0)
