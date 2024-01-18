@@ -51,11 +51,12 @@ program architect_gump(who)
         SendSysMessage(who, "*running in staff mode*");
     endif
 
-  if (!staffmode)
-    if (GetGlobalProperty ("#architect"))
-      SendSysMessage (who, lang["running"]);
-      return 0;
-    endif
+  //TODO Comentado, mas nao sei os riscos
+  // if (!staffmode)
+  //   if (GetGlobalProperty ("#architect"))
+  //     SendSysMessage (who, lang["running"]);
+  //     return 0;
+  //   endif
 
  /*   if (CALLFROMCITY && (FindCity(who) == "no city"))
       SendSysMessage (who, lang["nocallarea"]);
