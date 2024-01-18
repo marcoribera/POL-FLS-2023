@@ -36,6 +36,6 @@ program SpellScript(params)
 endprogram
 
 function RandomFoodObjType()
-    var random_index := RandomIntMinMax(0, food_objtypes.size() - 1);
+    var random_index := RandomIntMinMax(1, food_objtypes.size() + 1);
     return food_objtypes[random_index];
 endfunction

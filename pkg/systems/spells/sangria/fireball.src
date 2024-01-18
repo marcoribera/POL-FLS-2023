@@ -76,7 +76,7 @@ program spell_fireball(params)
     foreach mobile in mobiles
         if (!(mobile.serial in alreadydamaged) && (mobile != caster) && !(mobile in caster.party.members) && !(mobile in pets ))
             alreadydamaged.Append(mobile.serial);
-            DamageFLS(mobile, cint(dmg), DMG_FIRE, caster);
+            DamageFLS(mobile, cint(dmg), DMG_FIRE, caster, "fireball");
         endif
         sleepms(20);
     endforeach

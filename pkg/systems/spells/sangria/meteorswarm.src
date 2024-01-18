@@ -30,7 +30,7 @@ program spell_meteorSwarm( parms )
             PlayStationaryEffect(mobile.x, mobile.y, mobile.z, 0x6CCE, 0 ,70, 0, mobile.realm);
 
             alreadydamaged.Append(mobile.serial);
-            DamageFLS(mobile, cint(dmg), DMG_FIRE, caster);
+            DamageFLS(mobile, cint(dmg), DMG_FIRE, caster, "meteorSwarm");
         endif
         sleepms(20);
     endforeach
