@@ -22,6 +22,7 @@ program death(params)
 
 	var corpse := params[1];
 	var ghost := params[2];
+	var lastDamage := GetObjProperty(ghost, "LastDamage");
 	Setobjproperty(corpse, "account", ghost.acctname);
 		//sendsysmessage(ghost, " " + corpse.x + " " + corpse.y);
 
@@ -88,6 +89,7 @@ program death(params)
 		if (!protecao)
 			//if (getCoolDown(ghost, "deathtime") == 0 )
 			if (killer.npctemplate && killer.script  == ":ghaia:tamed")  //se for tamed nao tira dp
+			elseif(lastDamage.spell)  //se for spell nao tira dp
 			else
 				EraseObjProperty(ghost, "#Casting");
 				AP_ConsumeVital(ghost, "DP", 10);

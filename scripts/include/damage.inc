@@ -247,12 +247,16 @@ endfunction
  * Return value
  *
  */
-function SetLastDamageInfo(mobile, amount, type, source)
+function SetLastDamageInfo(mobile, amount, type, source, spell := "")
 	var last_damage := struct;
 	last_damage.+serial	:= source.serial;
 	last_damage.+time	:= polcore().systime;
 	last_damage.+amount	:= amount;
 	last_damage.+type	:= type;
+
+	if ( spell )
+		last_damage.+spell := spell;
+	endif
 
 	if ( last_damage.acctname )
 		last_damage.+acctname := source.acctname;
@@ -532,7 +536,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 
 endfunction
 
-function DamageFLS(defender, dmg, type := DMG_FORCED, source := 0)
+function DamageFLS(defender, dmg, type := DMG_FORCED, source := 0, spell := "")
 	var totaldmg;
 	if (type == DMG_FORCED)
 		totaldmg := CInt(dmg);
@@ -578,8 +582,9 @@ function DamageFLS(defender, dmg, type := DMG_FORCED, source := 0)
 		endif
 	endif
 
+	SetLastDamageInfo(defender, totaldmg, type, source, spell);
+
 	if (source)
-		SetLastDamageInfo(defender, totaldmg, type, source);
 		SetScriptController(source);
 	endif
 

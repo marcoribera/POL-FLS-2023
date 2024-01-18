@@ -56,7 +56,7 @@ program SpellScript(params)
             PlaySoundEffect( mob, SFX_228 );
             sleepms(100);
             SendSysMessageEx(mob, "As chamas queimam voce.", SSM_FAIL);
-            DamageFLS(mob, cint(damage), DMG_FIRE, caster);
+            DamageFLS(mob, cint(damage), DMG_FIRE, caster, "burninghands");
             sleepms(100);         
         endif
     endforeach
