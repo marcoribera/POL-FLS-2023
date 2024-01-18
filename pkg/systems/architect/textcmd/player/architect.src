@@ -63,8 +63,8 @@ program architect_gump(who)
       return 0;
     endif*/
 
-    SetGlobalProperty ("#architect", who.serial);
-  endif
+  //   SetGlobalProperty ("#architect", who.serial);
+  // endif
 
   var choice:= GetObjProperty (who, "#architect_choice");
   var col:= 0;
