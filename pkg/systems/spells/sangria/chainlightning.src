@@ -45,7 +45,7 @@ program chainLightning( params )
             casterThenNextMobile := mobile;
             PlaySoundEffect(mobile, SFX_SPELL_LIGHTNING);
             alreadydamaged.Append(mobile.serial);
-            DamageFLS(mobile, cint(dmg), DMG_ENERGY, caster);
+            DamageFLS(mobile, cint(dmg), DMG_ENERGY, caster, "chainLightning");
         endif
         sleepms(600);
     endforeach

@@ -46,7 +46,7 @@ program earthquake( parms )
             sleepms(200);
             alreadydamaged.Append(mobile.serial);
             SendSysMessageEx(mobile, "Voce sente o chao tremer com extrema violencia.", SSM_FAIL);
-            DamageFLS(mobile, cint(dmg), DMG_FORCED, caster);
+            DamageFLS(mobile, cint(dmg), DMG_FORCED, caster, "earthquake");
         endif
         sleepms(600);
     endforeach
