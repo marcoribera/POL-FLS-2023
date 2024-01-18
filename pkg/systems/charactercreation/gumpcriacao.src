@@ -1565,6 +1565,7 @@ program createchar(who)
             if (ganheispell == 0)
                 chardata.magia := "Sacerdote";
                 var malhoecinzel := CreateItemInBackpack(who, 0xf40, 1);
+                CreateItemInBackpack(who, 0x166E, 1);
                 //var simbolo_sagrado := CreateItemInBackpack(who, 0xB888, 1); //Simbolo Sagrado
 				//SetName(simbolo_sagrado, "Símbolo Sagrado");
                 //SetObjProperty(simbolo_sagrado, "descmod", "Acólito de Zhark");
