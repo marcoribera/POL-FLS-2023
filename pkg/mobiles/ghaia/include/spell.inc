@@ -758,7 +758,13 @@ function CastSummon(me, spell)
     CreateNpcFromTemplate(":brainai:earthelemental", me.x, me.y, me.z, 0, me.realm);
   elseif ( spell ==  "summonice")
 	CreateNpcFromTemplate(":brainai:snowelemental", me.x, me.y, me.z, 0, me.realm);
-  endif
+  elseif( spell == "summonspider1")
+    CreateNpcFromTemplate(":brainai:DreadGiantSpider", me.x, me.y, me.z, 0, me.realm);
+    CreateNpcFromTemplate(":brainai:DreadGiantSpider", me.x, me.y, me.z, 0, me.realm);
+  elseif( spell == "summonspider2")
+    CreateNpcFromTemplate(":brainai:BlackHugeSpider", me.x, me.y, me.z, 0, me.realm);
+    CreateNpcFromTemplate(":brainai:BlackHugeSpider", me.x, me.y, me.z, 0, me.realm);
+    endif
 endfunction
 
 function CastHeal(me, cast_on)

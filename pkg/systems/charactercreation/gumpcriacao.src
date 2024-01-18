@@ -132,9 +132,9 @@ var gfdata := array{
         endif
 	endif
 
-    if (who.graphic == 400 && chardata.raca == "Elfo")
+    if (who.graphic == 400 && (chardata.raca == "Elfo" || chardata.raca == "Drow"))
         who.graphic := 1830;
-    elseif(who.graphic == 401 && chardata.raca == "Elfo")
+    elseif(who.graphic == 401 && (chardata.raca == "Elfo" || chardata.raca == "Drow"))
         who.graphic := 1831;
     endif
 
