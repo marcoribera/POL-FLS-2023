@@ -70,7 +70,7 @@ program clericPowerWords(parms)
 
             if (verified == splitwords(spell.powerwords).size())
                Start_Script(":spells:cast_spell", {who, spell, "Shaman"});
-               shaman_list[spell_id].used := 1;
+               shaman_list[spell_id].used := 0; //TODO Comentado até o fim do evento
                SetObjProperty(who, "shaman_list", shaman_list);
                break;
             endif
