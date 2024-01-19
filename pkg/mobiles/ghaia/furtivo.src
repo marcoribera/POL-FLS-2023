@@ -46,8 +46,15 @@ program KillPlayers()
         if (!GetCooldown(me, "fleestealth"))
          PrintText(me, "*esconde*");
          sleep(1);
-         me.concealed := 1;
-         me.stealthsteps := 30;
+            GrantPrivilege(me, "runwhilestealth");
+            me.enable("runwhilestealth");
+
+            me.hidden := 1;
+            me.stealthsteps := 20;
+            me.stealthsteps := 30;
+            GrantPrivilege(me, "hiddenattack");
+            me.enable("hiddenattack");
+
          SetCooldown(me, "fleestealth", 10);
         endif
 
