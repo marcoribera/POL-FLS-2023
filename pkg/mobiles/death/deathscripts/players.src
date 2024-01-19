@@ -30,6 +30,11 @@ program death(params)
 		return 1;
 	endif
 
+	// Se virou fantasma, para de dar dano
+	if(GetObjProperty(ghost, "defaultPoison"))
+		TS_LowerDuration(ghost, "defaultPoison", -1);
+	endif
+
 	var lastHit := GetObjProperty(ghost, "lastHit");
 	var killer := SystemFindObjectBySerial(lastHit.attacker);
 	var dmg := lastHit.amount;
