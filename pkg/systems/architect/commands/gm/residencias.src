@@ -3,6 +3,7 @@ use datafile;
 use cfgfile;
 include ":gumps:gumps";
 include ":gumps:requestGump";
+include "include/string";
 
 program ConfigArchitect(who)
 
@@ -85,7 +86,7 @@ function AutoSetRealm(who, rect)
   var realm := rec[5];
   if(!realm || realm == "" || realm.errortext)
 	rec.append(who.realm);
-	return join(rec);
+	return " ".join(rec);
   endif
   return rect;
 

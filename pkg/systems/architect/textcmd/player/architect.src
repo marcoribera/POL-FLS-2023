@@ -536,6 +536,11 @@ program architect_gump(who)
               break;
             endif
 
+            if(!GetObjProperty(tbh, "#built_by_architect"))
+              SendSysMessage(who, "Somente e possivel esconder itens feitos pelo Architect");
+              break;
+            endif
+
             tbh.invisible:= 1;
             tbh.color:= 0;
             hidden.append (tbh);
@@ -964,7 +969,7 @@ program architect_gump(who)
 
                 if (GetObjProperty (tbd, "#built_by_architect") == who.serial)
                   var objtype := GetObjProperty(tbd, "#architect_objtype");
-                  CreateItemInBackPack(who, objtype, 10);
+                  CreateItemInBackPack(who, Cint(objtype), 10);
                   DestroyItem (tbd);
                   undone:= 1;
                 endif
@@ -1483,80 +1488,81 @@ endfunction
  * returns <objref> to the created item
 */
 function create_marked(who, x, y, z, type)
+    var custo := 10;
     var prop := dictionary;
-    var custo := 10; //Quantidade de recursos necessarios para criar uma estrutura
-    var madeira_ranges := {0x1BDD, 0xee36, 0xee37, 0xee38, 0xee39, 0xee3a, 0xee3b, 0xee3c, 0xee3d, 0xee3e, 0xee3f, 0xee40}; //Tipos de madeira
-    var total_recursos;
+    var madeira_ranges := array{"logs", "madeirapinheiro", "madeiracarvalho", "madeiranogueira", "madeirasalgueiro", "madeiraciprestre", "madeiraebano", "madeiracogumelo", "madeirapolar", "madeirateixo", "madeiraimbuia", "madeiramogno"}; // Tipos de madeira
+    var madeira_hex_ranges := {0x1BDD, 0xee36, 0xee37, 0xee38, 0xee39, 0xee3a, 0xee3b, 0xee3c, 0xee3d, 0xee3e, 0xee3f, 0xee40}; //Tipos de madeira
+    var total_recursos := 0;
+    var objtype := get_objtype(type);
 
-   prop["objtype"] := get_objtype(type);
-   if(prop["objtype"] == GetObjTypeByName("logs").objtype)
-      foreach tipo_madeira in madeira_ranges
-          total_recursos := AmountInContainer(who.backpack, tipo_madeira);
-          if(total_recursos < 10)
-            continue;
-          else
-            break;
-          endif
-      endforeach
-   else
-      total_recursos := AmountInContainer(who.backpack, prop);
-   endif
-   
-
-    if (total_recursos < custo && !staffmode)
-        SendSysMessageEx(who, "Voce nao tem recursos suficientes.", SSM_INFO);
-        return;
-    else
-        var madeira;
-        foreach item in EnumerateItemsInContainer(who.backpack)
-            if(item.objtype in madeira_ranges)
-              madeira := GetObjTypeByName("logs").objtype;
-            endif
-
-            if(item.objtype == prop["objtype"] || madeira == prop["objtype"])
-                SubtractAmount(item, custo);
-                break;
-            endif
-        endforeach
-
-        SendSysMessageEx(who, "Voce usou o(s) recursos(s).", SSM_INFO);
-        var z_real := z;
-        if(who.realm == "britannia_alt") //O mapa novo tem uma diferenca de -60 no Z, por isso tem esse tratamento
-          z_real := z - 60;
-        endif
-        var created:= CreateItemAtLocation (x, y, z_real, type, 1, who.realm);
-        created.movable:= 0;
-
-        SetObjProperty (created, "#built_by_architect", who.serial);
-        SetObjProperty (created, "#architect_objtype", prop["objtype"]);
-
-        if (KP_IsLockable(created))
-          var fechadura := YesNo(who, "Voce deseja por uma fechadura nesse item?");
-          if (fechadura)
-            SendSysMessageEx(who, "Escolha a fechadura para por neste item.", SSM_REQUEST);
-            var targ := Target(who);
-            if (targ)
-              if (targ.objtype == 4001)
-                if (!created.isDoor())
-                  var lvl := Cint(GetObjProperty(targ, "level"));
-                  if (!lvl)
-                    lvl := 1;
-                  endif
-                  SetObjProperty(created, "level", lvl);
+    if (!staffmode) // Se não for staff, verifica os recursos
+        if (objtype == GetObjTypeByName("logs")) // Se for madeira
+            foreach tipo_madeira in madeira_ranges
+                prop["objtype"] := GetObjTypeByName(tipo_madeira);
+                total_recursos := AmountInContainer(who.backpack, prop);
+                if (total_recursos >= custo) // Se já tem recursos suficientes, para o loop
+                    break;
                 endif
-                var lockid := CInt(GetObjProperty(targ, "LockId"));
-                SetObjProperty(created, "LockId", lockid);
-                DestroyItem(targ);
-                SendSysMessageEx(who, "Voce instalou a fechadura com sucesso.", SSM_INFO);
-              else
-                SendSysMessageEx(who, "Isto nao parece uma fechadura.", SSM_FAIL);
-              endif
-            endif
-          endif
+            endforeach
+        else // Se não for madeira
+            prop["objtype"] := objtype;
+            total_recursos := AmountInContainer(who.backpack, prop);
         endif
 
-        return created;
+        if (total_recursos < custo)
+            SendSysMessageEx(who, "Voce nao tem recursos suficientes.", SSM_INFO);
+            return;
+        endif
     endif
+
+    // Subtrai os recursos da mochila
+    foreach item in EnumerateItemsInContainer(who.backpack)
+        if (!staffmode && ((item.objtype == objtype) || (Cint(objtype) == Cint(GetObjTypeByName("logs")) && (item.objtype in madeira_hex_ranges))))
+            if(!SubtractAmount(item, custo))
+              continue;
+            else
+              break;
+            endif
+        endif
+    endforeach
+   
+    SendSysMessageEx(who, "Voce usou o(s) recursos(s).", SSM_INFO);
+    var z_real := z;
+    if(who.realm == "britannia_alt") //O mapa novo tem uma diferenca de -60 no Z, por isso tem esse tratamento
+      z_real := z - 60;
+    endif
+    var created:= CreateItemAtLocation (x, y, z_real, type, 1, who.realm);
+    created.movable:= 0;
+
+    SetObjProperty (created, "#built_by_architect", who.serial);
+    SetObjProperty (created, "#architect_objtype", objtype);
+
+    if (KP_IsLockable(created))
+      var fechadura := YesNo(who, "Voce deseja por uma fechadura nesse item?");
+      if (fechadura)
+        SendSysMessageEx(who, "Escolha a fechadura para por neste item.", SSM_REQUEST);
+        var targ := Target(who);
+        if (targ)
+          if (targ.objtype == 4001)
+            if (!created.isDoor())
+              var lvl := Cint(GetObjProperty(targ, "level"));
+              if (!lvl)
+                lvl := 1;
+              endif
+              SetObjProperty(created, "level", lvl);
+            endif
+            var lockid := CInt(GetObjProperty(targ, "LockId"));
+            SetObjProperty(created, "LockId", lockid);
+            DestroyItem(targ);
+            SendSysMessageEx(who, "Voce instalou a fechadura com sucesso.", SSM_INFO);
+          else
+            SendSysMessageEx(who, "Isto nao parece uma fechadura.", SSM_FAIL);
+          endif
+        endif
+      endif
+    endif
+
+    return created;
 endfunction
 
 
