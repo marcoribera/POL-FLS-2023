@@ -1485,21 +1485,35 @@ endfunction
 function create_marked(who, x, y, z, type)
     var prop := dictionary;
     var custo := 10; //Quantidade de recursos necessarios para criar uma estrutura
-    var objtype;
-
-    if (who.cmdlevel > STAFFMODELEVEL) //para staff não precisar dos recursos
-        staffmode := 1;
-    endif
+    var madeira_ranges := {0x1BDD, 0xee36, 0xee37, 0xee38, 0xee39, 0xee3a, 0xee3b, 0xee3c, 0xee3d, 0xee3e, 0xee3f, 0xee40}; //Tipos de madeira
+    var total_recursos;
 
    prop["objtype"] := get_objtype(type);
-   var total_recursos := AmountInContainer(who.backpack, prop);
+   if(prop["objtype"] == GetObjTypeByName("logs").objtype)
+      foreach tipo_madeira in madeira_ranges
+          total_recursos := AmountInContainer(who.backpack, tipo_madeira);
+          if(total_recursos < 10)
+            continue;
+          else
+            break;
+          endif
+      endforeach
+   else
+      total_recursos := AmountInContainer(who.backpack, prop);
+   endif
+   
 
     if (total_recursos < custo && !staffmode)
         SendSysMessageEx(who, "Voce nao tem recursos suficientes.", SSM_INFO);
         return;
     else
+        var madeira;
         foreach item in EnumerateItemsInContainer(who.backpack)
-            if(item.objtype == prop["objtype"])
+            if(item.objtype in madeira_ranges)
+              madeira := GetObjTypeByName("logs").objtype;
+            endif
+
+            if(item.objtype == prop["objtype"] || madeira == prop["objtype"])
                 SubtractAmount(item, custo);
                 break;
             endif
