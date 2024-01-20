@@ -963,6 +963,8 @@ program architect_gump(who)
                 var tbd:= SystemFindObjectBySerial (dummy);
 
                 if (GetObjProperty (tbd, "#built_by_architect") == who.serial)
+                  var objtype := GetObjProperty(tbd, "#architect_objtype");
+                  CreateItemInBackPack(who, objtype, 10);
                   DestroyItem (tbd);
                   undone:= 1;
                 endif
