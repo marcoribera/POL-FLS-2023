@@ -548,7 +548,7 @@ function DamageFLS(defender, dmg, type := DMG_FORCED, source := 0, spell := "")
 	if (GetObjProperty(defender, "#martir"))
 		var martir := SystemFindObjectBySerial(GetObjProperty(defender,"martirserial"));
 		//printtextabove(defender, " " + martir + "serial" + GetObjProperty(defender, "martirserial"));
-		if (martir)
+		if (martir && !martir.dead)
 			defender := martir;
 		endif
 	endif
