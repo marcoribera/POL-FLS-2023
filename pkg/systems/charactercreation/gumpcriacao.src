@@ -1561,7 +1561,7 @@ program createchar(who)
 					SetObjProperty(p1, "spellinfo", spellinfo);
 					ganheispell := 1;
 				endif
-        elseif (chardata.povo == "Zharkiano" || chardata.povo == "Drow" && who.graphic == 1831 || chardata.povo == "Anao")
+        elseif (chardata.povo == "Zharkiano" || (chardata.povo == "Drow" && who.graphic == 1831) || chardata.povo == "Anao")
             if (ganheispell == 0)
                 chardata.magia := "Sacerdote";
                 var malhoecinzel := CreateItemInBackpack(who, 0xf40, 1);
