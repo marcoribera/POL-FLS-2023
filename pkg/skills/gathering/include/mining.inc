@@ -513,7 +513,7 @@ function CanMine(targ, type)
 	var config := ReadConfigFile(":gathering:config/miningtiles");
 	config := config[type];
 
-	var land_scape := CStr( GetMapInfo(targ.x, targ.y).landtile );
+	var land_scape := CStr( GetMapInfo(targ.x, targ.y, targ.realm).landtile );
 	if ( targ.objtype )
 		if ( CStr(targ.objtype) in GetConfigStringArray(config, "static") )
 			return 1;
