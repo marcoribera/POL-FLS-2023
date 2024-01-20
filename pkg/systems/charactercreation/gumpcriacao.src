@@ -1417,25 +1417,22 @@ program createchar(who)
 		AP_setTrueSkill(who, terciaria, tercvalue);
 	endforeach
 */
+
+    var final_str := chardata.str;
+    var final_dex := chardata.dex;
+    var final_int := chardata.int;
+    var final_dpmod := 0;
 	if (chardata.povo == "Asanita")
-		SetObjProperty(who, "dpmod", 10);
-	endif
-
-    if (chardata.povo == "Thuriao")
-        AP_SetTrueStat(who, STRENGTH, chardata.str+10);
-    endif
-
-    if (chardata.povo == "Aquilrano")
-        AP_SetTrueStat(who, DEXTERITY, chardata.dex+10);
-	endif
-
-    if (chardata.povo == "Drow")
-        AP_SetTrueStat(who, DEXTERITY, chardata.dex+5);
-        AP_SetTrueStat(who, INTELLIGENCE, chardata.int+5);
-	endif
-
-    if (chardata.povo == "Orc")
-        AP_SetTrueStat(who, INTELLIGENCE, chardata.int+10);
+        final_dpmod += 10;
+    elseif (chardata.povo == "Thuriao")
+        final_str += 10;
+    elseif (chardata.povo == "Aquilrano")
+        final_dex += 10;
+    elseif (chardata.povo == "Drow")
+        final_dex += 5;
+        final_int +=5;
+    elseif (chardata.povo == "Orc")
+        final_int += 10;
 	endif
 
 	//SETA O KIT
@@ -1469,73 +1466,42 @@ program createchar(who)
 
 	var ganheispell := 0;
 	setObjproperty(who, "kit", chardata.kit);
-    var bonus_racial_stats := Array;
-    var drow := struct;
-    drow.+dex := 5;
-    drow.+int := 5;
-    bonus_racial_stats.Append(drow);
-    var orc := struct;
-    orc.+int := 10;
-    bonus_racial_stats.Append(orc);
-    var thuriao := struct;
-    thuriao.+str := 10;
-    bonus_racial_stats.Append(thuriao);
-    var aquilrano := 10;
-    aquilrano.+dex := 10;
-    bonus_racial_stats.Append(aquilrano);
-
 
 	if (chardata.kit == "Corpulento")
-        if (chardata.povo == "Thuriao")
-            AP_SetTrueStat(who, STRENGTH, chardata.str+30);
-            AP_SetTrueStat(who, DEXTERITY, chardata.dex-5);
-            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-5);
-        else
-            AP_SetTrueStat(who, STRENGTH, chardata.str+20);
-            AP_SetTrueStat(who, DEXTERITY, chardata.dex-5);
-            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-5);
-        endif
+        final_int -= 5;
+        final_dex -= 5;
+        final_str += 20;
 	elseif (chardata.kit == "Genio")
-		AP_SetTrueStat(who, INTELLIGENCE, chardata.int+20);
-		AP_SetTrueStat(who, DEXTERITY, chardata.dex-5);
-		AP_SetTrueStat(who, STRENGTH, chardata.str-5);
+        final_str -= 5;
+        final_dex -= 5;
+        final_int += 20;
 	elseif (chardata.kit == "Agil")
-        if (chardata.povo == "Aquilrano")
-            AP_SetTrueStat(who, DEXTERITY, chardata.dex+30);
-		    AP_SetTrueStat(who, STRENGTH, chardata.str-5);
-            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-5);
-        else
-            AP_SetTrueStat(who, DEXTERITY, chardata.dex+20);
-		    AP_SetTrueStat(who, STRENGTH, chardata.str-5);
-            AP_SetTrueStat(who, INTELLIGENCE, chardata.int-5);
-        endif
+        final_str -= 5;
+        final_int -= 5;
+        final_dex += 20;
     elseif (chardata.kit == "Afogado em Mana")
-		AP_SetTrueStat(who, DEXTERITY, chardata.dex-30);
-		AP_SetTrueStat(who, STRENGTH, chardata.str-30);
+        final_str -= 30;
+        final_dex -= 30;
 	elseif (chardata.kit == "Escravo Vanirio")
 		setObjProperty(who, "description", "Marca de escravo no rosto");
 		setObjProperty(who, "hitsmod", 20);
-	elseif (chardata.kit == "Velho")
-		AP_SetTrueStat(who, STRENGTH, chardata.str-10);
-		AP_SetTrueStat(who, INTELLIGENCE, chardata.int+20);
-		AP_SetTrueStat(who, DEXTERITY, chardata.dex-10);
-
+	elseif (chardata.kit == "Velho") // Parece que foi removido por alguem
+        final_str -= 10;
+        final_dex -= 10;
+        final_int += 40;
 	endif
-	if (chardata.povo == "Asanita")
-        SetObjProperty(who, "dpmod", 10);
-        if (chardata.vantagemracial == "Pacto com Asan")
-            SetObjProperty(who, "dpmod", 20);
-        endif
-        if (chardata.kit == "Duro de Matar")
-            SetObjProperty(who, "dpmod", 30);
-        endif
-        if (chardata.kit == "Duro de Matar" && chardata.vantagemracial == "Pacto com Asan")
-            SetObjProperty(who, "dpmod", 40);
-        endif
-    elseif (chardata.kit == "Duro de Matar")
-        SetObjProperty(who, "dpmod", 20);
+
+    if (chardata.vantagemracial == "Pacto com Asan")
+        final_dpmod += 20;
+    endif
+    if (chardata.kit == "Duro de Matar")
+        final_dpmod += 20;
     endif
 
+    AP_SetTrueStat(who, STRENGTH, final_str);
+    AP_SetTrueStat(who, INTELLIGENCE, final_int);
+    AP_SetTrueStat(who, DEXTERITY, final_dex);
+    SetObjProperty(who, "dpmod", final_dpmod);
 	if (chardata.classe == "Sabio")
 		if (chardata.povo == "Asanita") //asanita eh sempre mesum
 				if (ganheispell == 0)
