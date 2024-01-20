@@ -1512,6 +1512,7 @@ function create_marked(who, x, y, z, type)
         created.movable:= 0;
 
         SetObjProperty (created, "#built_by_architect", who.serial);
+        SetObjProperty (created, "#architect_objtype", prop["objtype"]);
 
         if (KP_IsLockable(created))
           var fechadura := YesNo(who, "Voce deseja por uma fechadura nesse item?");
