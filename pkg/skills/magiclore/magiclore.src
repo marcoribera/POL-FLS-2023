@@ -22,27 +22,27 @@ program skill_armslore(who)
 		return;
 	endif
 
-	if ( ! item.isa(POLCLASS_ITEM))
-		//SendSysMessageEx(who, "Este nao e um alvo valido.", SSM_FAIL);
-		//return;
-		PrintText(who, "*analisando " + item.name + " *");
-		var timers := GetMagicTimersSpellName(item);
-		if ( SkillCheck(who, MAGICLORE, -1) )
-			if (timers.size() > 0)
-				SendSysMessageEx(who,  "O alvo esta sob efeito dos encantamentos: ", SSM_INFO);
-				foreach time in (timers)
-					SendSysMessageEx(who, " " + time.nome, SSM_INFO);
-				endforeach
-				return;
-			else
-				SendSysMessageEx(who, "O alvo nao esta sob efeito de encantamentos.", SSM_INFO);
-				return;
-			endif
-		else
-			SendSysMessageEx(who, "Voce nao identifica nada.", SSM_FAIL);	
-			return;
-		endif
-	endif
+	//if ( !item.isa(POLCLASS_ITEM))
+	//	//SendSysMessageEx(who, "Este nao e um alvo valido.", SSM_FAIL);
+	//	//return;
+	//	PrintText(who, "*analisando " + item.name + " *");
+	//	var timers := GetMagicTimersSpellName(item);
+	//	if ( SkillCheck(who, MAGICLORE, -1) )
+	//		if (timers.size() > 0)
+	//			SendSysMessageEx(who,  "O alvo esta sob efeito dos encantamentos: ", SSM_INFO);
+	//			foreach time in (timers)
+	//				SendSysMessageEx(who, " " + time.nome, SSM_INFO);
+	//			endforeach
+	//			return;
+	//		else
+	//			SendSysMessageEx(who, "O alvo nao esta sob efeito de encantamentos.", SSM_INFO);
+	//			return;
+	//		endif
+	//	else
+	//		SendSysMessageEx(who, "Voce nao identifica nada.", SSM_FAIL);	
+	//		return;
+	//	endif
+	//endif
 
 	if (item.graphic == 3849)
 		PrintText(who, "*analisando um frasco*");
