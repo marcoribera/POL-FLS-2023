@@ -12,23 +12,12 @@ program SpellScript(params)
 	var info := params[2];
 	params := 0; // No longer needed
 
-	SendSysMessageEx(who, "Escolha o alvo.", SSM_REQUEST);
-	var targ := Spell_Target(who, TGTOPT_CHECK_LOS);
-	if (!targ)
-		return;
-	endif
-
-	if (!targ.isa(POLCLASS_MOBILE))
-		SendSysMessageEx(who, "Isto nao pode ser alvejado por essa magia.", SSM_FAIL);
-		return;
-	endif
-
 	var amt :=  cint( AP_GetSkill(who, MAGICLORE)*0.4);
 	//var time := (AP_GetSkill(who, MAGERY) + AP_GetSkill(who, MAGICLORE))*2;
 	//printtextabove(who, "maic lore " + AP_GetSkill(who, MAGICLORE)); 
-	TS_StartTimer(targ, "strength", GetSpellDuration(AP_GetSkill(who, MAGICLORE)), amt, who, 1 );
+	TS_StartTimer(info, "strength", GetSpellDuration(AP_GetSkill(who, MAGICLORE)), amt, who, 1 );
 
-	PlaySoundEffect(targ, SFX_SPELL_STRENGTH);
+	PlaySoundEffect(info, SFX_SPELL_STRENGTH);
 	SendSysMessageEx(who, "Voce deixou o alvo mais forte.", SSM_INFO);
 	
 	return 1;

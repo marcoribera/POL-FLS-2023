@@ -132,7 +132,7 @@ program core_npcDeath(params)
             shaman_souls := shaman_souls + 1;
             PerformAction (shaman, ANIM_SALUTE);
             sleep(1);
-            PlayObjectCenteredEffectHuefx(corpse, 0x6C6F, 0, 60, 2394, 1);
+            PlayStationaryEffectEx(corpse.x,corpse.y,corpse.z, shaman.realm, 0x6C6F, 0, 60, 2394);
             PlaySoundEffect(shaman, 0x653);
 
             SendSysMessage(shaman, "Voce colhe uma alma.");

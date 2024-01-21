@@ -225,7 +225,7 @@ program MainHitScript( params )
 		total := CalculateTotalDamage(defender, basedamage, attacker, dmgList);
         var shaman_bonus := CInt(AP_GetSkill(attacker, MAGICLORE) / 5);
         if (Getcooldown(attacker, "bloodlust") > 0)
-            PlayObjectCenteredEffectHuefx(attacker, GFX_BLUE_SPARKLE_GROUND, 0, 60, 2676, 0);
+            PlayStationaryEffect(attacker.x, attacker.y, attacker.z, GFX_BLUE_SPARKLE_GROUND, 10, 20, 0, attacker.realm);
             HealFLS(attacker, total * shaman_bonus/100);
         endif
 		if (GetObjProperty(attacker, "#ignorardefesas") >= 1);

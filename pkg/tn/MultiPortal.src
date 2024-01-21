@@ -13,6 +13,7 @@ program MultiPortal(multiportal)
 	var x := 0;
     var y := 0;
     var z := 0;
+    var r := "";
 
     EnableEvents(SYSEVENT_SPEECH, 1);
 	RegisterForSpeechEvents(multiportal, 1);
@@ -26,24 +27,28 @@ program MultiPortal(multiportal)
         SetObjProperty(multiportal,"destinationX0",5298);
         SetObjProperty(multiportal,"destinationY0",524);
         SetObjProperty(multiportal,"destinationZ0",0);
+        SetObjProperty(multiportal,"destinationR0",0);
 
         //Portal para Thuria
         SetObjProperty(multiportal,"magicword1","Thuria");
         SetObjProperty(multiportal,"destinationX1",1815);
         SetObjProperty(multiportal,"destinationY1",146);
         SetObjProperty(multiportal,"destinationZ1",0);
+        SetObjProperty(multiportal,"destinationR1",0);
 
         //Portal para Asan
         SetObjProperty(multiportal,"magicword2","Asan");
         SetObjProperty(multiportal,"destinationX2",815);
         SetObjProperty(multiportal,"destinationY2",1146);
         SetObjProperty(multiportal,"destinationZ2",0);
+        SetObjProperty(multiportal,"destinationR2",0);
 
         //Portal para Aquil
         SetObjProperty(multiportal,"magicword3","Aquil");
         SetObjProperty(multiportal,"destinationX3",2321);
         SetObjProperty(multiportal,"destinationY3",2191);
         SetObjProperty(multiportal,"destinationZ3",0);
+        SetObjProperty(multiportal,"destinationR3",0);
 
 // ### PIZZA - > adicionei a parte de baixo porque esta sem a opção de criar novos portais
         //Portal para Zharkia
@@ -51,6 +56,7 @@ program MultiPortal(multiportal)
         SetObjProperty(multiportal,"destinationX0",0);
         SetObjProperty(multiportal,"destinationY0",0);
         SetObjProperty(multiportal,"destinationZ0",0);
+        SetObjProperty(multiportal,"destinationR0",0);
     endif
 	
     while(multiportal)
@@ -98,27 +104,27 @@ endprogram
 function AbrirPortal(multiportal, color)
     var portal;
 
-    portal := CreateItemAtLocation(multiportal.x, multiportal.y, multiportal.z, 8141, 1, realm := _DEFAULT_REALM );
+    portal := CreateItemAtLocation(multiportal.x, multiportal.y, multiportal.z, 8141, 1, realm := multiportal.r );
     portal.color := color;
     sleep(1);
     DestroyItem(portal);
 
-    portal := CreateItemAtLocation(multiportal.x, multiportal.y, multiportal.z, 8142, 1, realm := _DEFAULT_REALM );
+    portal := CreateItemAtLocation(multiportal.x, multiportal.y, multiportal.z, 8142, 1, realm := multiportal.r );
     portal.color := color;
     sleep(1);
     DestroyItem(portal);
 
-    portal := CreateItemAtLocation(multiportal.x, multiportal.y, multiportal.z, 8143, 1, realm := _DEFAULT_REALM );
+    portal := CreateItemAtLocation(multiportal.x, multiportal.y, multiportal.z, 8143, 1, realm := multiportal.r );
     portal.color := color;
     sleep(1);
     DestroyItem(portal);
 
-    portal := CreateItemAtLocation(multiportal.x, multiportal.y, multiportal.z, 8144, 1, realm := _DEFAULT_REALM );
+    portal := CreateItemAtLocation(multiportal.x, multiportal.y, multiportal.z, 8144, 1, realm := multiportal.r );
     portal.color := color;
     sleep(1);
     DestroyItem(portal);
 
-    portal := CreateItemAtLocation(multiportal.x, multiportal.y, multiportal.z, 8145, 1, realm := _DEFAULT_REALM );
+    portal := CreateItemAtLocation(multiportal.x, multiportal.y, multiportal.z, 8145, 1, realm := multiportal.r );
     portal.color := color;
     sleep(1);
     DestroyItem(portal);
