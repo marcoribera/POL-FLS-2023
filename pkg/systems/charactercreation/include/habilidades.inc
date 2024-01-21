@@ -434,7 +434,7 @@ function comprarHabilidade(who, item, nv:=-1)
 			SetObjProperty(who, "fococomarma", targ.objtype);
 			SendSysMessageEx(who, "Arma escolhida.", SSM_INFO);
 		elseif (escolhida == "Inimigo Predileto")
-			var inimigo := RadioGump(who, 300, 380, "Escolha seu Inimigo Predileto", array{"Dragon","Undead","Giants","GiantAnimal","EvilHuman","Goblin"});
+			var inimigo := RadioGump(who, 300, 380, "Escolha seu Inimigo Predileto", array{"Dragon","Undead","Giants","GiantAnimal","EvilHuman","Goblin", "Underdark"});
 			SetObjProperty(who, "InimigoPredileto", inimigo);
 		elseif (escolhida == "Inventario Ferreiro")
 			var inventario := RadioGump(who, 300, 380, "Selecione a especialidade", array{"Armas","Escudos","Armaduras"});
