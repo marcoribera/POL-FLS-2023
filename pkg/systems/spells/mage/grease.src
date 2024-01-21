@@ -16,16 +16,14 @@ program SpellScript(params)
 	var who := params[1];
 	var info := params[2];
 	params := 0; // No longer needed
-    var targ := Target(who);
-    
-    if (!targ.isA(POLCLASS_MOBILE))
-        SendSysMessage(who, "Precisa ser uma pessoa ou criatura");
-    endif
 
     var duration := (CInt(AP_GetSkill(who, MAGICLORE)) / 10);
-    foreach mob in ListMobilesNearLocation(who.x, who.y, who.z, 3, who.ream)
-        PlayObjectCenteredEffect(mob, 0x6cb7, 7, 30);
 
+    PlayStationaryEffect(info.x, info.y, info.z, 0x6cb7, 10, 20, 0, who.realm);
+    foreach mob in ListMobilesNearLocation(info.x, info.y, info.z, 3, info.realm)
+        var lama := CreateItemAtLocation(mob.x, mob.y, mob.z, 4653, 1, mob.realm);
+        lama.color := 1008;
+        lama.name := "lama";
         TS_StartTimer(mob, "lentidao", duration);
     endforeach
 		
