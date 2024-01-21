@@ -497,7 +497,7 @@ program architect_gump(who)
           var tbm:= Target (who, TGTOPT_NOCHECK_LOS);
 
           if (!tbm ||
-              (GetObjProperty (tbm, "#built_by_architect") != who.serial))
+              (GetObjProperty (tbm, "built_by_architect") != who.serial))
             SendSysMessage (who, lang["cancelled"]);
             choice[1]:= 0;
             break;
@@ -536,7 +536,7 @@ program architect_gump(who)
               break;
             endif
 
-            if(!GetObjProperty(tbh, "#built_by_architect"))
+            if(!GetObjProperty(tbh, "built_by_architect"))
               SendSysMessage(who, "Somente e possivel esconder itens feitos pelo Architect");
               break;
             endif
@@ -626,7 +626,7 @@ program architect_gump(who)
             tbm:= Target (who, TGTOPT_NOCHECK_LOS);
 
             if (!tbm ||
-                (GetObjProperty (tbm, "#built_by_architect") != who.serial))
+                (GetObjProperty (tbm, "built_by_architect") != who.serial))
               SendSysMessage (who, lang["cancelled"]);
               choice[1]:= 0;
               break;
@@ -946,7 +946,7 @@ program architect_gump(who)
                 undo.append (array{2, element.objtype, element.x, element.y, element.z});
                 DestroyItem (element);
             else
-                if (GetObjProperty (element, "#built_by_architect") != who.serial)
+                if (GetObjProperty (element, "built_by_architect") != who.serial)
                   SendSysMessage (who, lang["delete_err"]);
                 else
                   undo.append (array{2, element.objtype, element.x, element.y, element.z});
@@ -967,8 +967,8 @@ program architect_gump(who)
               foreach dummy in (lastaction[2])
                 var tbd:= SystemFindObjectBySerial (dummy);
 
-                if (GetObjProperty (tbd, "#built_by_architect") == who.serial)
-                  var objtype := GetObjProperty(tbd, "#architect_objtype");
+                if (GetObjProperty (tbd, "built_by_architect") == who.serial)
+                  var objtype := GetObjProperty(tbd, "architect_objtype");
                   CreateItemInBackPack(who, Cint(objtype), 10);
                   DestroyItem (tbd);
                   undone:= 1;
@@ -1078,7 +1078,7 @@ program architect_gump(who)
           var output:= array{};
 
           foreach item in ListObjectsInBox (topleft[1], topleft[2], topleft[3], botright[1], botright[2], botright[3])
-            if (GetObjProperty (item, "#built_by_architect") == who.serial)
+            if (GetObjProperty (item, "built_by_architect") == who.serial)
               output.append (array {CInt (item.objtype), (item.x - topleft[1]), (item.y - topleft[2]), (item.z - topleft[3])});
             endif
           endforeach
@@ -1258,7 +1258,7 @@ program architect_gump(who)
           var dummy:= get_coords(who);
 
           foreach item in ListObjectsInBox (dummy[1], dummy[2], GetWorldHeight (dummy[1], dummy[2]), dummy[3], dummy[4], 120)
-            if (GetObjProperty (item, "#built_by_architect") == who.serial)
+            if (GetObjProperty (item, "built_by_architect") == who.serial)
               output.append (CInt (item.objtype) + " " + (item.x - who.x) + " " + (item.y - who.y) + " " + (item.z - who.z) + " " + 1);
             endif
           endforeach
@@ -1534,8 +1534,8 @@ function create_marked(who, x, y, z, type)
     var created:= CreateItemAtLocation (x, y, z_real, type, 1, who.realm);
     created.movable:= 0;
 
-    SetObjProperty (created, "#built_by_architect", who.serial);
-    SetObjProperty (created, "#architect_objtype", objtype);
+    SetObjProperty (created, "built_by_architect", who.serial);
+    SetObjProperty (created, "architect_objtype", objtype);
 
     if (KP_IsLockable(created))
       var fechadura := YesNo(who, "Voce deseja por uma fechadura nesse item?");
@@ -1631,7 +1631,7 @@ function clear_site(who)
   endif
 
   foreach built in ListObjectsInBox (clear_coords[1], clear_coords[2], clear_coords[3], clear_coords[4], clear_coords[5], 120)
-    if (GetObjProperty (built, "#built_by_architect") == who.serial)
+    if (GetObjProperty (built, "built_by_architect") == who.serial)
       DestroyItem (built);
     endif
 
