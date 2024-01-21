@@ -1175,7 +1175,7 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 	var parry_chance := CInt(skill/3);
 
 	//Aplica penalidade de chance de bloqueio se estiver usando apenas arma
-	if (usingweapon)
+	if (usingweapon && !TemHabilidade(defender, "Caminho do Andarilho"))
 		parry_chance := CInt(parry_chance * 0.7);
 	endif
 
