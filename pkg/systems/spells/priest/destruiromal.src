@@ -23,10 +23,11 @@ program SpellScript(params)
 		SendSysMessageEx(who, "Isto nao pode ser alvejado por essa magia.", SSM_FAIL);
 		return;
 	endif
-
+
+
 	PlaySoundEffect(targ, SFX_SPELL_STRENGTH);
 
-	foreach mobile in (ListMobilesNearLocation( targ.x ,targ.y, targ.z, 6))
+	foreach mobile in (ListMobilesNearLocation( targ.x ,targ.y, targ.z, 6, targ.realm))
 
 		if (mobile.npctemplate)
 			var elem := NPC_GetNPCConfig(mobile.npctemplate);

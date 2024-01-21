@@ -163,7 +163,7 @@ function examinarArea(who)
 	var lvl;
 	var found := 0;
 	var difficulty;
-	foreach mobile in ListMobilesNearLocationEX(who.x, who.y, who.z, range, LISTEX_FLAG_HIDDEN)
+	foreach mobile in ListMobilesNearLocationEX(who.x, who.y, who.z, range, LISTEX_FLAG_HIDDEN, who.realm)
 		if ( CheckLineOfSight(who, mobile) && abs(mobile.z - who.z ) < 19 )
 			difficulty := CalculateDHDiff(who, mobile);
 			if ( mobile == who ); // Do Nothing
@@ -201,7 +201,7 @@ function examinarArea(who)
 		endif
 	endforeach
 
-	foreach item in ListItemsNearLocation(who.x, who.y, who.z, range)
+	foreach item in ListItemsNearLocation(who.x, who.y, who.z, range, who.realm)
 		if ( item.invisible )
 			if ( item.isTrap())
 				lvl := Cint(GetObjProperty(item, "level"));

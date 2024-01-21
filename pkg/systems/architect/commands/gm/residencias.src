@@ -3,6 +3,7 @@ use datafile;
 use cfgfile;
 include ":gumps:gumps";
 include ":gumps:requestGump";
+include "include/string";
 
 program ConfigArchitect(who)
 
@@ -41,7 +42,7 @@ program ConfigArchitect(who)
 
 		var area := areasdf.createelement(""+nome);
 		area.setprop("Name", nome);
-		area.setprop("Rect", rect);
+		area.setprop("Rect", AutoSetRealm(who, rect));
 
 	elseif(input >= 400)
 
@@ -71,10 +72,22 @@ program ConfigArchitect(who)
 			SendSysMessage(who, "O jogador deve seguir essas regras para conseguir construir.");
 
 			elem.setprop("Name", nome);
-			elem.setprop("Rect", rect);
+			elem.setprop("Rect", AutoSetRealm(who, rect));
 		endif
 
 
 	endif
 
 endprogram
+
+function AutoSetRealm(who, rect)
+
+  var rec := SplitWords(rect);
+  var realm := rec[5];
+  if(!realm || realm == "" || realm.errortext)
+	rec.append(who.realm);
+	return " ".join(rec);
+  endif
+  return rect;
+
+endfunction
