@@ -17,7 +17,6 @@ program SpellScript(params)
 	var info := params[2];
 	params := 0; // No longer needed
 	
-	var targ := MS_Target(who, info.targ, "Select a target.", TGTOPT_CHECK_LOS+TGTOPT_HELPFUL);
 	if ( !targ.IsA(POLCLASS_MOBILE) )
 		SendSysMessage(who, "Cancelled.");
 		return 0;
