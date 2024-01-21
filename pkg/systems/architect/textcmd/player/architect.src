@@ -1237,8 +1237,8 @@ program architect_gump(who)
               choice[1]:= 0;
               break;
             endif
-            //Ele sempre move o player e nao entendi, deixei assim
-            MoveObjectToLocation (who, playerloc[1], playerloc[2], playerloc[3], who.realm, MOVEOBJECT_FORCELOCATION);
+            //Ele sempre move o player e nao entendi, removi e vamos ver o que acontece
+            //MoveObjectToLocation (who, playerloc[1], playerloc[2], playerloc[3], who.realm, MOVEOBJECT_FORCELOCATION);
             EraseGlobalProperty ("#architect");
 
             foreach dummy in starteqp
@@ -1526,7 +1526,7 @@ function create_marked(who, x, y, z, type)
         endif
     endforeach
    
-    SendSysMessageEx(who, "Voce usou o(s) recursos(s).", SSM_INFO);
+    SendSysMessageEx(who, "Voce usou o(s) recurso(s).", SSM_INFO);
     var z_real := z;
     if(who.realm == "britannia_alt") //O mapa novo tem uma diferenca de -60 no Z, por isso tem esse tratamento
       z_real := z - 60;
