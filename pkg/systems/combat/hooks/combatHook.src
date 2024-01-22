@@ -548,7 +548,7 @@ function CalculateHitChance(attacker, defender)
 		EraseObjProperty(attacker, "#attackbonus");
 	endif
 
-	if ( isBloodied(attacker) )
+	if ( isRaging(attacker) )
 		if (TemHabilidade(defender, "Iludir o Fraco") )
 			hit_chance := hit_chance - 10;
 		endif
@@ -556,7 +556,7 @@ function CalculateHitChance(attacker, defender)
 			hit_chance := hit_chance + 100;
 		endif
 	endif
-	if ( isBloodied(defender) )
+	if ( isRaging(defender) )
 		if (TemHabilidade(defender, "Esquiva Instintiva") )
 			hit_chance := hit_chance - 10;
 		endif
