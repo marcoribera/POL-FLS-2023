@@ -14,23 +14,12 @@ program cast_lightningbolt(params)
 	var info := params[2];
 	params := 0; // No longer needed
 
-	var targ := MS_Target(caster, info.targ, "Selecione o alvo.", TGTOPT_CHECK_LOS+TGTOPT_HARMFUL);
-	if ( !targ.IsA(POLCLASS_MOBILE) )
-		SendSysMessage(caster, "Alvo invalido.");
-		return 0;
-	endif
-
-    if (!targ)
-		SendSysMessageEx(caster, "Cancelado", SSM_FAIL);
-		return 0;
-	endif
-
-    LaunchProjectile(caster, targ);
+    LaunchProjectile(caster, info);
 endprogram
 
-function LaunchProjectile(caster, targ)
+function LaunchProjectile(caster, info)
     PlaySoundEffect(caster, SFX_SPELL_ENERGY_BOLT);
-    PlayMovingEffectXYZHued(caster, targ, 0xf42, 10, 1643, 0);
+    PlayLightningBoltEffect(info);
     var dmg := cint(AP_GetSkill(caster, MAGICLORE)) + RandomDiceRoll("4d8");
-    DamageFLS(targ, cint(dmg), DMG_ENERGY, caster);
+    DamageFLS(info, cint(dmg), DMG_ENERGY, caster);
 endfunction

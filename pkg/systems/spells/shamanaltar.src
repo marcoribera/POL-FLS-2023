@@ -65,7 +65,7 @@ program orderSpells(who, item)
             sleepms(2);
          endforeach
       endif
-      if (spell.circle >  Cint(Ceil((mlore - 10) / 20))) // 10, 30, 50 , 70 , 90 habs pra castar
+      if (spell.circle >  Cint((mlore + 10) / 20)) // 10, 30, 50 , 70 , 90 habs pra castar
          continue;
       elseif (spell.type == "Auto")
          continue;
