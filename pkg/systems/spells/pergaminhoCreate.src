@@ -48,7 +48,7 @@ program cria(item)
 
 	var random_spell_id := RandomInt(randomspells.size())+1;
 	spellinfo.+id := randomspells[random_spell_id];
-	spellinfo.+path_magic := spelltype_item;
+	spellinfo.+magic_path := spelltype_item;
 	SetObjProperty(item, "spellinfo", spellinfo);
 
 	return 1;
