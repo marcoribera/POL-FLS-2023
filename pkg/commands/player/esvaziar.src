@@ -35,8 +35,8 @@ program do_empty(who)
     else 
         SendSysMessageEx(who, "Voce esvaziou a pocao.", SSM_REQUEST);
         PlaySoundEffect(who, 0x241);
+		CreateItemInBackpack(who, 0xf0e, the_potion.amount);
         DestroyItem(the_potion);
-        CreateItemInBackpack(who, 0xf0e, 1);
         return;
     endif
 
