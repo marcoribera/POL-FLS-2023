@@ -299,6 +299,15 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 			endif
 			//var attr := PegarProp(item); //terminar para adicionar valores no item assim que começar a criar
 			theitem := CreateItem(who, objtype, chosenPrincipalMaterial, more);
+			// check if it is an alchemy book - if it is add player id
+			Print("Antes do meu if:"+objtype);
+			if (objtype==0xec29)
+			theitem.newbie := 1;
+			setobjproperty(theitem, "serialid", who.serial);
+			setobjproperty(theitem, "marked",who.name + " - " + who.acctname);
+			Print("Depois:"+objtype);
+			endif
+
 			if(!theitem)
 				SendSysMessageEx(who, "Voce nao tem espaco suficiente na sua mochila!", SSM_FAIL);
 				return theitems;
@@ -315,7 +324,7 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 			SendSysMessageEx(who, "Voce criou o item o colocou na mochila.", SSM_INFO);
 
 			hisskill := AP_GetSkill(who, craft_skill);
-
+		
 			if (theitem.isa(POLCLASS_WEAPON) || theitem.isa(POLCLASS_ARMOR))
 				SetObjProperty(theitem,"reparos",(hisskill/2));
 			endif
@@ -350,8 +359,13 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 			theitems.append( theitem);
 
 		else
+			if (objtype==0xec29) //checa se item feito é o alchemybook
+			SubtractMaterial(who, targMaterials, 0.5); //consome metade do material
+			SendSysMessageEx(who, "Voce nao conseguiu montar o livro.", SSM_FAIL);
+			else
 			SubtractMaterial(who, targMaterials, 0.5); //consome metade do material
 			SendSysMessageEx(who, "Voce falhou ao fazer o item e perdeu material." , SSM_FAIL);
+			endif
 		endif
 		sleepms(100);
 	endwhile
