@@ -570,17 +570,21 @@ function CalculateHitChance(attacker, defender)
 		endif
 	endif
 
-	if (GetCooldown(attacker, "semdor") > 0) //penaliza ataque
-		hit_chance := hit_chance - (GetObjProperty(attacker, "#semdorbonus"));
+    var sem_dor_bonus := 0;
+    var parry_bonus_sem_dor := 0;
+	if (TemHabilidade(attacker, "Defesa Persistente") > 0) //penaliza ataque
+        parry_bonus_sem_dor := Cint(Ap_GetSkill(attacker, PARRY) / 5);
+        sem_dor_bonus := cint(parry_bonus_sem_dor*( AP_GetVitalMaximumValue(attacker, HITS) / AP_GetVital(attacker, HITS)));
+		hit_chance := hit_chance - sem_dor_bonus;
 	endif
-	if (GetCooldown(defender, "semdor") > 0) //beneficia defesa
-		hit_chance := hit_chance - (GetObjProperty(defender, "#semdorbonus"));
+
+	if (TemHabilidade(defender, "Defesa Persistente") > 0) //beneficia defesa
+        parry_bonus_sem_dor := Cint(Ap_GetSkill(defender, PARRY) / 5);
+        sem_dor_bonus := cint(parry_bonus_sem_dor*( AP_GetVitalMaximumValue(defender, HITS) / AP_GetVital(defender, HITS)));
+		hit_chance := hit_chance - sem_dor_bonus;
 	endif
 
-
-
-
-	if (GetCooldown(defender, "resistenciaheroica") )
+	if (TemHabilidade(defender, "Resistencia Heroica") )
 		var hostiles := ListHostiles(defender, 3);
 		if ( hostiles.size() >= 5)
 			hit_chance := hit_chance  - 15;
