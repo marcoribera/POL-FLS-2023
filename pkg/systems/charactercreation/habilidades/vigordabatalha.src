@@ -5,13 +5,12 @@ include "include/say";
 include ":tn:cooldown";
 include "include/sysEvent";
 include "include/client";
-
+include "include/damage";
 
 program manobra(attacker)
+	//SendSysMessageEx(attacker, "Use seu vigor como sua vida.", SSM_INFO);
 
-	SendSysMessageEx(attacker, "Use seu vigor como sua vida.", SSM_INFO);
-
-	SetCooldown(attacker, "vigordabatalha", cint(AP_GetSkill(attacker, TACTICS)));
-
+	//SetCooldown(attacker, "vigordabatalha", cint(AP_GetSkill(attacker, TACTICS)));
+    HealFLS(attacker, Cint(AP_GetVitalMaximumValue(attacker, STAMINA)));
 endprogram 
 

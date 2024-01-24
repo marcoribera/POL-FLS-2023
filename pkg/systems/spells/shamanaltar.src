@@ -51,7 +51,6 @@ program orderSpells(who, item)
         endforeach
         SetObjProperty(who, "cantrips", cantrips);
     endif
-
     
    foreach spell in (GetConfigIntKeys(cfg))
       spell := FindConfigElem(cfg, spell);

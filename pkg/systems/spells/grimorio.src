@@ -77,6 +77,7 @@ endprogram
 
 Const OBJ_BLANK_SCROLL := 0xE34;
 Const OBJ_RECIPE_SLIP := 0x6116;
+Const OBJ_RECIPE_SLIP_SANGRIA := 0x2050;
 
 function copyrecipe(who, recipe)
 	writeSpellInfo(who, recipe);
@@ -87,14 +88,24 @@ function copyrecipe(who, recipe)
 				SendSysMessageEx(who, "Voce esta sem mana.", SSM_FAIL);
 				return 1;
 			endif
+
 			if (!TNCheckReagents(who, recipe, 0))
 				SendSysMessageEx(who, "Voce nao tem os reagentes.", SSM_FAIL);
 				return 1;
 			endif
-			var item := createiteminbackpack(who, OBJ_RECIPE_SLIP, 1);
-			if (item == error)
-				sendsysmessage(who, "  " + item);
+
+			var item;
+
+			if(recipe.magic_path == "Sangria")
+				item := createiteminbackpack(who, OBJ_RECIPE_SLIP_SANGRIA, 1);
+			else
+				item := createiteminbackpack(who, OBJ_RECIPE_SLIP, 1);
 			endif
+
+			if (item == error)
+				sendsysmessage(who, "  " + item);		
+			endif
+
 			setobjproperty(item, "spellinfo", recipe);
 			SendSysMessageEx(who, "Voce fez uma copia do pergaminho.", SSM_INFO);
 			printtext(who, "*escrevendo pergaminho*");

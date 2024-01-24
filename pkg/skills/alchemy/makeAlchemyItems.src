@@ -47,7 +47,13 @@ program use_Alchemy(who, tool)
 	var the_objtype := rinfo[1];
 	var amt         := rinfo[2];
 
-	makeAlchemyItems(who, the_objtype, amt, tool);
+	if (amt>0)
+		if (the_objtype==0xec29) //checa se item feito é o alchemybook
+		makeAlchemyBook(who, the_objtype, amt, tool);
+		else
+		makeAlchemyItems(who, the_objtype, amt, tool);
+		endif
+	endif
 
 endprogram
 
@@ -82,7 +88,29 @@ function makeAlchemyItems(who, what, amt, tool )
 	return 1;
 
 endfunction
+ 
+//Deixando alchemy book craftável - Somente retira funções de falha crítica e recuperação de pote
+function makeAlchemyBook(who, what, amt, tool )
 
+	if(!what)
+		SendSysMessageEx(who, "Cancelado.", SSM_FAIL);
+		return 0;
+	endif
+
+	var loop := 0;
+
+	var item := CraftItem(who, "Alchemy", tool, what, amt, 0, 0);
+
+	if(item.size() == 0)
+			PlaySoundEffect(who, SOUND_EFFECT_GRIND);
+			SendSysMessageEx(who, "Voce nao conseguiu montar o livro.", SSM_FAIL);
+			sleep(2);
+			return 0;
+	endif
+
+	return 1;
+
+endfunction
 
 function FalhaCritica(who, item)
 	if (TemHabilidade(who, "Alquimista Precavido"))

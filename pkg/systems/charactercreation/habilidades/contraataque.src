@@ -10,7 +10,7 @@ include ":tn:cooldown";
 program taunt(who)
 
 	SendSysMessageEx(who, "Voce contra-atacara sempre que puder.", SSM_INFO);
-	SetCooldown(who, "contraataque", 20); 
+	SetCooldown(who, "contraataque", 40); 
 
 endprogram
    

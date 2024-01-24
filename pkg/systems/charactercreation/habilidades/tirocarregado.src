@@ -158,11 +158,10 @@ function CriticalHitScripts(attacker, defender, weapon, armor, basedamage, byref
 		weapon_scripts :=  GetConfigStringArray( npcelem, "CriticalHitScripts" );
 	endif
 
-
 	if (weapon_scripts.size() > 0)
 		PrintText(attacker, "*CRITICO*", _DEFAULT_TEXT_FONT, 2118);
 		SetObjProperty(attacker, "critdelay", ReadGameClock()+180);
-		if (GetCooldown(defender, "vitalidadeinabalavel"))
+		if (TemHabilidade(defender, "Vitalidade Inabalavel"))
 			SendSysMessageEx(defender, "Voce ignora o critico", SSM_INFO);
 			SendSysMessageEx(attacker, "O defensor ignorou o critico", SSM_FAIL);
 			return 1;
@@ -173,7 +172,6 @@ function CriticalHitScripts(attacker, defender, weapon, armor, basedamage, byref
 		SendSysMessageEx(defender, "Voce nao leva o critico");
 		return;
 	endif
-
 
 	foreach hitscript in weapon_scripts
 		var script := start_script(hitscript, array{attacker, defender, weapon, armor, basedamage, rawdamage});

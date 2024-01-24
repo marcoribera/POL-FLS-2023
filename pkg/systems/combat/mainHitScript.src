@@ -324,6 +324,15 @@ program MainHitScript( params )
 		AP_ConsumeVital(defender, STAMINA, total);
 	endif
 
+    if (GetCooldown(defender, "defesasgloriosas"))
+        var dmgList := dictionary;
+	    dmgList := getNewDamageList(defender);
+	    total := cint(CalculateTotalDamage(attacker, basedamage, defender, dmgList));
+        TS_StartTimer(attacker, "paralysis", 5);
+        SetCooldown(defender, "defesasgloriosas", 0);
+        DamageFLS(attacker, total, DMG_FORCED, defender);
+    endif
+
 	if ((TemHabilidade(defender, "Furia Imortal") || TemHabilidade(defender, "Trapacear a Morte" )) && (AP_GetVital(defender, HITS) < total))
 		if ( !GetCooldown(defender, "trapacearmorte_rodando") > 0 )
 			start_script(":charactercreation:habilidades/trapacearmorte", array{defender, total});
@@ -890,12 +899,11 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 	endif
 	//Possivel mudar o critico de npc's. Os npcs só tem uma arma, a Intrinsic Weapon, mesmo que alguma esteja equipada.
 
-
 	//printtextabove(attacker, "critical hit scripts " + weapon_scripts);
 	if (weapon_scripts.size() > 0)
 		PrintText(attacker, "*CRITICO*", _DEFAULT_TEXT_FONT, 2118);
 		SetObjProperty(attacker, "critdelay", ReadGameClock()+180);
-		if (GetCooldown(defender, "vitalidadeinabalavel"))
+		if (TemHabilidade(defender, "Vitalidade Inabalavel"))
 			SendSysMessageEx(defender, "Voce ignora o critico", SSM_INFO);
 			SendSysMessageEx(attacker, "O defensor ignorou o critico", SSM_FAIL);
 			return 1;
@@ -906,7 +914,6 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 		SendSysMessageEx(defender, "Voce nao leva o critico");
 		return;
 	endif
-
 
 	foreach hitscript in weapon_scripts
 		/*var crit := ParseScriptString(hitscript);
@@ -1204,11 +1211,7 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 		//Verifica habilidade Defesas Gloriosas e, se cabível, aplica seu efeito
 		defendeu := 1;
 		//PerformAction(defender, 13);
-		if (GetCooldown(defender, "defesasgloriosas"))
-			TS_StartTimer(attacker, "paralysis", 5);
-			SetCooldown(defender, "defesasgloriosas", 0);
-            defender.attack_once(attacker);
-		endif
+
 
 		//Pike desarma defensor que bloquear sem escudo
 		if ((attacker.weapon.graphic == 0x26C8) && ( usingWeapon ))
