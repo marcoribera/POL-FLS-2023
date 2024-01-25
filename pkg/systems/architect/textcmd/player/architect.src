@@ -1299,6 +1299,7 @@ program architect_gump(who)
       subgroups:= ListConfigElemProps (parts[choice[2]]);
       subgroups.sort ();
       choice[3]:= subgroups[1];
+      DrawResourcesOnGump(subgroups[1], who);
       groupparts:= GetConfigStringArray (parts[choice[2]], choice[3]);
       makeArrayNumerical(groupparts);
       groupparts.sort ();
@@ -1480,8 +1481,6 @@ function check_coords(who, coords)
 
 endfunction
 
-
-
 /* Creates 1 item at passed coords and adds a flag to it
  *
  * x, y, z coordinates to create the item at
@@ -1490,44 +1489,66 @@ endfunction
  * returns <objref> to the created item
 */
 function create_marked(who, x, y, z, type)
-    var custo := 10;
+    var groupName;
     var prop := dictionary;
-    var madeira_ranges := array{"logs", "madeirapinheiro", "madeiracarvalho", "madeiranogueira", "madeirasalgueiro", "madeiraciprestre", "madeiraebano", "madeiracogumelo", "madeirapolar", "madeirateixo", "madeiraimbuia", "madeiramogno"}; // Tipos de madeira
-    var madeira_hex_ranges := {0x1BDD, 0xee36, 0xee37, 0xee38, 0xee39, 0xee3a, 0xee3b, 0xee3c, 0xee3d, 0xee3e, 0xee3f, 0xee40}; //Tipos de madeira
-    var total_recursos := 0;
-    var objtype := get_objtype(type);
+    var parts:= ReadConfigFile(":architect:config/parts");
 
+    foreach dummy in GetConfigStringKeys(parts)
+      foreach entry in ListConfigElemProps(parts[dummy])
+        foreach line in GetConfigStringArray(parts[dummy], entry)
+          foreach item in SplitWords(line)
+            if (item == type || item == Hex(type) || item == CStr(Hex(type)) || Hex(item) == Hex(type))
+              groupName := entry;
+              break;
+            endif 
+          endforeach
+        endforeach
+      endforeach
+    endforeach
+
+    if (!groupName)
+        SendSysMessageEx(who, "Tipo de item desconhecido.", SSM_INFO);
+        return;
+    endif
+
+    // Recuperar informações dos recursos necessários
+    var resourcesConfig := ReadConfigFile(":architect:config/resources");
+    var resourceName := GetConfigString( FindconfigElem(resourcesConfig, groupName), "resourceName" );
+    var quantity := GetConfigInt( FindconfigElem(resourcesConfig, groupName), "quantity" );
+
+    // Obter objtype de cada recurso
+    var resourceTypeConfig := ReadConfigFile(":architect:config/resource_type");
+    var resourcesIdList := GetConfigStringArray( FindconfigElem(resourceTypeConfig, resourceName), "resourcesIdList" );
+    var resourcesNameList := GetConfigStringArray( FindconfigElem(resourceTypeConfig, resourceName), "resourcesNameList" );
+
+    // Verifica se tem recursos suficientes
     if (!staffmode) // Se não for staff, verifica os recursos
-        if (objtype == GetObjTypeByName("logs")) // Se for madeira
-            foreach tipo_madeira in madeira_ranges
-                prop["objtype"] := GetObjTypeByName(tipo_madeira);
-                total_recursos := AmountInContainer(who.backpack, prop);
-                if (total_recursos >= custo) // Se já tem recursos suficientes, para o loop
-                    break;
-                endif
-            endforeach
-        else // Se não for madeira
-            prop["objtype"] := objtype;
+        var total_recursos := 0;
+        foreach resourceNameItem in SplitWords(resourcesNameList)
+            prop["objtype"] := GetObjTypeByName(resourceNameItem);
             total_recursos := AmountInContainer(who.backpack, prop);
-        endif
+            if (total_recursos >= quantity) // Se já tem recursos suficientes, para o loop
+                break;
+            endif
+        endforeach
 
-        if (total_recursos < custo)
+        if (total_recursos < quantity)
             SendSysMessageEx(who, "Voce nao tem recursos suficientes.", SSM_INFO);
             return;
         endif
+
+        // Subtrair os recursos da mochila
+        foreach item in EnumerateItemsInContainer(who.backpack)
+            if (Cstr(item.objtype) in SplitWords(resourcesIdList) || Lower(Cstr(Hex(item.objtype))) in SplitWords(resourcesIdList) || item.Name in SplitWords(resourcesNameList) || Lower(item.Name) in SplitWords(resourcesNameList))
+                if(!SubtractAmount(item, quantity))
+                  continue;
+                else
+                  break;
+                endif
+            endif
+        endforeach
     endif
 
-    // Subtrai os recursos da mochila
-    foreach item in EnumerateItemsInContainer(who.backpack)
-        if (!staffmode && ((item.objtype == objtype) || (Cint(objtype) == Cint(GetObjTypeByName("logs")) && (item.objtype in madeira_hex_ranges))))
-            if(!SubtractAmount(item, custo))
-              continue;
-            else
-              break;
-            endif
-        endif
-    endforeach
-   
     SendSysMessageEx(who, "Voce usou o(s) recurso(s).", SSM_INFO);
     var z_real := z;
     if(who.realm == "britannia_alt") //O mapa novo tem uma diferenca de -60 no Z, por isso tem esse tratamento
@@ -1537,7 +1558,7 @@ function create_marked(who, x, y, z, type)
     created.movable:= 0;
 
     SetObjProperty (created, "built_by_architect", who.serial);
-    SetObjProperty (created, "architect_objtype", objtype);
+    SetObjProperty (created, "architect_objtype", created.objtype);
 
     if (KP_IsLockable(created))
       var fechadura := YesNo(who, "Voce deseja por uma fechadura nesse item?");
@@ -1566,7 +1587,6 @@ function create_marked(who, x, y, z, type)
 
     return created;
 endfunction
-
 
 
 /* turns an alphanumerical array into a numerical one
@@ -1644,47 +1664,19 @@ function clear_site(who)
 
 endfunction
 
-function get_objtype(type)
-    var madeira_ranges := {
-    {6, 25},
-    {166, 196},
-    {541, 559},
-    {144, 165},
-    {527, 538},
-    {1685, 1732},
-    {1520, 1534},
-    {1414, 1428},
-    {1444, 1458},
-    {1474, 1519},
-    {1535, 1652},
-    {1749, 1780},
-    {2105, 2139},
-    {2150, 2168},
-    {820, 835},
-    {947, 950},
-    {2140, 2149},
-    {2965, 2979},
-    {2186, 2187},
-    {1291, 1292},
-    {1217, 1249},
-    {1189, 1216},
-    {1185, 1188},
-    {1824, 1871},
-    {1981, 1992},
-    {1993, 2001},
-    {2170, 2173},
-    {3023, 3082},
-    {7976, 7977},
-    {4758, 4766},
-    {2981, 3086}
-    }; //Todas itens do tipo madeira
+function DrawResourcesOnGump(groupName, who)
+    var resourcesConfig := ReadConfigFile(":architect:config/resources");
+    var resourceTypeConfig := ReadConfigFile(":architect:config/resource_type");
 
-    // Verifique se o valor está em algum dos intervalos de madeira
-    foreach range in madeira_ranges
-        if (type >= range[1] && type <= range[2])
-            return GetObjTypeByName("logs");
-        endif
-    endforeach
+    if (FindconfigElem(resourcesConfig, groupName) == error)
+        Syslog("Grupo de recursos não encontrado: " + groupName);
+        return error;
+    endif
 
-    return GetObjTypeByName("Stone");
+    var resourceName := GetConfigString( FindconfigElem(resourcesConfig, groupName), "resourceName" );
+    var quantity := GetConfigInt( FindconfigElem(resourcesConfig, groupName), "quantity" );
+    var resourcesIdList := GetConfigStringArray( FindconfigElem(resourceTypeConfig, resourceName), "resourcesIdList" );
+    var resourcesNameList := GetConfigStringArray( FindconfigElem(resourceTypeConfig, resourceName), "resourcesNameList" );
+    //TODO Depois vai precisar ler o array e retornar na tela isso
+    SendSysMessageEx(who, "Esse grupo precisa de " + quantity + " " + resourceName + "s por item.", SSM_INFO);
 endfunction
