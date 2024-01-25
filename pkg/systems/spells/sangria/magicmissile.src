@@ -31,8 +31,8 @@ program SpellScript(params)
         PlayMovingEffectXYZHued(who, targ, FX_MAGIC_ARROW, 10, 1643, 0);
         PlaySoundEffect(who, SFX_MAGIC_ARROW);
 
-        var dmg := cint(AP_GetSkill(who, MAGICLORE))/5 + RandomDiceRoll("1d4");
-        DamageFLS(targ, cint(dmg), DMG_FORCED, who, "magicmissile");
+        var dmg := cint(AP_GetSkill(who, MAGICLORE))/10 + RandomDiceRoll("1d4");
+        DamageFLS(targ, cint(dmg), DMG_FIRE, who, "magicmissile");
         SleepMS(500);
     EndFor
 	return 1;
