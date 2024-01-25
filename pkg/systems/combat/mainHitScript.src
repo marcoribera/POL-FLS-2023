@@ -330,7 +330,7 @@ program MainHitScript( params )
 	    total := cint(CalculateTotalDamage(attacker, basedamage, defender, dmgList));
         TS_StartTimer(attacker, "paralysis", 5);
         SetCooldown(defender, "defesasgloriosas", 0);
-        DamageFLS(attacker, total, DMG_FORCED, defender);
+        DamageFLS(defender, total, DMG_FORCED, attacker);
     endif
 
 	if ((TemHabilidade(defender, "Furia Imortal") || TemHabilidade(defender, "Trapacear a Morte" )) && (AP_GetVital(defender, HITS) < total))
