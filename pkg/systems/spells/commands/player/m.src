@@ -15,9 +15,6 @@ program magia(who, spellname)
 	endif
 
 	var cfg;
-
-	Syslog("chardata: " + GetObjProperty(who, "chardata").magia);
-	Syslog("advclass: " + GetObjProperty(who, "advclass"));
 	if(GetObjProperty(who, "chardata").magia == "kitahster" || GetObjProperty(who, "advclass") == "kitahster")
         cfg := ReadConfigFile(":spells:config/sangriaspells");
 		spellinfo.+magic_path := "Sangria";
