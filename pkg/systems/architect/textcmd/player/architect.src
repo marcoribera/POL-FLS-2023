@@ -1489,22 +1489,9 @@ endfunction
  * returns <objref> to the created item
 */
 function create_marked(who, x, y, z, type)
-    var groupName;
     var prop := dictionary;
     var parts:= ReadConfigFile(":architect:config/parts");
-
-    foreach dummy in GetConfigStringKeys(parts)
-      foreach entry in ListConfigElemProps(parts[dummy])
-        foreach line in GetConfigStringArray(parts[dummy], entry)
-          foreach item in SplitWords(line)
-            if (item == type || item == Hex(type) || item == CStr(Hex(type)) || Hex(item) == Hex(type))
-              groupName := entry;
-              break;
-            endif 
-          endforeach
-        endforeach
-      endforeach
-    endforeach
+    var groupName := FindGroupNameByType(parts, type);
 
     if (!groupName)
         SendSysMessageEx(who, "Tipo de item desconhecido.", SSM_INFO);
@@ -1523,14 +1510,7 @@ function create_marked(who, x, y, z, type)
 
     // Verifica se tem recursos suficientes
     if (!staffmode) // Se não for staff, verifica os recursos
-        var total_recursos := 0;
-        foreach resourceNameItem in SplitWords(resourcesNameList)
-            prop["objtype"] := GetObjTypeByName(resourceNameItem);
-            total_recursos := AmountInContainer(who.backpack, prop);
-            if (total_recursos >= quantity) // Se já tem recursos suficientes, para o loop
-                break;
-            endif
-        endforeach
+        var total_recursos := CheckResources(who, resourcesNameList, quantity, prop);
 
         if (total_recursos < quantity)
             SendSysMessageEx(who, "Voce nao tem recursos suficientes.", SSM_INFO);
@@ -1538,15 +1518,7 @@ function create_marked(who, x, y, z, type)
         endif
 
         // Subtrair os recursos da mochila
-        foreach item in EnumerateItemsInContainer(who.backpack)
-            if (Cstr(item.objtype) in SplitWords(resourcesIdList) || Lower(Cstr(Hex(item.objtype))) in SplitWords(resourcesIdList) || item.Name in SplitWords(resourcesNameList) || Lower(item.Name) in SplitWords(resourcesNameList))
-                if(!SubtractAmount(item, quantity))
-                  continue;
-                else
-                  break;
-                endif
-            endif
-        endforeach
+        SubtractResources(who, resourcesIdList, resourcesNameList, quantity);
     endif
 
     SendSysMessageEx(who, "Voce usou o(s) recurso(s).", SSM_INFO);
@@ -1560,7 +1532,13 @@ function create_marked(who, x, y, z, type)
     SetObjProperty (created, "built_by_architect", who.serial);
     SetObjProperty (created, "architect_objtype", created.objtype);
 
-    if (KP_IsLockable(created))
+    SetupNewLockDoor(who, created);
+
+    return created;
+endfunction
+
+function SetupNewLockDoor(who, created)
+  if (KP_IsLockable(created))
       var fechadura := YesNo(who, "Voce deseja por uma fechadura nesse item?");
       if (fechadura)
         SendSysMessageEx(who, "Escolha a fechadura para por neste item.", SSM_REQUEST);
@@ -1584,10 +1562,50 @@ function create_marked(who, x, y, z, type)
         endif
       endif
     endif
-
-    return created;
 endfunction
 
+function SubtractResources(who, resourcesIdList, resourcesNameList, quantity)
+  foreach item in EnumerateItemsInContainer(who.backpack)
+      if (Cstr(item.objtype) in SplitWords(resourcesIdList) || Lower(Cstr(Hex(item.objtype))) in SplitWords(resourcesIdList) || item.Name in SplitWords(resourcesNameList) || Lower(item.Name) in SplitWords(resourcesNameList))
+          if(!SubtractAmount(item, quantity))
+            continue;
+          else
+            break;
+          endif
+      endif
+  endforeach
+endfunction
+
+function FindGroupNameByType(parts, type)
+    foreach dummy in GetConfigStringKeys(parts)
+      foreach entry in ListConfigElemProps(parts[dummy])
+        foreach line in GetConfigStringArray(parts[dummy], entry)
+          foreach item in SplitWords(line)
+            if (item == type || item == Hex(type) || item == CStr(Hex(type)) || Hex(item) == Hex(type))
+              return entry;
+              break;
+            endif 
+          endforeach
+        endforeach
+      endforeach
+    endforeach
+
+    return "";
+endfunction
+
+function CheckResources(who, resourcesNameList, quantity, prop)
+    var total_recursos := 0;
+
+    foreach resourceNameItem in SplitWords(resourcesNameList)
+        prop["objtype"] := GetObjTypeByName(resourceNameItem);
+        total_recursos := AmountInContainer(who.backpack, prop);
+        if (total_recursos >= quantity) // Se já tem recursos suficientes, para o loop
+            break;
+        endif
+    endforeach
+
+    return total_recursos;
+endfunction
 
 /* turns an alphanumerical array into a numerical one
  *
