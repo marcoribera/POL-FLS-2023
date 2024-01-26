@@ -627,6 +627,7 @@ function WritespellInfo(who, byref spellinfo)
 	else
 		cfg := ReadConfigFile(":spells:config/allspells");
     endif
+
 	//sendsysmessage(who, "cfg" + cfg + " " + spellinfo.id);
 
 	if (!cfg)
