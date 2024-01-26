@@ -1626,6 +1626,7 @@ program createchar(who)
 					SetObjProperty(grimorio, "marked", who.name + " - " + who.acctname);
                     grimorio.newbie := 1;
 					var spellinfo := struct;
+					spellinfo.+magic_path := "Sangria";
 					var p1 := createiteminbackpack(who, "pergaminhosangria1");
 					spellinfo.+id := 9;
 					SetObjProperty(p1, "spellinfo", spellinfo);

@@ -356,9 +356,9 @@ function GetResourceId(oreToSearch)
 
 		"argonil": return 0x6451; //TN USED
 
+        "illyra": return 0x6314;
+
 		//"gromril": return 0x6452; //TN USED
-
-
 
 		"prata": return 0x6992; //TN USED
 
@@ -442,6 +442,7 @@ function DetermineMiningDifficulty(oretype)
 
 		0x6300: return 0;  //iron ore
 		0x6301: return 70; //litan
+        0x6314: return 72; //illyra
 		0x6302: return 80; //helce
 		0x6303: return 80; //sinque
 		0x6304: return 80; //figin

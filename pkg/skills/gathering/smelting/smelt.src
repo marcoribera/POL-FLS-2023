@@ -154,6 +154,7 @@ function SmeltOre(who, item, ore)
     0x6305:  ingot := 0x630e; //ouro
 
     0x6301:  ingot := 0x630a; //litan
+    0x6314:  ingot := 0x6315; // illyra
     0x6307:  ingot := 0x6310; //galvorn
     0x6308:  ingot := 0x6311; //mithril
     0x6303:  ingot := 0x630c; //sinque
