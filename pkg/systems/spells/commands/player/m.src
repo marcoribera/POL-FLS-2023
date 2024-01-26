@@ -7,6 +7,8 @@ include ":spells:spellbooks";
 include ":charactercreation:habilidades";
 
 program magia(who, spellname)
+	var spellinfo := struct;
+
 	if ( GetObjProperty(who, "#Casting") )
 		SendSysMessageEx(who, "Voce nao pode invocar um encanto agora.", SSM_FAIL);
 		return 0;
@@ -14,8 +16,11 @@ program magia(who, spellname)
 
 	var cfg;
 
-	if(GetObjProperty(who, "chardata").magia == "kitahster")
+	Syslog("chardata: " + GetObjProperty(who, "chardata").magia);
+	Syslog("advclass: " + GetObjProperty(who, "advclass"));
+	if(GetObjProperty(who, "chardata").magia == "kitahster" || GetObjProperty(who, "advclass") == "kitahster")
         cfg := ReadConfigFile(":spells:config/sangriaspells");
+		spellinfo.+magic_path := "Sangria";
 	else
 		cfg := ReadConfigFile(":spells:allspells");
     endif
@@ -62,8 +67,6 @@ program magia(who, spellname)
 		return;
 	endif
 
-
-	var spellinfo := struct;
 	spellinfo.+id := id;
 	var script := Start_Script(":spells:cast_spell", {who, spellinfo, booktype});
 	if ( script.errortext )
