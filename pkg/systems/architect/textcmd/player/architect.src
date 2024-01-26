@@ -1239,7 +1239,7 @@ program architect_gump(who)
               choice[1]:= 0;
               break;
             endif
-            //Ele sempre move o player e nao entendi, removi e vamos ver o que acontece
+            //TODO Ele sempre move o player e nao entendi, removi e vamos ver o que acontece
             //MoveObjectToLocation (who, playerloc[1], playerloc[2], playerloc[3], who.realm, MOVEOBJECT_FORCELOCATION);
             EraseGlobalProperty ("#architect");
 
