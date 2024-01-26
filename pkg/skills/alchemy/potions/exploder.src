@@ -57,13 +57,13 @@ program exploder(parms)
 endprogram
 
 function FlameEffect(who, potion, lvl)
-	PlayStationaryEffect( potion.x, potion.y, potion.z, 0x36b0, 7, 10, 1);
+	PlayStationaryEffect( potion.x, potion.y, potion.z, 0x36b0, 7, 10, 1, who.realm);
 	PlaySoundEffect(potion, 0x208);
 	potion.graphic := 1;
 
 	var coords := GetCoordsInSquare(potion.x, potion.y, 1+lvl);
 	foreach coord in coords;
-		var field := CreateItemAtLocation(coord.x, coord.y, potion.z, "FireField_NS", 1);
+		var field := CreateItemAtLocation(coord.x, coord.y, potion.z, "FireField_NS", 1, who.realm);
 		if (checklineofsight(field, potion))
 			field.SetDuration(10);
 		else
@@ -130,7 +130,7 @@ function GlueEffect(who, potion)
 		if ( RandomInt(2) != 1 ) // Don't place a fire field
 			continue;
 		endif
-		var field := CreateItemAtLocation(coord.x, coord.y, potion.z, "SpiderWeb", 1);
+		var field := CreateItemAtLocation(coord.x, coord.y, potion.z, "SpiderWeb", 1, who.realm);
 		if (CheckLineOfSight(field, potion))
 			field.SetDuration(20);
 		else
@@ -162,7 +162,7 @@ function Acideffetct(who, potion)
 		if (CheckLineOfSight(field2, potion))
 			field2.SetDuration(20);
 		endif*/
-		var field := CreateItemAtLocation(coord.x, coord.y, potion.z, 0xA370, 1);
+		var field := CreateItemAtLocation(coord.x, coord.y, potion.z, 0xA370, 1, who.realm);
 		if (CheckLineOfSight(field, potion))
 			field.SetDuration(20);
 		else
