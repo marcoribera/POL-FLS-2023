@@ -188,13 +188,14 @@ program architect_gump(who)
               lang["show_hexdec"],
               lang["quit"],
               "Export in sphere TXT Format",
-              "Baukosten schotzen"
+              "Baukosten schotzen",
+              "Mover" //27
       };
       layout:= array{
             "page 0",
        "nodispose",
          "noclose",
-       "resizepic " + (gpos[1] +   0) + " " + gpos[2] + " 5120 250 531",                // background
+       "resizepic " + (gpos[1] +   0) + " " + gpos[2] + " 5120 260 531",                // background
     "checkertrans " + (gpos[1] +   0) + " " + gpos[2] + " 250 531",
        "resizepic " + (gpos[1] +   6) + " " + (gpos[2] +  70) + " 2620 122 456",        // background IDs
             "text " + (gpos[1] +  10) + " " + (gpos[2] +   2) + " 600 0",               // title
@@ -252,6 +253,8 @@ program architect_gump(who)
       col:= 0;
 
       // page 10: chose main group ("Walls", "Roofs"...)
+      layout.append("text " + (gpos[1] + 140) + " " + (gpos[2] + 180) + " 40 27"); //Texto Mover
+
       layout.append ("page 10");
       layout.append ("resizepic " + (gpos[1] + 5 + col) + " " + (gpos[2] + row) + " 5100 320 490");
       layout.append ("button " + (gpos[1] + 8 + col) + " " + (gpos[2] + row - 13) + " 2437 2437 0 1");
@@ -604,13 +607,13 @@ program architect_gump(who)
           if (choice[5] == 1)
             // check if parts would be moved outside the borders
             var valid:= 1;
-
-            foreach tbm in marked
+            
+            //Moveu para fora da borda, então não deixar mover 
+            foreach tbm in marked   
               if (!check_coords(who, struct {x:= tbm.x + delta[1],
                                              y:= tbm.y + delta[2]}))
-                valid:= 0;
-				SendSysMessage(who, "break in check_coords"); //
-                break;
+                  valid:= 0;
+                  break;
               endif
             endforeach
 
@@ -642,9 +645,9 @@ program architect_gump(who)
 
             undo.append (array{3, tbm, tbm.x, tbm.y, tbm.z});
             set_critical (1);
-              tbm.movable:= 1;
-              MoveObjectToLocation (tbm, tbm.x + delta[1], tbm.y + delta[2], tbm.z + delta[3], who.realm, MOVEOBJECT_FORCELOCATION);
-              tbm.movable:= 0;
+            tbm.movable:= 1;
+            MoveObjectToLocation (tbm, tbm.x + delta[1], tbm.y + delta[2], tbm.z + delta[3], who.realm, MOVEOBJECT_FORCELOCATION);
+            tbm.movable:= 0;
             set_critical (0);
           endif
 
