@@ -622,11 +622,12 @@ function WritespellInfo(who, byref spellinfo)
     if (GetObjProperty(who, "chardata").magia == "Shaman")
         cfg := ReadConfigFile(":spells:config/shamanspells");
         spellinfo.used := 1;
-	elseif(GetObjProperty(who, "chardata").magia == "kitahster" || spellinfo.magic_path == "Sangria")
+	elseif(spellinfo.magic_path == "Sangria")
         cfg := ReadConfigFile(":spells:config/sangriaspells");
 	else
 		cfg := ReadConfigFile(":spells:config/allspells");
     endif
+
 	//sendsysmessage(who, "cfg" + cfg + " " + spellinfo.id);
 
 	if (!cfg)
@@ -655,7 +656,6 @@ function WritespellInfo(who, byref spellinfo)
 	spellinfo.+script := GetConfigString( elem, "SpellScript" );
 	spellinfo.+reagents := GetConfigStringDictionary(elem, "RegCost");
 	spellinfo.+spelltype := GetConfigString(elem, "Type");
-	spellinfo.+magic_path := GetConfigString(elem, "Type");
 	spellinfo.+align := GetConfigStringDictionary(elem, "Align");
 	spellinfo.+flavortext := GetConfigString( elem, "FlavorText" );
 	spellinfo.+cycles := GetConfigInt( elem, "Cycles" );
