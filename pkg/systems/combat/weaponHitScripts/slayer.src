@@ -20,7 +20,7 @@ program HitScript(params)
 	
 	
 	if (!GetObjProperty(weapon, "slayer"))
-		var categorias := array{"Dragon","Undead","Giants","GiantAnimal","EvilHuman","Goblin"};
+		var categorias := array{"Dragon","Undead","Giants","GiantAnimal","EvilHuman","Goblin", "Underdark"};
 		var selected := categorias[RandomIntMinMax(1,6)];
 		SetObjProperty(weapon, "slayer", selected);
 				case(selected)
@@ -36,6 +36,8 @@ program HitScript(params)
 				SetObjProperty(weapon, "description", "Empunhadura esculpida num osso humano");
 				"Goblin":
 				SetObjProperty(weapon, "description", "Empunhadura entalhada num osso goblinoide");
+                "Underdark": 
+                SetObjProperty(weapon, "description", "Empunhadura entalhada num osso negro");
 			endcase
 	endif
 

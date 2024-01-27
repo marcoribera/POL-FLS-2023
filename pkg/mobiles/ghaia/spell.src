@@ -107,7 +107,7 @@ function CloseDistance(opponent)
 		sleepdelay := 0;
 	endif
 	
-	if ( GetObjProperty(me, "GetDistance") )
+	//if ( GetObjProperty(me, "GetDistance") )
 		var dist := CoordinateDistance(me.x, me.y, opponent.x, opponent.y);
 		if (dist < 3 )
 			RunAwayFrom(opponent);
@@ -118,17 +118,17 @@ function CloseDistance(opponent)
 		else
 			return 1;
 		endif
-	else
-		case (CoordinateDistance( me.x, me.y, opponent.x, opponent.y ))
-			1:
-			0:
-				return 1;
-			default:
-				RunToward( opponent );
-				sleepms(sleepdelay);
-				return 0;
-		endcase
-	endif
+	//else
+	//	case (CoordinateDistance( me.x, me.y, opponent.x, opponent.y ))
+	//		1:
+	//		0:
+	//			return 1;
+	//		default:
+	//			RunToward( opponent );
+	//			sleepms(sleepdelay);
+	//			return 0;
+	//	endcase
+	//endif
 	
 	return 0;
 

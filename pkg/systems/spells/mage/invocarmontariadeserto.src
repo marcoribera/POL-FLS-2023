@@ -14,7 +14,7 @@ program summonSkeletaSteed(params)
         SendSysMessage(who, "Voce precisa aguardar antes de invocar uma nova montaria");
     endif
 
-	var template := ":brainai:hellhound";
+	var template := ":brainai:desertostard";
 
     if (template == error)
 		SendSysMessage(who, "erro ao ler o template" + template);
@@ -37,7 +37,7 @@ program summonSkeletaSteed(params)
 	TS_StartTimer(mount, "summon", duracao ); //inicio do timedScripts no summon
     SetObjProperty(who, "dread_lord", 1);
 
-    SendSysMessageEx(who, "Sua montaria nefasta esta pronta para servi-lo");
+    SendSysMessageEx(who, "Sua montaria do deserto esta pronta para servir");
 	return 1;
 
 endprogram
