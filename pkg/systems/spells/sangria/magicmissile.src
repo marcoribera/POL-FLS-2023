@@ -24,15 +24,15 @@ program SpellScript(params)
 		SendSysMessageEx(who, "Cancelado", SSM_FAIL);
 		return 0;
 	endif
-
+    var mlore := cint(AP_GetSkill(who, MAGICLORE)/20);
 	SendSysMessageEx(who, "Misseis magicos saem de sua mao", SSM_INFO);
 	var i := 1;
-    For (i := 1; i <= cint(AP_GetSkill(who, MAGICLORE) / 20); i += 1)
-        PlayMovingEffectXYZHued(who, targ, FX_MAGIC_ARROW, 10, 1643, 0);
-        PlaySoundEffect(who, SFX_MAGIC_ARROW);
-
-        var dmg := RandomDiceRoll(cstr(cint(AP_GetSkill(who, MAGICLORE) / 20)) + "d4");
-        DamageFLS(targ, cint(dmg), DMG_FIRE, who, "magicmissile");
+    For (i := 1; i <= mlore; i += 1)
+        PlayMovingEffectEx(who, targ, 0x5426, 10, 20, 2290, 2);
+        PlaySoundEffect(who, SFX_AGILITY2);
+        var dice := cstr(mlore +"d4");
+        var dmg := RandomDiceRoll(dice);
+        DamageFLS(targ, dmg+mlore, DMG_FORCED, who, "magicmissile");
         SleepMS(500);
     EndFor
 	return 1;
