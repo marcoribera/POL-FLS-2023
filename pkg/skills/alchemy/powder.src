@@ -32,13 +32,15 @@ program textcmd_openPack(who, item)
             endif
         endforeach
     endif
-
-    if (AP_GetSkill(who, ALCHEMY) < 50 || !TemHabilidade(who, "Artilheiro Preparado"))
+    var canMakePowder := 0;
+    if (AP_GetSkill(who, ALCHEMY) >= 50 || TemHabilidade(who, "Artilheiro Preparado"))
+        canMakePowder := 1;
+    else
         SendSysMessageEx(who, "Voce nao sabe o que fazer com isso", SSM_FAIL);
         return 0;
     endif
     
-    if (hasMortarInBag)
+    if (hasMortarInBag && canMakePowder)
         var loop := 0;
     	while(loop < 3)
             PlaySoundEffect(who, 0x243); // 0x242 mortar 0x247 powder
