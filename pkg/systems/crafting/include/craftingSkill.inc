@@ -71,27 +71,51 @@ function ExceptionalCraftChance(who, skillname, skillvalue, skillreq, theitem)
   if(chance > 0.0) //A diferença de skill entre o crafter e o necessário passa a ser o percentual de fazer excepcional
     if(skillname == "MetalWorking")
       if(TemHabilidade(who,"Maestria em Laminas") && (theitem.TipoAtaque == "Cortante"))
-        chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+        chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
       endif
 
       if(TemHabilidade(who,"Maestria em Pontas") && (theitem.TipoAtaque == "Perfurante"))
-        chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+        chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
       endif
 
       if(TemHabilidade(who,"Maestria em Impacto") && (theitem.TipoAtaque == "Contusivo"))
-        chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+        chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
       endif
 
-      if(TemHabilidade(who,"Maestria em Armaduras") && (theitem.TipoProtecao == "ArmaduraPesada" || theitem.TipoProtecao == "ArmaduraMedia" || theitem.TipoProtecao == "ArmaduraLeve"))
-        chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+    //if(TemHabilidade(who,"Maestria em Armaduras") && (theitem.TipoProtecao == "ArmaduraPesada" || theitem.TipoProtecao == "ArmaduraMedia" || theitem.TipoProtecao == "ArmaduraLeve"))
+    //  chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+    //endif
+
+      if(TemHabilidade(who,"Maestria em Armaduras") && (theitem.TipoProtecao == "Armadura Pesada Fraca" || theitem.TipoProtecao == "Armadura Pesada Media" || theitem.TipoProtecao == "Armadura Pesada Forte"))
+        chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
       endif
 
-      if(TemHabilidade(who,"Maestria em Escudos") && (theitem.TipoProtecao == "EscudoPesado" || theitem.TipoProtecao == "EscudoMedio" || theitem.TipoProtecao == "EscudoLeve"))
-        chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+      if(TemHabilidade(who,"Maestria em Armaduras") && (theitem.TipoProtecao == "Armadura Media Fraca" || theitem.TipoProtecao == "Armadura Media Media" || theitem.TipoProtecao == "Armadura Media Forte"))
+        chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+      endif
+
+      if(TemHabilidade(who,"Maestria em Armaduras") && (theitem.TipoProtecao == "Armadura Leve Fraca" || theitem.TipoProtecao == "Armadura Leve Media" || theitem.TipoProtecao == "Armadura Leve Forte"))
+        chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+      endif
+
+//    if(TemHabilidade(who,"Maestria em Escudos") && (theitem.TipoProtecao == "EscudoPesado" || theitem.TipoProtecao == "EscudoMedio" || theitem.TipoProtecao == "EscudoLeve"))
+//      chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+      if(TemHabilidade(who,"Maestria em Escudos") && (theitem.TipoProtecao == "Escudo de Corpo Fraco" || theitem.TipoProtecao == "Escudo de Corpo Medio" || theitem.TipoProtecao == "Escudo de Corpo Forte"))
+        chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+      endif
+
+      if(TemHabilidade(who,"Maestria em Escudos") && (theitem.TipoProtecao == "Escudo Pesado Fraco" || theitem.TipoProtecao == "Escudo Pesado Medio" || theitem.TipoProtecao == "Escudo Pesado Forte"))
+        chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+      endif
+      if(TemHabilidade(who,"Maestria em Escudos") && (theitem.TipoProtecao == "Escudo Medio Fraco" || theitem.TipoProtecao == "Escudo Medio Medio" || theitem.TipoProtecao == "Escudo Medio Forte"))
+        chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+      endif
+      if(TemHabilidade(who,"Maestria em Escudos") && (theitem.TipoProtecao == "Escudo Leve Fraco" || theitem.TipoProtecao == "Escudo Leve Medio" || theitem.TipoProtecao == "Escudo Leve Forte"))
+        chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
       endif
     elseif(skillname == "WoodWorking")
       if(TemHabilidade(who,"Carpintaria Combativa"))
-        chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+        chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
       endif
       if(TemHabilidade(who,"Mobiliario Exclusivo") && !theitem.isa(POLCLASS_WEAPON) && !theitem.isa(POLCLASS_ARMOR))
         chance := 100.0;
@@ -99,11 +123,19 @@ function ExceptionalCraftChance(who, skillname, skillvalue, skillreq, theitem)
     elseif(skillname == "DomesticWork")
       if((CInt(theitem.resist_physical)==0)) //Não é armadura
         if(TemHabilidade(who,"Maestria em Alfaiataria"))
-          chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+          chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
         endif
-      else
-        if(TemHabilidade(who,"Maestria em Curticao") && (theitem.TipoProtecao == "ArmaduraPesada" || theitem.TipoProtecao == "ArmaduraMedia" || theitem.TipoProtecao == "ArmaduraLeve"))
-          chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+//      else
+//      if(TemHabilidade(who,"Maestria em Curticao") && (theitem.TipoProtecao == "ArmaduraPesada" || theitem.TipoProtecao == "ArmaduraMedia" || theitem.TipoProtecao == "ArmaduraLeve"))
+//        chance := (chance * 5.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+       if(TemHabilidade(who,"Maestria em Curticao") && (theitem.TipoProtecao == "Armadura Pesada Fraca" || theitem.TipoProtecao == "Armadura Pesada Media" || theitem.TipoProtecao == "Armadura Pesada Forte"))
+          chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+        endif
+       if(TemHabilidade(who,"Maestria em Curticao") && (theitem.TipoProtecao == "Armadura Media Fraca" || theitem.TipoProtecao == "Armadura Media Media" || theitem.TipoProtecao == "Armadura Media Forte"))
+          chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
+        endif
+       if(TemHabilidade(who,"Maestria em Curticao") && (theitem.TipoProtecao == "Armadura Leve Fraca" || theitem.TipoProtecao == "Armadura Leve Media" || theitem.TipoProtecao == "Armadura Leve Forte"))
+          chance := (chance * 2.0) + CDbl(GetObjProperty(who, "craftexcepmod"));
         endif
       endif
     endif
