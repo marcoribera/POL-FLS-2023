@@ -68,7 +68,7 @@ function TemHabilidade(who, habilidade)
 	var habs := GetObjProperty(who, "myhabs");
 
 	foreach key in (habs.keys())
-		if (habs[key] == habilidade)
+		if (Lower(habs[key]) == Lower(habilidade))
 			return 1;
 		endif
 
