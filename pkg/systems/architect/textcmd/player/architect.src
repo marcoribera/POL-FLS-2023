@@ -100,12 +100,12 @@ program architect_gump(who)
     // remember what he brought to the construction site
     foreach dummy in ListEquippedItems (who)
       starteqp.append (dummy.serial);
-      ReserveItem (dummy);
+      // ReserveItem (dummy);
     endforeach
 
     foreach dummy in EnumerateItemsInContainer (who.backpack)
       starteqp.append (dummy.serial);
-      ReserveItem (dummy);
+      // ReserveItem (dummy);
     endforeach
 
     // cleanup construction site
@@ -188,13 +188,14 @@ program architect_gump(who)
               lang["show_hexdec"],
               lang["quit"],
               "Export in sphere TXT Format",
-              "Baukosten schotzen"
+              "Baukosten schotzen",
+              "Mover" //27
       };
       layout:= array{
             "page 0",
        "nodispose",
          "noclose",
-       "resizepic " + (gpos[1] +   0) + " " + gpos[2] + " 5120 250 531",                // background
+       "resizepic " + (gpos[1] +   0) + " " + gpos[2] + " 5120 260 531",                // background
     "checkertrans " + (gpos[1] +   0) + " " + gpos[2] + " 250 531",
        "resizepic " + (gpos[1] +   6) + " " + (gpos[2] +  70) + " 2620 122 456",        // background IDs
             "text " + (gpos[1] +  10) + " " + (gpos[2] +   2) + " 600 0",               // title
@@ -252,6 +253,8 @@ program architect_gump(who)
       col:= 0;
 
       // page 10: chose main group ("Walls", "Roofs"...)
+      layout.append("text " + (gpos[1] + 140) + " " + (gpos[2] + 180) + " 40 27"); //Texto Mover
+
       layout.append ("page 10");
       layout.append ("resizepic " + (gpos[1] + 5 + col) + " " + (gpos[2] + row) + " 5100 320 490");
       layout.append ("button " + (gpos[1] + 8 + col) + " " + (gpos[2] + row - 13) + " 2437 2437 0 1");
@@ -604,13 +607,13 @@ program architect_gump(who)
           if (choice[5] == 1)
             // check if parts would be moved outside the borders
             var valid:= 1;
-
-            foreach tbm in marked
+            
+            //Moveu para fora da borda, então não deixar mover 
+            foreach tbm in marked   
               if (!check_coords(who, struct {x:= tbm.x + delta[1],
                                              y:= tbm.y + delta[2]}))
-                valid:= 0;
-				SendSysMessage(who, "break in check_coords"); //
-                break;
+                  valid:= 0;
+                  break;
               endif
             endforeach
 
@@ -642,9 +645,9 @@ program architect_gump(who)
 
             undo.append (array{3, tbm, tbm.x, tbm.y, tbm.z});
             set_critical (1);
-              tbm.movable:= 1;
-              MoveObjectToLocation (tbm, tbm.x + delta[1], tbm.y + delta[2], tbm.z + delta[3], who.realm, MOVEOBJECT_FORCELOCATION);
-              tbm.movable:= 0;
+            tbm.movable:= 1;
+            MoveObjectToLocation (tbm, tbm.x + delta[1], tbm.y + delta[2], tbm.z + delta[3], who.realm, MOVEOBJECT_FORCELOCATION);
+            tbm.movable:= 0;
             set_critical (0);
           endif
 
@@ -1239,12 +1242,12 @@ program architect_gump(who)
               choice[1]:= 0;
               break;
             endif
-            //Ele sempre move o player e nao entendi, removi e vamos ver o que acontece
+            //TODO Ele sempre move o player e nao entendi, removi e vamos ver o que acontece
             //MoveObjectToLocation (who, playerloc[1], playerloc[2], playerloc[3], who.realm, MOVEOBJECT_FORCELOCATION);
             EraseGlobalProperty ("#architect");
 
             foreach dummy in starteqp
-              ReleaseItem (dummy);
+              // ReleaseItem (dummy); //Comentado todos os reserveitem e releaseitem, assim não impede o jogador de mexer na bolsa
             endforeach
           endif
 
@@ -1299,6 +1302,7 @@ program architect_gump(who)
       subgroups:= ListConfigElemProps (parts[choice[2]]);
       subgroups.sort ();
       choice[3]:= subgroups[1];
+      DrawResourcesOnGump(subgroups[1], who);
       groupparts:= GetConfigStringArray (parts[choice[2]], choice[3]);
       makeArrayNumerical(groupparts);
       groupparts.sort ();
@@ -1323,7 +1327,7 @@ program architect_gump(who)
 
   if (!staffmode)
     foreach dummy in starteqp
-      ReleaseItem (dummy);
+      // ReleaseItem (dummy);
     endforeach
 
     MoveObjectToLocation (who, playerloc[1], playerloc[2], playerloc[3], who.realm, MOVEOBJECT_FORCELOCATION);
@@ -1480,8 +1484,6 @@ function check_coords(who, coords)
 
 endfunction
 
-
-
 /* Creates 1 item at passed coords and adds a flag to it
  *
  * x, y, z coordinates to create the item at
@@ -1490,44 +1492,38 @@ endfunction
  * returns <objref> to the created item
 */
 function create_marked(who, x, y, z, type)
-    var custo := 10;
     var prop := dictionary;
-    var madeira_ranges := array{"logs", "madeirapinheiro", "madeiracarvalho", "madeiranogueira", "madeirasalgueiro", "madeiraciprestre", "madeiraebano", "madeiracogumelo", "madeirapolar", "madeirateixo", "madeiraimbuia", "madeiramogno"}; // Tipos de madeira
-    var madeira_hex_ranges := {0x1BDD, 0xee36, 0xee37, 0xee38, 0xee39, 0xee3a, 0xee3b, 0xee3c, 0xee3d, 0xee3e, 0xee3f, 0xee40}; //Tipos de madeira
-    var total_recursos := 0;
-    var objtype := get_objtype(type);
+    var parts:= ReadConfigFile(":architect:config/parts");
+    var groupName := FindGroupNameByType(parts, type);
 
+    if (!groupName)
+        SendSysMessageEx(who, "Tipo de item desconhecido.", SSM_INFO);
+        return;
+    endif
+
+    // Recuperar informações dos recursos necessários
+    var resourcesConfig := ReadConfigFile(":architect:config/resources");
+    var resourceName := GetConfigString( FindconfigElem(resourcesConfig, groupName), "resourceName" );
+    var quantity := GetConfigInt( FindconfigElem(resourcesConfig, groupName), "quantity" );
+
+    // Obter objtype de cada recurso
+    var resourceTypeConfig := ReadConfigFile(":architect:config/resource_type");
+    var resourcesIdList := GetConfigStringArray( FindconfigElem(resourceTypeConfig, resourceName), "resourcesIdList" );
+    var resourcesNameList := GetConfigStringArray( FindconfigElem(resourceTypeConfig, resourceName), "resourcesNameList" );
+
+    // Verifica se tem recursos suficientes
     if (!staffmode) // Se não for staff, verifica os recursos
-        if (objtype == GetObjTypeByName("logs")) // Se for madeira
-            foreach tipo_madeira in madeira_ranges
-                prop["objtype"] := GetObjTypeByName(tipo_madeira);
-                total_recursos := AmountInContainer(who.backpack, prop);
-                if (total_recursos >= custo) // Se já tem recursos suficientes, para o loop
-                    break;
-                endif
-            endforeach
-        else // Se não for madeira
-            prop["objtype"] := objtype;
-            total_recursos := AmountInContainer(who.backpack, prop);
-        endif
+        var total_recursos := CheckResources(who, resourcesNameList, quantity, prop);
 
-        if (total_recursos < custo)
+        if (total_recursos < quantity)
             SendSysMessageEx(who, "Voce nao tem recursos suficientes.", SSM_INFO);
             return;
         endif
+
+        // Subtrair os recursos da mochila
+        SubtractResources(who, resourcesIdList, resourcesNameList, quantity);
     endif
 
-    // Subtrai os recursos da mochila
-    foreach item in EnumerateItemsInContainer(who.backpack)
-        if (!staffmode && ((item.objtype == objtype) || (Cint(objtype) == Cint(GetObjTypeByName("logs")) && (item.objtype in madeira_hex_ranges))))
-            if(!SubtractAmount(item, custo))
-              continue;
-            else
-              break;
-            endif
-        endif
-    endforeach
-   
     SendSysMessageEx(who, "Voce usou o(s) recurso(s).", SSM_INFO);
     var z_real := z;
     if(who.realm == "britannia_alt") //O mapa novo tem uma diferenca de -60 no Z, por isso tem esse tratamento
@@ -1537,9 +1533,15 @@ function create_marked(who, x, y, z, type)
     created.movable:= 0;
 
     SetObjProperty (created, "built_by_architect", who.serial);
-    SetObjProperty (created, "architect_objtype", objtype);
+    SetObjProperty (created, "architect_objtype", created.objtype);
 
-    if (KP_IsLockable(created))
+    SetupNewLockDoor(who, created);
+
+    return created;
+endfunction
+
+function SetupNewLockDoor(who, created)
+  if (KP_IsLockable(created))
       var fechadura := YesNo(who, "Voce deseja por uma fechadura nesse item?");
       if (fechadura)
         SendSysMessageEx(who, "Escolha a fechadura para por neste item.", SSM_REQUEST);
@@ -1563,11 +1565,50 @@ function create_marked(who, x, y, z, type)
         endif
       endif
     endif
-
-    return created;
 endfunction
 
+function SubtractResources(who, resourcesIdList, resourcesNameList, quantity)
+  foreach item in EnumerateItemsInContainer(who.backpack)
+      if (Cstr(item.objtype) in SplitWords(resourcesIdList) || Lower(Cstr(Hex(item.objtype))) in SplitWords(resourcesIdList) || item.Name in SplitWords(resourcesNameList) || Lower(item.Name) in SplitWords(resourcesNameList))
+          if(!SubtractAmount(item, quantity))
+            continue;
+          else
+            break;
+          endif
+      endif
+  endforeach
+endfunction
 
+function FindGroupNameByType(parts, type)
+    foreach dummy in GetConfigStringKeys(parts)
+      foreach entry in ListConfigElemProps(parts[dummy])
+        foreach line in GetConfigStringArray(parts[dummy], entry)
+          foreach item in SplitWords(line)
+            if (item == type || item == Hex(type) || item == CStr(Hex(type)) || Hex(item) == Hex(type))
+              return entry;
+              break;
+            endif 
+          endforeach
+        endforeach
+      endforeach
+    endforeach
+
+    return "";
+endfunction
+
+function CheckResources(who, resourcesNameList, quantity, prop)
+    var total_recursos := 0;
+
+    foreach resourceNameItem in SplitWords(resourcesNameList)
+        prop["objtype"] := GetObjTypeByName(resourceNameItem);
+        total_recursos := AmountInContainer(who.backpack, prop);
+        if (total_recursos >= quantity) // Se já tem recursos suficientes, para o loop
+            break;
+        endif
+    endforeach
+
+    return total_recursos;
+endfunction
 
 /* turns an alphanumerical array into a numerical one
  *
@@ -1644,47 +1685,19 @@ function clear_site(who)
 
 endfunction
 
-function get_objtype(type)
-    var madeira_ranges := {
-    {6, 25},
-    {166, 196},
-    {541, 559},
-    {144, 165},
-    {527, 538},
-    {1685, 1732},
-    {1520, 1534},
-    {1414, 1428},
-    {1444, 1458},
-    {1474, 1519},
-    {1535, 1652},
-    {1749, 1780},
-    {2105, 2139},
-    {2150, 2168},
-    {820, 835},
-    {947, 950},
-    {2140, 2149},
-    {2965, 2979},
-    {2186, 2187},
-    {1291, 1292},
-    {1217, 1249},
-    {1189, 1216},
-    {1185, 1188},
-    {1824, 1871},
-    {1981, 1992},
-    {1993, 2001},
-    {2170, 2173},
-    {3023, 3082},
-    {7976, 7977},
-    {4758, 4766},
-    {2981, 3086}
-    }; //Todas itens do tipo madeira
+function DrawResourcesOnGump(groupName, who)
+    var resourcesConfig := ReadConfigFile(":architect:config/resources");
+    var resourceTypeConfig := ReadConfigFile(":architect:config/resource_type");
 
-    // Verifique se o valor está em algum dos intervalos de madeira
-    foreach range in madeira_ranges
-        if (type >= range[1] && type <= range[2])
-            return GetObjTypeByName("logs");
-        endif
-    endforeach
+    if (FindconfigElem(resourcesConfig, groupName) == error)
+        Syslog("Grupo de recursos não encontrado: " + groupName);
+        return error;
+    endif
 
-    return GetObjTypeByName("Stone");
+    var resourceName := GetConfigString( FindconfigElem(resourcesConfig, groupName), "resourceName" );
+    var quantity := GetConfigInt( FindconfigElem(resourcesConfig, groupName), "quantity" );
+    var resourcesIdList := GetConfigStringArray( FindconfigElem(resourceTypeConfig, resourceName), "resourcesIdList" );
+    var resourcesNameList := GetConfigStringArray( FindconfigElem(resourceTypeConfig, resourceName), "resourcesNameList" );
+    //TODO Depois vai precisar ler o array e retornar na tela isso
+    SendSysMessageEx(who, "Esse grupo precisa de " + quantity + " " + resourceName + "s por item.", SSM_INFO);
 endfunction
