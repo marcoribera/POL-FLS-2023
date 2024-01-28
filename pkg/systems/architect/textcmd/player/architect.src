@@ -100,12 +100,12 @@ program architect_gump(who)
     // remember what he brought to the construction site
     foreach dummy in ListEquippedItems (who)
       starteqp.append (dummy.serial);
-      ReserveItem (dummy);
+      // ReserveItem (dummy);
     endforeach
 
     foreach dummy in EnumerateItemsInContainer (who.backpack)
       starteqp.append (dummy.serial);
-      ReserveItem (dummy);
+      // ReserveItem (dummy);
     endforeach
 
     // cleanup construction site
@@ -1247,7 +1247,7 @@ program architect_gump(who)
             EraseGlobalProperty ("#architect");
 
             foreach dummy in starteqp
-              ReleaseItem (dummy);
+              // ReleaseItem (dummy); //Comentado todos os reserveitem e releaseitem, assim não impede o jogador de mexer na bolsa
             endforeach
           endif
 
@@ -1327,7 +1327,7 @@ program architect_gump(who)
 
   if (!staffmode)
     foreach dummy in starteqp
-      ReleaseItem (dummy);
+      // ReleaseItem (dummy);
     endforeach
 
     MoveObjectToLocation (who, playerloc[1], playerloc[2], playerloc[3], who.realm, MOVEOBJECT_FORCELOCATION);
