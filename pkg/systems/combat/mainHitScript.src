@@ -909,14 +909,14 @@ function CriticalHitScripts(attacker, defender, weapon, armor, byref basedamage,
 	if (weapon_scripts.size() > 0)
 		PrintText(attacker, "*CRITICO*", _DEFAULT_TEXT_FONT, 2118);
 		SetObjProperty(attacker, "critdelay", ReadGameClock()+180);
-		if (TemHabilidade(defender, "Vitalidade Inabalavel"))
+		if (GetCooldown(defender, "vitalidadeinabalavel") > 0)
 			SendSysMessageEx(defender, "Voce ignora o critico", SSM_INFO);
 			SendSysMessageEx(attacker, "O defensor ignorou o critico", SSM_FAIL);
 			return 1;
 		endif
 	endif
 
-	if (GetCooldown(defender, "VontadeIndomavel"))
+	if (GetCooldown(defender, "VontadeIndomavel") || GetCooldown(defender, "vitalidadeinabalavel") > 0)
 		SendSysMessageEx(defender, "Voce nao leva o critico");
 		return;
 	endif
