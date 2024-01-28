@@ -1186,6 +1186,9 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 		parry_chance := CInt(parry_chance * 0.7);
 	endif
 
+	if (usingweapon && TemHabilidade(defender, "Caminho do Andarilho"))
+		parry_chance := CInt(parry_chance * 1.3);
+	endif
 	//Calcula a chance TOTAL de bloqueio
 	parry_chance := parry_chance + parryBonus;
 
