@@ -47,6 +47,6 @@ program taunt(who)
         sleep(2);
         i++;
     endwhile
-    SetCooldown(attacker, "resistenciaheroica", cint(AP_GetSkill(who, PARRY)/5));
+    SetCooldown(who, "resistenciaheroica", cint(AP_GetSkill(who, PARRY)/5));
 	//TS_StartTimer(who, "provocar", 10); //bonus de parry e de reduzir hit_chance
 endprogram
