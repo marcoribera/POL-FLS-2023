@@ -230,7 +230,7 @@ var gflayout := array{
 	endif
 
 	var ret := SendDialogGump( who, gflayout, gfdata );
-	if (chardata.raca == "Humano")
+	if (chardata.raca == "Humano" || chardata.raca == "Anao"  || chardata.raca == "Orc")
 		if (1 in ret.keys)
 			chardata.+vantagemracial := "Versatilidade";
 		elseif (2 in ret.keys && chardata.povo == "Zharkiano")
@@ -257,7 +257,7 @@ var gflayout := array{
 			chardata.+vantagemracial := "Toxina natural";
 		endif
 	endif
-
+    //SetObjProperty(who, "chardata", chardata);
 endfunction
 
 function Classe(who, byref  chardata)
@@ -1360,7 +1360,7 @@ program createchar(who)
 	AP_SetTrueStat(who, INTELLIGENCE, chardata.int);
 	who.title_race := chardata.raca;
 	CreateItemInBackpack(who, 0xba63, 100); //dinheiro
-	who.race := RACE_HUMAN;
+	who.race := chardata.raca;
 
 	//Esconde o nome de todas as mecanicas diretas do jogo
 	SetObjProperty(who, "nome_inicial", who.name);
