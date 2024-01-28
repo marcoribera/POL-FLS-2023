@@ -644,8 +644,8 @@ var creature := mobontrack;
     var r := ""+creature.resist_physical+"%"; //resist!
     var rf := ""+creature.resist_fire+"%";
     var rc := ""+creature.resist_cold+"%";
-	var re := ""+creature.damage_energy+"%";
-	var rp := ""+creature.damage_poison+"%";
+	var re := ""+creature.resist_energy+"%";
+	var rp := ""+creature.resist_poison+"%";
 
     var ar := ""+creature.damage_physical+"%"; //damage!
     var arf := ""+creature.damage_fire+"%";
