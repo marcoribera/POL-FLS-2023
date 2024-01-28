@@ -324,13 +324,19 @@ program MainHitScript( params )
 		AP_ConsumeVital(defender, STAMINA, total);
 	endif
 
-    if (GetCooldown(defender, "defesasgloriosas"))
-        var dmgList := dictionary;
-	    dmgList := getNewDamageList(defender);
-	    total := cint(CalculateTotalDamage(attacker, basedamage, defender, dmgList));
+    if (GetCooldown(defender, "defesasgloriosas") > 0)
+        PerformAction(defender, 0x0e);
+        PrintText(defender, "*Golpeia com o escudo*");
+        PlaySoundEffect(defender, 0x3b4);
         TS_StartTimer(attacker, "paralysis", 5);
+        sleep(2);
+        defender.attack_once(attacker);
+
         SetCooldown(defender, "defesasgloriosas", 0);
-        DamageFLS(defender, total, DMG_FORCED, attacker);
+    endif
+
+    if (GetCooldown(defender, "disarm") > 0)
+        disarmOpponent(defender, attacker);
     endif
 
 	if ((TemHabilidade(defender, "Furia Imortal") || TemHabilidade(defender, "Trapacear a Morte" )) && (AP_GetVital(defender, HITS) < total))
@@ -1362,4 +1368,29 @@ function Trespassar(attacker, defender)
 		EraseObjProperty(attacker, "#trespassando");
 	endif
 
+endfunction
+
+function disarmOpponent(attacker, defender)
+	if (TemHabilidade(defender, "Nexus"))
+		if (GetObjProperty(defender.weapon, "swordmage") ==  defender.serial)//seta com a arma
+			SendSysMessageEx(attacker, "O alvo tem uma ligacao magica com a arma.", SSM_FAIL);
+			return 1;
+		endif
+	endif
+
+	PrintTextAbove(attacker, "*desarmar*");
+    var tactics_bonus := CInt(AP_GetSkill(attacker, TACTICS) / 1.5);
+	TS_StartTimer(defender, "desarmar", tactics_bonus, 0, attacker);
+	var defweapon := defender.weapon;
+    if ((defweapon.objtype == 0x1F020 || defender.npctemplate) && TemHabilidade(attacker, "Artista Marcial"))
+        TS_StartTimer(defender, "dmgreduction", tactics_bonus, 4, attacker);
+	elseif ((defender.isA(POLCLASS_NPC) || defender.npctemplate) && defweapon.objtype != 0x1F020)
+		TS_StartTimer(defender, "dmgreduction", 20, 2, attacker);
+		SetObjProperty(defender, "arma_desarmada", defweapon.objtype);
+		MoveItemToContainer(defweapon, defender.backpack);
+    else
+		var x := defender.x + RandomInt(2)+1;
+		var y := defender.y + RandomInt(2)+1;
+		MoveObjectToLocation(defweapon, x, y,  GetWorldHeight(x, y), attacker.realm, MOVEOBJECT_FORCELOCATION);
+	endif
 endfunction
