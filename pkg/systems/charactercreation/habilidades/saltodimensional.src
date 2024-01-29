@@ -41,6 +41,11 @@ program HitScript(who)
         who.frozen := 0;
 		return 0;
 	endif
+    
+	if(!CheckLosAt( who, targ.x, targ.y, targ.z ) );
+		SendSysMessageEx( who, "Voce nao ve o alvo.", SSM_FAIL );
+		return 0;
+	endif
 
 	MoveObjectToLocation(who, targ.x, targ.y, targ.z, who.realm, MOVEOBJECT_FORCELOCATION);
     sleep(1);
