@@ -118,23 +118,29 @@ endfunction
 function mark_portal(player, portal_number)
     var portals := GetObjProperty(player, "portals");
 
-        SendSysMessage(player, "Qual local deseja marcar seu portal?");
-        var targ := TargetCoordinateS(player);
-        var portalName := "portal" + Cstr(portal_number);
-        if (targ)
-            portals[portalName].x := targ.x;
-            portals[portalName].y := targ.y;
-            portals[portalName].z := targ.z;
-            portals[portalName].r := player.realm;
-            portals[portalName].created := 1;
-            var name := RequestGump(player, "Deseja adicionar um nome ao portal?");
-            portals[portalName].desc := name;
+    SendSysMessage(player, "Qual local deseja marcar seu portal?");
+    var targ := TargetCoordinateS(player);
 
-            SetObjProperty(player, "portals", portals);
-            PlayStationaryEffect(targ.x, targ.y, targ.z, 0x6D70, 0, 40,0, player.realm);
-            PlaySoundEffect(player, 0x1f0);
-        else
-            SendSysMessage(player, "Voce nao marcou nenhuma localizacao");
-            return;
-        endif
+    if(!CheckLosAt(player, targ.x, targ.y, targ.z))
+		SendSysMessage(player, "Voce nao consegue ver o alvo.");
+		return 0;
+	endif
+
+    var portalName := "portal" + Cstr(portal_number);
+    if (targ)
+        portals[portalName].x := targ.x;
+        portals[portalName].y := targ.y;
+        portals[portalName].z := targ.z;
+        portals[portalName].r := player.realm;
+        portals[portalName].created := 1;
+        var name := RequestGump(player, "Deseja adicionar um nome ao portal?");
+        portals[portalName].desc := name;
+
+        SetObjProperty(player, "portals", portals);
+        PlayStationaryEffect(targ.x, targ.y, targ.z, 0x6D70, 0, 40,0, player.realm);
+        PlaySoundEffect(player, 0x1f0);
+    else
+        SendSysMessage(player, "Voce nao marcou nenhuma localizacao");
+        return;
+    endif
 endfunction
