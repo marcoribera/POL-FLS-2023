@@ -8,15 +8,7 @@ include ":charactercreation:resists";
 include ":survival:fishingFunctions";
 
 program HitScript(who)
-    PerformAction(who, ANIM_CAST_AREA);
-    sleep(2);
-    who.concealed := 1;
-    who.frozen := 1;
-
-    PlayStationaryEffect(who.x+2, who.y+1, who.z-13, 0x6CA5, 0, 35,0, who.realm);
-	PlaySoundEffect(who, 0x1f2);
-
-	var targ := TargetCoordinates(who);
+    var targ := TargetCoordinates(who);
     var dist := Distance(who, targ);
     var mlore := Cint(AP_GetSkill(who, MAGICLORE));
 
@@ -27,23 +19,17 @@ program HitScript(who)
 
     if (dist > (mlore/ 5))
         SendSysMessage(who, "O alvo esta muito distante");
-        who.concealed := 0;
-        who.frozen := 0;
         return 0;
     endif
-   
-	var locinfo:= GetMapInfo( targ.x, targ.y, who.realm );
+
+    var locinfo:= GetMapInfo( targ.x, targ.y, who.realm );
 	if(IsWater(targ, locinfo))
         SendSysMessage(who, "Voce nao pode clicar na agua");
-        who.concealed := 0;
-        who.frozen := 0;
         return 0;
     endif
 
 	if ( !targ )
 		SendSysMessage(who, "Cancelled.");
-        who.concealed := 0;
-        who.frozen := 0;
 		return 0;
 	endif
     
@@ -51,6 +37,14 @@ program HitScript(who)
 		SendSysMessageEx( who, "Voce nao ve o alvo.", SSM_FAIL );
 		return 0;
 	endif
+
+    PerformAction(who, ANIM_CAST_AREA);
+    sleep(2);
+    who.concealed := 1;
+    who.frozen := 1;
+
+    PlayStationaryEffect(who.x+2, who.y+1, who.z-13, 0x6CA5, 0, 35,0, who.realm);
+	PlaySoundEffect(who, 0x1f2);
 
 	MoveObjectToLocation(who, targ.x, targ.y, targ.z, who.realm, MOVEOBJECT_FORCELOCATION);
     sleep(1);

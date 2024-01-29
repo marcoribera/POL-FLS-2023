@@ -21,7 +21,7 @@ program SpellScript(params)
 	endif
 
 	if(TemHabilidade(who, "Estudioso da Sangria"))
-		if (CheckResist(targ, VONTADE, 70, -CInt(AP_GetSkill(who, MAGICLORE)/2.5)))
+		if (CheckResist(targ, VONTADE, 60, -CInt(AP_GetSkill(who, MAGICLORE)/2.5)))
 			SendSysMessageEx(who, "O alvo  resistiu a magia.", SSM_FAIL);
 			SendSysMessageEx(targ, "Voce resistiu a magia.", SSM_INFO);
 
