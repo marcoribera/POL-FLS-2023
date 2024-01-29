@@ -19,7 +19,7 @@ program magia(who, spellname)
 
 	foreach spell in ( GetConfigIntKeys(cfg) )
 		elem := FindConfigElem(cfg, id);
-		if ( GetConfigString(elem, "Name") == spellname)
+		if ( Lower(GetConfigString(elem, "Name")) == Lower(spellname))
 			achou := 1;
 			break;
 		endif
@@ -32,14 +32,14 @@ program magia(who, spellname)
 	endif
 
 	var cintosabio := 0xC892;
+	
 	//Tenta achar primeiro no cinto do sabio, depois na backpack
 	foreach equip in (ListEquippedItems(who))
 		if (equip.objtype == cintosabio)
 			foreach item in (EnumerateItemsInContainer(equip))
-			
-			var runaId := GetObjProperty(item, "runatype");
+
+				var runaId := GetObjProperty(item, "runatype");
 				if (runaId == id)
-					// SendSysMessage(who,"Achou a runa");
 					var script := start_script( ":spells:priestrune_m", {who, item});
 					if ( script.errortext )
 						SendSysMessage(who, "Error - Could not start spell starter ->"+script.errortext);
@@ -52,9 +52,8 @@ program magia(who, spellname)
 		else
 			foreach item in (EnumerateItemsInContainer(who.backpack))
 			
-			var runaId := GetObjProperty(item, "runatype");
+				var runaId := GetObjProperty(item, "runatype");
 				if (runaId == id)
-					// SendSysMessage(who,"Achou a runa");
 					var script := start_script( ":spells:priestrune_m", {who, item});
 					if ( script.errortext )
 						SendSysMessage(who, "Error - Could not start spell starter ->"+script.errortext);

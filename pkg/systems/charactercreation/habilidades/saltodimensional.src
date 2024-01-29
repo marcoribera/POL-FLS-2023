@@ -20,6 +20,11 @@ program HitScript(who)
     var dist := Distance(who, targ);
     var mlore := Cint(AP_GetSkill(who, MAGICLORE));
 
+    if(!CheckLosAt(who, targ.x, targ.y, targ.z))
+		SendSysMessage(who, "Voce nao consegue ver o alvo.");
+		return 0;
+	endif
+
     if (dist > (mlore/ 5))
         SendSysMessage(who, "O alvo esta muito distante");
         who.concealed := 0;
