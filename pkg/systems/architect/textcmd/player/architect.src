@@ -974,7 +974,7 @@ program architect_gump(who)
 
                 if (GetObjProperty (tbd, "built_by_architect") == who.serial)
                   var objtype := GetObjProperty(tbd, "architect_objtype");
-                  CreateItemInBackPack(who, Cint(objtype), 10);
+                  CreateItemInBackPack(who, objtype, 10);
                   DestroyItem (tbd);
                   undone:= 1;
                 endif
@@ -1495,6 +1495,7 @@ function create_marked(who, x, y, z, type)
     var prop := dictionary;
     var parts:= ReadConfigFile(":architect:config/parts");
     var groupName := FindGroupNameByType(parts, type);
+    var item_obj_type;
 
     if (!groupName)
         SendSysMessageEx(who, "Tipo de item desconhecido.", SSM_INFO);
@@ -1521,7 +1522,7 @@ function create_marked(who, x, y, z, type)
         endif
 
         // Subtrair os recursos da mochila
-        SubtractResources(who, resourcesIdList, resourcesNameList, quantity);
+        item_obj_type := SubtractResources(who, resourcesIdList, resourcesNameList, quantity);
     endif
 
     SendSysMessageEx(who, "Voce usou o(s) recurso(s).", SSM_INFO);
@@ -1533,7 +1534,7 @@ function create_marked(who, x, y, z, type)
     created.movable:= 0;
 
     SetObjProperty (created, "built_by_architect", who.serial);
-    SetObjProperty (created, "architect_objtype", created.objtype);
+    SetObjProperty (created, "architect_objtype", item_obj_type);
 
     SetupNewLockDoor(who, created);
 
@@ -1573,7 +1574,7 @@ function SubtractResources(who, resourcesIdList, resourcesNameList, quantity)
           if(!SubtractAmount(item, quantity))
             continue;
           else
-            break;
+            return Cint(item.objtype);
           endif
       endif
   endforeach

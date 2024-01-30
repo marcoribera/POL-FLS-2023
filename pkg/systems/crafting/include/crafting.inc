@@ -300,7 +300,6 @@ function CraftItem(who, craft_skill, tool, objtype, amt, canFix, anvil, more := 
 			//var attr := PegarProp(item); //terminar para adicionar valores no item assim que começar a criar
 			theitem := CreateItem(who, objtype, chosenPrincipalMaterial, more);
 			// check if it is an alchemy book - if it is add player id
-			Print("Antes do meu if:"+objtype);
 			if (objtype==0xec29)
 			theitem.newbie := 1;
 			setobjproperty(theitem, "serialid", who.serial);

@@ -27,7 +27,7 @@ program magia(who, spellname)
 	var achou := 0;
 	foreach spell in ( GetConfigIntKeys(cfg) )
 		elem := FindConfigElem(cfg, id);
-		if ( GetConfigString(elem, "Name") == spellname)
+		if ( Lower(GetConfigString(elem, "Name")) == Lower(spellname))
 			achou := 1;
 			break;
 		endif
