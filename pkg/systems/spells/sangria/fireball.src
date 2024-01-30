@@ -76,7 +76,7 @@ program spell_fireball(params)
     foreach mobile in mobiles
         if (!(mobile.serial in alreadydamaged) && (mobile != caster) && !(mobile in caster.party.members) && !(mobile in pets ))
             alreadydamaged.Append(mobile.serial);
-			var dmg := cint(AP_GetSkill(caster, MAGICLORE))/5 + RandomDiceRoll("8d10");
+			var dmg := cint(AP_GetSkill(caster, MAGICLORE))/3 + RandomDiceRoll("8d10");
             DamageFLS(mobile, cint(dmg), DMG_FIRE, caster, "fireball");
         endif
         sleepms(20);
