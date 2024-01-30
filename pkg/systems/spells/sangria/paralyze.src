@@ -38,7 +38,7 @@ program SpellScript(params)
 
 	printText(targ, "*paralisado*");
 
-	TS_StartTimer(targ, "paralysis", CINT(AP_GetSkill(who, MAGICLORE)/3), who);
+	TS_StartTimer(targ, "paralysis", CINT(AP_GetSkill(who, MAGICLORE)/5), who);
 	
 
 	if (!GetObjProperty(who, "#magiasilenciosa"))
