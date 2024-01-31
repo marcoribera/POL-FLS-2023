@@ -8,10 +8,10 @@ include ":charactercreation:resists";
 include ":survival:fishingFunctions";
 
 program HitScript(who)
-    PerformAction(who, ANIM_CAST_AREA);
-    sleep(2);
     who.concealed := 1;
     who.frozen := 1;
+    PerformAction(who, ANIM_CAST_AREA);
+    sleep(2);
 
     PlayStationaryEffect(who.x+2, who.y+1, who.z-13, 0x6CA5, 0, 35,0, who.realm);
 	PlaySoundEffect(who, 0x1f2);
