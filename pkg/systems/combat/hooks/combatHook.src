@@ -207,6 +207,8 @@ exported function Attack(attacker, defender)
 			        TurnObjectToward(attacker, defender.x, defender.y);
                 endif
 	        endif
+            
+            return 1;
         endif
 
 	    //testa possiveis esquivas
