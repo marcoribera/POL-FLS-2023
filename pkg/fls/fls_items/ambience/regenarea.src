@@ -11,7 +11,7 @@ program setupsound(rune)
 			range := 6;
 		endif
 
-		var nearbypeople := ListMobilesNearLocation( rune.x, rune.y, rune.z, range);
+		var nearbypeople := ListMobilesNearLocation( rune.x, rune.y, rune.z, range, rune.realm);
 		foreach people in nearbypeople
 			var name := splitwords(people.name);
 			name := name[1];

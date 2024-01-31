@@ -27,7 +27,7 @@ program alerta(rune)
 			intervalo := 600;
 		endif
 
-		var nearbypeople := ListMobilesNearLocation( rune.x, rune.y, rune.z, range);
+		var nearbypeople := ListMobilesNearLocation( rune.x, rune.y, rune.z, range, rune.realm);
 		foreach people in nearbypeople
 			if(!people.npctemplate)
 				SendSysMessage(people, mensagem, _DEFAULT_TEXT_FONT, 91);
