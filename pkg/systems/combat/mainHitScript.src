@@ -125,7 +125,7 @@ program MainHitScript( params )
 	var move := GetObjProperty(attacker, "movement");
 	var movtime := cint(GetObjProperty(attacker, "#movtime"));
 	if (move != error)
-		if (movtime < ReadGameClock() + 30 )
+		if (ReadGameClock() < movtime + 30 )
 			var e := start_script(cstr(move), array{attacker, defender, weapon, armor, basedamage, basedamage});
 //			printtextabove(attacker, " e  " + e + " move " + move);
 			EraseObjProperty(attacker, "movement");
