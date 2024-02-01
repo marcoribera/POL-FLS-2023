@@ -503,7 +503,7 @@ function doCombatSpecialNotBoss(me, opponent)
   var script := GetConfigString(npccfgfile[mytemplate],  "SpecialAttack");
   var delay := GetConfigInt(npccfgfile[mytemplate],  "SpecialAttackDelay");
     if (!delay)
-      delay := 70;
+      delay := 80;
     endif
   var armor :=  CS_GetEquipmentInArmorZone(opponent, CS_GetRandomArmorZone());
 
