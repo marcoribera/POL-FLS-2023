@@ -64,6 +64,11 @@ function SpellFight(opponent, spell_list ,alerted := 0)
     return;
   endif
 
+    if (GetCooldown(me, "silence") > 0)
+        PrintTextAbove(me, "*Silenciado*");
+        return 1;
+    endif
+
   var oldprio := set_priority(50);
   SetOpponent(opponent);
   DisableMainEvents();

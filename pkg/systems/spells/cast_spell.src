@@ -44,7 +44,7 @@ program SpellStarter(params)
 		endif
 	endif
 
-    if (GetCooldown(mobile, "silence"))
+    if (GetCooldown(mobile, "silence") > 0)
         SendSysMessageEx(mobile, "Voce esta silenciado e nao pode usar magias.");
         return 1;
     endif

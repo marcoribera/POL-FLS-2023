@@ -161,7 +161,6 @@ function CheckResist(who, resist, dif, mod := 0)
 	var valor := GetResist(who, resist);
 
 	//printtextabove(who, "dado " + dado + " valor " + valor + " diff " + dif);
-
 	if (dado + valor + mod >= dif)
 		return 1;
 
