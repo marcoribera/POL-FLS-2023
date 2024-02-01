@@ -16,7 +16,7 @@ program danoarea(rune)
 			intervalo := 4;
 		endif
 
-		var nearbypeople := ListMobilesNearLocation( rune.x, rune.y, rune.z, range);
+		var nearbypeople := ListMobilesNearLocation( rune.x, rune.y, rune.z, range, rune.realm);
 		if (!nearbypeople)
 			sleep(10);
 		else
