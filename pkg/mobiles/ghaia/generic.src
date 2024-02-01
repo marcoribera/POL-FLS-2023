@@ -408,8 +408,7 @@ function Fight(opponent, alerted := 0)
 
 
    if (dist > range || !CheckLineOfSight(me, opponent))
-    printText(me, "460"); //talvez aqui
-      CalcPathAndMove(me, opponent, 275 - me.run_speed); //TODO Tem algo errado aqui
+      CalcPathAndMove(me, opponent, 275 - me.run_speed);
    endif
 
     checkFlee(opponent);
@@ -505,7 +504,6 @@ function Flee(opponent)
 
     var numflees := GetObjProperty(me,"#flees");
 	if(numflees > 10)
-    PrintText(me, "RestartScript 571");
       RestartScript(me);
 	else
 	  numflees := numflees + 1;
@@ -654,12 +652,10 @@ function CalcPathAndMove(me, byref opponent, sleepdelay)
 
       if (move_type)
         if(!RunToward(opponent))
-          PrintText(me, "RestartScript 710");
           RestartScript(me);//TODO Ver se faz sentido manter
         endif
       else
         if(!WalkToward(opponent))
-          PrintText(me, "RestartScript 716");
           RestartScript(me);//TODO Ver se faz sentido manter
         endif
       endif
@@ -673,10 +669,7 @@ function CalcPathAndMove(me, byref opponent, sleepdelay)
       if (reachtry[2] > ReadGameClock())
          path := FindPath(  me.x, me.y, me.z, opponent.x, opponent.y, opponent.z, me.realm, 0, 15);
          if (!path)
-          PrintText(me, "Flee 723");
-            RestartScript(me);//TODO Ver se faz sentido manter
-            // Flee(opponent);
-            // sleepms(sleepdelay);
+            RestartScript(me); //TODO Ver se faz sentido manter
          else
             SetObjProperty(me, "path", path);
             SetObjProperty(me, "#enemy_last_loc", array{opponent.x, opponent.y, opponent.z});
@@ -692,21 +685,21 @@ function CalcPathAndMove(me, byref opponent, sleepdelay)
          endif
          path := FindPath(  me.x, me.y, me.z, opponent.x, opponent.y, opponent.z, me.realm, flags, 15); //calcula o path
 
-         if (!path[1] || !path || path == error)
-              PrintText(me, "RestartScript 696");
-            RestartScript(me);
+         if (!path[1] || !path || path == error || path.errortext)
+              ChooseAnotherOpponent(me);
          else
             if (move_type)
-              if(!RunTowardLocation( path[1].x, path[1].y ))
-                PrintText(me, "RestartScript 746");
+              var run_toward := RunTowardLocation( path[1].x, path[1].y );
+              if(!run_toward || run_toward == error || run_toward.errortext)
+                PrintText(me, "RunTowardLocation 746: " + run_toward.errortext);
                 RestartScript(me);//TODO Ver se faz sentido manter
               endif
             else
-              
-              if(!WalkTowardLocation(path[1].x, path[1].y))
-                PrintText(me, "RestartScript 751");
+              var walk_toward := WalkTowardLocation( path[1].x, path[1].y );
+              if(!walk_toward || walk_toward == error || walk_toward.errortext)
+                PrintText(me, "WalkTowardLocation 751: " + walk_toward.errortext);
                 RestartScript(me);//TODO Ver se faz sentido manter
-              endif 
+              endif
             endif
 
 				path.erase(1); //deleta a coordenada e vai pra proxima
@@ -724,20 +717,16 @@ function CalcPathAndMove(me, byref opponent, sleepdelay)
          endif
          if (move_type) 
           if(!RunTowardLocation( coord.x, coord.y ))
-          PrintText(me, "RestartScript 764");
             RestartScript(me);//TODO Ver se faz sentido manter
           endif
          else
           if(!WalkTowardLocation(coord.x, coord.y))
-            PrintText(me, "RestartScript 767");
             RestartScript(me);//TODO Ver se faz sentido manter
           endif 
         endif
          sleepms(sleepdelay);
-         PrintText(me, "Opendoors 799");
          Opendoors(me); //tenta abrir possiveis portas
          if (CoordinateDistance(me.x, me.y, coord.x, coord.y) <= 1) //se chegou onde devia
-            PrintText(me, "771");
             path.erase(1); //deleta a coordenada e vai pra proxima
             if (path[1])
                SetObjProperty(me, "path", path);
@@ -749,12 +738,10 @@ function CalcPathAndMove(me, byref opponent, sleepdelay)
                EraseObjProperty(me, "path"); //deleta o path atual
                me.remAggro(opponent);
                var old_opponent := opponent;
-               PrintText(me, "782");
                ChooseHighestOpponent(me, opponent);
                if (old_opponent == opponent) 
-               PrintText(me, "Flee 784"); //TODO merda aqui no flee
-			   	Flee(opponent); 
-			   endif
+                    ChooseAnotherOpponent(me);
+              endif
             endif
          endif
       else
