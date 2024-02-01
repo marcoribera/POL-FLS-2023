@@ -193,26 +193,22 @@ exported function Attack(attacker, defender)
 	if ( random < hit_chance )
 
         if (getcooldown(attacker, "deathdance") > 0)
-            if (!IsBehind(attacker, defender.x, defender.y))
-                // Calculate the position behind the opponent
+            if (!IsBehind(attacker, defender.x, defender.y) && IsFacing(defender, attacker.x, attacker.y))
                 var behindX := defender.x + (defender.x - attacker.x);
                 var behindY := defender.y + (defender.y - attacker.y);
 
-                // Move the attacker to the calculated position
                 if (defender.x == attacker.x && defender.y == attacker.y)
                     SendSysMessageEx(attacker, "Voce esta muito proximo do oponente!", SSM_FAIL);
                     return 0;
                 else
+                    PlayObjectCenteredEffect(attacker, 0x5433, 7, 16);
+                    PlaySoundEffect(attacker, 0x526);
                     MoveObjectToLocation(attacker, behindX, behindY, defender.z, defender.realm, MOVEOBJECT_FORCELOCATION);
-                    PlayObjectCenteredEffect(attacker, 0x3735, 7, 16);
-                    PlaySoundEffect(attacker, 0x35E4);
-                endif
-                if (!IsFacing(attacker, defender.x, defender.y))
-			        TurnObjectToward(attacker, defender.x, defender.y);
+                    if (!IsFacing(attacker, defender.x, defender.y))
+                        TurnObjectToward(attacker, defender.x, defender.y);
+                    endif
                 endif
 	        endif
-            
-            return 1;
         endif
 
 	    //testa possiveis esquivas
@@ -777,7 +773,7 @@ function FacingChecks(attacker, defender)
 		if ( attacker.npctemplate )
 			TurnObjectToward(attacker, defender.x, defender.y);
 		else
-			if ( IsBehind(attacker, defender.x, defender.y) )
+			if ( IsBehind(attacker, defender.x, defender.y) && !(getcooldown(attacker, "deathdance")))
 				SendSysMessage(attacker, "Voce esta de costas para o inimigo!");
 				retval := 0;
 			endif

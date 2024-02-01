@@ -114,6 +114,11 @@ function ProccessHab(who, hab)
 			SendSysMessageEx(who, "Nao foi encontrado o script da habilidade: " + hab, SSM_FAIL);
 			return;
 		endif
+        if (hab == "lamina da escuridao")
+            PlayObjectCenteredEffectHuefx(who, 0x5487, 10, 20, 2296, 1);
+            PlaySoundEffect(who, 0x56e);
+        endif
+
 		SendSysMessageEx(who, "Se voce acertar o proximo ataque, vai executar o movimento: " + hab, SSM_INFO);
 		SetObjProperty(who, "movement",  script);
 		SetObjProperty(who, "#movtime", ReadGameClock());
