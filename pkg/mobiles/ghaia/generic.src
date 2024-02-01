@@ -182,7 +182,6 @@ function CloseDistance( opponent )
          path := FindPath(  me.x, me.y, me.z, opponent.x, opponent.y, opponent.z, me.realm, flags, 15); //calcula o path
 
          if (!path[1] || !path || path == error)
-            //TODO Tava dando merda aqui
             Flee(opponent);
             sleepms(sleepdelay);
          else
@@ -651,12 +650,14 @@ function CalcPathAndMove(me, byref opponent, sleepdelay)
       EraseObjProperty(me, "#enemy_last_loc");
 
       if (move_type)
-        if(!RunToward(opponent))
-          RestartScript(me);//TODO Ver se faz sentido manter
+        var run_toward := RunToward(opponent);
+        if(!run_toward || run_toward == error || run_toward.errortext)
+          ChooseAnotherOpponent(me);
         endif
       else
-        if(!WalkToward(opponent))
-          RestartScript(me);//TODO Ver se faz sentido manter
+        var walk_toward := WalkToward(opponent);
+        if(!walk_toward || walk_toward == error || walk_toward.errortext)
+          ChooseAnotherOpponent(me);
         endif
       endif
 
@@ -691,14 +692,12 @@ function CalcPathAndMove(me, byref opponent, sleepdelay)
             if (move_type)
               var run_toward := RunTowardLocation( path[1].x, path[1].y );
               if(!run_toward || run_toward == error || run_toward.errortext)
-                PrintText(me, "RunTowardLocation 746: " + run_toward.errortext);
-                RestartScript(me);//TODO Ver se faz sentido manter
+                ChooseAnotherOpponent(me);
               endif
             else
               var walk_toward := WalkTowardLocation( path[1].x, path[1].y );
               if(!walk_toward || walk_toward == error || walk_toward.errortext)
-                PrintText(me, "WalkTowardLocation 751: " + walk_toward.errortext);
-                RestartScript(me);//TODO Ver se faz sentido manter
+                ChooseAnotherOpponent(me);
               endif
             endif
 
