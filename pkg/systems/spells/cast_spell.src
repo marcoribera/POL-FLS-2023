@@ -79,7 +79,7 @@ program SpellStarter(params)
 			EraseObjProperty(mobile, "#Casting");
 			return 0;
 		else
-			if(!TemHabilidade(mobile, "Concentracao Aprimorada") || !TemHabilidade(mobile, "Concentracao Macabra"))
+			if(!TemHabilidade(mobile, "Concentracao Aprimorada") && !TemHabilidade(mobile, "Concentracao Macabra"))
 			mobile.frozen := 1;
 			endif
 		endif
