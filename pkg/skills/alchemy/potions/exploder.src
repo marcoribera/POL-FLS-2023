@@ -323,8 +323,6 @@ function Minaterrestre(who, potion)
 endfunction
 
 function destroycraft(potion, who)
-
-
 	var potions := {61282, 48915, 48916, 48917 };
 	var quebraveis := {0xec24, 0xFF04, 0xec27, 0xec28, 0xec25, 0xec26};
 	var counter := 1;
