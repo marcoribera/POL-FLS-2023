@@ -45,7 +45,7 @@ program walkOn(mobile, tile)
 		ReverseLight(mobile);
 	endif
 	endif
-	
+	destroyIllyraOutsideDungeons(mobile);
 	return 1;
 endprogram
 
