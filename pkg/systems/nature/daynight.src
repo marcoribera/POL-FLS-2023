@@ -9,7 +9,6 @@ include ":nature:nature";
 include ":death:death";
 
 program daynightsystem()
-
 	setglobalproperty("daynightpid", getpid());
 	var config := readconfigfile(":nature:config/daynight");
 	config := config["settings"];
@@ -26,9 +25,10 @@ program daynightsystem()
 		Broadcast("O sol esta nascendo.");
                 SetGlobalProperty("dia", "dia");
                 darkness := GeTMoonLightMod();
-		
+		//Aqui vai setando lentamente o lightlevel por região, é necessário passar aqui cada região (tybar, memmar e etc)
 		for (i:=darkness;i>=0;i:=i-1)
 			setregionlightlevel("Background", i);
+			setregionlightlevel("Memmar", i);
 			setglobalproperty("lightlevel", i);
 			ApllyLightLevel();
 			sleepms(transspeed);
@@ -39,8 +39,10 @@ program daynightsystem()
   
 		broadcast("O sol esta se pondo.");
                 SetGlobalProperty("dia", "noite");
+		//Aqui vai setando lentamente o lightlevel por região, é necessário passar aqui cada região (tybar, memmar e etc)
 		for (i:=0;i<=darkness;i:=i+1)
 			setregionlightlevel("Background", i);
+			setregionlightlevel("Memmar", i);
 			setglobalproperty("lightlevel", i);
 			ApllyLightLevel();
 			sleepms(transspeed);

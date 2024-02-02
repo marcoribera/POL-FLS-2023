@@ -46,8 +46,10 @@ program death(params)
 		endif
 	endif
 
-	var protecao := Cint(GetObjProperty(ghost, "protecaomorte"));
+	//var protecao := Cint(GetObjProperty(ghost, "protecaomorte"));
 	var save := 0;
+    var protecao := GetCooldown(ghost, "protecaomorte") > 0;
+
 	if (getObjProperty(ghost, "savegame") != error)
 		protecao := 1;
 		save := 1;
@@ -87,9 +89,8 @@ program death(params)
 	if (getObjProperty(corpse, "oldbodyserial"))
 		KataWakeUp(ghost, corpse);
 	endif
-
 	if (protecao) // Proteção Contra Morte
-		EraseObjProperty(ghost, "protecaomorte");
+		SendSysMessageEx(ghost, "Sua alma esta protegida");
 	elseif (!killer.acctname || ghost.cmdlevel) // Foi morto por NPC ou é GM
 		if (!protecao)
 			//if (getCoolDown(ghost, "deathtime") == 0 )

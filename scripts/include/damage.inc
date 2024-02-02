@@ -596,5 +596,35 @@ function DamageFLS(defender, dmg, type := DMG_FORCED, source := 0, spell := "")
 
 endfunction
 
+function destroycraft(potion, who)
+    if (!CanDestroyCraft(who))
+        SendSysMessageEx(who, "Voce nao pode destruir nada sem um GM online", SSM_FAIL);
+        return 0;
+    endif
 
+	foreach item in (ListItemsNearLocation(who.x, who.y, who.z, 8, who.realm))
+        if (CheckLosAt(who, item.x, item.y, item.z))
+            if (GetObjProperty(item, "crafteracc"))
+                var roll := RandomInt(100)+1;
+                if (roll > 75)
+                    if (!GetObjProperty(item, "LockId"))
+                        createitematlocation(item.x, item.y, item.z, 3119, 1, item.realm);
+                        sleepms(10);
+                        DestroyItem(item);
+                    endif
+                endif
+            endif
+        endif
+	endforeach
+endfunction
+
+function CanDestroyCraft(who)
+    foreach x in EnumerateOnlineCharacters()
+            if (x.cmdlevel > 0)
+                SendSysMessageEx(x, who.acctname+" quer destruir coisas!", SSM_REQUEST);
+                return 1;
+            endif
+    endforeach
+    return 0;
+endfunction
 //TODO: adicionar influencia do .dmg_mod das armas

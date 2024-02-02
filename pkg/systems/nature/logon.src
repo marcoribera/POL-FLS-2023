@@ -17,4 +17,5 @@ program logon(who)
 		who.setlightlevel(0, 2);
 	endif
 
+    destroyIllyraOutsideDungeons(who);
 endprogram

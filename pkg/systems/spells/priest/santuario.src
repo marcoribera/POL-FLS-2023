@@ -1,6 +1,7 @@
 use uo;
 use os;
 include ":attributes:attributes";
+include ":tn:cooldown";
 
 program sanctuary(params)
 	var who := params[1];
@@ -28,6 +29,9 @@ function protected(who)
 	elseif (who.warmode)
         SendSysMessage(who, "Voce entrou em modo de combate e cancelou o santuario");
 		return 0;
+    elseif (GetCooldown(who, "martir") > 0)
+        SendSysMessage(who, "Voce optou pelo sacrificio pessoal");
+        return 0;
 	endif
 
 	return 1;

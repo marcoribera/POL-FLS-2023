@@ -93,6 +93,8 @@ program vacuodemana(params)
         PLayStationaryEffect(mob.x, mob.y, mob.z, 0x36cc, 0, 10, 0, mob.realm);
         TS_StartTimer(mob, "tombar", 10);
     endforeach
+	destroycraft(targ, who);
+
 
     PrintTextAbove(who, "*Desmonta o equipamento*");
     sleep(2);
@@ -120,4 +122,3 @@ function cannonPosition(who, targ)
 
     return quadrant;
 endfunction
-
