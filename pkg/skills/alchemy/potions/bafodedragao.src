@@ -113,24 +113,9 @@ program use_explosion(who, potion)
 	foreach mobile in chars
 		DamageFLS(mobile, dano, DMG_FIRE);
 	endforeach
-    destroycraft(cast_on);
+	destroycraft(cast_on, who);
 	Detach();
 
     DestroyItem(Potion);
 	
 endprogram
-
-function destroycraft(who)
-	foreach item in (ListItemsNearLocation(who.x, who.y, who.z, 8, who.realm))
-		if (GetObjProperty(item, "crafteracc"))
-			var roll := RandomInt(100)+1;
-			if (roll > 75)
-				if (!GetObjProperty(item, "LockId"))
-					createitematlocation(item.x, item.y, item.z, 3119, 1, item.realm);
-					sleepms(10);
-					DestroyItem(item);
-				endif
-			endif
-		endif
-	endforeach
-endfunction

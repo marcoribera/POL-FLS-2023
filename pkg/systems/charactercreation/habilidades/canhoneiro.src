@@ -93,7 +93,7 @@ program vacuodemana(params)
         PLayStationaryEffect(mob.x, mob.y, mob.z, 0x36cc, 0, 10, 0, mob.realm);
         TS_StartTimer(mob, "tombar", 10);
     endforeach
-    destroycraft(targ);
+	destroycraft(targ, who);
 
 
     PrintTextAbove(who, "*Desmonta o equipamento*");
@@ -121,19 +121,4 @@ function cannonPosition(who, targ)
     endif
 
     return quadrant;
-endfunction
-
-function destroycraft(who)
-	foreach item in (ListItemsNearLocation(who.x, who.y, who.z, 8, who.realm))
-		if (GetObjProperty(item, "crafteracc"))
-			var roll := RandomInt(100)+1;
-			if (roll > 75)
-				if (!GetObjProperty(item, "LockId"))
-					createitematlocation(item.x, item.y, item.z, 3119, 1, item.realm);
-					sleepms(10);
-					DestroyItem(item);
-				endif
-			endif
-		endif
-	endforeach
 endfunction
