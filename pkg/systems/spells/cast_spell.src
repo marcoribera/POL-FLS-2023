@@ -63,6 +63,11 @@ program SpellStarter(params)
 		return 1;
 	endif
 
+	//Se é kitahster e tem habilidade e esta sangrando, não pode gastar mana
+	if (kitahster_chardata.magia == "kitahster" && TemHabilidade(mobile, "Determinacao Elemental") && isBloodied(mobile))
+		HealMana(mobile, cint(spellinfo.mana));
+	endif
+
 	if ( !Attach(mobile) )
 		SendSysMessageEx(mobile, "Voce ja esta fazendo alguma coisa.", SSM_FAIL);
 		return 0;
@@ -79,7 +84,7 @@ program SpellStarter(params)
 			EraseObjProperty(mobile, "#Casting");
 			return 0;
 		else
-			if(!TemHabilidade(mobile, "Concentracao Aprimorada") || !TemHabilidade(mobile, "Concentracao Macabra"))
+			if(!TemHabilidade(mobile, "Concentracao Aprimorada") && !TemHabilidade(mobile, "Concentracao Macabra"))
 			mobile.frozen := 1;
 			endif
 		endif
