@@ -144,6 +144,7 @@ function DeterminaLiga(metals, who)
         0x6460: metais.append("argonil");
         0x6310: metais.append("galvorn");
         0x6311: metais.append("mithril");
+        0x6315: metais.append("illyra");
         0x630b: metais.append("helce");
         0x630c: metais.append("sinque");
         0x630d: metais.append("figin");

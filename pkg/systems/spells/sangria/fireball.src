@@ -81,5 +81,5 @@ program spell_fireball(params)
         endif
         sleepms(20);
     endforeach
+	destroycraft(cast_on, caster);
 endprogram
-

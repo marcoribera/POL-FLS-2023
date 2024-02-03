@@ -461,8 +461,12 @@ function doCombatSpecial(me)
 
   var str := GetConfigString(npccfgfile[mytemplate],  "SpecialCombat");
   str := splitwords(str);
-  //printtextabove(me, " " + TS_GetCooldown(me, str[1]))
-  if (!TS_GetCooldown(me, str[1]))
+  
+  if(TS_GetCooldown(me, str[1]))
+      return 0; //O especial já foi dado, tem que esperar
+  endif
+
+  if (str[1] != error && str[2] != error && !TS_GetCooldown(me, str[1]))
     sleepms(10);
     TS_StartCooldown(me, cstr(str[1]), cint(str[2]));
       var e := Start_Script(str[1], array{me, cint(str[2]), str[1]});
@@ -482,6 +486,16 @@ function hasAttack(me)
   return 1;
 endfunction
 
+function hasSpecialCombat(me)
+  var str := GetConfigString(npccfgfile[mytemplate],  "SpecialCombat");
+  //str := splitwords(str);
+  //printtextabove(me, " " + str);
+  if (!str)//.size() >= 1)
+      return 0;
+  endif
+  return 1;
+endfunction
+
 
 function doCombatSpecialNotBoss(me, opponent)
 
@@ -489,9 +503,13 @@ function doCombatSpecialNotBoss(me, opponent)
   var script := GetConfigString(npccfgfile[mytemplate],  "SpecialAttack");
   var delay := GetConfigInt(npccfgfile[mytemplate],  "SpecialAttackDelay");
     if (!delay)
-      delay := 40;
+      delay := 80;
     endif
   var armor :=  CS_GetEquipmentInArmorZone(opponent, CS_GetRandomArmorZone());
+
+  if(TS_GetCooldown(me, "npc_special"))
+    return 0; //O especial já foi dado, tem que esperar
+  endif
 
   TS_StartCooldown(me, "npc_special", delay);
     //printtextabove(me, " " + TS_GetCooldown(me, str[1]))

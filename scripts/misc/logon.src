@@ -55,7 +55,7 @@ program Logon(who)
 	if (HaveReverseVision(who))
 		ReverseLight(who);
 	endif
-
+    destroyIllyraOutsideDungeons(who);
 	var recorde := GetGlobalProperty("maxonline");
 	if (!recorde)
 		recorde := 0;

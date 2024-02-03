@@ -98,17 +98,6 @@ function ClearChests(spawn)
 
 endfunction
 
-function HasPlayerNear(x, y, realm)
-	var mobs := ListMobilesNearLocation( x, y, LIST_IGNORE_Z, 8, realm );
-	foreach mob in mobs
-		if (mob.acctname ) //se for player e priv de player
-			return 1;
-		endif
-		sleepms(10);
-	endforeach
-	return 0;
-endfunction
-
 function cleanarray(item)
 
 	var chests := GetObjProperty(item, "chests");

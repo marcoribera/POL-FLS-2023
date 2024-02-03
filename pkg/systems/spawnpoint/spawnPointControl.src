@@ -61,7 +61,7 @@ program spawnpointcontrol(spawnpoint)
 			if((x != "Empty") && (x != "Active"))
 				if(x == 0)
 					//enquanto tiver player perto sleepa, se nao cria o npc
-					while (hasplayernear(spawnpoint.x, spawnpoint.y, spawnpoint.realm))
+					while (hasplayernearSpawn(spawnpoint.x, spawnpoint.y, spawnpoint.realm))
 						//printtextabove(spawnpoint, "teste " + playernear);
 						sleep(60);
 					endwhile
@@ -82,7 +82,7 @@ program spawnpointcontrol(spawnpoint)
 	endwhile
 endprogram
 
-function HasPlayerNear(x, y, realm)
+function hasplayernearSpawn(x, y, realm)
 	var num_player := ListMobilesNearLocation( x, y, 19, LISTEX_FLAG_PLAYERS_ONLY && LISTEX_FLAG_NORMAL, realm).size();
   //print("players perto: "+ num_player);
   return num_player > 0;

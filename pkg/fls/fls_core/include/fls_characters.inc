@@ -5,7 +5,7 @@ use cfgfile;
 include ":brainai:npcUtil";
 include ":attributes:attributes";
 include ":fls_core:fls_chargumps_ex";
-
+include "include/dungeons";
 
 function EquipRaceSkin(who)
 
@@ -320,4 +320,39 @@ function GetSkillNameByID(input)
 
 	return "";
 
+endfunction
+
+function destroyIllyraOutsideDungeons(who)
+    print("Entrei");
+    var hasIllyra := 0;
+    if (InDungeon(who))
+        return 0;
+    endif
+
+    foreach item in EnumerateItemsInContainer(who.backpack)
+        print("bkp.item.color: "+ item.color);
+        print("bkp.item.name: "+ item.name);
+        if (item.color == 2278)
+            DestroyItem(item);
+            hasIllyra := 1;
+        endif
+    endforeach
+    
+    foreach item in ListEquippedItems(who)
+        print("item.color: "+ item.color);
+        print("item.name: "+ item.name);
+        if (item.color == 2278)
+            DestroyItem(item);
+            hasIllyra := 1;
+        endif
+    endforeach
+
+    if (hasIllyra)
+        SendSysMessage(who, "Voce foi para a superficie e todos seus itens de Illyra se tornaram po");
+        var illyraDust := CreateItemInBackPack(who, 0x9092, 2);
+        illyraDust.name := "Po de Illyra";
+        illyraDust.color := 2278;
+    endif
+
+    return 1;
 endfunction

@@ -161,7 +161,6 @@ function CheckResist(who, resist, dif, mod := 0)
 	var valor := GetResist(who, resist);
 
 	//printtextabove(who, "dado " + dado + " valor " + valor + " diff " + dif);
-
 	if (dado + valor + mod >= dif)
 		return 1;
 
@@ -172,7 +171,7 @@ function CheckResist(who, resist, dif, mod := 0)
 			SendSysMessageEx(who, "Zharkia esta do seu lado!", SSM_INFO);
 			return 1;
 		endif
-    elseif((GetObjProperty(who, "chardata")).vantagemracial == "Toxina Natural" && resist == FORTITUDE)
+    elseif((GetObjProperty(who, "chardata")).vantagemracial == "Toxina natural" && resist == FORTITUDE)
         mod += 30;
 		if (dado + valor + mod >= dif)
 			SendSysMessageEx(who, "Seu organismo drow expurga o veneno", SSM_INFO);

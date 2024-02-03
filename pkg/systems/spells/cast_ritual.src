@@ -29,6 +29,11 @@ program SpellStarter(params)
 		return 0;
 	endif
 
+    if (GetCooldown(mobile, "silence") > 0)
+        SendSysMessageEx(mobile, "Voce esta silenciado e nao pode usar magias.");
+        return 1;
+    endif
+
 	// Already casting?
 	if ( GetObjProperty(mobile, "#Casting") )
 		SendSysMessageEx(mobile, "Voce nao pode invocar um encanto agora.", SSM_FAIL);

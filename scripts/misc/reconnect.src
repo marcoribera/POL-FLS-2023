@@ -41,5 +41,6 @@ program core_reconnect(who)
 	else
 		who.setlightlevel(0, 2);
 	endif
+    destroyIllyraOutsideDungeons(who);
 	return 1;
 endprogram
