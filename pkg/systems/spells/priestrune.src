@@ -21,9 +21,9 @@ program usavarinha(who, wand)
 
 	var cargas := GetObjProperty(wand, "cargas");
 	if (cargas == error)
-		cargas := 20;
+		cargas := 40;
 		if ( temHabilidade(who, "Fluxo Divino") )
-			cargas := 30;
+			cargas := 50;
 		endif
 	endif
 	if (cargas <= 0)

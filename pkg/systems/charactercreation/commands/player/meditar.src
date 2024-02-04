@@ -1,0 +1,49 @@
+
+
+
+use uo;
+
+include ":charactercreation:createchar";
+include "include/say";
+include ":gumps:yesNo";
+include ":charactercreation:chargumps";
+include ":tn:characters";
+include ":tn:tngumps";
+include ":attributes:attributes";
+include ":tn:cooldown";
+
+program meditar(who, text)
+    var full_mana := AP_GetVitalMaximumValue(who, MANA);
+    var current_mana := AP_GetVital(who, MANA);
+    var start_hp := AP_GetVital(who, "Hits");
+    
+	var oldx := who.x;
+	var oldy := who.y;
+    if (GetCooldown(who, "meditation") > 0)
+        SendSysMessage(who, "Voce precisa aguardar antes de meditar novamente");
+        return 0;
+    endif
+
+    SetCooldown(who, "meditation", 120);
+    while (current_mana < full_mana)
+        if (oldx != who.x || oldy != who.y)
+            SendSysMessage(who, "Voce se movimentou e cancelou sua meditacao");
+			break;
+		endif
+        if (current_mana == full_mana)
+            SendSysMessage(who, "Voce completou sua meditacao");
+			break;
+        endif
+        if (start_hp > AP_GetVital(who, "Hits"))
+            SendSysMessage(who, "Voce perdeu sua concentracao");
+			break;
+        endif
+
+        PlaySoundEffect(who, 0x20C);
+        HealMana(who, Cint(AP_GetSkill(who, MAGICLORE)/10));
+        PlayObjectCenteredEffect(who, 0x375a, 10, 80);
+        sleep(5);
+    endwhile
+
+    return 1;
+endprogram

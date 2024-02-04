@@ -11,6 +11,7 @@ include "include/utils";
 include "include/damage";
 include ":attributes:attributes";
 include ":timedscripts:timedScripts";
+include ":taming:taming";
 
 program animateSword(params)
 	var who := params[1];
@@ -38,14 +39,29 @@ program animateSword(params)
    PlaySoundEffect(who, 0x221);
     var duration := cint(AP_GetSkill(who, MAGICLORE)/10);
     sleepms(500);
+    var festa := who.party;
+    var dano_mlore := CInt(AP_GetSkill(who, MAGICLORE) / 2);
+
+    var pets := ListPetsNear(who, 2);
+    var tamed;
+    var summoned;
+    foreach member in festa
+        if (member.serial != who.serial)
+            tamed := GetObjProperty(member, "TamedPets");
+            summoned := GetObjProperty(member, "SummonedPets");
+        endif
+    endforeach
     var nearby := ListMobilesNearLocation(who.x, who.y, who.z, 2 , who.realm );
     foreach char in nearby
-        if (char != who)
-            PlayObjectCenteredEffect( char, 0x6d67, 0, 10);
-
-            TS_StartTimer(char, "tombar", duration);
-            TS_StartTimer(char, "lentidao", duration*2);
-            TS_StartTimer(char, "paralysis", duration);
+        var char_owner := GetObjProperty(char, "owner");
+        if (!(char in (festa.members) || char == who))
+            if (!(char.serial in tamed) && !(char in pets) && !(char.serial in summoned) && !(char in who.party.members) && !(char_owner == who.serial))
+                PlayObjectCenteredEffect( char, 0x6d67, 0, 10);
+                TS_StartTimer(char, "tombar", duration);
+                TS_StartTimer(char, "lentidao", duration*2);
+                TS_StartTimer(char, "paralysis", duration);
+                DamageFLS(char, dano_mlore, DMG_FIRE, who);
+            endif
         endif
     endforeach
 

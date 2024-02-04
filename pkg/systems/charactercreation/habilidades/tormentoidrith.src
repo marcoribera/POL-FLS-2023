@@ -7,6 +7,7 @@ include "include/say";
 include "include/dungeons";
 include ":tn:cooldown";
 include ":taming:taming";
+include "include/damage";
 
 program truesight(who)
     var range := cint(AP_GetSkill(who, MAGICLORE)/5);
@@ -27,6 +28,8 @@ program truesight(who)
             summoned := GetObjProperty(member, "SummonedPets");
         endif
     endforeach
+    var dano_mlore := CInt(AP_GetSkill(who, MAGICLORE) / 2);
+
     foreach char in nearby
         var char_owner := GetObjProperty(char, "owner");
         if (!(char in (festa.members) || char == who))
@@ -36,6 +39,7 @@ program truesight(who)
                 PlayObjectCenteredEffect(char, 0x54F7, 10, 30);
                 // todo Play animation sparkles pra ficar bonito
                 PrintTextAbove(char, "*atormentado*");
+                DamageFLS(char, dano_mlore, DMG_FIRE, who);
 
                 if (InDarkness(char))
                     SendSysMessage(who, "Sua visao verdadeira funciona apenas na escuridao");

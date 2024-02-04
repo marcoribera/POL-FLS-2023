@@ -29,6 +29,17 @@ function isBoss(targ)
 	return 0;
 endfunction
 
+function isTrueBoss(targ)
+	var spawnpoint := SystemFindObjectBySerial( GetObjProperty(targ, "spawnpoint") );
+	if (spawnpoint != error)
+		var unique := GetObjProperty(spawnpoint, "true_boss");
+		if (unique != error)
+			return 1;
+		endif
+	endif
+	return 0;
+endfunction
+
 function CreateBossStructGump(who, byref boss)
 
 	if (boss.resist)
