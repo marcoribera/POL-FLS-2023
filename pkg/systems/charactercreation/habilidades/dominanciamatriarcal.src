@@ -24,7 +24,7 @@ program vacuodemana(params)
         return 1;
     endif
 
-    SetObjProperty(who, "#attackbonus", 100);
+    SetObjProperty(attacker, "#attackbonus", 100);
 
     var dano_mlore := CInt(AP_GetSkill(attacker, MAGICLORE));
     if (attacker.weapon.objtype != 0x166E)
