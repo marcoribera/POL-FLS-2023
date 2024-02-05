@@ -24,7 +24,7 @@ program meditar(who, text)
         return 0;
     endif
 
-    SetCooldown(who, "meditation", 120);
+    SetCooldown(who, "meditation", 300);
     while (current_mana < full_mana)
         if (oldx != who.x || oldy != who.y)
             SendSysMessage(who, "Voce se movimentou e cancelou sua meditacao");
@@ -38,9 +38,18 @@ program meditar(who, text)
             SendSysMessage(who, "Voce perdeu sua concentracao");
 			break;
         endif
+        if (GetObjProperty(who, "#Casting"))
+            SendSysMessage(who, "Voce perdeu sua concentracao");
+            EraseObjProperty(who, "#Casting");
+			break;
+        endif
+        if (!EquipmentCheck(mobile))
+            SendSysMessage(who, "Suas maos precisam estar livres");
+			break;
+        endif
 
         PlaySoundEffect(who, 0x20C);
-        HealMana(who, Cint(AP_GetSkill(who, MAGICLORE)/10));
+        HealMana(who, Cint(AP_GetSkill(who, MAGICLORE)/20));
         PlayObjectCenteredEffect(who, 0x375a, 10, 80);
         sleep(5);
     endwhile

@@ -323,15 +323,12 @@ function GetSkillNameByID(input)
 endfunction
 
 function destroyIllyraOutsideDungeons(who)
-    print("Entrei");
     var hasIllyra := 0;
     if (InDungeon(who))
         return 0;
     endif
 
     foreach item in EnumerateItemsInContainer(who.backpack)
-        print("bkp.item.color: "+ item.color);
-        print("bkp.item.name: "+ item.name);
         if (item.color == 2278)
             DestroyItem(item);
             hasIllyra := 1;
@@ -339,8 +336,6 @@ function destroyIllyraOutsideDungeons(who)
     endforeach
     
     foreach item in ListEquippedItems(who)
-        print("item.color: "+ item.color);
-        print("item.name: "+ item.name);
         if (item.color == 2278)
             DestroyItem(item);
             hasIllyra := 1;
