@@ -11,7 +11,7 @@ include ":charactercreation:chargumps";
 include ":tn:characters";
 include ":tn:tngumps";
 include ":attributes:attributes";
-include ":tn:cooldown";
+include ":timedscripts:timedScripts";
 
 program meditar(who, text)
     var full_mana := AP_GetVitalMaximumValue(who, MANA);
@@ -20,7 +20,7 @@ program meditar(who, text)
     
 	var oldx := who.x;
 	var oldy := who.y;
-    if (GetCooldown(who, "meditation") > 0)
+    if (TS_GetCooldown(who, "meditation"))
         SendSysMessage(who, "Voce precisa aguardar antes de meditar novamente");
         return 0;
     endif
@@ -53,7 +53,7 @@ program meditar(who, text)
         PlayObjectCenteredEffect(who, 0x375a, 10, 80);
         sleep(5);
     endwhile
-    SetCooldown(who, "meditation", 300);
+    TS_StartCooldown(who, "meditation", 300);
 
     return 1;
 endprogram
