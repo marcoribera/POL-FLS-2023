@@ -28,24 +28,24 @@ program meditar(who, text)
     while (current_mana < full_mana)
         if (oldx != who.x || oldy != who.y)
             SendSysMessage(who, "Voce se movimentou e cancelou sua meditacao");
-			break;
+			return 0;
 		endif
         if (current_mana == full_mana)
             SendSysMessage(who, "Voce completou sua meditacao");
-			break;
+			return 0;
         endif
         if (start_hp > AP_GetVital(who, "Hits"))
             SendSysMessage(who, "Voce perdeu sua concentracao");
-			break;
+			return 0;
         endif
         if (GetObjProperty(who, "#Casting"))
             SendSysMessage(who, "Voce perdeu sua concentracao");
             EraseObjProperty(who, "#Casting");
-			break;
+			return 0;
         endif
         if (!EquipmentCheck(who))
             SendSysMessage(who, "Suas maos precisam estar livres");
-			break;
+			return 0;
         endif
 
         PlaySoundEffect(who, 0x20C);

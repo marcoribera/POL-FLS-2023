@@ -12,8 +12,12 @@ include "include/say";
 include "include/damage";
 
 program aura_of_hate(params)
-	var attacker := params[1];
-	var defender := params[2];
+	var attacker	:= params[1];
+	var defender	:= params[2];
+	var weapon	:= params[3];
+	var armor	:= params[4];
+	var basedamage	:= params[5];
+	var rawdamage	:= params[6];
 	params := 0; // Not needed anymore.
     
     var corrupcao := Cint(GetObjProperty(attacker, "corruption")/1000);
@@ -61,7 +65,13 @@ program aura_of_hate(params)
 	SendSysMessageEx(attacker, "Nao te falta odio!", SSM_INFO);
 	var hate_dmg := cast_points * 1;
     SetObjProperty(attacker, "repreensao", 1);
-	DamageFLS(defender, hate_dmg, DMG_FORCED, attacker);
+
+	var dmgList := dictionary;
+	dmgList := getNewDamageList(attacker);
+	var total := cint(CalculateTotalDamage(defender, basedamage, attacker, dmgList));
+	DamageFLS(defender, total, DMG_PHYSICAL, attacker);
+
+    DamageFLS(defender, hate_dmg, DMG_PHYSICAL, attacker);
     var curse_time := CInt(AP_GetSkill(attacker, MAGICLORE) / 3);
 
 	Sleep(curse_time);
