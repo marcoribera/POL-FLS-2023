@@ -2,6 +2,7 @@
 
 
 use uo;
+use os;
 
 include ":charactercreation:createchar";
 include "include/say";
@@ -43,7 +44,7 @@ program meditar(who, text)
             EraseObjProperty(who, "#Casting");
 			break;
         endif
-        if (!EquipmentCheck(mobile))
+        if (!EquipmentCheck(who))
             SendSysMessage(who, "Suas maos precisam estar livres");
 			break;
         endif
@@ -56,3 +57,22 @@ program meditar(who, text)
 
     return 1;
 endprogram
+
+function EquipmentCheck(who)
+	var hand_1 := GetEquipmentByLayer(who, LAYER_HAND1);
+
+	if ( hand_1 )
+		if ( (cint(GetObjProperty(hand_1, "cancast")) != 1) )
+			return 0;
+		endif
+	endif
+
+	var hand_2 := GetEquipmentByLayer(who, LAYER_HAND2);
+	if ( hand_2 )
+		if ( (cint(GetObjProperty(hand_2, "cancast")) != 1)  )
+			return 0;
+		endif
+	endif
+
+	return 1;
+endfunction
