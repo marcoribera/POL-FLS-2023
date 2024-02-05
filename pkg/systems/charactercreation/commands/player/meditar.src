@@ -25,7 +25,6 @@ program meditar(who, text)
         return 0;
     endif
 
-    SetCooldown(who, "meditation", 300);
     while (current_mana < full_mana)
         if (oldx != who.x || oldy != who.y)
             SendSysMessage(who, "Voce se movimentou e cancelou sua meditacao");
@@ -54,6 +53,7 @@ program meditar(who, text)
         PlayObjectCenteredEffect(who, 0x375a, 10, 80);
         sleep(5);
     endwhile
+    SetCooldown(who, "meditation", 300);
 
     return 1;
 endprogram
