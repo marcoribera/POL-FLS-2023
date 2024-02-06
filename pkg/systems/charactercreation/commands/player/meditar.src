@@ -20,6 +20,7 @@ program meditar(who, text)
     
 	var oldx := who.x;
 	var oldy := who.y;
+
     if (GetCooldown(who, "meditation") > 0)
         SendSysMessage(who, "Voce precisa aguardar antes de meditar novamente");
         return 0;
@@ -47,13 +48,17 @@ program meditar(who, text)
             SendSysMessage(who, "Suas maos precisam estar livres");
 			return 0;
         endif
+        if (who.hidden || who.concealed)
+            SendSysMessage(who, "Voce nao pode fazer isso escondido");
+			return 0;
+        endif
 
         PlaySoundEffect(who, 0x20C);
         HealMana(who, Cint(AP_GetSkill(who, MAGICLORE)/20));
         PlayObjectCenteredEffect(who, 0x375a, 10, 80);
         sleep(5);
+        SetCooldown(who, "meditation", 300);
     endwhile
-    SetCooldown(who, "meditation", 300);
 
     return 1;
 endprogram
