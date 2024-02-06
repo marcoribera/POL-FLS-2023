@@ -16,6 +16,8 @@ program SpellScript(params)
 	var who := params[1];
     var targ := params[2];
 	params := 0; // No longer needed
+	var xInicial := who.x;
+	var yInicial := who.y;
 
 	//SendSysMessage(who, "Selecione o alvo.");
 	//var targ := Target(who);
@@ -29,6 +31,11 @@ program SpellScript(params)
 	var loc := TargetCoordinates(who);
 	if ( !loc )
 		SendSysMessageEx(who, "Cancelado.", SSM_FAIL);
+		return 0;
+	endif
+
+	if (who.x != xInicial || who.y != yInicial)
+		SendSysMessageEx(who, "Voce se moveu e parou de tentar levitar!", SSM_FAIL);
 		return 0;
 	endif
 
