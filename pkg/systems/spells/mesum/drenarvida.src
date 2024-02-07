@@ -93,6 +93,8 @@ program SpellScript(params)
 			PrintTextAbovePrivate(who, "+"+amt + " Vida", who, 3, 568); // verde
 			time := time + 1;
 			sleep(1);
+
+			SetObjProperty(targ, "affected_by_spell", who.serial);
 		endif
 	endwhile
 
