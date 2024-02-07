@@ -51,6 +51,7 @@ program vacuodemana(params)
     if (attacker.hidden || attacker.concealed)
     	PlayAttackAnimation(attacker);
 	    PlayHitSounds(attacker, defender);
+        DamageFLS(defender, total, DMG_PHYSICAL, attacker);
         DamageFLS(defender, dano_mlore, DMG_COLD, attacker);
     endif
 
