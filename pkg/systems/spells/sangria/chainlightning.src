@@ -35,9 +35,10 @@ program chainLightning( params )
     
     var mobiles := ListMobilesNearLocation(targ.x, targ.y, targ.z, range, targ.realm);
     var pets := ListPetsNear(caster, range);
+    var summonedPets := ListSummonedPetsNear(caster, range);
     var casterThenNextMobile := caster;
     foreach mobile in mobiles
-        if (!(mobile.serial in alreadydamaged) && (mobile != caster) && !(mobile in caster.party.members) && !(mobile in pets ))
+        if (!(mobile.serial in alreadydamaged) && (mobile != caster) && !(mobile in caster.party.members) && !(mobile in pets ) && !(mobile in summonedPets ))
 			SetObjProperty(mobile, "LastHit", {caster.name, caster.serial, "chain lightning"});
             //PlayLightningBoltEffect( mobile );
             PlayMovingEffect(casterThenNextMobile, mobile , 0x379f, 0, 20 );

@@ -249,6 +249,27 @@ function ListPetsNEar(who,  range)
 
 endfunction
 
+//pega os Summoned Pets da pessoa na area
+function ListSummonedPetsNear(who,  range)
+
+	var pets := array;
+	var tamed := GetObjProperty(who, "SummonedPets");
+	if ( !tamed )
+		return pets;
+	endif
+
+	foreach serial in tamed
+		var pet := SystemFindObjectBySerial(serial);
+		if ( (pet.owner == who)  && (Distance(pet, who) < range))
+			pets.append(pet);
+		endif
+		sleepms(2);
+	endforeach
+
+	return pets;
+
+endfunction
+
 //traz os pets pra proximo do dono.
 function LogonPets(who)
 
