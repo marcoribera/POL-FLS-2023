@@ -349,7 +349,6 @@ program SpellStarter(params)
 					TurnObjectToward(mobile, targ.x, targ.y);
 				endif
 
-
 				if (!targ)
 					SendsysMessageEx(mobile, "Voce cancelou a magia.", SSM_FAIL);
 					FailSpell(mobile);
