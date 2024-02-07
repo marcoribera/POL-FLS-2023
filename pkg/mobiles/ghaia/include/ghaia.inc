@@ -790,6 +790,10 @@ function ChooseHighestOpponent(me, byref opponent, new_opponent := 0, force_chan
       SetOpponent(new_opponent);
       TurnToward(new_opponent);
       return 1;
+   elseif (opponent && new_opponent)
+      SetOpponent(opponent);
+      TurnToward(opponent);
+      return 1;
    elseif (opponent && !CheckLineOfSight(me, opponent))
       me.setAggro(opponent.serial, -50);
    endif
