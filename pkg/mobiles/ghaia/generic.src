@@ -302,9 +302,9 @@ function Fight(opponent, alerted := 0)
   var waittime := 0;
 
   if (!alerted) //se ele ja nao foi alertado por outro aliado
-	if (alert_allies) //se esse npc eh do tipo que alerta
-		AlertAllies(me, opponent);
-	endif
+    if (alert_allies) //se esse npc eh do tipo que alerta
+      AlertAllies(me, opponent);
+    endif
   endif
 
    var speech := GetConfigStringArray( npccfgfile[mytemplate], "InitCombatSpeech" );
@@ -349,12 +349,14 @@ function Fight(opponent, alerted := 0)
     endif
 
     if (opponent.concealed)
-      	break;
+      break;
     endif
 
     if (opponent.hidden)
-		break;
+		  break;
     endif
+
+    attacksDamnCaster(me, opponent);
 
     dist := CoordinateDistance(me.x, me.y, opponent.x, opponent.y);
     if ( dist > 20)
@@ -471,6 +473,22 @@ function Fight(opponent, alerted := 0)
   SetWarMode(0);
   SetOpponent(0);
   sleep(1);
+endfunction
+
+function attacksDamnCaster(me, opponent)
+  var affectedBySpell := GetObjProperty(me, "affected_by_spell");
+  if(affectedBySpell)
+    var mobile_caster := SystemFindObjectBySerial(affectedBySpell);
+    EraseObjProperty(me, "affected_by_spell");
+    me.setAggro(opponent.serial, -100);
+    EraseObjProperty(me, "path"); //deleta o path atual
+    me.remAggro(opponent);
+    opponent := mobile_caster;
+    ChooseHighestOpponent(me, opponent, 1);
+    sleepms(100);
+    RunToward(opponent);
+    sleepms(100);
+  endif
 endfunction
 
 function EnableCombatEvents()

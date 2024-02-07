@@ -64,7 +64,7 @@ program SpellStarter(params)
 	endif
 
 	//Se é kitahster e tem habilidade e esta sangrando, não pode gastar mana
-	if (kitahster_chardata.magia == "kitahster" && TemHabilidade(mobile, "Determinacao Elemental") && isBloodied(mobile))
+	if (TemHabilidade(mobile, "Determinacao Elemental") && isBloodied(mobile))
 		HealMana(mobile, cint(spellinfo.mana));
 	endif
 
@@ -115,7 +115,7 @@ program SpellStarter(params)
 			endif
 		endif
 	endif
-    var battlemageHabs := Array{"Concentracao Macabra", "Senhor do Medo", "Devocao", "Concentracao Aprimorada", "Colheita de Almas", "Campeao das Montanhas"};
+    var battlemageHabs := Array{"Concentracao Macabra", "Senhor do Medo", "Devocao", "Concentracao Aprimorada", "Colheita de Almas", "Campeao das Montanhas", "Visao verdadeira"};
     var tem_hab := 0;
     foreach hab in battlemageHabs
         if (TemHabilidade(mobile, hab))
@@ -348,7 +348,6 @@ program SpellStarter(params)
 					targ := TargetCoordinates(mobile);
 					TurnObjectToward(mobile, targ.x, targ.y);
 				endif
-
 
 				if (!targ)
 					SendsysMessageEx(mobile, "Voce cancelou a magia.", SSM_FAIL);

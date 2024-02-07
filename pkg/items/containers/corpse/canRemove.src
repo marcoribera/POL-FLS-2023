@@ -18,8 +18,8 @@ program canRemove(character, container, item, move_type)
 		endif
 	endif
 
-	var mods := GetObjProperty(item, "equip");
-	if ("cursed" in (mods.keys()) && GetObjProperty(item, "#EquippedOn") == container.ownerserial)
+	var is_cursed := GetObjProperty(item, "equip").cursed;
+	if (is_cursed && GetObjProperty(item, "#EquippedOn") == container.ownerserial)
 		SendSysMessage(character, "Este item parece estar preso ao usuario");
 		return 0;
 	endif

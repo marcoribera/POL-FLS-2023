@@ -33,7 +33,7 @@ program controlScript(field)
 		var event := Wait_For_Event(1);
 		if ( event )
 			//Someone just walked onto the tile.
-			BurnMobile(event, dmg_dice);
+			BurnMobile(event, dmg_dice, creator);
 		endif
 		
 		if ( field.IsExpired() )
@@ -46,7 +46,7 @@ endprogram
 function BurnNearbyMobiles(field, dmg_dice)
 	var nearby := ListMobilesNearLocationEX(field.x, field.y, field.z, 0, LISTEX_FLAG_NORMAL+LISTEX_FLAG_HIDDEN, field.realm);
 	foreach mobile in ( nearby )
-		BurnMobile(mobile, dmg_dice);
+		BurnMobile(mobile, dmg_dice, field.GetOwner());
 
 		sleepms(2);
 	endforeach
@@ -54,9 +54,9 @@ function BurnNearbyMobiles(field, dmg_dice)
 	return (nearby.size());
 endfunction
 
-function BurnMobile(mobile, dmg_dice)
+function BurnMobile(mobile, dmg_dice, field_owner)
 	var dmg := RandomDiceRoll(dmg_dice); // - resistance ?
 	ApplyDamageEX(mobile, dmg, DMG_FIRE);
-
+	SetObjProperty(mobile, "affected_by_spell", field_owner.serial);
 	return 1;
 endfunction

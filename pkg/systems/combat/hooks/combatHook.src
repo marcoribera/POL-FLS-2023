@@ -98,7 +98,7 @@ exported function Attack(attacker, defender)
 		return 1;
 	elseif ( !FacingChecks(attacker, defender) )
 		return 1;
-	elseif ( !AmmoCheck(attacker, defender) )
+	elseif ( !AmmoCheckCombatHook(attacker, defender) )
 		return 1;
 	elseif ( GetCooldown(attacker, "defesatotal") > 0 )
 		return 1;
@@ -191,6 +191,9 @@ exported function Attack(attacker, defender)
 	//ACERTOU
 	var dmg := 1;
 	if ( random < hit_chance )
+        if (defender.frozen)
+            defender.frozen := 0;
+        endif
 
         if (getcooldown(attacker, "deathdance") > 0)
             if (!IsBehind(attacker, defender.x, defender.y) && IsFacing(defender, attacker.x, attacker.y))
@@ -653,7 +656,7 @@ endfunction
 
 // Arqueiros
 
-function AmmoCheck(attacker, defender)
+function AmmoCheckCombatHook(attacker, defender)
 	if ( !wpn_a_elem.ProjectileType )
 		return 1;
 	endif

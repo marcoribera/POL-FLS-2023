@@ -41,7 +41,7 @@ program vacuodemana(params)
 	var dmgList := dictionary;
 	dmgList := getNewDamageList(attacker);
 	var total := cint(CalculateTotalDamage(defender, basedamage, attacker, dmgList));
-	DamageFLS(defender, total, DMG_FORCED, attacker);
+	DamageFLS(defender, total, DMG_PHYSICAL, attacker);
 	DamageFLS(defender, mlore, DMG_FORCED, attacker);
     PlaySoundEffect(defender, 0X51d);
     MakeBleed(defender);

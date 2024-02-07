@@ -4,9 +4,6 @@ include ":tn:tngumps";
 include "include/say";
 
 program settooltip(who)
-
-
-
 	SendSysMessageEx(who, "Escolha o item.", SSM_REQUEST);
 	var item := target(who);
 	if (!item)

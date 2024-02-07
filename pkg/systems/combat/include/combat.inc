@@ -152,3 +152,70 @@ function PlayHurtSound(defender)
 		endif
 	endif
 endfunction
+
+
+function CanBackStab(who, weapon)
+
+	var can_back_stab := 0;
+	if ((weapon.attribute) == "MeleeCombat1H")
+		can_back_stab := 1;
+	endif
+
+	if ((weapon.attribute) == "RangedCombat")
+		can_back_stab := 1;
+	endif
+
+
+	if ( !can_back_stab )
+		SendSysMessage(who, "Esta arma nao e apropriada para um ataque furtivo.");
+		return 0;
+	endif
+
+	return 1;
+endfunction
+
+function AmmoCheck(attacker, defender)
+	var wpn_a_elem := GetWpnCfgInfo(attacker, attacker.weapon);
+
+	if ( !wpn_a_elem.ProjectileType )
+		return 1;
+	endif
+
+	var has_ammo := 0;
+
+	var aljavas := array{0x791c, 0x2fb7};
+	var aljava := GetEquipmentByLayer(attacker, 0x14);
+
+		if (aljava.objtype in aljavas)
+			aljava := GetEquipmentByLayer(attacker, 0x14);
+		else
+			aljava := GetEquipmentByLayer(attacker, 0xc);
+		endif
+	var ammo := GetObjProperty(attacker.weapon, "ammo");
+	if (!ammo)
+		SendSysMessage(attacker, "Voce nao definiu o tipo de flecha que vai usar. [clique 2x no arco e na flecha]");
+		return 0;
+	endif
+
+    var in_aljava := 0;
+    foreach arrow in (EnumerateItemsInContainer(aljava))
+		if (arrow.serial == ammo)
+			in_aljava := 1;
+        endif
+    endforeach
+    if (in_aljava == 0)
+        return 0;
+    endif
+
+
+	if ( SubtractAmount( ammo, 1 ) )
+		var cfg:=ReadConfigFile(":woodworking:itemdesc");
+		var elem := FindConfigElem(cfg, GetObjType( ammo ));
+		var ammo_color := elem.color;
+		PlayMovingEffectXYZHued(attacker, defender, wpn_a_elem.ProjectileAnim, 10, 10, 0, ammo_color);
+		return 1;
+	else
+		return 0;
+	endif
+
+endfunction

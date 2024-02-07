@@ -25,6 +25,8 @@ include "include/sounds";
 include ":spells:swordmage";
 include ":taming:taming";
 include ":charactercreation:resists";
+include ":combat:combat";
+
 //include ":combat:include/mainHitScript";
 
 var item_cfg := ReadConfigFile(":*:itemdesc");
@@ -83,7 +85,7 @@ program MainHitScript( params )
 	FacingChecks(attacker, defender);
 
 	//Toca do som do alvo sofrendo ataque
-	PlayHitSounds(defender);
+	PlayHitSounds(attacker, defender);
 
 	//Processa o aumento ou não de skill de combate
 	//SkillChecks(attacker, defender, weapon, rawdamage); //jogado pro combatHook.src para upar até quando errar o golpe
@@ -104,7 +106,7 @@ program MainHitScript( params )
 	endif
 	if(TemHabilidade(attacker, "Flanquear"))
 		if(IsBehind(defender,attacker.x, attacker.y))
-			basedamage := basedamage + basedamage * 0.2; //+20% de dano
+			basedamage := basedamage + basedamage * 0.4;
 		endif
 	endif
 
@@ -366,9 +368,11 @@ program MainHitScript( params )
 			DamageStamina(defender, total);
 		else
 			if (GetObjProperty(attacker,  "backstab"))
-				total := total*2;
+				//total := total*2;
 				EraseObjProperty(attacker, "backstab");
 				EraseObjProperty(attacker, "#nextcritical");
+                DamageFLS(defender, total, DMG_FORCED, attacker);
+                ataqueFurtivo(attacker,defender);
             elseif(attacker.weapon.objtype == 0x166E)
                 var dist := Distance(attacker, defender);
                 if (dist == 1)
@@ -419,14 +423,14 @@ function FacingChecks(attacker, defender)
 	return 1;
 endfunction
 
-function PlayHitSounds(defender)
-	if ( defender.IsA(POLCLASS_NPC) )
-		var damaged_sound := NPC_GetNPCConfig(defender).DamagedSound;
-		if (damaged_sound)
-			PlaySoundEffect(defender, damaged_sound);
-		endif
-	endif
-endfunction
+//function PlayHitSounds(defender)
+//	if ( defender.IsA(POLCLASS_NPC) )
+//		var damaged_sound := NPC_GetNPCConfig(defender).DamagedSound;
+//		if (damaged_sound)
+//			PlaySoundEffect(defender, damaged_sound);
+//		endif
+//	endif
+//endfunction
 
 function PlayWeaponSounds(attacker)
 	//Toca o som da arma do atacante
@@ -1396,4 +1400,34 @@ function disarmOpponent(attacker, defender)
 		var y := defender.y + RandomInt(2)+1;
 		MoveObjectToLocation(defweapon, x, y,  GetWorldHeight(x, y), attacker.realm, MOVEOBJECT_FORCELOCATION);
 	endif
+endfunction
+
+function ataqueFurtivo(attacker, defender)
+	var weapon := attacker.weapon;
+	var weaponBow := 0;
+	if (lower(weapon.attribute) == "rangedcombat")
+		weaponBow := 1;
+	endif
+
+	if ( IsBehind(defender, attacker.x, attacker.y) )
+		if ( !CanBackStab(attacker, weapon) )
+			return;
+		else
+			sleepms(100);
+			if ( weaponBow)
+				if (!AmmoCheck(attacker, defender))
+					return 1;
+				endif
+			else
+				PerformAction(attacker, 0x000a );
+			endif
+        endif
+    endif
+
+    var sneak_dmg := AP_GetSkill(attacker, SNEAK);
+	DamageFLS(defender, sneak_dmg, DMG_FORCED, attacker);
+    PlaySoundEffect(defender, 0X510);
+    MakeBleed(defender);
+    RevokePrivilege(attacker, "hiddenattack");
+    attacker.disable("hiddenattack");
 endfunction
