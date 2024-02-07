@@ -104,7 +104,7 @@ program MainHitScript( params )
 	endif
 	if(TemHabilidade(attacker, "Flanquear"))
 		if(IsBehind(defender,attacker.x, attacker.y))
-			basedamage := basedamage + basedamage * 0.2; //+20% de dano
+			basedamage := basedamage + basedamage * 0.4;
 		endif
 	endif
 
