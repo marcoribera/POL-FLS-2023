@@ -7,10 +7,11 @@ include "include/damage";
 include "include/say";
 include ":timedScripts:timedScripts";
 include "include/dungeons";
+include ":tn:combat";
 
 program vacuodemana(params)
 	var attacker	:= params[1];
-	var basedamage	:= params[5];
+    var basedamage := CalculateRawDamage(attacker, attacker.weapon);
 	var rawdamage	:= params[6];
 	params := 0; // Not needed anymore.
     var defender := Target(attacker);
@@ -42,9 +43,9 @@ program vacuodemana(params)
 	var dmgList := dictionary;
 	dmgList := getNewDamageList(attacker);
 	var total := cint(CalculateTotalDamage(defender, basedamage, attacker, dmgList));
-
     PlayAttackAnimation(attacker);
     PlayHitSounds(attacker, defender);
+
 	DamageFLS(defender, total, DMG_PHYSICAL, attacker);
 	DamageFLS(defender, dano_mlore, DMG_COLD, attacker);
     if (attacker.hidden || attacker.concealed)
