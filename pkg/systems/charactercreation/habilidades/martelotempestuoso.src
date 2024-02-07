@@ -7,10 +7,11 @@ include "include/damage";
 include "include/say";
 include ":timedScripts:timedScripts";
 include "include/dungeons";
+include ":tn:combat";
 
 program vacuodemana(params)
 	var attacker	:= params[1];
-	var basedamage	:= params[5];
+    var basedamage := CalculateRawDamage(attacker, attacker.weapon);
 	var rawdamage	:= params[6];
 	params := 0; // Not needed anymore.
     var defender := Target(attacker);
