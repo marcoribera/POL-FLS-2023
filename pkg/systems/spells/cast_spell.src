@@ -64,7 +64,8 @@ program SpellStarter(params)
 	endif
 
 	//Se é kitahster e tem habilidade e esta sangrando, não pode gastar mana
-	if (kitahster_chardata.magia == "kitahster" && TemHabilidade(mobile, "Determinacao Elemental") && isBloodied(mobile))
+	if (TemHabilidade(mobile, "Determinacao Elemental") && isBloodied(mobile))
+		PrintText(mobile, "entrou no if e vai recuperar mana");
 		HealMana(mobile, cint(spellinfo.mana));
 	endif
 
