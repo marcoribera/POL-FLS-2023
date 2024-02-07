@@ -302,9 +302,9 @@ function Fight(opponent, alerted := 0)
   var waittime := 0;
 
   if (!alerted) //se ele ja nao foi alertado por outro aliado
-	if (alert_allies) //se esse npc eh do tipo que alerta
-		AlertAllies(me, opponent);
-	endif
+    if (alert_allies) //se esse npc eh do tipo que alerta
+      AlertAllies(me, opponent);
+    endif
   endif
 
    var speech := GetConfigStringArray( npccfgfile[mytemplate], "InitCombatSpeech" );
@@ -326,6 +326,13 @@ function Fight(opponent, alerted := 0)
 
     if (!opponent)
       break;
+    endif
+
+    var affectedBySpell := GetObjProperty(me, "affected_by_spell");
+    if(affectedBySpell)
+      var mobile_caster := SystemFindObjectBySerial(affectedBySpell);
+      EraseObjProperty(me, "affected_by_spell");
+      ChooseHighestOpponent(me, mobile_caster);
     endif
 
     if (opponent.dead)
