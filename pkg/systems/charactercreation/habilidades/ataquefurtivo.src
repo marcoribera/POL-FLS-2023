@@ -24,7 +24,9 @@ program backstab(who)
     SetObjProperty(who, "backstab", 1);
     if (who.hidden)
         SetObjProperty(who, "#attackbonus", 100);
-        //SetObjProperty(who, "#nextcritical",1);
+        if (TemHabilidade(who, "Instinto Assassino"))
+            SetObjProperty(who, "#nextcritical", 1);
+        endif
     endif
     GrantPrivilege(who, "hiddenattack");
     who.enable("hiddenattack");
