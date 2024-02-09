@@ -65,7 +65,7 @@ program skill_Stealing(mobile)
 		SendSysMessageEx(mobile, "O alvo esta muito longe.", SSM_FAIL);
 		return 0;
 	elseif ( !IsBehind(targ, mobile.x, mobile.y) )
-		if(!temHabilidade(mobile, "Punga"))
+		if(!temHabilidade(mobile, "Batedor de Carteira"))
 			SendSysMessageEx(mobile, "Voce precisa estar nas costas do alvo.", SSM_FAIL);
 			return 0;
 		else
@@ -74,7 +74,7 @@ program skill_Stealing(mobile)
 	endif
 
 	var diff := 15 + CInt(AP_GetSkill(targ, AWARENESS));
-	if (temHabilidade(mobile, "Ladrao de Multidoes"))
+	if (temHabilidade(mobile, "Valentao"))
 		var multidao := ListMobilesNearLocation(targ.x, targ.y, targ.z, 4, targ.realm).size();
 		if (multidao > 4)
 			var bonus := 5 * (multidao - 4);
@@ -115,7 +115,7 @@ program skill_Stealing(mobile)
 				SendSysMessageEx(mobile, "O alvo se afastou demais.", SSM_FAIL);
 				break;
 			elseif ( !IsBehind(targ, mobile.x, mobile.y) )
-				if(!temHabilidade(mobile, "Punga"))
+				if(!temHabilidade(mobile, "Batedor de Carteira"))
 				SendSysMessageEx(mobile, "O alvo nao esta mais de costas para voce.", SSM_FAIL);
 				break;
 				endif
@@ -142,17 +142,17 @@ program skill_Stealing(mobile)
 
 			if (steal.objtype IN {0xba63, 0xba64, 0xba65}) // moeda
 				diff := CInt(steal.amount / 5);
-				if (temHabilidade(mobile, "Punga"))
+				if (temHabilidade(mobile, "Batedor de Carteira"))
 					diff := 0;
 				endif
 			elseif (steal.objtype IN {0x1085, 0x1086, 0x1087, 0x1088, 0xA349, 0x1089, 0x108a, 0x2b6e, 0x2b6f, 0x2b70, 0xCE3D, 0xCE3E, 0xCE3F}) // joias
 				diff := CInt(steal.weight*10);
-				if (temHabilidade(mobile, "Punga"))
+				if (temHabilidade(mobile, "Batedor de Carteira"))
 					diff := 0;
 				endif
 			elseif (steal.objtype IN {0x1011, 0x100E, 0x100F, 0x1010, 0x1012, 0x1013}) // chaves
 				diff := 35;
-				if (temHabilidade(mobile, "Punga"))
+				if (temHabilidade(mobile, "Batedor de Carteira"))
 					diff := 0;
 				endif
 			else

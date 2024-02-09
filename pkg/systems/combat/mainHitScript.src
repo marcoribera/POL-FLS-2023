@@ -341,7 +341,7 @@ program MainHitScript( params )
         disarmOpponent(defender, attacker);
     endif
 
-	if ((TemHabilidade(defender, "Furia Imortal") || TemHabilidade(defender, "Trapacear a Morte" )) && (AP_GetVital(defender, HITS) < total))
+	if ((TemHabilidade(defender, "Furia Imortal") || TemHabilidade(defender, "Trapaceiro Experiente" )) && (AP_GetVital(defender, HITS) < total))
 		if ( !GetCooldown(defender, "trapacearmorte_rodando") > 0 )
 			start_script(":charactercreation:habilidades/trapacearmorte", array{defender, total});
 		endif

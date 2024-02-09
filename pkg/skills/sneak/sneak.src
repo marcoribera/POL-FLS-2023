@@ -229,7 +229,7 @@ function CanHide(who, orig_x, orig_y, override_hiding := 0)
 	endif
 
 	var hostiles := ListHostiles(who, range);
-	if (temHabilidade(who, "Mestre do Esconderijo") || temHabilidade(who, "Mestre Espiao"))
+	if (temHabilidade(who, "Fuga de Emergencia") || temHabilidade(who, "Mestre Espiao"))
 		return 1;
 	elseif ( hostiles[1] )
 		SendSysMessageEx(who, "Voce nao pode se esconder enquanto " + hostiles[1].name + " esta atacando voce.", SSM_FAIL);
