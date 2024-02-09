@@ -49,7 +49,7 @@ program skill_Stealth( who )
 
 	var baseSteps := qtdSteps(who, skill);
 
-	if (temHabilidade(who, "Comunhao com as Sombras"))
+	if (temHabilidade(who, "Furtividade Aprimorada"))
 		baseSteps:= baseSteps*2;
 	endif
 

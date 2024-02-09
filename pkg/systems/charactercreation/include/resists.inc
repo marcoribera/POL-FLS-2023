@@ -30,9 +30,9 @@ function GetResist(who, resist)
 	var valor := 0;
 
 	EraseResist(who, resist);//Para uso da barra de status, apaga o que tem para calcular de novo
-
+    // Rework do TH, IGOR. Mudei pra maos magicas
  	// Faz a resistência de Vontade para utilizar o valor de Reflexos para quem tem habilidade "Mente Evasiva"
-	if (resist == VONTADE && (TemHabilidade(who, "Mente Evasiva")))
+	if (resist == VONTADE && (TemHabilidade(who, "Truques Magicos")))
 		resist := REFLEXOS;
 	endif
 

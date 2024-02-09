@@ -17,7 +17,7 @@ CONST CANCEL_BTN	:= 0xA00001;
 
 program disguise(who, kit)
 
-	if (!TemHabilidade(who, "Disfarces") && !TemHabilidade(who, "Disfarce Simplorio"))
+	if (!TemHabilidade(who, "Dissimulacao") && !TemHabilidade(who, "Disfarce Simplorio"))
 		SendSysMessageEx(who, "Voce nao sabe usar isto.", SSM_FAIL);
 		return 1;
 	elseif (GetObjProperty(who, "disfarce"))
@@ -48,12 +48,12 @@ program disguise(who, kit)
 
 	GfTextLine(gump, 35, 80, 1153, "Remover disfarce");
 	GfTextLine(gump, 35, 100, 1153, "Criar disfarce");
-	if (TemHabilidade(who, "Disfarces"))
+	if (TemHabilidade(who, "Dissimulacao"))
 		GfTextLine(gump, 35, 120, 1153, "Disfarcar-se de alguem");
 	endif
 	GfAddButton(gump, 20, 82, 2117, 2118, 1, 1);
 	GfAddButton(gump, 20, 102, 2117, 2118, 1, 2);
-	if (TemHabilidade(who, "Disfarces"))
+	if (TemHabilidade(who, "Dissimulacao"))
 		GfAddButton(gump, 20, 122, 2117, 2118, 1, 3);
 	endif
 	GfTextLine(gump, 35, 160, 1153, "Disfarces:");
@@ -99,14 +99,14 @@ function criaDisfarceTarget(who, kit)
 	endif
 
 	if (who.trueobjtype != targ.trueobjtype)
-		if (!temHabilidade(who, "Disfarces"))
+		if (!temHabilidade(who, "Dissimulacao"))
 			SendSysMessageEx(who, "Voce nao pode se disfarcar de pessoas de outro sexo.", SSM_FAIL);
 			return;
 		endif
 	endif
 
 	if (GetObjProperty(who, "raca") != GetObjProperty(targ, "raca"))
-		if (!temHabilidade(who, "Disfarces"))
+		if (!temHabilidade(who, "Dissimulacao"))
 			SendSysMessageEx(who, "Voce nao pode se disfarcar de pessoas de outra raca.", SSM_FAIL);
 			return;
 		endif
@@ -140,7 +140,7 @@ endfunction
 
 function usarDisfarce(who, disfarce)
 
-	if (TemHabilidade(who, "Disfarces"))
+	if (TemHabilidade(who, "Dissimulacao"))
 		SendSysMessageEx(who, "Quem voce deseja disfarcar?", SSM_REQUEST);
 		var targ := target(who);
 		if (!targ)
@@ -260,7 +260,7 @@ function usarDisfarce(who, disfarce)
 		SetName(who, who.name);
 	endif
 */
-	if (!temHabilidade(who, "Disfarces"))
+	if (!temHabilidade(who, "Dissimulacao"))
 		TS_StartTimer(who, "kitdisfarce", 600);
 	endif
 
@@ -288,12 +288,12 @@ function disguiseSelf(who, kit, byref disfarce);
 	GfAddButton(gump, 20, 142, 2117, 2118, 1, 13);
 	GfAddButton(gump, 20, 162, 2117, 2118, 1, 14);
 
-	if (TemHabilidade(who, "Disfarces"))
+	if (TemHabilidade(who, "Dissimulacao"))
 		GfTextLine(gump, 35, 180, 1153, "Alterar aparencia");
 		GfAddButton(gump, 20, 182, 2117, 2118, 1, 15);
 	endif
 
-	if (TemHabilidade(who, "Disfarces"))
+	if (TemHabilidade(who, "Dissimulacao"))
 		GfTextLine(gump, 35, 200, 1153, "Alterar sexo");
 		GfAddButton(gump, 20, 202, 2117, 2118, 1, 16);
 		GfTextLine(gump, 35, 220, 1153, "Alterar raca");
