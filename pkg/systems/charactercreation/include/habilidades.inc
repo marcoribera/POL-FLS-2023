@@ -464,6 +464,8 @@ function comprarHabilidade(who, item, nv:=-1)
             endforeach
         elseif(escolhida == "Artilheiro Preparado")
             who.carrying_capacity_mod := 50;
+        elseif(escolhida == "Bolsa Infinita")
+            who.carrying_capacity_mod := 120;
 		endif
 		myhabs[nivel] := escolhida;
 		habs[nivel] := 2;

@@ -38,7 +38,7 @@ program trapScript(params)
 			SendSysMessageEx(mobile, "Voce foi atingido por uma armadilha de dardos.", SSM_FAIL);
 
 			if (CheckResist(mobile, REFLEXOS, 30,-15*dmg))
-				if (temHabilidade(mobile, "Evasao"))
+				if (temHabilidade(mobile, "Desbravador Nato"))
 					SendSysMessageEx(mobile, "Voce escapou completamente da armadilha de dardos.", SSM_INFO);
 					mobile.hidden := 0;
 					continue;

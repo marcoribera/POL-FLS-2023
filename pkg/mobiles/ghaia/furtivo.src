@@ -648,7 +648,11 @@ function Fight(opponent, alerted := 0)
 			EVID_COMBAT_MOVE:
 				RunTowardLocation( ev.x, ev.y );
 				if (coordinateDistance(me.x, me.y, ev.x, ev.y) <= 1)
-          me.concealed :=0;
+                    if (TemHabilidade(opponent, "Sempre Alerta"))
+                        TS_StartTimer(me, "paralysis", 5);
+                        PrintTextAbove(opponent, "*Sempre Alerta*");
+                    endif
+                    me.concealed :=0;
 					clear_event_queue();
 				endif
 		endcase

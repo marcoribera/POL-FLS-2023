@@ -115,7 +115,7 @@ function CalculateDHDiff(who, mobile)
 	var dist := Distance(who, mobile);
 	var difficulty;
 
-	if (TemHabilidade(mobile, "Furtividade Aprimorada"))
+	if (TemHabilidade(mobile, "Furtividade Aprimorada") && !TemHabilidade(who, "Sempre Alerta"))
 		difficulty := CInt(mobile_skill);
 	else
 		if (dist >=8)
@@ -146,8 +146,7 @@ endfunction
 function examinarArea(who)
 	var range := CInt( AP_GetSkill(who, AWARENESS) / 10 ) + 1;
 
-	var vantagem := (GetObjProperty(who, "chardata")).vantagemracial;
-	if ( vantagem == "Sentidos Aguçados" )
+	if ( TemHabilidade(who, "Sempre Alerta") )
 		range := range + 5;
 	endif
 
