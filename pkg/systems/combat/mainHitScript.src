@@ -371,8 +371,13 @@ program MainHitScript( params )
 				//total := total*2;
 				EraseObjProperty(attacker, "backstab");
 				EraseObjProperty(attacker, "#nextcritical");
-                DamageFLS(defender, total, DMG_FORCED, attacker);
-                ataqueFurtivo(attacker,defender);
+                if (TemHabilidade(defender, "Sempre Alerta"))
+                    TS_StartTimer(attacker, "paralysis", 5);
+                    PrintTextAbove(defender, "*Sempre Alerta*");
+                else
+                    DamageFLS(defender, total, DMG_FORCED, attacker);
+                    ataqueFurtivo(attacker,defender);
+                endif
             elseif(attacker.weapon.objtype == 0x166E)
                 var dist := Distance(attacker, defender);
                 if (dist == 1)
