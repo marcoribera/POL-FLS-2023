@@ -5,6 +5,7 @@ include ":attributes:attributes";
 include ":charactercreation:habilidades";
 include "include/say";
 include ":tn:cooldown";
+include "include/facings";
 
 program skill_Hide(who)
 
@@ -228,47 +229,54 @@ function CanHide(who, orig_x, orig_y, override_hiding := 0)
 	endif
 
 	var hostiles := ListHostiles(who, range);
-	if (temHabilidade(who, "Mestre do Esconderijo"))
+	if (temHabilidade(who, "Fuga de Emergencia") || temHabilidade(who, "Mestre Espiao"))
 		return 1;
 	elseif ( hostiles[1] )
 		SendSysMessageEx(who, "Voce nao pode se esconder enquanto " + hostiles[1].name + " esta atacando voce.", SSM_FAIL);
 		return 0;
 	endif
 
-	/*
-	Caso queira colocar novamente aquele esquema de nao se esconder com pessoas OLHANDO
-	var num_watching := GetWatchingPeople(who);
-	var skill := AP_GetSkill(who, SNEAK) / 20;
 
-	if (skill < 1)
-		skill := 0;
+	var num_watching := GetWatchingPeople(who);
+	var skill2 := AP_GetSkill(who, SNEAK) / 20;
+
+	if (skill2 < 1)
+		skill2 := 0;
 	endif
 
-	if ( num_watching > skill )
+	if ( num_watching > skill2 )
 		SendSysMessageEx(who, "Existem muitas pessoas olhando voce se esconder aqui.", SSM_FAIL);
 		return 0;
 	endif
-	*/
+
 
 	return 1;
 endfunction
 
 function GetWatchingPeople(who)
 	var counter := 0;
+	var counterpt :=0;
 	var range := GetHidingRange(AP_GetSkill(who, SNEAK));
 	if (temHabilidade(who, "Camuflagem"))
 		var range := GetHidingRange(AP_GetSkill(who, SURVIVAL));
 	endif
+	// adicionada exclusão para membros de pt - BORS
 	foreach person in ListMobilesInLineOfSight(who, range)
-		if ( IsFacing(person, who.x, who.y) )
+		if ((person.connected) && (person != who))
+			if ( (person in who.party.members ) )
+				if (IsFacing(person, who.x, who.y))
+				counterpt := counterpt+1;
+				endif
+			endif
+		endif
+		if ( IsFacing(person, who.x, who.y) ) //&& (SkillCheck(person, AWARENESS, 20) > 0) ) - Caso queira impor um minimo de awareness
 			counter := counter+1;
 		endif
-
 		sleepms(4);
 	endforeach
-
-	return counter;
-endfunction
+	var counterliq:= counter-counterpt;
+	return counterliq;
+	endfunction
 
 function GetHidingRange( skill )
 

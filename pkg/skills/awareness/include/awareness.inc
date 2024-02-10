@@ -115,7 +115,7 @@ function CalculateDHDiff(who, mobile)
 	var dist := Distance(who, mobile);
 	var difficulty;
 
-	if (TemHabilidade(mobile, "Comunhao com as Sombras"))
+	if (TemHabilidade(mobile, "Furtividade Aprimorada"))
 		difficulty := CInt(mobile_skill);
 	else
 		if (dist >=8)

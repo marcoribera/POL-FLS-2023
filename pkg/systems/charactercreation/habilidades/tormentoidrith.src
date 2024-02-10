@@ -42,7 +42,6 @@ program truesight(who)
                 DamageFLS(char, dano_mlore, DMG_FIRE, who);
 
                 if (InDarkness(char))
-                    SendSysMessage(who, "Sua visao verdadeira funciona apenas na escuridao");
                     duration += cint(AP_GetSkill(who, MAGICLORE)/5);
                     SetCooldown(char, "blinded", duration);
                     PrintTextAbove(char, "*cegueira*");
