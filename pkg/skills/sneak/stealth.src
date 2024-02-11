@@ -55,7 +55,7 @@ program skill_Stealth( who )
 
 	var atualStep := CInt(GetObjProperty(who, "#steathsteps"));
 	var diff := 15 + atualStep * 10;
-	if (!temHabilidade(who, "Espionagem"))
+	if (!temHabilidade(who, "Espionagem") || !temHabilidade(who, "Salto das Sombras"))
 		diff := diff + 50;
 	endif
 
