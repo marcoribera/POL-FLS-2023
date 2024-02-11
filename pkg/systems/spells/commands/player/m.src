@@ -18,7 +18,9 @@ program magia(who, spellname)
 	if(GetObjProperty(who, "chardata").magia == "kitahster" || GetObjProperty(who, "advclass") == "kitahster")
         cfg := ReadConfigFile(":spells:config/sangriaspells");
 		spellinfo.+magic_path := "Sangria";
-	else
+	elseif (TemHabilidade(who, "Truques Magicos"))
+        cfg := ReadConfigFile(":spells:config/sangriaspells");
+    else
 		cfg := ReadConfigFile(":spells:allspells");
     endif
 

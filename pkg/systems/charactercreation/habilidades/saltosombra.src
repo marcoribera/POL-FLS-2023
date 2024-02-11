@@ -29,7 +29,7 @@ function movimentoRapido(param)
 		SendSysMessageEx(who, "Voce nao consegue se mover.", SSM_FAIL);
       return 0;
 	endif
-
+    var range := Cint(Ap_GetSkill(who, SNEAK)/ 5);
 	SendSysMessageEx(who, "Escolha o alvo", SSM_REQUEST);
 	var targ := Target(who);
    if (!targ)
@@ -37,7 +37,7 @@ function movimentoRapido(param)
    elseif (!targ.isA(POLCLASS_MOBILE))
 		SendSysMessageEx(who, "Alvo Invalido.", SSM_FAIL);
       return 0;
-   elseif (Distance(who, targ) > 7 || abs(who.z - targ.z ) > 19)
+   elseif (Distance(who, targ) > range || abs(who.z - targ.z ) > 19)
 		SendSysMessageEx(who, "Alvo muito distante.", SSM_FAIL);
       return 0;
    elseif (!CheckLineOfSight(who, targ))
