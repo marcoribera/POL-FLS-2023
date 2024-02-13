@@ -38,7 +38,7 @@ function AP_GetSkill(who, skill_name)
 				return 70;
 			endif
 		endif
-        if (TemHabilidade(who, "Sensibilidade Profana"))
+        if (TemHabilidade(who, "Sensibilidade Arcana"))
 			skill_name := AWARENESS;
             var arcane_thief_bonus := Cint((AP_GetTrueSkill(who, skill_name) + AP_GetSkillMod(who, skill_name)) / 2);
             return arcane_thief_bonus;

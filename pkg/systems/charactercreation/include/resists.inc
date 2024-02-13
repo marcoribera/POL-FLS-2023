@@ -77,7 +77,7 @@ function GetResist(who, resist)
 		valor := valor + CInt(GetObjProperty(who, "#FortitudeMod"));
 
 	elseif (resist == REFLEXOS)
-		if (TemHabilidade(who, "Evasao Aprimorada"))
+		if (TemHabilidade(who, "Ladrao de Magias"))
 			valor := valor + 40;
 		endif
 		// Aplica os bonus base do Caminho para a resistência
