@@ -374,10 +374,12 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 
 	if (getCooldown(who, "faroporsangue"))
 		var bonus := AP_GetVital(defender, HITS) / AP_GetVitalMaximumValue(defender, HITS);
-        if (bonus < 0.5)
-			bonus := 0.2; //20% de bonus se o oponente estiver com menos q 50% de life
-		elseif (bonus < 0.2)
-			bonus := 0.5; //50% de bonus se o oponente estiver com menos q 20% de life
+        if (bonus <= 0.25)
+			bonus := 0.75;
+		elseif (bonus <= 0.5)
+			bonus := 0.5;
+        elseif (bonus <= 0.75)
+            bonus := 0.25;
 		endif
 
 		other := other + bonus;

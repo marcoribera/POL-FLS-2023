@@ -31,7 +31,7 @@ program SpellStarter(params)
 	var spellinfo := params[2]; // spellinfo
 	var scroll := params[3]; // item que usou pra castar o spell (scroll, book, varinha ou nada)
 	var targ := params[4];
-	var sens := TemHabilidade(mobile, "Sensibilidade Arcana");
+	var sens := TemHabilidade(mobile, "Truques Magicos");
 
 	if (spellinfo.id != error) //le o cfg pra escrever a info
 		writeSpellInfo(mobile, spellinfo);
@@ -299,8 +299,8 @@ program SpellStarter(params)
 		var difficulty := CInt(spellinfo.Difficulty);
 
 		mobile.frozen := 0;
-		if(TemHabilidade(mobile, "Sensibilidade Arcana"))
-		    attribute := MECHANICALAPITUDE;
+		if(TemHabilidade(mobile, "Truques Magicos"))
+		    attribute := MAGICLORE;
 		endif
 
 		var skill_check := SkillCheck(mobile, attribute, difficulty);
