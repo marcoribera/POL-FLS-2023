@@ -34,6 +34,11 @@ program SpellScript(params)
 		return 0;
 	endif
 
+	if(!CheckLosAt(who, loc.x, loc.y, loc.z))
+		SendSysMessage(who, "Voce nao consegue ver o alvo.");
+		return 0;
+	endif
+
 	if (who.x != xInicial || who.y != yInicial)
 		SendSysMessageEx(who, "Voce se moveu e parou de tentar levitar!", SSM_FAIL);
 		return 0;
