@@ -229,7 +229,7 @@ function LogoutPets(who)
 endfunction
 
 //pega os pets da pessoa na area
-function ListPetsNEar(who,  range)
+function ListPetsNear(who,  range)
 
 	var pets := array;
 	var tamed := GetObjProperty(who, "TamedPets");
@@ -239,7 +239,7 @@ function ListPetsNEar(who,  range)
 
 	foreach serial in tamed
 		var pet := SystemFindObjectBySerial(serial);
-		if ( (pet.master == who)  && (Distance(pet, who) < range))
+		if ( (pet.master == who)  && (Distance(pet, who) <= range))
 			pets.append(pet);
 		endif
 		sleepms(2);
@@ -260,10 +260,34 @@ function ListSummonedPetsNear(who,  range)
 
 	foreach serial in tamed
 		var pet := SystemFindObjectBySerial(serial);
-		if ( (pet.owner == who)  && (Distance(pet, who) < range))
+		var owner := GetObjProperty(pet, "owner");
+		if ( (owner == who || owner == who.serial || cstr(owner) == cstr(who.serial))  && (Distance(pet, who) <= range))
 			pets.append(pet);
 		endif
 		sleepms(2);
+	endforeach
+
+	return pets;
+
+endfunction
+
+//pega os pets da pessoa na area
+function ListAllPetsAndSummonedPetsNear(who,  range)
+
+	var pets := array;
+	var tamedPets := ListPetsNear(who,  range)
+	var summonedPets := ListSummonedPetsNear(who,  range);
+
+	if ( !tamedPets && !summonedPets)
+		return pets;
+	endif
+
+	foreach pet in tamedPets
+		pets.append(pet);
+	endforeach
+
+	foreach pet in summonedPets
+		pets.append(pet);
 	endforeach
 
 	return pets;
