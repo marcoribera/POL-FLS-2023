@@ -271,11 +271,11 @@ function ListSummonedPetsNear(who,  range)
 
 endfunction
 
-//pega os pets da pessoa na area
+//pega os pets e summons da pessoa na area
 function ListAllPetsAndSummonedPetsNear(who,  range)
 
 	var pets := array;
-	var tamedPets := ListPetsNear(who,  range)
+	var tamedPets := ListPetsNear(who,  range);
 	var summonedPets := ListSummonedPetsNear(who,  range);
 
 	if ( !tamedPets && !summonedPets)
