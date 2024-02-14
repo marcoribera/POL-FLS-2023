@@ -260,7 +260,7 @@ function CanPassiveIncreaseSkill(who, skill)
 	endif
 	//verifica se ainda não alcancou o cap máximo permitido para aquela skill e se não atingiu o cap permitido por tempo de criação do personagem
 	if( (limiteportempo(who) + valorinicial(who, skill))  > true_skill)
-		var maximo := AP_CheckClassSkillCap(mobile, skill_name);
+		var maximo := AP_CheckClassSkillCap(who, skill);
 		if ( true_skill >= maximo ) //verifica quanto pode subir com base na classe
 			//printtextabove(mobile, "to no maximo da skill");
 			//SkillDbgMsg(mobile, "Chegou no maximo da classe: " + maximo);
