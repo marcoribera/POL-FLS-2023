@@ -13,6 +13,7 @@ include ":taming:taming";
 include ":gumps:gumpPrompt";
 include ":gumps:gumpPrompt";
 include ":charactercreation:resists";
+include ":attributes:advanceCheck";
 
 program Logon(who)
 
@@ -116,7 +117,7 @@ program Logon(who)
 			SendSysMessage(who, who.name + " tem tempo para subir 0.1 "+ ticks + "vezes.");
 			var i := 0;
 
-			var possiveis;
+			var possiveis := array;
 			var skills := GetObjProperty(who, "chardata").Skills;
 			if(!skills)
 				return 0;
@@ -157,7 +158,7 @@ program Logon(who)
 				//endwhile
 
 				AP_SetTrueSkill(who, chosen, temp);
-				sleep(2);
+				sleep(200);
 			endfor
 
 			SetObjProperty(who, "lastprize", lastPrize + time);
@@ -259,7 +260,14 @@ function CanPassiveIncreaseSkill(who, skill)
 	endif
 	//verifica se ainda não alcancou o cap máximo permitido para aquela skill e se não atingiu o cap permitido por tempo de criação do personagem
 	if( (limiteportempo(who) + valorinicial(who, skill))  > true_skill)
-		return 1;
+		var maximo := AP_CheckClassSkillCap(mobile, skill_name);
+		if ( true_skill >= maximo ) //verifica quanto pode subir com base na classe
+			//printtextabove(mobile, "to no maximo da skill");
+			//SkillDbgMsg(mobile, "Chegou no maximo da classe: " + maximo);
+			return 0;
+		else
+			return 1;
+		endif
 	else
 		return 0;
 	endif
