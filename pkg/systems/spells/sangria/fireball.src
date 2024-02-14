@@ -29,13 +29,15 @@ program spell_fireball(params)
         return 0;
     endif
 
-    var coord_list := GetCoordsInLine(caster.x, caster.y, cast_on.x, cast_on.y);
+    PlayMovingEffect(caster, cast_on, GFX_LARGE_FIREBALL, 10, 10, 1);
+
+	var coord_list := GetCoordsInLine(caster.x, caster.y, cast_on.x, cast_on.y);
 	foreach coord in coord_list
 		if ( _coord_iter < 4 ) // Dont make one where its standing
 			continue;
 		endif
 		
-		var field := CreateItemAtLocation(coord.x, coord.y, caster.z, "FireField_NS", caster.realm);
+		var field := CreateItemAtLocation(coord.x, coord.y, caster.z, "FireField_NS", 1, caster.realm);
 		field.SetDuration(0);
 		sleepms(105);
 	endforeach
@@ -46,27 +48,26 @@ program spell_fireball(params)
 		endif
 		case( RandomInt(3) )
 			default:
-				PlayStationaryEffect(coord.x, coord.y, caster.z, GFX_EXPLODE_1, 10, 10, caster.realm);
+				PlayStationaryEffect(coord.x, coord.y, caster.z, GFX_EXPLODE_1, 10, 10, 0, caster.realm);
 				break;
 			1:
-				PlayStationaryEffect(coord.x, coord.y, caster.z, GFX_EXPLODE_2, 10, 10, caster.realm);
+				PlayStationaryEffect(coord.x, coord.y, caster.z, GFX_EXPLODE_2, 10, 10, 0, caster.realm);
 				break;
 			2:
-				PlayStationaryEffect(coord.x, coord.y, caster.z, GFX_EXPLODE_3, 10, 10, caster.realm);
+				PlayStationaryEffect(coord.x, coord.y, caster.z, GFX_EXPLODE_3, 10, 10, 0, caster.realm);
 				break;
 		endcase
 		var field;
 		if ( RandomInt(2) )
-			field := CreateItemAtLocation(coord.x, coord.y, cast_on.z, "FireFieldNS", caster.realm);
+			field := CreateItemAtLocation(coord.x, coord.y, cast_on.z, "FireFieldNS", 1, caster.realm);
 		else
-			field := CreateItemAtLocation(coord.x, coord.y, cast_on.z, "FireFieldEW", caster.realm);
+			field := CreateItemAtLocation(coord.x, coord.y, cast_on.z, "FireFieldEW", 1, caster.realm);
 		endif
 		field.SetDuration(20);
 		sleepms(5);
 	endforeach
 
-    PlayMovingEffect(caster, cast_on, GFX_LARGE_FIREBALL, 10, 10, 1);
-    PlaySoundEffect(cast_on, 0x208);
+	PlaySoundEffect(cast_on, 0x208);
     
     var alreadydamaged := array{};
     
