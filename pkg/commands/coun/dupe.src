@@ -13,7 +13,6 @@ program textcmd_dupe( who )
     if (what.isA(POLCLASS_ITEM))
       copyitem := CreateItemCopyAtLocation(who.x, who.y, who.z, what, who.realm);
 	  SetObjProperty(copyitem, "createdby", who.acctname + " " + who.name);
-	  print("dupado");
 	        
       if (what.isA(POLCLASS_CONTAINER))
         items := EnumerateItemsInContainer(what);

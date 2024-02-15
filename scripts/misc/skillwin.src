@@ -73,6 +73,14 @@ program core_skillWin(who)
 		captermax := 40;
 	endif
 
+	if(capsec > capsecmax)
+		capsec := capsecmax;
+	endif
+
+	if(capter > captermax)
+		capter := captermax;
+	endif
+
 	GFTextMid(charGump, 190, 345, 0, 300, "Cap/MaxCap:");
 	///GFTextMid(charGump, 200, 350, 0, 300, "Pri.: " +cappri+ "/" +capprimax+ " Sec.: " +capsec+ "/" +capsecmax+ " Ter.: " +capter+ "/" +captermax);
 	GFTextLine(charGump, 25, 365, 300, "Pri.:");
@@ -81,7 +89,7 @@ program core_skillWin(who)
 	GFTextLine(charGump, 165, 365, 300, capsec+ "/" +capsecmax);
 	GFTextLine(charGump, 245, 365, 300, "Ter.:");
 	GFTextLine(charGump, 275, 365, 300, capter+ "/" +captermax);
-	
+
 	var habs := GetObjProperty(who, "buyhab");
 	if (!habs)
 		habs := dictionary;

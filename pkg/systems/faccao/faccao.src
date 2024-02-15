@@ -231,7 +231,7 @@ program faccao(params)
       y  += 18;
    endforeach
 
-   foreach item in ListItemsNearLocation(who.x, who.y, who.z, 2)
+   foreach item in ListItemsNearLocation(who.x, who.y, who.z, 20, who.realm)
 
       if (is_gm_or_leader || privilegies.contractnpc)
          if (guild_obj.npcs.size() >= 0 && (item.objtype == 0x46AE || who.cmdlevel >= 2))
@@ -241,14 +241,14 @@ program faccao(params)
             GFAddButton(gump, 426-10, y+18, 5605, 5605, GF_CLOSE_BTN, BUTTON_REPORT_NPC);
             GFTextLine(gump, 426+10, y+18-2, 0, "Relatorio");
          endif
-
-         if (who.cmdlevel >= 2)
-            GFAddButton(gump, 426-10, y+36, 5605, 5605, GF_CLOSE_BTN, BUTTON_ADD_NPC);
-            GFTextLine(gump, 426+10, y-2+36, 0, "Adicionar NPC");
-         endif
       endif
 
    endforeach
+
+   if (who.cmdlevel > 1)
+      GFAddButton(gump, 426-10, y+36, 5605, 5605, GF_CLOSE_BTN, BUTTON_ADD_NPC);
+      GFTextLine(gump, 426+10, y-2+36, 0, "Adicionar NPC");
+   endif
 
 	// GFPage(gump, 2);
 	// GFResizePic(gump, 227, 67, 9350, 346, 326);

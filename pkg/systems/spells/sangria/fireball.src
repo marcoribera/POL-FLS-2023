@@ -29,13 +29,15 @@ program spell_fireball(params)
         return 0;
     endif
 
-    var coord_list := GetCoordsInLine(caster.x, caster.y, cast_on.x, cast_on.y);
+    PlayMovingEffect(caster, cast_on, GFX_LARGE_FIREBALL, 10, 10, 1);
+
+	var coord_list := GetCoordsInLine(caster.x, caster.y, cast_on.x, cast_on.y);
 	foreach coord in coord_list
 		if ( _coord_iter < 4 ) // Dont make one where its standing
 			continue;
 		endif
 		
-		var field := CreateItemAtLocation(coord.x, coord.y, caster.z, "FireField_NS", 1);
+		var field := CreateItemAtLocation(coord.x, coord.y, caster.z, "FireField_NS", 1, caster.realm);
 		field.SetDuration(0);
 		sleepms(105);
 	endforeach
@@ -46,36 +48,48 @@ program spell_fireball(params)
 		endif
 		case( RandomInt(3) )
 			default:
-				PlayStationaryEffect(coord.x, coord.y, caster.z, GFX_EXPLODE_1, 10, 10, 0);
+				PlayStationaryEffect(coord.x, coord.y, caster.z, GFX_EXPLODE_1, 10, 10, 0, caster.realm);
 				break;
 			1:
-				PlayStationaryEffect(coord.x, coord.y, caster.z, GFX_EXPLODE_2, 10, 10, 0);
+				PlayStationaryEffect(coord.x, coord.y, caster.z, GFX_EXPLODE_2, 10, 10, 0, caster.realm);
 				break;
 			2:
-				PlayStationaryEffect(coord.x, coord.y, caster.z, GFX_EXPLODE_3, 10, 10, 0);
+				PlayStationaryEffect(coord.x, coord.y, caster.z, GFX_EXPLODE_3, 10, 10, 0, caster.realm);
 				break;
 		endcase
 		var field;
 		if ( RandomInt(2) )
-			field := CreateItemAtLocation(coord.x, coord.y, cast_on.z, "FireFieldNS", 1);
+			field := CreateItemAtLocation(coord.x, coord.y, cast_on.z, "FireFieldNS", 1, caster.realm);
 		else
-			field := CreateItemAtLocation(coord.x, coord.y, cast_on.z, "FireFieldEW", 1);
+			field := CreateItemAtLocation(coord.x, coord.y, cast_on.z, "FireFieldEW", 1, caster.realm);
 		endif
-		field.SetDuration(20);
+		field.SetDuration(1);
 		sleepms(5);
 	endforeach
 
-    PlayMovingEffect(caster, cast_on, GFX_LARGE_FIREBALL, 10, 10, 1);
-    PlaySoundEffect(cast_on, 0x208);
+	PlaySoundEffect(cast_on, 0x208);
     
     var alreadydamaged := array{};
     
-	var range := cint(AP_GetSkill(caster, MAGICLORE))/10;
-    var mobiles := ListMobilesNearLocation(caster.x, caster.y, caster.z, range, caster.realm);
-    var pets := ListPetsNear(caster, range);
-	var summonedPets := ListSummonedPetsNear(caster, range);
+	var range := cint(AP_GetSkill(caster, MAGICLORE)/10);
+    var mobiles := ListMobilesNearLocation(cast_on.x, cast_on.y, cast_on.z, range, caster.realm);
+	var allPets := array{};
+	var party_members := caster.party.members;
+
+	if (caster.party)
+		foreach member in party_members
+			if (member != caster)
+				var memberObj := SystemFindObjectBySerial(member.serial);
+				var allPetsAndSummonedPets := ListAllPetsAndSummonedPetsNear(memberObj, range * 4);
+				foreach pet in allPetsAndSummonedPets
+						allPets.append(pet);
+				endforeach
+			endif
+		endforeach
+	endif	
+
     foreach mobile in mobiles
-        if (!(mobile.serial in alreadydamaged) && (mobile != caster) && !(mobile in caster.party.members) && !(mobile in pets ) && !(mobile in summonedPets ))
+        if (!(mobile.serial in alreadydamaged) && (mobile != caster) && !(mobile in party_members) && !(mobile in allPets))
             alreadydamaged.Append(mobile.serial);
 			var dmg := cint(AP_GetSkill(caster, MAGICLORE))/3 + RandomDiceRoll("8d10");
             DamageFLS(mobile, cint(dmg), DMG_FIRE, caster, "fireball");
