@@ -113,10 +113,10 @@ function ContractNPC(guild, npc_i, who, loc)
 
     var npc_list := listContractedNPC(guild);
     if(len(npc_list) < 15)
-       var agent := CreateNPCFromTemplate(template.template, loc.x, loc.y, loc.z+2);
-      	if (agent.npctemplaye["merchant"])
-          SetObjProperty(agent, "noequip", 1);
-      	endif
+       var agent := CreateNPCFromTemplate(template.template, loc.x, loc.y, loc.z+2, 0, who.realm);
+      if (agent.npctemplaye["merchant"])
+         SetObjProperty(agent, "noequip", 1);
+      endif
 
 		if (agent.name != "Vendedor")
 
