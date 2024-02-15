@@ -23,7 +23,8 @@ program truesight(who)
             var duration := cint(AP_GetSkill(who, MAGICLORE)/10);
             PrintTextAbove(char, "*revelado*");
             PlayObjectCenteredEffect(char, 0x6D4B, 10, 20);
-            for (var i := 0; i < duration; i++)
+            var i;
+            for (i := 0; i < duration; i++)
                 char.frozen := 1;
                 sleep(1);
             endfor
