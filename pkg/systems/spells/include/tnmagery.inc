@@ -242,6 +242,10 @@ endfunction
 function CastSpell(mobile, spellinfo, targ)
 	//sendsysmessage(mobile, " " + spellinfo.script);
 	//se for um spell com script (ou seja o novo sistema) executa o script e retorna, caso o contrario executa o de magias custom
+    if (GetCooldown(targ, "spellthief"))
+        targ := mobile;
+    endif
+        
 	if (spellinfo.script != error)
 		var e := Start_Script(spellinfo.script, {mobile, targ, spellinfo.id});
 		//sendsysmessage(mobile, " " );
@@ -624,6 +628,8 @@ function WritespellInfo(who, byref spellinfo)
         spellinfo.used := 1;
 	elseif(spellinfo.magic_path == "Sangria")
         cfg := ReadConfigFile(":spells:config/sangriaspells");
+    elseif(spellinfo.magic_path == "Trickster")
+        cfg := ReadConfigFile(":spells:config/tricksterspells");
 	else
 		cfg := ReadConfigFile(":spells:config/allspells");
     endif

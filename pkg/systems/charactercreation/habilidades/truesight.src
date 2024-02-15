@@ -19,16 +19,11 @@ program truesight(who)
         if ((char.hidden == 1 || (char.concealed == 1 && char.cmdlevel < 1)) && CheckLineOfSight(who, char))
             char.hidden := 0;
             char.concealed := 0;
-            
+
             var duration := cint(AP_GetSkill(who, MAGICLORE)/10);
             PrintTextAbove(char, "*revelado*");
             PlayObjectCenteredEffect(char, 0x6D4B, 10, 20);
-            var i;
-            for (i := 0; i < duration; i++)
-                char.frozen := 1;
-                sleep(1);
-            endfor
-            char.frozen := 0;
+            TS_StartTimer(char, "paralyzePoison", duration);
             sleepms(20);
         endif
     endforeach

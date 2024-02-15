@@ -549,6 +549,9 @@ function CastSpellNPC(opponent, spell_list)
 		endforeach
 	endif
 
+    if (GetCooldown(me.opponent, "spellthief"))
+        me.opponent := me;
+    endif
 	if ( (AP_GetVital(me, HITS)/ AP_GetVitalMaximumValue(me, HITS) < 0.3) )
 		if (drenarvida)
 			start_script(":spells:mesum/drenarvida", array{me, me.opponent}); //escolher: melee mais perto do life maximo sugado
@@ -587,6 +590,9 @@ function CastSpellNPC(opponent, spell_list)
 				var possiveis := array;
 				foreach m in enemies
 					if ( GetObjProperty(m, "#dmgreductionspell") == error )
+                        if (GetCooldown(m, "spellthief"))
+                            m := me;
+                        endif
 						possiveis.append(m);
 					endif
 				endforeach
@@ -658,8 +664,12 @@ endif
 
   //se tem so um inimigo casta alguma de magia de ataque nele
   var directspells := GetDirectSpells(spell_list);
+
   if (directspells.size() >= 1)
     if (directspells.size() >= 1) //tem q testar 2x :(
+        if (GetCooldown(opponent, "spellthief"))
+            opponent := me;
+        endif
       CastDirect(me, opponent, directspells[randomint(directspells.size()+1)]);
     endif
   endif

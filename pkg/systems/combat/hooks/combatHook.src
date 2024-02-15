@@ -195,6 +195,12 @@ exported function Attack(attacker, defender)
             defender.frozen := 0;
         endif
 
+        var trickster_bonus := CInt(AP_GetSkill(attacker, MAGICLORE) / 20);
+        if (getCooldown(attacker, "disparomistico"))
+            PrintTextAbovePrivate(attacker, "*passo nebuloso*", attacker);
+            SetCooldown(attacker, "disparomisticoHit", trickster_bonus);
+        endif
+
         if (getcooldown(attacker, "deathdance") > 0)
             if (!IsBehind(attacker, defender.x, defender.y) && IsFacing(defender, attacker.x, attacker.y))
                 var behindX := defender.x + (defender.x - attacker.x);

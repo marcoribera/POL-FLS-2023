@@ -19,7 +19,8 @@ program magia(who, spellname)
         cfg := ReadConfigFile(":spells:config/sangriaspells");
 		spellinfo.+magic_path := "Sangria";
 	elseif (TemHabilidade(who, "Sensibilidade Arcana"))
-        cfg := ReadConfigFile(":spells:config/sangriaspells");
+        cfg := ReadConfigFile(":spells:config/tricksterspells");
+        spellinfo.+magic_path := "Trickster";
     else
 		cfg := ReadConfigFile(":spells:allspells");
     endif
@@ -67,6 +68,8 @@ program magia(who, spellname)
 	endif
 
 	spellinfo.+id := id;
+    print("spellinfo: "+spellinfo);
+    print("booktype: "+ booktype);
 	var script := Start_Script(":spells:cast_spell", {who, spellinfo, booktype});
 	if ( script.errortext )
 		SendSysMessage(who, "Error - Could not start spell starter ->"+script.errortext);

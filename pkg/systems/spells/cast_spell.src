@@ -93,9 +93,9 @@ program SpellStarter(params)
 
 	// Perform various checks to see if mobile can perform the spell
 	spellinfo.mana := spellinfo.mana + Cint(spellinfo.mana*GetObjProperty(mobile, "#manapenalty")/100);
-	if(sens)
-		spellinfo.mana := 0;
-	endif
+	//if(sens)
+	//	spellinfo.mana := 0;
+	//endif
 
 
 	if (spellinfo.spelltype == "Swordmage")
@@ -299,7 +299,7 @@ program SpellStarter(params)
 		var difficulty := CInt(spellinfo.Difficulty);
 
 		mobile.frozen := 0;
-		if(TemHabilidade(mobile, "Sensibilidade Arcana"))
+		if(sens)
 		    attribute := MAGICLORE;
 		endif
 
