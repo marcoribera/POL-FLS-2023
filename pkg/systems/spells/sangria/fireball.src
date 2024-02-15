@@ -63,7 +63,7 @@ program spell_fireball(params)
 		else
 			field := CreateItemAtLocation(coord.x, coord.y, cast_on.z, "FireFieldEW", 1, caster.realm);
 		endif
-		field.SetDuration(20);
+		field.SetDuration(1);
 		sleepms(5);
 	endforeach
 
