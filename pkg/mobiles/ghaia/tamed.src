@@ -10,6 +10,7 @@ include "include/say";
 include ":mounts:mounts";
 include ":taming:taming";
 include ":tn:cooldown";
+include ":ghaia:ghaia";
 
 
 set_script_option(SCRIPTOPT_CAN_ACCESS_OFFLINE_MOBILES, 1);
@@ -21,10 +22,11 @@ var wait_time := 120;
 var next_watch := ReadGameClock();
 var guarding := 0;
 var last_following := 0;
-var following :=0;
+var following := 0;
 var fighting := 0;
 var opponent := 0;
 var going_loc := 0;
+var areasize := 10;
 
 //Owner info
 var owner_serial;
@@ -41,17 +43,17 @@ const GO_LOC_CMD	:= 0xA008;
 
 
 program TamedAI()
-
+	Set_Script_Option(SCRIPTOPT_NO_RUNAWAY, 1); //Adicionado para diminuir a quantidade de logs no arquivo script.log
 	EnableMainEvents();
 	Setup();
 
-  Detach();
-  var time := ReadGameClock();
-  SetObjProperty(me,"countercheck", time);
-  var parms := {};
-  parms[1] := me;
-  parms[2] := time;
-  start_script(":taming:happyCounter", parms);
+	Detach();
+	var time := ReadGameClock();
+	SetObjProperty(me,"countercheck", time);
+	var parms := {};
+	parms[1] := me;
+	parms[2] := time;
+	start_script(":taming:happyCounter", parms);
 
 	while ( me )
 		if ( wait_time < 1 )
@@ -62,46 +64,48 @@ program TamedAI()
 
 		var ev := Wait_For_Event(wait_time);
 		var time := ReadGameClock();
-		 var parms := {};
+		var parms := {};
 		parms[1] := me;
 		parms[2] := time;
 		//start_script(":taming:happycounter", {me, ReadGameClock()});
 
-        //npcs criam ovos ou outras coisas
-        //if ( (GetCooldown(me, "dropitem" ) == 0) && (CInt(npccfgfile[mytemplate].DropDelay) > 0) )
-        //   CreateItemAtLocation(me.x, me.y, me.z, CStr(npccfgfile[mytemplate].DropItem), 1, me.realm);
-        //   SetCooldown(me, "dropitem", CInt(npccfgfile[mytemplate].DropDelay));
-        //endif
-        //se for carneiro
-        if ( me.graphic == 223)
-            if (GetCooldown(me, "wool") == 0)
-                me.graphic := 207;
-            endif
-        endif
+		//npcs criam ovos ou outras coisas
+		//if ( (GetCooldown(me, "dropitem" ) == 0) && (CInt(npccfgfile[mytemplate].DropDelay) > 0) )
+		//   CreateItemAtLocation(me.x, me.y, me.z, CStr(npccfgfile[mytemplate].DropItem), 1, me.realm);
+		//   SetCooldown(me, "dropitem", CInt(npccfgfile[mytemplate].DropDelay));
+		//endif
+		//se for carneiro
+		if ( me.graphic == 223)
+			if (GetCooldown(me, "wool") == 0)
+				me.graphic := 207;
+			endif
+		endif
 
 		case ( ev.type )
 
-//			EVID_FLEE:
-//				if (ev.source)
-//					flee(ev.source);
-//				endif
+	//			EVID_FLEE:
+	//				if (ev.source)
+	//					flee(ev.source);
+	//				endif
 
 			SYSEVENT_SPEECH:
-
 				ProcessSpeech(ev);
 
 			SYSEVENT_ENGAGED:
-
+				if ( (ev.source).IsA(POLCLASS_MOBILE) )
+					if (ev.source == guarding)
+						Guard();
+					endif
+				endif
 
 			SYSEVENT_DAMAGED:
-
 				if ( (ev.source).IsA(POLCLASS_MOBILE) )
 					if ( Distance(ev.source, me) <= 1)
-
-					opponent := ev.source;
-
+						opponent := ev.source;
 					endif
-
+					if (ev.source == guarding)
+						Guard();
+					endif
 				endif
 			EVID_HERDING:
 
@@ -111,15 +115,12 @@ program TamedAI()
 				going_loc.+type := "run";
 
 			FOLLOW_CMD:
-
 				following := ev.targ;
 
 			ATTACK_CMD:
-
 				opponent := ev.targ;
 
 			GUARD_CMD:
-
 				guarding := ev.targ;
 
 			NEW_MASTER_CMD:
@@ -146,17 +147,21 @@ program TamedAI()
 
 					elseif ( !GetEquipmentByLayer(ev.source, LAYER_MOUNT) )
 
-						if ( IsMountable(me.graphic) && MoveObjectToLocation(ev.source, me.x, me.y, me.z, ev.source.realm))
-
-							if (me.npctemplate == ":brainai:Unicorn")
-								if (GetObjProperty(me, "aprimorado"))
-									SetObjProperty(owner, "unicorn", 1);
+						if ( IsMountable(me.graphic))
+							if(MoveObjectToLocation(ev.source, me.x, me.y, me.z, ev.source.realm))
+								if (me.npctemplate == ":brainai:Unicorn")
+									if (GetObjProperty(me, "aprimorado"))
+										SetObjProperty(owner, "unicorn", 1);
+									endif
 								endif
+								ev.source.hidden := 0;
+								MP_Mount(ev.source, me);
+								me.hidden := 0;
 							endif
-							ev.source.hidden := 0;
-							MP_Mount(ev.source, me);
-							me.hidden := 0;
-
+						else
+							if (ev.source == owner)
+								ProcessDoubleClick(ev);
+							endif
 						endif
 
 					endif
@@ -164,70 +169,53 @@ program TamedAI()
 				endif
 
 			SYSEVENT_ITEM_GIVEN:
-
 				TakeItem(ev);
-
-
-
 		endcase
-var summoned := GetObjProperty(me, "summoned");
-var fideliz := (GetObjProperty(me, "NeverRelease") == 1);
+
+		var summoned := GetObjProperty(me, "summoned");
+		var fideliz := (GetObjProperty(me, "NeverRelease") == 1);
 		if ( CInt(GetObjProperty(me, "happiness")) < 10 && !GetCooldown(me,"aviso") && !summoned && !fideliz )
-				
-			//var skill := AP_GetSkill(owner,ANIMAL_TAMING);
-
-			//skill := skill - 0.1;
-
-			//SetTrueSkill(owner, "Taming", skill);
-            if (owner.cmdlevel < 2)
-			    SendSysMessageEX(owner, me.name+" esta infeliz e o proximo comando sera o ultimo!", SSM_INFO_IC);
-            endif
+			if (owner.cmdlevel < 2)
+				SendSysMessageEX(owner, me.name+" esta infeliz e o proximo comando sera o ultimo!", SSM_INFO_IC);
+			endif
 			SetCooldown(me, "aviso", 4);
-
-
-			//if ( me.graphic in mountables )
-
-				//MP_Unmount (owner);
-
-			//endif
-
-			//UnTame();
 		endif
 
 		if ( opponent && !IsDead(opponent) && !opponent.concealed && !opponent.hidden )
-
 			Fight();
 			Follow();
-
 		elseif ( fighting && IsDead(opponent) )
-
 			following := last_following;
 			fighting := 0;
 			opponent := 0;
 			last_following := 0;
-		SetWarMode(0);
-
+			SetWarMode(0);
 		elseif ( following )
-
 			Follow();
-
+			look_around();
 		elseif ( guarding )
-
 			Guard();
+			look_around();
 		elseif ( going_loc )
 			goToLoc();
-
 		else
-
-			wait_time := 120;
-
+			wait_time := 10;
 		endif
 
+		
 	endwhile
 
 endprogram
 
-
+function look_around()
+  foreach npc in ListMobilesNearLocation(me.x, me.y, me.z, areasize, me.realm)
+	if(npc != me && npc.warmode && IsDead(opponent) && guarding && (npc.opponent == guarding || npc.opponent.serial == guarding.serial))
+		Say("*correndo para defender*");
+		opponent := npc;
+	endif
+    sleepms(2);
+  endforeach
+endfunction
 
 function ProcessSpeech(ev)
 
@@ -247,7 +235,7 @@ function ProcessSpeech(ev)
 
 	if( text[name+" mate"] || text[name+" ataque"] || text["todos matem"] || text["todos ataquem"] )
 
-		var targ := target(me.master, TGTOPT_HARMFUL + TGTOPT_CHECK_LOS);
+		var targ := target(me.master, TGTOPT_CHECK_LOS);
 		if ( targ == me || targ == ev.source || !targ.IsA(POLCLASS_MOBILE) )
 			return;
 		endif
@@ -607,15 +595,15 @@ endfunction
 
 function Guard()
 
-	wait_time := 7;
+	wait_time := 3;
 
 	if ( !guarding.IsA(POLCLASS_MOBILE) )
 		guarding := 0;
 	elseif ( Distance(me, guarding) > 15 )
 		guarding := 0;
 	elseif ( next_watch < ReadGameClock() )
-		next_watch := ReadGameClock()+7;
-		if ( RandomInt(8) == 1 )
+		next_watch := ReadGameClock()+3;
+		if ( RandomInt(100) < 5 )
 			Say("*guardando "+guarding.name+"*");
 		endif
 		foreach mob in ListHostiles(guarding, 9, LH_FLAG_LOS);
