@@ -462,14 +462,19 @@ function doCombatSpecial(me)
   var str := GetConfigString(npccfgfile[mytemplate],  "SpecialCombat");
   str := splitwords(str);
   
-  if(TS_GetCooldown(me, str[1]))
-      return 0; //O especial já foi dado, tem que esperar
+  if(TS_GetCooldown(me, str[1]) || !str)
+      return 0; //O especial já foi dado, tem que esperar ou não existe especial
   endif
 
-  if (str[1] != error && str[2] != error && !TS_GetCooldown(me, str[1]))
+  var delay := str[2];
+  if (!delay)
+    delay := 80;
+  endif
+
+  if (str[1] != error && delay != error && !TS_GetCooldown(me, str[1]))
     sleepms(10);
-    TS_StartCooldown(me, cstr(str[1]), cint(str[2]));
-      var e := Start_Script(str[1], array{me, cint(str[2]), str[1]});
+    TS_StartCooldown(me, cstr(str[1]), cint(delay));
+      var e := Start_Script(str[1], array{me, cint(delay), str[1]});
     sleepms(10);
       //printtextabove(me, " " + e +  " " + str[1]);
   endif
@@ -507,18 +512,16 @@ function doCombatSpecialNotBoss(me, opponent)
     endif
   var armor :=  CS_GetEquipmentInArmorZone(opponent, CS_GetRandomArmorZone());
 
-  if(TS_GetCooldown(me, "npc_special"))
-    return 0; //O especial já foi dado, tem que esperar
+  if(TS_GetCooldown(me, "npc_special") || !script || script == "" || script == error)
+    return 0; //O especial já foi dado, tem que esperar ou não tem especial
   endif
 
   TS_StartCooldown(me, "npc_special", delay);
-    //printtextabove(me, " " + TS_GetCooldown(me, str[1]))
    if (CheckResist(opponent, REFLEXOS, diff_aleatorio))
       printtextabove(opponent, "*Evitou o ataque especial do inimigo!*");
     return 0;
    else
     var e := Start_Script(script, array{me, opponent, 0, armor, GetRawDmg(me)});
-    //printtextabove(me, " " + e +  " " + script);
     return 1;
   endif
 endfunction

@@ -486,6 +486,7 @@ function attacksDamnCaster(me, opponent)
     opponent := mobile_caster;
     ChooseHighestOpponent(me, opponent, 1);
     sleepms(100);
+    SetOpponent(opponent);
     RunToward(opponent);
     sleepms(100);
   endif
