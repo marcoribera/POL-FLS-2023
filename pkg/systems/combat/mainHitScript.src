@@ -258,18 +258,23 @@ program MainHitScript( params )
 					DamageFLS(inimigox, cint(total/3), DMG_PHYSICAL, attacker);
 				endforeach
 			else
-				var pets := ListPetsNear(attacker, 5);
-				var tamed;
-				var summoned;
-				foreach member in pt
-					if (member.serial != attacker.serial)
-						tamed := GetObjProperty(member, "TamedPets");
-						summoned := GetObjProperty(member, "SummonedPets");
-					endif
-				endforeach
+				var allPets := array{};
+				var party_members := attacker.party.members;
+
+				if (attacker.party)
+					foreach member in party_members
+						if (member != attacker)
+							var memberObj := SystemFindObjectBySerial(member.serial);
+							var allPetsAndSummonedPets := ListAllPetsAndSummonedPetsNear(memberObj, 8 * 4);
+							foreach pet in allPetsAndSummonedPets
+								allPets.append(pet);
+							endforeach
+						endif
+					endforeach
+				endif
 				var inimigos2x := ListMobilesNearLocation(attacker.x, attacker.y, attacker.z, 1, attacker.realm);
 				foreach inimigox in inimigos2x
-					if( !(inimigox.serial in tamed) && !(inimigox in pets) && !(inimigox.serial in summoned) && !(inimigox in attacker.party.members))
+					if(!(inimigox in allPets) && !(inimigox in attacker.party.members))
 						DamageFLS(inimigox, cint(total/3), DMG_PHYSICAL, attacker);
 					endif
 				endforeach
