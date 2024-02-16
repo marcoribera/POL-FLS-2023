@@ -634,8 +634,8 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 					while(ct < 4)
 						randomDmg := RandomIntMinMax(1,3);
 						case(randomDmg)
-							1: theitem.damage_fire_mod := theitem.damage_fire_mod + 1; bonusfire := bonusfire + 1; break;
-							2: theitem.damage_cold_mod := theitem.damage_cold_mod + 1; bonuscold := bonuscold + 1; break;
+							1: theitem.resist_fire_mod := theitem.resist_fire_mod + 1; bonusfire := bonusfire + 1; break;
+							2: theitem.resist_cold_mod := theitem.resist_cold_mod + 1; bonuscold := bonuscold + 1; break;
 						endcase
 						ct := ct + 1;
 					endwhile
@@ -649,8 +649,8 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 					while(ct < 4)
 						randomDmg := RandomIntMinMax(1,3);
 						case(randomDmg)
-							1: theitem.damage_energy_mod := theitem.damage_energy_mod + 1; bonusenergy := bonusenergy + 1; break;
-							2: theitem.damage_poison_mod := theitem.damage_poison_mod + 1; bonuspoison := bonuspoison + 1; break;
+							1: theitem.resist_energy_mod := theitem.resist_energy_mod + 1; bonusenergy := bonusenergy + 1; break;
+							2: theitem.resist_poison_mod := theitem.resist_poison_mod + 1; bonuspoison := bonuspoison + 1; break;
 						endcase
 						ct := ct + 1;
 					endwhile
