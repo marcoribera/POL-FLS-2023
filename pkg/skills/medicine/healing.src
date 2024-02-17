@@ -418,10 +418,10 @@ function HealNpcCorpse(mobile, targ, aux_skill)
 		SendSysMessage(mobile, "Voce interrompeu a cura.");
 		return 0;
 	endif
-	var diff := CInt(100 - CInt(aux_skill/1.5));
+	var diff := CInt(100 - CInt(aux_skill/1.2));
 	if (diff < 20)
 		diff := 20;
-	elseif (diff > 80);
+	elseif (diff >= 80);
 		diff := 80;
 	endif
 
@@ -449,7 +449,7 @@ function HealNpcCorpse(mobile, targ, aux_skill)
 				endif
 			endif
 			DestroyItem(targ);
-			SetCooldown(npc, "resurrect", 180);
+			SetCooldown(npc, "resurrect", 120);
 			var skills := GetObjProperty(npc, "petskills");
 			foreach skill in (skills.keys())
 				AP_SetTrueSkill(npc, skill, skills[skill]);
