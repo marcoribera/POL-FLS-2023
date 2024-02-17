@@ -48,8 +48,8 @@ program vacuodemana(params)
 	var total := cint(CalculateTotalDamage(defender, basedamage, attacker, dmgList));
     PlayAttackAnimation(attacker);
     PlayHitSounds(attacker, defender);
-	DamageFLS(defender, total, DMG_PHYSICAL, attacker);
-	DamageFLS(defender, dano_mlore, DMG_ENERGY, attacker);
+	DamageFLS(defender, total, DMG_FORCED, attacker);
+	DamageFLS(defender, dano_mlore, DMG_FORCED, attacker);
     PlayLightningBoltEffect(defender);
 	PlayLightningSoundEffect(defender);
 
