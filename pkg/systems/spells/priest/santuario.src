@@ -9,12 +9,12 @@ program sanctuary(params)
     var duration := Cint(AP_GetSkill(who, MAGICLORE) / 2);
     var i := 0;
     PLaySoundEffect(who, 0x216);
-	while (protected(who) && i < Cint(duration / 3))
+	while (protected(who) && i < duration)
         GrantPrivilege(who, "invul");
         who.enable("invul");
 
 		PlayObjectCenteredEffect(who, 0x375a, 10, 80);
-		sleep(3);
+		sleep(1);
         i++;
 	endwhile
 
