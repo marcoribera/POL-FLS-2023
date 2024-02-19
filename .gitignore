@@ -22,16 +22,19 @@ core-changes.txt
 packethooks.txt
 packets.zip
 pol
+pol.pid
 pol.cfg.example
 poltool
 uoconvert
 uoconvert.txt
 uotool
+ecompile
 scripts/ecompile
 scripts/ecompile.cfg.example
 scripts/modules
 scripts/runecl
 *.exe
+.vscode
 
 # UOConvert Files
 config/multis.cfg
