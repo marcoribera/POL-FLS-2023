@@ -416,7 +416,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 	endif
 
     if (TemHabilidade(who, "Arsenal Sombrio"))
-        var assassin_weapons := {0x27EF, 0x27ab, 0x27af, 11570, 11565, 11566, 0x1401, 0x0f51, 0x0f63, 0x143c, 0x13B2};
+        var assassin_weapons := {0x27EF, 0x27ab, 0x27af, 11570, 11565, 11566, 0x1401, 0x1440, 0x0f51, 0x0f63, 0x143c, 0x13B2};
         var sneak_dmg := AP_GetSkill(who, SNEAK) / 200;
         if (who.weapon.objtype in assassin_weapons)
             other += sneak_dmg;

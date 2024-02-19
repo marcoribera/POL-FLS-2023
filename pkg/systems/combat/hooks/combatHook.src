@@ -386,7 +386,6 @@ exported function Attack(attacker, defender)
 			oportunidade := 1;
 		endif
 
-
 		if ( (GetCooldown(defender, "ataqueoportunidade") > 0) || oportunidade == 1)
 			if (Distance(attacker,defender)<=1 && defender.weapon.attributte != "RangedCombat")
 				if (GetObjProperty(defender, "#atacandooportunidade") == error)
@@ -446,6 +445,17 @@ exported function Attack(attacker, defender)
 			PlayHitSounds(defender, attacker);
 			var dmg := CalculateRawDamage(attacker, attacker.weapon);
 			dmg := dmg*0.33;
+			var result := Run_Script_To_Completion(":combat:mainHitScript", array{attacker, defender, wpn_a, armor, dmg, dmg});
+			SkillChecks(attacker, defender, wpn_a, dmg);
+		endif
+
+        if (GetCooldown(attacker, "mestreduelista") > 0)
+			printtext(attacker, "*mestre duelista*");
+			var armor :=  CS_GetEquipmentInArmorZone(attacker, CS_GetRandomArmorZone());
+			armor := armor[ RandomInt( len( armor ) ) + 1];
+			PlayHitSounds(defender, attacker);
+			var dmg := CalculateRawDamage(attacker, attacker.weapon);
+			dmg := dmg;
 			var result := Run_Script_To_Completion(":combat:mainHitScript", array{attacker, defender, wpn_a, armor, dmg, dmg});
 			SkillChecks(attacker, defender, wpn_a, dmg);
 		endif
@@ -567,6 +577,7 @@ function CalculateHitChance(attacker, defender)
 			hit_chance := hit_chance + 100;
 		endif
 	endif
+    
 	if ( IsRaging(defender) )
 		if (TemHabilidade(defender, "Esquiva Instintiva") )
 			hit_chance := hit_chance - 10;
@@ -575,10 +586,10 @@ function CalculateHitChance(attacker, defender)
 			hit_chance := hit_chance + 100;
 		endif
 	endif
+
+    var swash_debuff := cint(AP_GetSkill(defender, TACTICS)/5);
 	if (GetCooldown(attacker, "desafioheroico") > 0 )
-		if ( GetObjProperty(attacker, "desafiante") != defender.serial)
-			hit_chance := hit_chance - 10;
-		endif
+        hit_chance := hit_chance - swash_debuff;
 	endif
 
     var sem_dor_bonus := 0;
@@ -637,6 +648,16 @@ function CalculateHitChance(attacker, defender)
     if (GetCooldown(defender, "shadowdancer_blur") > 0)
         hit_chance := hit_chance - dancer_bonus;
     endif
+
+    var swash_bonus := CInt(AP_GetSkill(attacker, TACTICS) / 10);
+    if (TemHabilidade(attacker, "Movimentacao Graciosa"))
+        hit_chance := hit_chance + swash_bonus;
+    endif
+
+    if (TemHabilidade(defender, "Movimentacao Graciosa"))
+        hit_chance := hit_chance - swash_bonus;
+    endif
+    
 
 	if (hit_chance < 5.0)
 		hit_chance := 5.0;

@@ -1185,6 +1185,10 @@ function ParryCheck(attacker, defender, byref rawdamage, weapon)
 
 	var skill := CInt(AP_GetSkill(defender, PARRY));
 
+    if (TemHabilidade(defender, "Reflexo Estrategico"))
+        skill := CInt(AP_GetSkill(defender, TACTICS));
+    endif
+
 	//Aplica delay básico do escudo, reduz delay com base na skill e soma fator de balanceamento
 	var parryDelay := CInt((item_cfg[shield.objtype]).parrydelay) - CInt(GetObjProperty(shield, "parrydelay_mod"))  - CInt(skill/20) + 8;
 
