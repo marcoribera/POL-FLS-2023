@@ -3,6 +3,7 @@
 include ":attributes:attributes";
 include ":timedScripts:timedScripts";
 include "include/say";
+include ":tn:cooldown";
 
 program manobra(attacker)
 
