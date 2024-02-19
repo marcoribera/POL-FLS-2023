@@ -70,7 +70,7 @@ program aura_of_hate(params)
 	var dmgList := dictionary;
 	dmgList := getNewDamageList(attacker);
 	var total := cint(CalculateTotalDamage(defender, basedamage, attacker, dmgList));
-	DamageFLS(defender, total, DMG_PHYSICAL, attacker);
+	DamageFLS(defender, total, DMG_FORCED, attacker);
 
     DamageFLS(defender, hate_dmg, DMG_PHYSICAL, attacker);
     var curse_time := CInt(AP_GetSkill(attacker, MAGICLORE) / 3);
