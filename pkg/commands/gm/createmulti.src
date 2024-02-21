@@ -10,7 +10,7 @@ include ":fls_core:packets";
 
 program textcmd_Kill(who, text)
 	SendSysMessage(who, "Select a target to create multi.");
-	var targ := TargetCoordinates(who);
+	var targ := TargetMultiplacement(who, text);
     var ship := CreateMultiAtLocation(targ.x, targ.y, targ.z, text, 0x0007, who.realm);
     SendSysMessage(who, "multi: " + ship);
 
