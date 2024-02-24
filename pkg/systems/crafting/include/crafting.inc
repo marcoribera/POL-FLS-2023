@@ -521,18 +521,18 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 	    		var DexPenBonus := Cint(elem.DexPenalty);
 	    		if(DexPenBonus > 0)
 		    		case (DexPenBonus)
-		    			1:
-		    				DexPenBonus := 1;
+		    			6:
+		    				DexPenBonus := 2;
 		    				break;
-//		    			2:
-//		    				DexPenBonus := 1;
-//		    				break;
-//		    			3:
-//		    				DexPenBonus := 2;
-//		    				break;
+		    			8:
+		    				DexPenBonus := 2;
+		    				break;
+		    			12:
+		    				DexPenBonus := 2;
+		    				break;														
+
 	    				default:
-//	    					DexPenBonus := CInt(DexPenBonus/2);
-							DexPenBonus := CInt(DexPenBonus-1); // Bors verificar se funciona - Bônus da hab -1 de penalidade sempre.
+							DexPenBonus := CInt(DexPenBonus)+1; // Bors verificar se funciona - Bônus da hab -1 de penalidade sempre.
 		    		endcase
 		    		SetObjProperty(theitem, "penaltybonus", DexPenBonus);
 					attr["hab_dexpenmod"] := DexPenBonus;
@@ -602,18 +602,18 @@ function AddMaterialMod(who, craft_skill, theitem, principalMaterial, materialCo
 	    		var DexPenBonus := Cint(elem.DexPenalty);
 	    		if(DexPenBonus > 0)
 		    		case (DexPenBonus)
-		    			1:
-		    				DexPenBonus := 1;
-		    				break;
-/*		    			2:
-		    				DexPenBonus := 1;
-		    				break;
-		    			3:
+		    			6:
 		    				DexPenBonus := 2;
 		    				break;
-*/	    				default:
-//	    					DexPenBonus := CInt(DexPenBonus/2);
-	    					DexPenBonus := CInt(DexPenBonus-1); // Bors verificar se funciona - Bônus da hab -1 de penalidade sempre.
+		    			8:
+		    				DexPenBonus := 2;
+		    				break;
+		    			12:
+		    				DexPenBonus := 2;
+		    				break;														
+
+	    				default:
+							DexPenBonus := CInt(DexPenBonus)+1; // Bors verificar se funciona - Bônus da hab -1 de penalidade sempre.
 		    		endcase
 		    		SetObjProperty(theitem, "penaltybonus", DexPenBonus);
 					attr["hab_dexpenmod"] := DexPenBonus;
