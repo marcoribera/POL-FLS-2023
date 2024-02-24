@@ -70,14 +70,21 @@ endfunction
 
 function AddQualityDamageMod(who, craft_skill, byref theitem, quality )
 	if (quality >= 1.2)
-		var randomDmg;
-		var maxBonus := CInt(quality*20); //mínimo 24
+//		var randomDmg; //Bors sugestão excluído dano elemental aleatório em EXP
+//		var maxBonus := CInt(quality*20); //mínimo 24
+		var maxBonus := CInt(quality*10); //novo mínimo de 12
+		/* BORS
+		Tabulamos bônus de 5% a 25% conforme as classes de itens.
+		Contudo a estrutura do script usa a qualidade do item como multiplicador
+		A qualidade do item vai até 3.0
+		Então acabei arrendondando pra 12% a 30% de bônus*/
+
 
 		//adiciona 5% a 20%
-		var i := 0;
+//		var i := 0;
 		var cfg:=ReadConfigFile(":combat:itemdesc");
 		var elem := FindConfigElem(cfg, theitem.objtype);
-		var qtd := 5;
+//		var qtd := 5;
 
 		var attr := PegarProp(theitem);
 		var attr_excp := PegarPropExcep(theitem);
@@ -91,67 +98,61 @@ function AddQualityDamageMod(who, craft_skill, byref theitem, quality )
 		attr_excp["poisonmod"] := 0;
 		attr_excp["energymod"] := 0;
 
-		while(i < maxBonus)
-			if(qtd < maxBonus)
-				qtd := maxBonus;
-			endif
-			randomDmg := RandomIntMinMax(1, 6);
-			case(randomDmg)
-				1: 
-					theitem.damage_physical_mod := theitem.damage_physical_mod + qtd;
-					attr_excp["physicalmod"] := CInt(qtd);
-					break;
-				2: 
-					theitem.damage_fire_mod     := theitem.damage_fire_mod + qtd;
-					attr_excp["firemod"] := CInt(qtd);
-					break;
-				3:
-					theitem.damage_cold_mod     := theitem.damage_cold_mod + qtd;
-					attr_excp["coldmod"] := CInt(qtd);
-					break;
-				4: 
-					theitem.damage_energy_mod   := theitem.damage_energy_mod + qtd; 
-					attr_excp["energymod"] := CInt(qtd);
-					break;
-				5: 
-					theitem.damage_poison_mod   := theitem.damage_poison_mod + qtd; 
-					attr_excp["poisonmod"] := CInt(qtd);
-					break;
-			endcase
-			maxBonus := maxBonus - qtd;
-			sleepms(3);
-		endwhile
-		var modadc := (0.1 + ((quality-1)/4));
+//ADD BORS - Novo Bônus EXP
+		if (theitem.damage_physical_mod>0);
+		theitem.damage_physical_mod := theitem.damage_physical_mod + maxBonus;
+		attr_excp["physicalmod"] := maxBonus;
+		endif
+		if (theitem.damage_fire_mod>0);
+		theitem.damage_fire_mod := theitem.damage_fire_mod + maxBonus;
+		attr_excp["firemod"] := maxBonus;
+		endif
+		if (theitem.damage_cold_mod>0);
+		theitem.damage_cold_mod := theitem.damage_cold_mod + maxBonus;
+		attr_excp["coldmod"] := maxBonus;
+		endif
+		if (theitem.damage_poison_mod>0);
+		theitem.damage_poison_mod := theitem.damage_poison_mod + maxBonus;
+		attr_excp["energymod"] := maxBonus;
+		endif
+		if (theitem.damage_energy_mod>0);
+		theitem.damage_energy_mod := theitem.damage_energy_mod + maxBonus;
+		attr_excp["poisonmod"] := maxBonus;
+		endif
+
+
+// BORS sugestao eliminado bônus de dano aleatório - Somente bônus dos elementos dos ORES agora
+		var modadc := (((quality-1)/20)); //Bors Sugestao mudado cálculo para Habs darem no máximo 10% a mais - antigamente podia chegar a 60% 
 		if(craft_skill == "MetalWorking")
 			if(TemHabilidade(who,"Armas Velozes"))
 				//SendSysMessage(who,"bonus velocidade" + (quality-1)/2 + "qualidade: "+ quality);
-				SetObjProperty(theitem,"attackspeedbonus", CInt(elem.Speed * modadc)); //VAI FICAR OBSOLETA DEPOIS DA IMPLEMENTAÇÃO DO propitens.inc
-				attr_excp["speedmod"] := CInt(elem.Speed * modadc) - attr."hab_speedmod"; //REVER PARA USAR APENAS ESTA PROP NOS OUTROS LOCAIS
+				SetObjProperty(theitem,"attackspeedbonus", CInt(elem.Speed * modadc) + attr."hab_speedmod"); //VAI FICAR OBSOLETA DEPOIS DA IMPLEMENTAÇÃO DO propitens.inc
+				attr_excp["speedmod"] := CInt(elem.Speed * modadc) + attr."hab_speedmod"; //REVER PARA USAR APENAS ESTA PROP NOS OUTROS LOCAIS
 				//theitem.speed_mod := CInt(elem.Speed * (0.1 + (quality-1)/4));
 			endif
 			//Acplica dano extra pra arma
-			if(TemHabilidade(who,"Amolador de Laminas") && (elem.TipoAtaque == "Cortante"))
+			if(TemHabilidade(who,"Armas Letais") && (elem.TipoAtaque == "Cortante"))
 				//SendSysMessage(who,"bonus dano" + theitem.quality-1);
-				theitem.dmg_mod := CInt(elem.MaxDam * modadc); //VAI FICAR OBSOLETA DEPOIS DA IMPLEMENTAÇÃO DO propitens.inc
-				attr_excp["dmgmod"] := CInt(elem.MaxDam * modadc) - attr."hab_dmgmod";
+				theitem.dmg_mod := CInt(elem.MaxDam * modadc) + attr."hab_dmgmod"; //VAI FICAR OBSOLETA DEPOIS DA IMPLEMENTAÇÃO DO propitens.inc
+				attr_excp["dmgmod"] := CInt(elem.MaxDam * modadc) + attr."hab_dmgmod";
 			endif
-			if(TemHabilidade(who,"Ponta Temperada") && (elem.TipoAtaque == "Perfurante"))
-				theitem.dmg_mod := CInt(elem.MaxDam * modadc); //VAI FICAR OBSOLETA DEPOIS DA IMPLEMENTAÇÃO DO propitens.inc
-				attr_excp["dmgmod"] := CInt(elem.MaxDam * modadc) - attr."hab_dmgmod";
+			if(TemHabilidade(who,"Armas Letais") && (elem.TipoAtaque == "Perfurante"))
+				theitem.dmg_mod := CInt(elem.MaxDam * modadc) + attr."hab_dmgmod"; //VAI FICAR OBSOLETA DEPOIS DA IMPLEMENTAÇÃO DO propitens.inc
+				attr_excp["dmgmod"] := CInt(elem.MaxDam * modadc) + attr."hab_dmgmod";
 			endif
-			if(TemHabilidade(who,"Densidade Esmagadora") && (elem.TipoAtaque == "Contusivo"))
-				theitem.dmg_mod := CInt(elem.MaxDam * modadc); //VAI FICAR OBSOLETA DEPOIS DA IMPLEMENTAÇÃO DO propitens.inc
-				attr_excp["dmgmod"] := CInt(elem.MaxDam * modadc) - attr."hab_dmgmod";
+			if(TemHabilidade(who,"Armas Letais") && (elem.TipoAtaque == "Contusivo"))
+				theitem.dmg_mod := CInt(elem.MaxDam * modadc) + attr."hab_dmgmod"; //VAI FICAR OBSOLETA DEPOIS DA IMPLEMENTAÇÃO DO propitens.inc
+				attr_excp["dmgmod"] := CInt(elem.MaxDam * modadc) + attr."hab_dmgmod";
 			endif
 		elseif(craft_skill == "WoodWorking")
 			if(TemHabilidade(who,"Entalhe para Combate"))
-				SetObjProperty(theitem,"attackspeedbonus", CInt(elem.Speed * modadc)); //VAI FICAR OBSOLETA DEPOIS DA IMPLEMENTAÇÃO DO propitens.inc
-				attr_excp["speedmod"] := CInt(elem.Speed * modadc) - attr["hab_speedmod"];
+				SetObjProperty(theitem,"attackspeedbonus", CInt(elem.Speed * modadc)+ attr["hab_speedmod"]); //VAI FICAR OBSOLETA DEPOIS DA IMPLEMENTAÇÃO DO propitens.inc
+				attr_excp["speedmod"] := CInt(elem.Speed * modadc) + attr["hab_speedmod"];
 				//theitem.speed_mod := CInt(elem.Speed * modadc); //BUGADO
 			endif
 			if(TemHabilidade(who,"Flexao da Madeira")) //&& (Cint(elem.maxrange) > 2))
-				theitem.dmg_mod := CInt(elem.MaxDam * modadc); //VAI FICAR OBSOLETA DEPOIS DA IMPLEMENTAÇÃO DO propitens.inc
-				attr_excp["dmgmod"] := CInt(elem.MaxDam * modadc) - attr."hab_dmgmod";
+				theitem.dmg_mod := CInt(elem.MaxDam * modadc) + attr."hab_dmgmod"; //VAI FICAR OBSOLETA DEPOIS DA IMPLEMENTAÇÃO DO propitens.inc
+				attr_excp["dmgmod"] := CInt(elem.MaxDam * modadc) + attr."hab_dmgmod";
 			endif
 		endif
 		SetarPropExcep(theitem, attr_excp); //ATIVAR

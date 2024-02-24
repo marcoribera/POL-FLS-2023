@@ -1447,26 +1447,18 @@ endfunction
 
 function getQualityTemplate(num)
 	var rank;
-	if(num>3.0)
-		rank := "SSS";
-	elseif(num>2.9)
-		rank := "SS";
-	elseif(num>2.7)
-		rank := "S";
+	if(num>2.8)
+		rank := "Lendária";
 	elseif(num>2.5)
-		rank := "A";
+		rank := "Épica";
 	elseif(num>2.2)
-		rank := "B";
+		rank := "Rara";
 	elseif(num>1.9)
-		rank := "C";
-	elseif(num>1.3)
-		rank := "D";
-	elseif(num>1.3)
-		rank := "E";
+		rank := "Excepcional";
 	else
-		rank := "F";
+		rank := "Aprimorada";
 	endif
-	return "Excepcional [Rank "+rank+"]";
+	return rank;
 endfunction
 
 function GetConditionTemplate(item) //Durabilidade dos itens

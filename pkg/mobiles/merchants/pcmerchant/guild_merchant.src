@@ -694,27 +694,17 @@ function GetDetails(item, who)
 endfunction
 
 function getQuality(num)
-   var rank;
-   if(num>3.0)
-      rank := "SSS";
-   elseif(num>2.9)
-      rank := "SS";
-   elseif(num>2.7)
-      rank := "S";
-   elseif(num>2.5)
-      rank := "A";
-   elseif(num>2.2)
-      rank := "B";
-   elseif(num>1.9)
-      rank := "C";
-   elseif(num>1.3)
-      rank := "D";
-   elseif(num>1.3)
-      rank := "E";
-   elseif(num>=1.2)
-      rank := "F";
-   else
-      return "Comum";
-   endif
-   return "Excepcional [Rank "+rank+"]";
+	var rank;
+	if(num>2.8)
+		rank := "Lendária";
+	elseif(num>2.5)
+		rank := "Épica";
+	elseif(num>2.2)
+		rank := "Rara";
+	elseif(num>1.9)
+		rank := "Excepcional";
+	else
+		rank := "Aprimorada";
+	endif
+	return rank;
 endfunction
