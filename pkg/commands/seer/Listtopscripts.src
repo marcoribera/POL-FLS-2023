@@ -1,7 +1,6 @@
 use uo;
 use os;
 include ":gumps:gumps";
-include "include/say";
 
 program ListTopScripts(who, size_of_list)
     var result := PerformanceMeasure();
@@ -13,10 +12,10 @@ program ListTopScripts(who, size_of_list)
         var totalInstructions := result["total_instructions"];
         var scripts := result["scripts"];
         
-        PrintText(who, "=====================");
-        PrintText(who, "Total Scripts Observed: " + totalObserved);
-        PrintText(who, "Total Instructions: " + totalInstructions);
-        PrintText(who, "=====================");
+        SendSysMessage(who, "=====================");
+        SendSysMessage(who, "Total Scripts Observed: " + totalObserved);
+        SendSysMessage(who, "Total Instructions: " + totalInstructions);
+        SendSysMessage(who, "=====================");
 
         if (topNumber <= 0 || topNumber > scripts.size())
             topNumber := scripts.size();
@@ -33,11 +32,11 @@ program ListTopScripts(who, size_of_list)
             var pid := script["pid"];
             var percent := script["percent"];
 
-            PrintText(who, "Script: " + name + " (PID: " + pid + ") - Instructions: " + instructions + " (" + percent + "%)");
-            PrintText(who, "=====================");
+            SendSysMessage(who, "Script: " + name + " (PID: " + pid + ") - Instructions: " + instructions + " (" + percent + "%)");
+            SendSysMessage(who, "=====================");
             sleepms(100); // Pausa entre cada exibição para evitar sobrecarga
         endfor
     else
-        PrintText(who, "Error obtaining performance data: " + result.errortext);
+        SendSysMessage(who, "Error obtaining performance data: " + result.errortext);
     endif
 endprogram

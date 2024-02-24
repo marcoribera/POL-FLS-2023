@@ -43,7 +43,7 @@ program spell_meteorSwarm( parms )
             PlayStationaryEffect(mobile.x, mobile.y, mobile.z, 0x6CCE, 0 ,70, 0, mobile.realm);
 
             alreadydamaged.Append(mobile.serial);
-            var dmg := cint(AP_GetSkill(caster, MAGICLORE)) + RandomDiceRoll("12d6");
+            var dmg := cint(AP_GetSkill(caster, MAGICLORE)) + RandomDiceRoll("20d6");
             DamageFLS(mobile, cint(dmg), DMG_FIRE, caster, "meteorSwarm");
         endif
         sleepms(20);
