@@ -41,8 +41,10 @@ program KillPlayers()
 
 
     while (1)    
-    var hasPlayerNearMe := 0;
-        foreach player in ListMobilesInLineOfSight(me, 20)
+        var hasPlayerNearMe := 0;
+        var nearby := ListMobilesNearLocationEx( me.x, me.y, LIST_IGNORE_Z, 30 ,LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN + LISTEX_FLAG_CONCEALED, me.realm);
+
+        foreach player in nearby
             if (player.acctname)
                 hasPlayerNearMe++;
             endif

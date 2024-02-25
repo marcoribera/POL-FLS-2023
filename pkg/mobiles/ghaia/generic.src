@@ -29,82 +29,98 @@ const FOLLOW_CMD	:= 0xA001;
 
 program KillPlayers()
     Set_Script_Option(SCRIPTOPT_NO_RUNAWAY, 1); //Adicionado para diminuir a quantidade de logs no arquivo script.log
-
-	var ev;
-	var wanders;
 	propallies := dictionary;
-
 	set_critical(1);
 	//printtextabove(me, "vai inicializr");
 	InitializeNPC(me);
 	set_critical(0);
 	//printtextabove(me, "done");
 	SetWarMode( 0 );
+
+    while (1)    
+        var hasPlayerNearMe := 0;
+        var nearby := ListMobilesNearLocationEx( me.x, me.y, LIST_IGNORE_Z, 30 ,LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN + LISTEX_FLAG_CONCEALED, me.realm);
+
+        foreach player in nearby
+            if (player.acctname)
+                hasPlayerNearMe++;
+            endif
+        endforeach
+        if (hasPlayerNearMe >= 1)
+            genericBrain();
+        endif
+        sleep(20);
+    endwhile
+
+endprogram
+
+function genericBrain()
+	var ev;
+	var wanders;
 	ev := os::wait_for_event(0);
 	wanders := 0;
 	EnableMainEvents();
 	Set_Event_Queue_Size(1000);
 
 
-    	while(me)
-var timedes := TS_GetTimerNames(me);
-		//se tem objetivo, anda na direcao dele, se nao tem so wander
-		if ("encantar" in timedes) //se está seguindo o Pastor
-			wanders := 0;
-			PetFollow();
-		else
-		if (GetObjProperty(me, "objloc") != error)
-			wanders := 0;
-			DoObjective();
-		else
-			MoveAround();
-		endif
-		endif
-		
-		if (!("encantar" in timedes)) //Quando não está seguindo o pastor, feito pq a ação demorava quando wanders ativo
-		wanders := wanders +1;
-		if(wanders >= 30)
-			wanders := 0;
-			look_around();
-			ev := sleepmode();
-		else
-			ev := os::wait_for_event(10);
-		endif
-		endif
+    while(me)
+        var timedes := TS_GetTimerNames(me);
+        //se tem objetivo, anda na direcao dele, se nao tem so wander
+        if ("encantar" in timedes) //se está seguindo o Pastor
+            wanders := 0;
+            PetFollow();
+        else
+        if (GetObjProperty(me, "objloc") != error)
+            wanders := 0;
+            DoObjective();
+        else
+            MoveAround();
+        endif
+        endif
+        
+        if (!("encantar" in timedes)) //Quando não está seguindo o pastor, feito pq a ação demorava quando wanders ativo
+        wanders := wanders +1;
+        if(wanders >= 30)
+            wanders := 0;
+            look_around();
+            ev := sleepmode();
+        else
+            ev := os::wait_for_event(10);
+        endif
+        endif
 
-		if(ev)
-			case(ev.type)
-				SYSEVENT_ENTEREDAREA:
-					if (CheckLineOfSight(me, ev.source))
-						if(CanFight(me, ev.source, align)) //verifica se eh inimigo
-							wanders := 0;
-							Fight(ev.source);
-						endif
-					endif
-				SYSEVENT_ENGAGED:	wanders := 0; Fight(ev.source);
-				SYSEVENT_DAMAGED:	wanders := 0; Fight(ev.source);
-				EVID_ALERT_ALLIES:	wanders := 0; Fight(ev.opponent, 1);
-				EVID_HERDING:		herd(ev);
-				EVID_TAUNT:
-							if(ev.source)
-								wanders := 0; Fight(ev.opponent, 1);
-							endif
-				EVID_FLEE:
-							if (ev.source)
-								flee(ev.source);
-							endif
-				FOLLOW_CMD:
-					following := ev.source;
-					PetFollow(ev.targ);
+        if(ev)
+            case(ev.type)
+                SYSEVENT_ENTEREDAREA:
+                    if (CheckLineOfSight(me, ev.source))
+                        if(CanFight(me, ev.source, align)) //verifica se eh inimigo
+                            wanders := 0;
+                            Fight(ev.source);
+                        endif
+                    endif
+                SYSEVENT_ENGAGED:	wanders := 0; Fight(ev.source);
+                SYSEVENT_DAMAGED:	wanders := 0; Fight(ev.source);
+                EVID_ALERT_ALLIES:	wanders := 0; Fight(ev.opponent, 1);
+                EVID_HERDING:		herd(ev);
+                EVID_TAUNT:
+                            if(ev.source)
+                                wanders := 0; Fight(ev.opponent, 1);
+                            endif
+                EVID_FLEE:
+                            if (ev.source)
+                                flee(ev.source);
+                            endif
+                FOLLOW_CMD:
+                    following := ev.source;
+                    PetFollow(ev.targ);
             break;
-			endcase
-		endif
+            endcase
+        endif
 
-		look_around();
-		sleepms(200);
-	endwhile
-
-endprogram
+        look_around();
+        sleepms(200);
+    endwhile
+endfunction
 
 function CloseDistance( opponent )
 
