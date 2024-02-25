@@ -33,6 +33,23 @@ program spawntesthet(item)
 		frq := 7200;
 	endif
 
+    while (1)    
+        var hasPlayerNearMe := 0;
+        var nearby := ListMobilesNearLocationEx( item.x, item.y, LIST_IGNORE_Z, 30 ,LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN + LISTEX_FLAG_CONCEALED, item.realm);
+
+        foreach player in nearby
+            if (player.acctname)
+                hasPlayerNearMe++;
+            endif
+        endforeach
+        if (hasPlayerNearMe >= 1)
+            makeChests(item, frq, amt, rng);
+        endif
+        sleep(20);
+    endwhile
+endprogram
+
+function makeChests(item, frq, amt, rng)
 	var current, newamt;
 	var lvl := GetObjProperty(item, "level");
 	var lootname;
@@ -40,7 +57,6 @@ program spawntesthet(item)
 	var race  := cstr(GetObjProperty(item, "race"));
 	lootname := race+class+"Chest"+lvl;
 	var chests;
-
 	while(item)
 		CleanArray(item);
 		var currentChests := GetObjProperty(item, "chests");
@@ -84,7 +100,7 @@ program spawntesthet(item)
 
 		sleep(frq);
 	endwhile
-endprogram
+endfunction
 
 function ClearChests(spawn)
 

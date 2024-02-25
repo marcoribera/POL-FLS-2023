@@ -39,7 +39,6 @@ program KillPlayers()
 	set_critical(0);
 	//printtextabove(me, "done");
 
-
     while (1)    
         var hasPlayerNearMe := 0;
         var nearby := ListMobilesNearLocationEx( me.x, me.y, LIST_IGNORE_Z, 30 ,LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN + LISTEX_FLAG_CONCEALED, me.realm);
