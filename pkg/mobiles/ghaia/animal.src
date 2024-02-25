@@ -44,32 +44,37 @@ program KillPlayers()
 	wanders := 0;
 	EnableMainEvents();
 	Set_Event_Queue_Size(1000);
+    var hasPlayerNearMe := 0;
+    foreach player in ListMobilesInLineOfSight(me, 20)
+        if (player.acctname)
+            hasPlayerNearMe++;
+        endif
+    endforeach
 
-
-    	while(me)
-var timedes := TS_GetTimerNames(me);
-		//se tem objetivo, anda na direcao dele, se nao tem so wander
-		if ("encantar" in timedes) //se está seguindo o Pastor
-			wanders := 0;
-			PetFollow();
-		else
-		if (GetObjProperty(me, "objloc") != error)
-			wanders := 0;
-			DoObjective();
-		else
-			MoveAround();
-		endif
-		endif
-		
+    while(hasPlayerNearMe >= 1)
+        var timedes := TS_GetTimerNames(me);
+        //se tem objetivo, anda na direcao dele, se nao tem so wander
+        if ("encantar" in timedes) //se está seguindo o Pastor
+            wanders := 0;
+            PetFollow();
+        else
+            if (GetObjProperty(me, "objloc") != error)
+                wanders := 0;
+                DoObjective();
+            else
+                MoveAround();
+            endif
+        endif
+            
 		if (!("encantar" in timedes)) //Quando não está seguindo o pastor, feito pq a ação demorava quando wanders ativo
-		wanders := wanders +1;
-		if(wanders >= 30)
-			wanders := 0;
-			look_around();
-			ev := sleepmode();
-		else
-			ev := os::wait_for_event(10);
-		endif
+            wanders := wanders +1;
+            if(wanders >= 30)
+                wanders := 0;
+                look_around();
+                ev := sleepmode();
+            else
+                ev := os::wait_for_event(10);
+            endif
 		endif
 
 		if(ev)
@@ -102,6 +107,13 @@ var timedes := TS_GetTimerNames(me);
 
 		look_around();
 		sleepms(200);
+
+        hasPlayerNearMe := 0;
+        foreach player in ListMobilesInLineOfSight(me, 20)
+            if (player.acctname)
+                hasPlayerNearMe++;
+            endif
+        endforeach
 	endwhile
 
 endprogram
@@ -339,10 +351,10 @@ var timedes := TS_GetTimerNames(me);
 
 var xs := "encantar" in timedes;
 if (life != lifeatual)
-following := 0;
-TS_LowerDuration(me, "encantar", -1);
-printtextabove(me, "O animal estah assustado demais!");
-return;
+    following := 0;
+    TS_LowerDuration(me, "encantar", -1);
+    printtextabove(me, "O animal está assustado demais!");
+    return;
 endif
 
 
