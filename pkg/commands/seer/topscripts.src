@@ -2,7 +2,7 @@ use uo;
 use os;
 include ":gumps:gumps";
 
-program ListTopScripts(who, size_of_list)
+program TopScripts(who, size_of_list)
     var result := PerformanceMeasure();
     var topNumber := Cint(size_of_list);
     var count;
