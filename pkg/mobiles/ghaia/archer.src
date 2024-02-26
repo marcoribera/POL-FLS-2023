@@ -21,7 +21,25 @@ var propallies;
 
 program KillPlayers()
     Set_Script_Option(SCRIPTOPT_NO_RUNAWAY, 1); //Adicionado para diminuir a quantidade de logs no arquivo script.log
+	
+    while (1)    
+        var hasPlayerNearMe := 0;
+        var nearby := ListMobilesNearLocationEx( me.x, me.y, LIST_IGNORE_Z, 40 ,LISTEX_FLAG_NORMAL + LISTEX_FLAG_HIDDEN + LISTEX_FLAG_CONCEALED, me.realm);
 
+        foreach player in nearby
+            if (player.acctname)
+                hasPlayerNearMe++;
+            endif
+        endforeach
+        if (hasPlayerNearMe >= 1)
+            archercBrain();
+        endif
+        sleep(20);
+    endwhile
+
+endprogram
+
+function archercBrain()
 	var ev;
 	var wanders;
 	propallies := dictionary;
@@ -78,7 +96,7 @@ program KillPlayers()
 		sleepms(100);
 	endwhile
 
-endprogram
+endfunction
 
 function CloseDistance(opponent)
 
