@@ -14,6 +14,8 @@ program magia(who, spellname)
 		return 0;
 	endif
 
+	//Print("Debug: Teste.");
+
 	var cfg;
 	if(GetObjProperty(who, "chardata").magia == "kitahster" || GetObjProperty(who, "advclass") == "kitahster")
         cfg := ReadConfigFile(":spells:config/sangriaspells");
@@ -21,6 +23,7 @@ program magia(who, spellname)
 	elseif (TemHabilidade(who, "Sensibilidade Arcana"))
         cfg := ReadConfigFile(":spells:config/tricksterspells");
         spellinfo.+magic_path := "Trickster";
+		//Print("Debug: Sou malandro.");
     else
 		cfg := ReadConfigFile(":spells:allspells");
     endif
@@ -33,6 +36,7 @@ program magia(who, spellname)
 		if ( Lower(GetConfigString(elem, "Name")) == Lower(spellname))
 			achou := 1;
 			break;
+			//Print("Debug: Achou.");
 		endif
 		id := id + 1;
 	endforeach
@@ -62,10 +66,12 @@ program magia(who, spellname)
 	endforeach
 
 	var circle_spell := cint(GetConfigString(elem, "Circle"));
-	if ( !spellbook && !(GetObjProperty(who, "advclass") == "kitahster" && circle_spell == 0))
-		SendSysMessageEx(who, "Voce nao possui a magia " + spellname + " nos seu grimorio.", SSM_FAIL);
-		return;
-	endif
+	if ( !(TemHabilidade(who, "Sensibilidade Arcana")))
+		if ( !spellbook && !(GetObjProperty(who, "advclass") == "kitahster" && circle_spell == 0))
+			SendSysMessageEx(who, "Voce nao possui a magia " + spellname + " nos seu grimorio.", SSM_FAIL);
+			return;
+		endif
+	endif	
 
 	spellinfo.+id := id;
     print("spellinfo: "+spellinfo);
