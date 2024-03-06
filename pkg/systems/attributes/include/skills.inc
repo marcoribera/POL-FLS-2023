@@ -32,22 +32,19 @@ use uo;
  */
 function AP_GetSkill(who, skill_name)
 	var bonus_corrucao := 0;
+	var arcane_thief_bonus := 0;
 	if (skill_name == MAGICLORE)
 		if (TemHabilidade(who, "Sensibilidade Arcana"))
 			if ( 70 > cint((AP_GetTrueSkill(who, skill_name)+AP_GetSkillMod(who, skill_name))))
 				return 70;
 			endif
-		endif
-        if (TemHabilidade(who, "Sensibilidade Arcana"))
-			skill_name := AWARENESS;
-            var arcane_thief_bonus := Cint((AP_GetTrueSkill(who, skill_name) + AP_GetSkillMod(who, skill_name)) / 2);
-            return arcane_thief_bonus;
+            arcane_thief_bonus := Cint((AP_GetTrueSkill(who, AWARENESS) + AP_GetSkillMod(who, AWARENESS)) / 2);
 		endif
 		if (TemHabilidade(who, "Corrupcao Constante"))
 			bonus_corrucao := cInt(GetObjProperty(who, "corruption")/1000);
 		endif
 	endif
-	return AP_GetTrueSkill(who, skill_name) + AP_GetSkillMod(who, skill_name) + bonus_corrucao;
+	return AP_GetTrueSkill(who, skill_name) + AP_GetSkillMod(who, skill_name) + bonus_corrucao + arcane_thief_bonus;
 endfunction
 
 /*
