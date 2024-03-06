@@ -31,7 +31,14 @@ program SpellStarter(params)
 	var spellinfo := params[2]; // spellinfo
 	var scroll := params[3]; // item que usou pra castar o spell (scroll, book, varinha ou nada)
 	var targ := params[4];
+	var attribute;
 	var sens := TemHabilidade(mobile, "Sensibilidade Arcana");
+	
+	if(sens)
+		attribute := MAGICLORE;
+	else
+		attribute := MAGERY;
+	endif
 
 	if (spellinfo.id != error) //le o cfg pra escrever a info
 		writeSpellInfo(mobile, spellinfo);
@@ -293,15 +300,9 @@ program SpellStarter(params)
 			moveCheck_script.kill();
 		endif
 
-		var attribute;
-		attribute := MAGERY;
-
 		var difficulty := CInt(spellinfo.Difficulty);
 
 		mobile.frozen := 0;
-		if(sens)
-		    attribute := MAGICLORE;
-		endif
 
 		var skill_check := SkillCheck(mobile, attribute, difficulty);
 
