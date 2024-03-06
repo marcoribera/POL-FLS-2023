@@ -22,13 +22,15 @@ cp landtiles.cfg config/
 ./uoconvert statics realm=britannia_alt
 ./uoconvert maptile realm=britannia_alt
 
+# ilshenar
 # ./uoconvert map     realm=ilshenar mapid=2 usedif=1 width=2304 height=1600
 # ./uoconvert statics realm=ilshenar
 # ./uoconvert maptile realm=ilshenar
 
-# ./uoconvert map     realm=malas mapid=3 usedif=1 width=2560 height=2048
-# ./uoconvert statics realm=malas
-# ./uoconvert maptile realm=malas
+# malas
+./uoconvert map     realm=malas mapid=3 usedif=1 width=2560 height=2048
+./uoconvert statics realm=malas
+./uoconvert maptile realm=malas
 
 # ./uoconvert map     realm=tokuno mapid=4 usedif=1 width=1448 height=1448
 # ./uoconvert statics realm=tokuno
