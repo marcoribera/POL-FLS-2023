@@ -62,10 +62,12 @@ program magia(who, spellname)
 	endforeach
 
 	var circle_spell := cint(GetConfigString(elem, "Circle"));
-	if ( !spellbook && !(GetObjProperty(who, "advclass") == "kitahster" && circle_spell == 0))
-		SendSysMessageEx(who, "Voce nao possui a magia " + spellname + " nos seu grimorio.", SSM_FAIL);
-		return;
-	endif
+	if ( !(TemHabilidade(who, "Sensibilidade Arcana")))
+		if ( !spellbook && !(GetObjProperty(who, "advclass") == "kitahster" && circle_spell == 0))
+			SendSysMessageEx(who, "Voce nao possui a magia " + spellname + " nos seu grimorio.", SSM_FAIL);
+			return;
+		endif
+	endif	
 
 	spellinfo.+id := id;
     print("spellinfo: "+spellinfo);
