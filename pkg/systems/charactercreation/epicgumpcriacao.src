@@ -47,7 +47,7 @@ program epicCreationGump(who)
     chardata.+culture := getCultureByPictureId(culture_pic);
 
     while (1)
-        var input := CultureGump(who, culture_pic);
+        var input := RaceGump(who, culture_pic);
         btn_value := input[0]; 
 
         if (btn_value == 201)

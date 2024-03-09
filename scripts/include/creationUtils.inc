@@ -103,3 +103,35 @@ function getCulturalDescriptionByPictureId(culture_id)
             return polkineaText;
     endcase
 endfunction
+
+function RaceGump(who, culture_pic)
+    var next_btn := array{"9903", "9904"};
+    var prev_btn := array{"9909", "9910"};
+    var cultures := { "Aigla", "Björska", "Povos do Leste", "Har'oloth", "Alüriel", "Polkinea", "Badûran", "Gulthrak" };
+
+    var races := array{"Humano", "Drow", "Polski", "Elfo", "Anão", "Orc"};
+
+    var gump := GFCreateGump();
+    GFGumpPic(gump, 17, 31, 0x9E6); // background
+
+    GFHTMLArea(gump, 346, 56, 192, 40, "<BASEFONT Size=55 Color=#999999 >Escolha sua raça", 0, 0); //shadow
+    GFHTMLArea(gump, 345, 55, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Escolha sua raça", 0, 0);
+    var x := 63;
+    var y := 100;
+    var i := 0;
+
+    for (i := 1; i <= races.size(); i++)
+        var race := races[i];
+ 
+        var color := "#000000";
+        GFHTMLArea(gump, x, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, race), 1, 0);
+        GFAddButton(gump, x+211, y+5, 10006, 10006, GF_CLOSE_BTN, 200+i);
+        sleepms(2);
+        y += 26;
+    endfor
+    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 200);
+
+    GFGumpPic(gump, 298, 100, culture_pic);
+
+    return GFSendGump(who, gump);
+endfunction

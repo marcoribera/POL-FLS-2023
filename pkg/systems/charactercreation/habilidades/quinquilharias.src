@@ -93,9 +93,7 @@ function create_portal_gump(player)
  
         var color := "#000000";
         GFHTMLArea(gump, 63, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, upgrade), 1, 0);
-        //GFToolTipText(gump, "<BASEFONT color=#{}>{}<br><BASEFONT color=#FFFFFF>".format(color, portal.desc));
         GFAddButton(gump, 274, y+5, 10006, 10006, GF_CLOSE_BTN, 200+i);
-        //GFAddButton(gump, 324, y+4, 10006, 10006, GF_CLOSE_BTN, 200+i+10);
         sleepms(2);
         y += 26;
     endfor
