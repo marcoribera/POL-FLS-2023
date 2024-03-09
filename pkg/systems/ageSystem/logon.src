@@ -1,0 +1,43 @@
+use uo;
+use os;
+use file;
+
+include ":datafile:datafile";
+
+program AgeSystem(who)
+	var cfg := ReadConfigFile(":config/ageconfig");
+	var elem := FindConfigElem(cfg, "AgeSystem" );
+	var enabled := GetConfigInt( elem, "Enabled" );
+	if(enabled)
+		ReduceDP(who);
+	endif
+endprogram
+
+function ReduceDP(player)
+    var creationDate = GetObjProperty(player, "creation_date"); // Supondo que você armazene a data de criação como propriedade do objeto do jogador.
+    if (!creationDate)
+        // Se não houver data de criação, pode definir uma ou simplesmente retornar.
+        return;
+    endif
+
+    var daysSinceCreation = DaysSince(creationDate);
+    var dpLossInterval = 30; // Intervalo em dias para perda de DP.
+    var totalDPLoss = daysSinceCreation / dpLossInterval; // Calcula o total de DP a ser perdido baseado nos dias desde a criação.
+
+    // Verifica se o jogador deve perder DP baseado nos dias desde a última verificação.
+    var lastDPLoss = GetObjProperty(player, "last_dp_loss") || 0;
+    if (totalDPLoss > lastDPLoss)
+        var dp = GetObjProperty(player, "dp") || 0; // Obtém o DP atual do jogador.
+        dp = max(0, dp - (totalDPLoss - lastDPLoss)); // Reduz o DP e impede que seja menor que 0.
+        SetObjProperty(player, "dp", dp); // Atualiza o DP do jogador.
+        SetObjProperty(player, "last_dp_loss", totalDPLoss); // Atualiza a contagem de perda de DP para evitar redução múltipla.
+        // Opcional: enviar mensagem para o jogador informando sobre a perda de DP.
+        SendSysMessage(player, "Você perdeu " + (totalDPLoss - lastDPLoss) + " DP.");
+    endif
+endfunction
+
+function DaysSince(creationDate)
+    var now = GetCurrentTime();
+    var secondsSinceCreation = now - creationDate;
+    return secondsSinceCreation / (60 * 60 * 24); // Converte segundos em dias.
+endfunction

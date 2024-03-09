@@ -1,0 +1,25 @@
+/* $Id: motdadd.src 1035 2012-03-27 00:16:06Z Duttones $
+ *
+ */
+
+use uo;
+use os;
+use file;
+
+include ":gumps:gumps";
+include ":gumps:gumps_ex";
+include ":gumps:requestGump";
+include ":gumps:yesNo";
+include ":tn:tngumps";
+
+
+program SetIdade(who)
+	var alterar := YesNo(who, "Deseja reverter um dp perdido pelo sistema de idade?" , "Sim.", "Nao.");
+	if (!alterar)
+		SendSysMessage(who, "Voce optou por nao mudar o dp perdido");
+		return;
+	endif
+
+	var targ := Target(who);
+
+endprogram
