@@ -18,13 +18,6 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          if [ -f /POL-FLS-2023/workflow_lock ]; then
-            echo "Compilation is already running. Exiting."
-            exit 1
-          else
             cd POL-FLS-2023
-            touch workflow_lock
             git pull
             ./compilar.sh
-            rm -f workflow_lock
-          fi
