@@ -1,6 +1,9 @@
 name: Compile scripts
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   release:
