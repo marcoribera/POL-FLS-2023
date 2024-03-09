@@ -22,9 +22,9 @@ jobs:
             echo "Compilation is already running. Exiting."
             exit 1
           else
-            touch /POL-FLS-2023/workflow_lock
             cd POL-FLS-2023
+            touch workflow_lock
             git pull
             ./compilar.sh
-            rm -f /POL-FLS-2023/workflow_lock
+            rm -f workflow_lock
           fi
