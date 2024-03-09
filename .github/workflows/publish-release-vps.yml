@@ -1,32 +1,26 @@
-name: Publish Release
+name: Compile scripts
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   release:
-    name: Publish Release
+    name: Compile scripts
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
-    - name: Upload dos scripts para o VPS
-      uses: appleboy/scp-action@v0.1.7
-      env:
-        HOST: ${{ secrets.HOST }}
-        USERNAME: ${{ secrets.USERNAME }}
-        PORT: ${{ secrets.PORT }}
-        KEY: ${{ secrets.SSHKEY }}
-      with:
-        source: "."
-        target: "/var/www/local/alguma_pasta_aqui"
-    - name: Deploy no servidor
+    - name: Compilação no servidor
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSHKEY }}
+        password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          chmod +x deploy.sh
-          ./deploy.sh
+            cd POL-FLS-2023
+            git pull
+            ./compilar.sh
