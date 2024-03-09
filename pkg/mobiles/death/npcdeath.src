@@ -272,6 +272,7 @@ program core_npcDeath(params)
 		var lastDamage := GetObjProperty(corpse, "LastDamage");
 		
 	if(!lastDamage)
+        // Do nothing
 	else
 		var region := GetRegionName(corpse);
 		var char_name := lastDamage.serial;
@@ -386,17 +387,17 @@ function res_pet(corpse)
 	DestroyItem(corpse);
 	SetCooldown(npc, "resurrect", 180);
 	var skills := GetObjProperty(npc, "petskills");
-		foreach skill in (skills.keys())
-			AP_SetTrueSkill(npc, skill, skills[skill]);
-		endforeach
+    foreach skill in (skills.keys())
+        AP_SetTrueSkill(npc, skill, skills[skill]);
+    endforeach
 
 //Desconta o DP dos fieis
 if ( (Getobjproperty(npc, "bond") == "fiel") )
 	var DP := AP_GetVital(npc, "DP");
 	AP_SetVital(npc, "DP", DP -10);
-		if (DP < 0)
-			AP_SetVital(npc, "DP", 0);
-		endif
+    if (DP < 0)
+        AP_SetVital(npc, "DP", 0);
+    endif
 endif
 
 //Para repor as habs do despertar natureza do pet

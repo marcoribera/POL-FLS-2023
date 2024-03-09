@@ -14,19 +14,20 @@ program summonSkeletaSteed(params)
 
 	var template := ":brainai:sheep";
     var lvl := Cint(AP_GetSkill(who, MAGICLORE));
-    var dice_roll := randomint (10);
-
+    var dice_roll := RandomDiceRoll("1d10");
+    PrintTextAbovePrivate(who, "rolou um "+dice_roll, who);
+    
     case ( dice_roll )
-        0: template := ":brainai:sheep";
-        1: template := ":brainai:dog";
+        1: template := ":brainai:sheep";
+        2: template := ":brainai:dog";
         3: template := ":brainai:warg";
-        2: template := ":brainai:panther";
-        4: template := ":brainai:horse1";
-        5: template := ":brainai:GrizzlyBear";
-        6: template := ":brainai:Ent";
-        7: template := ":brainai:hellhound";
-        8: template := ":brainai:PoisonElemental";
-        9: template := ":brainai:Daemon";
+        4: template := ":brainai:panther";
+        5: template := ":brainai:horse1";
+        6: template := ":brainai:GrizzlyBear";
+        7: template := ":brainai:Ent";
+        8: template := ":brainai:hellhound";
+        9: template := ":brainai:PoisonElemental";
+        10: template := ":brainai:Daemon";
     endcase
 
     if (template == error)
@@ -53,6 +54,7 @@ program summonSkeletaSteed(params)
         PlayObjectCenteredEffect(mount, 0x6D1D, 10, 20);
         sleep(1);
         PrintTextAbove(mount, "Teu chamado ressoou pelos planos, invocador ousado. Estou aqui para servir.");
+        duracao := Cint(AP_GetSkill(who, MAGICLORE));
     elseif (dice_roll == 0)
         PrintTextAbove(mount, "Beeh");
     endif

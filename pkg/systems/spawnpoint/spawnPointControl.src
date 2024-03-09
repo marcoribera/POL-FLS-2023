@@ -88,7 +88,6 @@ function hasplayernearSpawn(x, y, realm)
   return num_player > 0;
 endfunction
 
-
 //mata todos os spawns e coloca a lista "Empty"
 function KillChildren(spawnpoint)
   var i;

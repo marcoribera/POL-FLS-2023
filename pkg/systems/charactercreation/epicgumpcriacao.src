@@ -12,6 +12,7 @@ include ":disguise:disguise";
 include ":charactercreation:createchar";
 include ":datafile:datafile";
 include "include/say";
+include "include/creationUtils";
 
 function CultureGump(who)
     CONST BOTAO_FOTO_PROXIMA := "9904 9903";
@@ -19,30 +20,49 @@ function CultureGump(who)
 
     var gump := GFCreateGump();
     GFGumpPic(gump, 17, 31, 0x9E6); // background
-    //GFHTMLArea(gump, 114, 69, 192, 20, "<BASEFONT Size=15 Color=#999999 >Escolha sua cultura", 0, 0); //shadow
 
     GFHTMLArea(gump, 346, 56, 192, 40, "<BASEFONT Size=55 Color=#999999 >Escolha sua cultura", 0, 0); //shadow
     GFHTMLArea(gump, 345, 55, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Escolha sua cultura", 0, 0);
     var x := 63;
     var y := 100;
+    var i := 0;
+
     var btn_value := 0;
     var povos := {"Aigla", "Björska", "Povos do Leste", "Drow", "Elfo", "Polski", "Anão", "Orc"};
     var imagemFundo := 0x9E7;
-	//if((!imagemFundo) || (CInt(imagemFundo) > 30582) || (CInt(imagemFundo) < 30567))
-	//	imagemFundo := "30567";
-	//endif
-    GFGumpPic(gump, 298, 100, imagemFundo);
-    var aiglaText := "Os Aiglanos são um povo astuto e inclusivo, conhecido por sua capital Aquileia. Sua bandeira apresenta uma águia dourada em um fundo vermelho, simbolizando a seleção dos capazes. Eles são um povo mestiço, com variação de tom de pele, altura e tipo de cabelo. São disciplinados, valorizam a história e fazem do exercício físico um hábito.
-Historicamente, os Aiglanos prosperaram apesar dos desafios, aprendendo com suas fraquezas e remodelando-se. Passaram de um pequeno vilarejo para uma República, com um sistema político fechado. A ascensão do Imperador Crassus trouxe um período de bonança, com reformas militares e de governo que expandiram o poder do império.
-A religião Aiglana é flexível, absorvendo divindades dos povos conquistados através do ritual de evocatio. Os costumes incluem uma nobreza intocável, lealdade à legião e pagamento dos legionários durante campanhas.
-Em resumo, os Aiglanos são um povo resiliente e adaptável, com uma história marcada por conquistas militares e uma cultura diversificada.";
-    //function GFHTMLArea(byref gump, x, y, width, height, text, background:=0, scrollbar:=0)
 
     GFHTMLArea(gump, 100, 550, 650, 120, aiglaText, 1, 1);
-    //function GFAddButton(byref gump, x, y, off_id, on_id, btn_type:=GF_PAGE_BTN, btn_value:=0)
+    GFAddButton(gump, 273, 300, 9910, 9909, GF_PAGE_BTN, 200+i);
+    GFAddButton(gump, 543, 300, 9904, 9903, GF_PAGE_BTN, 200+i+10);
 
-    GFAddButton(gump, 273, 300, 9910, 9909, GF_PAGE_BTN, 110);
-    GFAddButton(gump, 543, 300, 9904, 9903, GF_PAGE_BTN, 111);
+    if (btn_value == 200+i)
+        imagemFundo++;
+        i++;
+    elseif (btn_value == 200+i+10) 
+        imagemFundo--;
+        i := 10 + i + 1;
+    endif
+
+    if (imagemFundo < 0x9E7)
+        imagemFundo := 0x9E7;
+    elseif (imagemFundo > 0x9EB)
+        imagemFundo := 0x9EB;
+    endif
+    
+    GFGumpPic(gump, 298, 100, imagemFundo);
+    print ( "btn_value: " + btn_value);
+    print ( "imagemFundo: " + imagemFundo);
+
+    return GFSendGump(who, gump);
+
+endfunction
+
+
+program epicCreationGump(who)
+    var input := CultureGump(who);
+
+endprogram
+
 
 
     //foreach povo in povos
@@ -59,12 +79,3 @@ Em resumo, os Aiglanos são um povo resiliente e adaptável, com uma história m
 
     //GFGumpPic(gump, 38, 103, 9773, 0);
     //GFGumpPic(gump, 296, 0, 9000, 0);
-
-    return GFSendGump(who, gump);
-
-endfunction
-
-
-program epicCreationGump(who)
-    CultureGump(who);
-endprogram
