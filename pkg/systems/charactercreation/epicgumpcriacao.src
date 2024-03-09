@@ -14,7 +14,7 @@ include ":datafile:datafile";
 include "include/say";
 include "include/creationUtils";
 
-function CultureGump(who)
+function CultureGump(who, culture_pic := 0x9E7)
     CONST BOTAO_FOTO_PROXIMA := "9904 9903";
     CONST BOTAO_FOTO_ANTERIOR := "9910 9909";
 
@@ -27,55 +27,35 @@ function CultureGump(who)
     var y := 100;
     var i := 0;
 
-    var btn_value := 0;
-    var povos := {"Aigla", "Björska", "Povos do Leste", "Drow", "Elfo", "Polski", "Anão", "Orc"};
-    var imagemFundo := 0x9E7;
+    var cultures := { "Aigla", "Björska", "Povos do Leste", "Har'oloth", "Alüriel", "Polkinea", "Badûran", "Gulthrak" };
 
     GFHTMLArea(gump, 100, 550, 650, 120, aiglaText, 1, 1);
-    GFAddButton(gump, 273, 300, 9910, 9909, GF_PAGE_BTN, 200+i);
-    GFAddButton(gump, 543, 300, 9904, 9903, GF_PAGE_BTN, 200+i+10);
-
-    if (btn_value == 200+i)
-        imagemFundo++;
-        i++;
-    elseif (btn_value == 200+i+10) 
-        imagemFundo--;
-        i := 10 + i + 1;
-    endif
-
-    if (imagemFundo < 0x9E7)
-        imagemFundo := 0x9E7;
-    elseif (imagemFundo > 0x9EB)
-        imagemFundo := 0x9EB;
-    endif
-    
-    GFGumpPic(gump, 298, 100, imagemFundo);
-    print ( "btn_value: " + btn_value);
-    print ( "imagemFundo: " + imagemFundo);
+    GFAddButton(gump, 273, 300, 9910, 9909, GF_PAGE_BTN, 201);
+    GFAddButton(gump, 543, 300, 9904, 9903, GF_PAGE_BTN, 210);
+   
+    GFGumpPic(gump, 298, 100, culture_pic);
 
     return GFSendGump(who, gump);
 
 endfunction
 
-
 program epicCreationGump(who)
     var input := CultureGump(who);
+    var culture_pic := 0x9E7;
+    var btn_value := input[0];
+    while (btn_value != 200)
+        if (btn_value == 201)
+            culture_pic++;
+        elseif (btn_value == 210) 
+            culture_pic--;
+        endif
+
+        if (culture_pic < 0x9E7)
+            culture_pic := 0x9E7;
+        elseif (culture_pic > 0x9EB)
+            culture_pic := 0x9EB;
+        endif
+        input := CultureGump(who, culture_pic);
+    endwhile
 
 endprogram
-
-
-
-    //foreach povo in povos
-    //    GFCheckBox(gump, 43, y+=30, 0x25FF, 0x2602, 0, btn_value+=1);
-    //    GFTextLine(gump, 73, y+=2, 500, povo);
-    //endforeach
-    //GFTextLine(gump, 63, y+=30, 0, );
-    //GFTextLine(gump, 63, y+=30, 0, );
-    //GFTextLine(gump, 63, y+=30, 0, );
-    //GFTextLine(gump, 63, y+=30, 0, );
-    //GFTextLine(gump, 63, y+=30, 0, );
-    //GFTextLine(gump, 63, y+=30, 0, );
-    //GFTextLine(gump, 63, y+=30, 0, );
-
-    //GFGumpPic(gump, 38, 103, 9773, 0);
-    //GFGumpPic(gump, 296, 0, 9000, 0);
