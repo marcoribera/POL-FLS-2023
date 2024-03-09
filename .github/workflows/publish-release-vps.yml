@@ -19,7 +19,7 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           if [ -f /POL-FLS-2023/workflow_lock ]; then
-            echo "Workflow is already running. Exiting."
+            echo "Compilation is already running. Exiting."
             exit 1
           else
             touch /POL-FLS-2023/workflow_lock
