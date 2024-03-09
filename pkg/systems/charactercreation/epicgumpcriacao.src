@@ -14,48 +14,56 @@ include ":datafile:datafile";
 include "include/say";
 include "include/creationUtils";
 
-function CultureGump(who, culture_pic := 0x9E7)
-    CONST BOTAO_FOTO_PROXIMA := "9904 9903";
-    CONST BOTAO_FOTO_ANTERIOR := "9910 9909";
-
-    var gump := GFCreateGump();
-    GFGumpPic(gump, 17, 31, 0x9E6); // background
-
-    GFHTMLArea(gump, 346, 56, 192, 40, "<BASEFONT Size=55 Color=#999999 >Escolha sua cultura", 0, 0); //shadow
-    GFHTMLArea(gump, 345, 55, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Escolha sua cultura", 0, 0);
-    var x := 63;
-    var y := 100;
-    var i := 0;
-
-    var cultures := { "Aigla", "Björska", "Povos do Leste", "Har'oloth", "Alüriel", "Polkinea", "Badûran", "Gulthrak" };
-
-    GFHTMLArea(gump, 100, 550, 650, 120, aiglaText, 1, 1);
-    GFAddButton(gump, 273, 300, 9910, 9909, GF_PAGE_BTN, 201);
-    GFAddButton(gump, 543, 300, 9904, 9903, GF_PAGE_BTN, 210);
-   
-    GFGumpPic(gump, 298, 100, culture_pic);
-
-    return GFSendGump(who, gump);
-
-endfunction
-
 program epicCreationGump(who)
-    var input := CultureGump(who);
     var culture_pic := 0x9E7;
-    var btn_value := input[0];
-    while (btn_value != 200)
+    var btn_value;
+
+    while (1)
+        var input := CultureGump(who, culture_pic);
+        btn_value := input[0]; 
+
         if (btn_value == 201)
             culture_pic++;
         elseif (btn_value == 210) 
             culture_pic--;
+        else
+            break;
         endif
 
         if (culture_pic < 0x9E7)
-            culture_pic := 0x9E7;
-        elseif (culture_pic > 0x9EB)
             culture_pic := 0x9EB;
+        elseif (culture_pic > 0x9EB)
+            culture_pic := 0x9E7;
         endif
-        input := CultureGump(who, culture_pic);
+    endwhile
+
+    var chardata := struct;
+	chardata.+Skills := dictionary;
+	chardata.+Credits := 100;
+	chardata.+credits := 100;
+	chardata.+str := 40;
+	chardata.+dex := 40;
+	chardata.+int := 40;
+    chardata.+culture := getCultureByPictureId(culture_pic);
+
+    while (1)
+        var input := CultureGump(who, culture_pic);
+        btn_value := input[0]; 
+
+        if (btn_value == 201)
+            culture_pic++;
+        elseif (btn_value == 210) 
+            culture_pic--;
+        else
+            break;
+        endif
+
+        if (culture_pic < 0x9E7)
+            culture_pic := 0x9EB;
+        elseif (culture_pic > 0x9EB)
+            culture_pic := 0x9E7;
+        endif
     endwhile
 
 endprogram
+
