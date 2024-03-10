@@ -16,13 +16,19 @@ include "include/creationUtils";
 
 program epicCreationGump(who)
     var chardata := struct;
-	chardata.+Skills := dictionary;
-	chardata.+Credits := 100;
-	chardata.+credits := 100;
-	chardata.+str := 40;
-	chardata.+dex := 40;
-	chardata.+int := 40;
+	//chardata.+Skills := dictionary;
+	//chardata.+Credits := 100;
+	//chardata.+credits := 100;
+	//chardata.+str := 40;
+	//chardata.+dex := 40;
+	//chardata.+int := 40;
 
+    var culture_pic := culturalSelection(who, chardata);
+    racialSelection(who, chardata, culture_pic);
+    classSelection(who, chardata, culture_pic);
+endprogram
+
+function culturalSelection(who, chardata)
     var culture_pic := 0x9E7;
     var btn_value;
     while (1)
@@ -44,33 +50,50 @@ program epicCreationGump(who)
         endif
     endwhile
     chardata.+culture := getCultureByPictureId(culture_pic);
+    return culture_pic;
+endfunction
 
+function racialSelection(who, chardata, culture_pic)
+    var btn_value;
     while (1)
         var input := RaceGump(who, culture_pic);
         foreach key in (input.keys)
             btn_value := key;
         endforeach
-        
+
         if (btn_value == 201)
             chardata.race := "Anao";
+            break;
         elseif (btn_value == 202) 
             chardata.race := "Drow";
+            break;
         elseif (btn_value == 203) 
             chardata.race := "Elfo";
+            break;
         elseif (btn_value == 204) 
             chardata.race := "Humano";
+            break;
         elseif (btn_value == 205) 
             chardata.race := "Orc";
+            break;
         elseif (btn_value == 206) 
             chardata.race := "Polski";
+            break;
+        elseif (chardata.culture == "Aiglano" || chardata.culture == "Povos do Leste")
+            SendSysMessageEX(who, "Escolha sua raça!", SSM_FAIL);
         else
             chardata.race := getRaceByCulturalId(culture_pic)[1];
+            break;
         endif
+    endwhile
+    SendSysMessageEX(who, "Voce será um "+chardata.race, SSM_INFO);
 
-        break;
-     endwhile
-        SetObjProperty(who, "chardata", chardata);
-     while (1)
+    SetObjProperty(who, "chardata", chardata);
+endfunction
+
+function classSelection(who, chardata, culture_pic)
+    var btn_value;
+    while (1)
         var input := ClassGump(who, culture_pic);
         foreach key in (input.keys)
             btn_value := key;
@@ -89,10 +112,8 @@ program epicCreationGump(who)
             break;
         else
             SendSysMessageEX(who, "Escolha seu caminho", SSM_FAIL);
-            //input := ClassGump(who, culture_pic);
         endif
     endwhile
     
     SendSysMessageEX(who, "Você escolheu o caminho do "+chardata.classe, SSM_INFO);
-endprogram
-
+endfunction
