@@ -75,7 +75,7 @@ function racialSelection(who, culture_pic)
         elseif (btn_value == 206) 
             chardata.race := "Polski";
             break;
-        elseif (chardata.culture == "Aiglano" || chardata.culture == "Povos do Leste")
+        elseif (chardata.culture == CULTURA.AIGLANA || chardata.culture == CULTURA.LESTE)
             SendSysMessageEX(who, "Escolha sua raça!", SSM_FAIL);
         else
             chardata.race := getRaceByCulturalId(culture_pic)[1];

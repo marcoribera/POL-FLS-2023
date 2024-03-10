@@ -39,8 +39,6 @@ Curiosidades sobre os Orcs incluem seu uso de armaduras feitas de couro, ossos e
 Na adolescência, os Orcs são submetidos a ritos de passagem no deserto e enfrentam os perigos das dunas. A presença de forasteiros no deserto era comum, mas os Orcs geralmente não forneciam ajuda, exceto em situações de perigo contra os Aklats.
 Alguns Orcs vivem sem tribo, considerados perigosos por não seguirem as tradições. Eles se esforçam para resolver conflitos na Arena de Sangue, mesmo fora do deserto, mantendo um código de honra entre eles.";
 
-var cultures := { "Aigla", "Björska", "Povos do Leste", "Har'oloth", "Alüriel", "Polkinea", "Badûran", "Gulthrak" };
-
 const AIGLA_ID := 0x9E7;
 const HAROLOTH_ID := 0x9E8;
 const LESTE_ID := 0x9EA;
@@ -50,18 +48,21 @@ const POLKINEA_ID := 0x9EB;
 const BADURAN_ID := "";
 const GULTHRAK_ID := "";
 
+var CULTURA := struct{AIGLANA := "Aiglana", HAROLOTH := "Har'oloth", LESTE := "Povos do Leste", BJORSKA := "Björska", ALURIEL := "Alüriel", BADURAN := "Badûran", GULTHRAK := "Gulthrak", POLKINEA := "Polkinea"};
+var RACA := struct{ANAO := "Anão", DROW := "Drow", ELFO := "Elfo", ORC := "Orc", HUMANO :="Humano", POLSKI := "Polski"};
+
 function getCultureByPictureId(culture_id)
     case (culture_id)
         AIGLA_ID:
-            return "Aiglano";
+            return CULTURA.AIGLANA;
         HAROLOTH_ID:
-            return "Har'oloth";
+            return CULTURA.HAROLOTH;
         ALURIEL_ID:
-            return "Alüriel";
+            return CULTURA.ALURIEL;
         LESTE_ID:
-            return "Povos do Leste";
+            return CULTURA.LESTE;
         POLKINEA_ID:
-            return "Polkinea";
+            return CULTURA.POLKINEA;
     endcase
 endfunction
 
@@ -77,7 +78,6 @@ function CultureGump(who, culture_pic)
     var x := 63;
     var y := 100;
     var i := 0;
-
 
     GFHTMLArea(gump, 100, 550, 650, 120, getCulturalDescriptionByPictureId(culture_pic), 1, 1);
     GFAddButton(gump, 543, 300, next_btn[1], next_btn[2], GF_CLOSE_BTN, 201);
@@ -107,7 +107,7 @@ endfunction
 function RaceGump(who, culture_pic)
     var next_btn := array{"9903", "9904"};
     var prev_btn := array{"9909", "9910"};
-    var cultures := { "Aigla", "Björska", "Povos do Leste", "Har'oloth", "Alüriel", "Polkinea", "Badûran", "Gulthrak" };
+
     var races := getRaceByCulturalId(culture_pic);
     var gump := GFCreateGump();
     GFGumpPic(gump, 17, 31, 0x9E6); // background
@@ -143,16 +143,16 @@ function RaceGump(who, culture_pic)
 endfunction
 
 function getRaceByCulturalId(culture_pic)
-    var races := array{};
+    var races;
     case (culture_pic)
         HAROLOTH_ID:
-            races := {"Drow"};
+            races := {RACA.DROW};
         ALURIEL_ID:
-            races := {"Elfo"};
+            races := {RACA.ELFO};
         POLKINEA_ID:
-            races := {"Polski"};
+            races := {RACA.POLSKI};
         default:
-            races := array{"Anão", "Drow", "Elfo", "Humano", "Orc", "Polski"};
+            races := array{RACA.ANAO, RACA.DROW, RACA.ELFO, RACA.HUMANO, RACA.ORC, RACA.POLSKI};
     endcase
     return races;
 endfunction
@@ -180,8 +180,7 @@ function ClassGump(who, culture_pic)
     var all_classes := array{ 
         "Caminho das Armas",
 		"Caminho do Subterfúgio",
-		"Caminho da Sabedoria",
-		"Caminho da Trabalhador"
+		"Caminho da Sabedoria"
     };
     var race := GetObjProperty(who, "chardata").race;
     var color := "#000000";
