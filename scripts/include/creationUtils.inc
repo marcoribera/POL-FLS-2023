@@ -91,15 +91,15 @@ endfunction
 
 function getCulturalDescriptionByPictureId(culture_id)
     case (culture_id)
-        0x9E7:
+        AIGLA_ID:
             return aiglaText;
-        0x9E8:
+        HAROLOTH_ID:
             return harolothText;
-        0x9E9:
+        ALURIEL_ID:
             return alurielText;
-        0x9EA:
+        LESTE_ID:
             return lesteText;
-        0x9EB:
+        POLKINEA_ID:
             return polkineaText;
     endcase
 endfunction
@@ -108,30 +108,51 @@ function RaceGump(who, culture_pic)
     var next_btn := array{"9903", "9904"};
     var prev_btn := array{"9909", "9910"};
     var cultures := { "Aigla", "Björska", "Povos do Leste", "Har'oloth", "Alüriel", "Polkinea", "Badûran", "Gulthrak" };
-
-    var races := array{"Humano", "Drow", "Polski", "Elfo", "Anão", "Orc"};
-
+    var races := getRaceByCulturalId(culture_pic);
     var gump := GFCreateGump();
     GFGumpPic(gump, 17, 31, 0x9E6); // background
 
-    GFHTMLArea(gump, 346, 56, 192, 40, "<BASEFONT Size=55 Color=#999999 >Escolha sua raça", 0, 0); //shadow
-    GFHTMLArea(gump, 345, 55, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Escolha sua raça", 0, 0);
     var x := 63;
     var y := 100;
-    var i := 0;
+    var i := 1;
+    var raceText := "Escolha sua raça";
+    if (races.size() == 1)
+        raceText := "Raça selecionada";
+    endif
+    GFHTMLArea(gump, x+21, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 > "+raceText, 0, 0); //shadow
+    GFHTMLArea(gump, x+20, y-25, 192, 40, "<BASEFONT Size=55 Color=#ffffff > "+raceText, 0, 0);
+    
+    GFHTMLArea(gump, 346, 66, 192, 40, "<BASEFONT Size=55 Color=#999999 >Cultura selecionada", 0, 0); //shadow
+    GFHTMLArea(gump, 345, 65, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Cultura selecionada", 0, 0);
 
-    for (i := 1; i <= races.size(); i++)
-        var race := races[i];
- 
+    foreach race in races
         var color := "#000000";
         GFHTMLArea(gump, x, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, race), 1, 0);
-        GFAddButton(gump, x+211, y+5, 10006, 10006, GF_CLOSE_BTN, 200+i);
+        if (races.size() > 1)
+            GFRadioButton(gump, x+201, y, 0x9C4E, 0x9C4F, 0, 200+i); // Anão
+        endif
         sleepms(2);
         y += 26;
-    endfor
-    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 200);
+        i++;
+    endforeach
 
+    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 200);
     GFGumpPic(gump, 298, 100, culture_pic);
 
     return GFSendGump(who, gump);
+endfunction
+
+function getRaceByCulturalId(culture_pic)
+    var races := array{};
+    case (culture_pic)
+        HAROLOTH_ID:
+            races := {"Drow"};
+        ALURIEL_ID:
+            races := {"Elfo"};
+        POLKINEA_ID:
+            races := {"Polski"};
+        default:
+            races := array{"Anão", "Drow", "Elfo", "Humano", "Orc", "Polski"};
+    endcase
+    return races;
 endfunction

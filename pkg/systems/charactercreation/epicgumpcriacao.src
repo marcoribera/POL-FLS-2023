@@ -15,9 +15,16 @@ include "include/say";
 include "include/creationUtils";
 
 program epicCreationGump(who)
+    var chardata := struct;
+	chardata.+Skills := dictionary;
+	chardata.+Credits := 100;
+	chardata.+credits := 100;
+	chardata.+str := 40;
+	chardata.+dex := 40;
+	chardata.+int := 40;
+
     var culture_pic := 0x9E7;
     var btn_value;
-
     while (1)
         var input := CultureGump(who, culture_pic);
         btn_value := input[0]; 
@@ -36,34 +43,31 @@ program epicCreationGump(who)
             culture_pic := 0x9E7;
         endif
     endwhile
-
-    var chardata := struct;
-	chardata.+Skills := dictionary;
-	chardata.+Credits := 100;
-	chardata.+credits := 100;
-	chardata.+str := 40;
-	chardata.+dex := 40;
-	chardata.+int := 40;
     chardata.+culture := getCultureByPictureId(culture_pic);
 
     while (1)
         var input := RaceGump(who, culture_pic);
-        btn_value := input[0]; 
-
+        foreach key in (input.keys)
+            btn_value := key;
+        endforeach
+        
         if (btn_value == 201)
-            culture_pic++;
-        elseif (btn_value == 210) 
-            culture_pic--;
+            chardata.race := "Anao";
+        elseif (btn_value == 202) 
+            chardata.race := "Drow";
+        elseif (btn_value == 203) 
+            chardata.race := "Elfo";
+        elseif (btn_value == 204) 
+            chardata.race := "Humano";
+        elseif (btn_value == 205) 
+            chardata.race := "Orc";
+        elseif (btn_value == 206) 
+            chardata.race := "Polski";
         else
-            break;
+            chardata.race := getRaceByCulturalId(culture_pic)[1];
         endif
 
-        if (culture_pic < 0x9E7)
-            culture_pic := 0x9EB;
-        elseif (culture_pic > 0x9EB)
-            culture_pic := 0x9E7;
-        endif
-    endwhile
-
+        break;
+     endwhile
 endprogram
 
