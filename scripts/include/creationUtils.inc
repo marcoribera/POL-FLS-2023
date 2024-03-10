@@ -129,7 +129,7 @@ function RaceGump(who, culture_pic)
         var color := "#000000";
         GFHTMLArea(gump, x, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, race), 1, 0);
         if (races.size() > 1)
-            GFRadioButton(gump, x+201, y, 0x9C4E, 0x9C4F, 0, 200+i); // Anão
+            GFRadioButton(gump, x+201, y, 0x9C4E, 0x9C4F, 0, 200+i);
         endif
         sleepms(2);
         y += 26;
@@ -155,4 +155,52 @@ function getRaceByCulturalId(culture_pic)
             races := array{"Anão", "Drow", "Elfo", "Humano", "Orc", "Polski"};
     endcase
     return races;
+endfunction
+
+function ClassGump(who, culture_pic)
+    var next_btn := array{"9903", "9904"};
+    var prev_btn := array{"9909", "9910"};
+    var gump := GFCreateGump();
+    GFGumpPic(gump, 17, 31, 0x9E6); // background
+
+    var x := 63;
+    var y := 100;
+    var i := 1;
+
+    var raceText := "Raça selecionada";
+    GFHTMLArea(gump, x+21, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 > "+raceText, 0, 0); //shadow
+    GFHTMLArea(gump, x+20, y-25, 192, 40, "<BASEFONT Size=55 Color=#ffffff > "+raceText, 0, 0);
+    
+    GFHTMLArea(gump, 346, 66, 192, 40, "<BASEFONT Size=55 Color=#999999 >Cultura selecionada", 0, 0); //shadow
+    GFHTMLArea(gump, 345, 65, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Cultura selecionada", 0, 0);
+
+    GFHTMLArea(gump, x+16, y+40, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seu caminho", 0, 0); //shadow
+    GFHTMLArea(gump, x+15, y+39, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha seu caminho", 0, 0);
+
+    var all_classes := array{ 
+        "Caminho das Armas",
+		"Caminho do Subterfúgio",
+		"Caminho da Sabedoria",
+		"Caminho da Trabalhador"
+    };
+    var race := GetObjProperty(who, "chardata").race;
+    var color := "#000000";
+    GFHTMLArea(gump, x, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, race), 1, 0);
+    foreach class in (all_classes)
+        GFHTMLArea(gump, x, y+65, 192, 24, "<BASEFONT color=#{}>{}".format(color, class), 1, 0);
+        GFRadioButton(gump, x+201, y+65, 0x9C4E, 0x9C4F, 0, 200+i);
+
+        sleepms(2);
+        y += 26;
+        i++;
+    endforeach
+
+    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 200);
+    GFGumpPic(gump, 298, 100, culture_pic);
+
+    return GFSendGump(who, gump);
+endfunction
+
+function getClasses()
+
 endfunction

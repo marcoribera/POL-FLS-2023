@@ -69,5 +69,24 @@ program epicCreationGump(who)
 
         break;
      endwhile
+        SetObjProperty(who, "chardata", chardata);
+     while (1)
+        var input := ClassGump(who, culture_pic);
+        foreach key in (input.keys)
+            btn_value := key;
+        endforeach
+        if (btn_value == 201)
+            chardata.+classe := "Guerreiro";
+        elseif (btn_value == 202) 
+            chardata.+classe := "Ladino";
+        elseif (btn_value == 203) 
+            chardata.+classe := "Sabio";
+        elseif (btn_value == 204) 
+            chardata.+classe := "Artifice";
+        endif
+
+        break;
+     endwhile
+     print(chardata.classe);
 endprogram
 
