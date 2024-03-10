@@ -77,16 +77,22 @@ program epicCreationGump(who)
         endforeach
         if (btn_value == 201)
             chardata.+classe := "Guerreiro";
+            break;
         elseif (btn_value == 202) 
             chardata.+classe := "Ladino";
+            break;
         elseif (btn_value == 203) 
             chardata.+classe := "Sabio";
+            break;
         elseif (btn_value == 204) 
             chardata.+classe := "Artifice";
+            break;
+        else
+            SendSysMessageEX(who, "Escolha seu caminho", SSM_FAIL);
+            //input := ClassGump(who, culture_pic);
         endif
-
-        break;
-     endwhile
-     print(chardata.classe);
+    endwhile
+    
+    SendSysMessageEX(who, "Você escolheu o caminho do "+chardata.classe, SSM_INFO);
 endprogram
 
