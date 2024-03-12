@@ -40,29 +40,37 @@ Na adolescência, os Orcs são submetidos a ritos de passagem no deserto e enfre
 Alguns Orcs vivem sem tribo, considerados perigosos por não seguirem as tradições. Eles se esforçam para resolver conflitos na Arena de Sangue, mesmo fora do deserto, mantendo um código de honra entre eles.";
 
 const AIGLA_ID := 0x9E7;
-const HAROLOTH_ID := 0x9E8;
-const LESTE_ID := 0x9EA;
-const BJORSKA_ID := "";
-const ALURIEL_ID := 0x9E9;
-const POLKINEA_ID := 0x9EB;
-const BADURAN_ID := "";
-const GULTHRAK_ID := "";
+const ALURIEL_ID := 0x9E8;
+const BADURAN_ID := 0x9E9;
+const BJORSKA_ID := 0x9EA;
+const GULTHRAK_ID := 0x9EB;
+const HAROLOTH_ID := 0x9EC;
+const POLKINEA_ID := 0x9ED;
+const LESTE_ID := 0x9EE;
 
 var CULTURA := struct{AIGLANA := "Aiglana", HAROLOTH := "Har'oloth", LESTE := "Povos do Leste", BJORSKA := "Björska", ALURIEL := "Alüriel", BADURAN := "Badûran", GULTHRAK := "Gulthrak", POLKINEA := "Polkinea"};
 var RACA := struct{ANAO := "Anão", DROW := "Drow", ELFO := "Elfo", ORC := "Orc", HUMANO :="Humano", POLSKI := "Polski"};
+var BACKGROUNDS := struct{DOMESTIC_WORK := "Trabalhador Doméstico", METAL_WORK := "Criado na Forja", GATHERING := "Coletador de recursos", PICK_POCKETING := "Criado nas ruas", MECHANICAL_APITUDE := "Aventureiro", HANDLE_ANIMAL := "Criado em Circo", SURVIVAL := "Caçador", MEDICINE := "Socorrista", WOOD_WORK := "Marceneiro"};
+var CULTURAL_BACKGROUNDS := struct{ "Aiglana" := "Legionário", "Har'oloth" := "Véu de Idrith", "Polkinea" := "Pés Leves", "Alüriel" := "Templo da Mente", "Björska" := "Escaramuçador", "Gulthrak" := "Brutamontes", "Badûran" := "Filho da Montanha", "Povos do Leste" := "Andarilho"};
 
 function getCultureByPictureId(culture_id)
     case (culture_id)
         AIGLA_ID:
             return CULTURA.AIGLANA;
-        HAROLOTH_ID:
-            return CULTURA.HAROLOTH;
         ALURIEL_ID:
             return CULTURA.ALURIEL;
-        LESTE_ID:
-            return CULTURA.LESTE;
+        BADURAN_ID:
+            return CULTURA.BADURAN;
+        BJORSKA_ID:
+            return CULTURA.BJORSKA;
+        GULTHRAK_ID:
+            return CULTURA.GULTHRAK;
+        HAROLOTH_ID:
+            return CULTURA.HAROLOTH;
         POLKINEA_ID:
             return CULTURA.POLKINEA;
+        LESTE_ID:
+            return CULTURA.LESTE;
     endcase
 endfunction
 
@@ -93,14 +101,20 @@ function getCulturalDescriptionByPictureId(culture_id)
     case (culture_id)
         AIGLA_ID:
             return aiglaText;
-        HAROLOTH_ID:
-            return harolothText;
         ALURIEL_ID:
             return alurielText;
-        LESTE_ID:
-            return lesteText;
+        BADURAN_ID:
+            return baduranText;
+        BJORSKA_ID:
+            return bjorskaText;
+        GULTHRAK_ID:
+            return gulthrakText;
+        HAROLOTH_ID:
+            return harolothText;
         POLKINEA_ID:
             return polkineaText;
+        LESTE_ID:
+            return lesteText;
     endcase
 endfunction
 
@@ -200,6 +214,57 @@ function ClassGump(who, culture_pic)
     return GFSendGump(who, gump);
 endfunction
 
-function getClasses()
+function backgroundGump(who, culture_pic)
+    var next_btn := array{"9903", "9904"};
+    var prev_btn := array{"9909", "9910"};
+    var gump := GFCreateGump();
+    GFGumpPic(gump, 17, 31, 0x9E6); // background
 
+    var x := 63;
+    var y := 100;
+    var i := 1;
+
+    var raceText := "Raça selecionada";
+    var chardata := GetObjProperty(who, "chardata");
+    var class := chardata.classe;
+    GFHTMLArea(gump, x+21, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 > "+raceText, 0, 0); //shadow
+    GFHTMLArea(gump, x+20, y-25, 192, 40, "<BASEFONT Size=55 Color=#ffffff > "+raceText, 0, 0);
+    
+    GFHTMLArea(gump, 346, 66, 192, 40, "<BASEFONT Size=55 Color=#999999 >Cultura selecionada", 0, 0); //shadow
+    GFHTMLArea(gump, 345, 65, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Cultura selecionada", 0, 0);
+
+    GFHTMLArea(gump, x+21, y+29, 192, 40, "<BASEFONT Size=55 Color=#999999 > Classe selecionada", 0, 0); //shadow
+    GFHTMLArea(gump, x+20, y+30, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Classe selecionada", 0, 0);
+
+    GFHTMLArea(gump, x+16, y+96, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seu histórico", 0, 0); //shadow
+    GFHTMLArea(gump, x+15, y+95, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha seu histórico", 0, 0);
+    var all_backgrounds := BACKGROUNDS;
+    VAR cultural_bg := backgroundByCulture(who);
+    var race := GetObjProperty(who, "chardata").race;
+    var color := "#000000";
+    GFHTMLArea(gump, x+16, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, race), 1, 0);
+    GFHTMLArea(gump, x+16, y+51, 192, 24, "<BASEFONT color=#{}>{}".format(color, class), 1, 0);
+
+    foreach bg in (all_backgrounds)
+        GFHTMLArea(gump, x, y+116, 192, 24, "<BASEFONT color=#{}>{}".format(color, bg), 1, 0);
+        GFRadioButton(gump, x+201, y+116, 0x9C4E, 0x9C4F, 0, 200+i);
+
+        sleepms(2);
+        y += 26;
+        i++;
+    endforeach
+    GFHTMLArea(gump, x, y+116, 192, 24, "<BASEFONT color=#{}>{}".format(color, cultural_bg), 1, 0);
+    GFRadioButton(gump, x+201, y+116, 0x9C4E, 0x9C4F, 0, 200+i);
+
+    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 200);
+    GFGumpPic(gump, 298, 100, culture_pic);
+
+    return GFSendGump(who, gump);
+endfunction
+
+function backgroundByCulture(who)
+    var chardata := GetObjProperty(who, "chardata");
+    var culture := chardata.culture;
+
+    return CULTURAL_BACKGROUNDS[culture];
 endfunction

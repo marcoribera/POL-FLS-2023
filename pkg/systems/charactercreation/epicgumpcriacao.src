@@ -18,6 +18,7 @@ program epicCreationGump(who)
     var culture_pic := culturalSelection(who);
     racialSelection(who, culture_pic);
     classSelection(who, culture_pic);
+    backgroundSelection(who, culture_pic);
 endprogram
 
 function culturalSelection(who)
@@ -37,8 +38,8 @@ function culturalSelection(who)
         endif
 
         if (culture_pic < 0x9E7)
-            culture_pic := 0x9EB;
-        elseif (culture_pic > 0x9EB)
+            culture_pic := 0x9EE;
+        elseif (culture_pic > 0x9EE)
             culture_pic := 0x9E7;
         endif
     endwhile
@@ -58,22 +59,22 @@ function racialSelection(who, culture_pic)
             btn_value := key;
         endforeach
         if (btn_value == 201)
-            chardata.race := "Anao";
+            chardata.race := RACA.ANAO;
             break;
         elseif (btn_value == 202) 
-            chardata.race := "Drow";
+            chardata.race := RACA.DROW;
             break;
         elseif (btn_value == 203) 
-            chardata.race := "Elfo";
+            chardata.race := RACA.ELFO;
             break;
         elseif (btn_value == 204) 
-            chardata.race := "Humano";
+            chardata.race := RACA.HUMANO;
             break;
         elseif (btn_value == 205) 
-            chardata.race := "Orc";
+            chardata.race := RACA.ORC;
             break;
         elseif (btn_value == 206) 
-            chardata.race := "Polski";
+            chardata.race := RACA.POLSKI;
             break;
         elseif (chardata.culture == CULTURA.AIGLANA || chardata.culture == CULTURA.LESTE)
             SendSysMessageEX(who, "Escolha sua raça!", SSM_FAIL);
@@ -104,9 +105,6 @@ function classSelection(who, culture_pic)
         elseif (btn_value == 203) 
             chardata.+classe := "Sabio";
             break;
-        elseif (btn_value == 204) 
-            chardata.+classe := "Artifice";
-            break;
         else
             SendSysMessageEX(who, "Escolha seu caminho", SSM_FAIL);
         endif
@@ -114,4 +112,30 @@ function classSelection(who, culture_pic)
 
     SetObjProperty(who, "chardata", chardata);
     SendSysMessageEX(who, "Você escolheu o caminho do "+chardata.classe, SSM_INFO);
+endfunction
+
+function backgroundSelection(who, culture_pic)
+    var btn_value;
+    var chardata := GetObjProperty(who, "chardata");
+    while (1)
+        var input := backgroundGump(who, culture_pic);
+        foreach key in (input.keys)
+            btn_value := key;
+        endforeach
+        if (btn_value == 201)
+            chardata.+background := "Guerreiro";
+            break;
+        elseif (btn_value == 202) 
+            chardata.+background := "Ladino";
+            break;
+        elseif (btn_value == 203) 
+            chardata.+background := "Sabio";
+            break;
+        else
+            SendSysMessageEX(who, "Escolha seu caminho", SSM_FAIL);
+        endif
+    endwhile
+
+    SetObjProperty(who, "chardata", chardata);
+    SendSysMessageEX(who, "Você escolheu o caminho do "+chardata.background, SSM_INFO);
 endfunction
