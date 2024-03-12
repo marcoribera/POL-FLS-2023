@@ -50,7 +50,7 @@ const LESTE_ID := 0x9EE;
 
 var CULTURA := struct{AIGLANA := "Aiglana", HAROLOTH := "Har'oloth", LESTE := "Povos do Leste", BJORSKA := "Björska", ALURIEL := "Alüriel", BADURAN := "Badûran", GULTHRAK := "Gulthrak", POLKINEA := "Polkinea"};
 var RACA := struct{ANAO := "Anão", DROW := "Drow", ELFO := "Elfo", ORC := "Orc", HUMANO :="Humano", POLSKI := "Polski"};
-var BACKGROUNDS := struct{DOMESTIC_WORK := "Trabalhador Doméstico", METAL_WORK := "Criado na Forja", GATHERING := "Coletador de recursos", PICK_POCKETING := "Criado nas ruas", MECHANICAL_APITUDE := "Aventureiro", HANDLE_ANIMAL := "Criado em Circo", SURVIVAL := "Caçador", MEDICINE := "Socorrista", WOOD_WORK := "Marceneiro"};
+var BACKGROUNDS := struct{DOMESTIC_WORK := "Mestre do Lar", METAL_WORK := "Ferreiro aprendiz", GATHERING := "Explorador de recursos", PICK_POCKETING := "Rato de rua", MECHANICAL_APITUDE := "Aventureiro", HANDLE_ANIMAL := "Domador de Feras", SURVIVAL := "Caçador", MEDICINE := "Curandeiro itinerante", WOOD_WORK := "Marceneiro"};
 var CULTURAL_BACKGROUNDS := struct{ "Aiglana" := "Legionário", "Har'oloth" := "Véu de Idrith", "Polkinea" := "Pés Leves", "Alüriel" := "Templo da Mente", "Björska" := "Escaramuçador", "Gulthrak" := "Brutamontes", "Badûran" := "Filho da Montanha", "Povos do Leste" := "Andarilho"};
 
 function getCultureByPictureId(culture_id)
@@ -242,8 +242,8 @@ function backgroundGump(who, culture_pic)
     GFHTMLArea(gump, x+21, y+29, 192, 40, "<BASEFONT Size=55 Color=#999999 > Classe selecionada", 0, 0); //shadow
     GFHTMLArea(gump, x+20, y+30, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Classe selecionada", 0, 0);
 
-    GFHTMLArea(gump, x+16, y+96, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seu histórico", 0, 0); //shadow
-    GFHTMLArea(gump, x+15, y+95, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha seu histórico", 0, 0);
+    GFHTMLArea(gump, x+16, y+96, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seu passado", 0, 0); //shadow
+    GFHTMLArea(gump, x+15, y+95, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha seu passado", 0, 0);
     var all_backgrounds := BACKGROUNDS;
     VAR cultural_bg := backgroundByCulture(who);
     var race := GetObjProperty(who, "chardata").race;

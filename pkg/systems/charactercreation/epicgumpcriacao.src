@@ -158,5 +158,5 @@ function backgroundSelection(who, culture_pic)
     endwhile
 
     SetObjProperty(who, "chardata", chardata);
-    SendSysMessageEX(who, "Seu histórico é "+chardata.background, SSM_INFO);
+    SendSysMessageEX(who, "Seu passado é "+chardata.background, SSM_INFO);
 endfunction
