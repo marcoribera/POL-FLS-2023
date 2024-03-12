@@ -165,6 +165,12 @@ function getRaceByCulturalId(culture_pic)
             races := {RACA.ELFO};
         POLKINEA_ID:
             races := {RACA.POLSKI};
+        GULTHRAK_ID:
+            races := {RACA.ORC};
+        BADURAN_ID:
+            races := {RACA.ANAO};
+        BJORSKA_ID:
+            races := {RACA.HUMANO};
         default:
             races := array{RACA.ANAO, RACA.DROW, RACA.ELFO, RACA.HUMANO, RACA.ORC, RACA.POLSKI};
     endcase
@@ -248,7 +254,6 @@ function backgroundGump(who, culture_pic)
     foreach bg in (all_backgrounds)
         GFHTMLArea(gump, x, y+116, 192, 24, "<BASEFONT color=#{}>{}".format(color, bg), 1, 0);
         GFRadioButton(gump, x+201, y+116, 0x9C4E, 0x9C4F, 0, 200+i);
-
         sleepms(2);
         y += 26;
         i++;

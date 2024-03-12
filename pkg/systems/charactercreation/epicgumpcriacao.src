@@ -123,19 +123,40 @@ function backgroundSelection(who, culture_pic)
             btn_value := key;
         endforeach
         if (btn_value == 201)
-            chardata.+background := "Guerreiro";
+            chardata.+background := BACKGROUNDS.DOMESTIC_WORK;
             break;
         elseif (btn_value == 202) 
-            chardata.+background := "Ladino";
+            chardata.+background := BACKGROUNDS.GATHERING;
             break;
         elseif (btn_value == 203) 
-            chardata.+background := "Sabio";
+            chardata.+background := BACKGROUNDS.HANDLE_ANIMAL;
+            break;
+        elseif (btn_value == 204) 
+            chardata.+background := BACKGROUNDS.MECHANICAL_APITUDE;
+            break;
+        elseif (btn_value == 205) 
+            chardata.+background := BACKGROUNDS.MEDICINE;
+            break;
+        elseif (btn_value == 206) 
+            chardata.+background := BACKGROUNDS.METAL_WORK;
+            break;
+        elseif (btn_value == 207) 
+            chardata.+background := BACKGROUNDS.PICK_POCKETING;
+            break;
+        elseif (btn_value == 208) 
+            chardata.+background := BACKGROUNDS.SURVIVAL;
+            break;
+        elseif (btn_value == 209) 
+            chardata.+background := BACKGROUNDS.WOOD_WORK;
+            break;
+        elseif (btn_value == 210) 
+            chardata.+background := backgroundByCulture(who);
             break;
         else
-            SendSysMessageEX(who, "Escolha seu caminho", SSM_FAIL);
+            SendSysMessageEX(who, "Escolha seu histórico", SSM_FAIL);
         endif
     endwhile
 
     SetObjProperty(who, "chardata", chardata);
-    SendSysMessageEX(who, "Você escolheu o caminho do "+chardata.background, SSM_INFO);
+    SendSysMessageEX(who, "Seu histórico é "+chardata.background, SSM_INFO);
 endfunction
