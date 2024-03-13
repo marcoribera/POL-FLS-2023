@@ -1,43 +1,102 @@
 use uo;
 use os;
 use file;
+use math;
 
 include ":datafile:datafile";
 
+var elem;
+
 program AgeSystem(who)
-	var cfg := ReadConfigFile(":config/ageconfig");
-	var elem := FindConfigElem(cfg, "AgeSystem" );
-	var enabled := GetConfigInt( elem, "Enabled" );
-	if(enabled)
+	// Ler o arquivo de configuração
+    var cfg := ReadConfigFile(":ageSystem:config/ageconfig");
+
+    if (!cfg)
+        Syslog("ageSystem error ReadConfigFile: " + cfg.errortext);
+        return;
+    endif
+    
+    elem := FindConfigElem(cfg, "AgeSystem");
+    if (!elem)
+        Syslog("ageSystem error FindConfigElem: " + elem.errortext);
+        return;
+    endif
+    
+    // Lê se o sistema está ativo
+    var enabled := GetConfigInt(elem, "Enabled");
+    if (enabled.errortext)
+        Syslog("ageSystem error GetConfigInt enabled: " + enabled.errortext);
+        return;
+    endif
+    
+	if(enabled && who.cmdlevel <= 1)
+        Syslog("ageSystem ativado");
 		ReduceDP(who);
 	endif
 endprogram
 
 function ReduceDP(player)
-    var creationDate = GetObjProperty(player, "creation_date"); // Supondo que você armazene a data de criação como propriedade do objeto do jogador.
+    var creationDate := idadeCharInDays(player); // Supondo que você armazene a data de criação como propriedade do objeto do jogador.
     if (!creationDate)
         // Se não houver data de criação, pode definir uma ou simplesmente retornar.
         return;
     endif
 
-    var daysSinceCreation = DaysSince(creationDate);
-    var dpLossInterval = 30; // Intervalo em dias para perda de DP.
-    var totalDPLoss = daysSinceCreation / dpLossInterval; // Calcula o total de DP a ser perdido baseado nos dias desde a criação.
+    var daysSinceCreation := creationDate;
+    var dpLossInterval := getDpLossInterval(player); // Intervalo em dias para perda de DP.
+    var totalDPLoss := daysSinceCreation / dpLossInterval; // Calcula o total de DP a ser perdido baseado nos dias desde a criação.
 
     // Verifica se o jogador deve perder DP baseado nos dias desde a última verificação.
-    var lastDPLoss = GetObjProperty(player, "last_dp_loss") || 0;
+    var lastDPLoss := GetObjProperty(player, "last_dp_loss") || 0;
     if (totalDPLoss > lastDPLoss)
-        var dp = GetObjProperty(player, "dp") || 0; // Obtém o DP atual do jogador.
-        dp = max(0, dp - (totalDPLoss - lastDPLoss)); // Reduz o DP e impede que seja menor que 0.
-        SetObjProperty(player, "dp", dp); // Atualiza o DP do jogador.
+        var dp := GetObjProperty(player, "dpmod") || 0; // Obtém o DP atual do jogador.
+        dp := max(0, dp - (totalDPLoss - lastDPLoss)); // Reduz o DP e impede que seja menor que 0.
+        SetObjProperty(player, "dpmod", dp); // Atualiza o DP do jogador.
         SetObjProperty(player, "last_dp_loss", totalDPLoss); // Atualiza a contagem de perda de DP para evitar redução múltipla.
         // Opcional: enviar mensagem para o jogador informando sobre a perda de DP.
         SendSysMessage(player, "Você perdeu " + (totalDPLoss - lastDPLoss) + " DP.");
     endif
 endfunction
 
-function DaysSince(creationDate)
-    var now = GetCurrentTime();
-    var secondsSinceCreation = now - creationDate;
-    return secondsSinceCreation / (60 * 60 * 24); // Converte segundos em dias.
+function getDpLossInterval(character)
+    var raca := GetObjProperty(mobile, "raca");
+
+    var elvesAge := GetConfigInt(elem, "Elves");
+    if (!elvesAge)
+        Syslog("Erro ao ler a configuração 'Elves'.");
+    else
+        Syslog("Elves Age: " + CStr(elvesAge));
+    endif
+    return 30;
+endfunction
+
+// function backgroundByCulture(who)
+//     var chardata := GetObjProperty(who, "chardata");
+//     var culture := chardata.culture;
+
+//     return CULTURAL_BACKGROUNDS[culture];
+// endfunction
+
+// var CULTURA := struct{AIGLANA := "Aiglana", HAROLOTH := "Har'oloth", LESTE := "Povos do Leste", BJORSKA := "Björska", ALURIEL := "Alüriel", BADURAN := "Badûran", GULTHRAK := "Gulthrak", POLKINEA := "Polkinea"};
+// function getCultureByPictureId(culture_id)
+//     case (culture_id)
+//         AIGLA_ID:
+//             return CULTURA.AIGLANA;
+//         HAROLOTH_ID:
+//             return CULTURA.HAROLOTH;
+//         ALURIEL_ID:
+//             return CULTURA.ALURIEL;
+//         LESTE_ID:
+//             return CULTURA.LESTE;
+//         POLKINEA_ID:
+//             return CULTURA.POLKINEA;
+//     endcase
+// endfunction
+
+function idadeCharInDays(character)// para 10000 deu 292 segundos 300
+    var criadoEm := cint(GetObjProperty(character, "createdate"));
+    var tempoAgora := polcore().systime;// segundos
+    var tempoDevida:= tempoAgora - criadoEm;
+    var dias := cint(tempoDevida/(86400));//24horas*60minutos*60segundos = 86400 segundos
+    return dias;
 endfunction

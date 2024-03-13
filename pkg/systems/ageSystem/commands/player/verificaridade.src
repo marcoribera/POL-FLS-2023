@@ -1,5 +1,0 @@
-use uo;
-use os;
-
-program VerificarIdade(who)
-endprogram
