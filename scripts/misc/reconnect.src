@@ -36,7 +36,6 @@ program core_reconnect(who)
 	endif
 
 	if (HaveReverseVision(who))
-		sendsysmessage(who, "reverse");
 		ReverseLight(who);
 	else
 		who.setlightlevel(0, 2);

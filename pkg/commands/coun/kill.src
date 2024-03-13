@@ -14,11 +14,6 @@ program textcmd_Kill(who)
 		SendSysMessage(who, "Cancelled.");
 		return 0;
 	endif
-	
-    if (targ.acctname == "Arandur")
-        SendSysMessage(who, "Voce não pode matar O Papai Urso.");
-        return 1;
-	endif
 
 	targ.Disable("invul");
 	SetObjProperty(targ, "GuardKill", 1);	
