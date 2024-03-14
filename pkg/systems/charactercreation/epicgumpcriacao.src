@@ -19,6 +19,7 @@ program epicCreationGump(who)
     racialSelection(who, culture_pic);
     classSelection(who, culture_pic);
     backgroundSelection(who, culture_pic);
+    kitSelection(who, culture_pic);
 endprogram
 
 function culturalSelection(who)
@@ -160,3 +161,18 @@ function backgroundSelection(who, culture_pic)
     SetObjProperty(who, "chardata", chardata);
     SendSysMessageEX(who, "Seu passado é "+chardata.background, SSM_INFO);
 endfunction
+
+function kitSelection(who, culture_pic)
+    var btn_value;
+    var chardata := GetObjProperty(who, "chardata");
+    while (1)
+        var input := kitGump(who, culture_pic);
+        foreach key in (input.keys)
+            btn_value := key;
+        endforeach
+    endwhile
+
+    SetObjProperty(who, "chardata", chardata);
+    SendSysMessageEX(who, "Seu passado é "+chardata.kit, SSM_INFO);
+endfunction
+
