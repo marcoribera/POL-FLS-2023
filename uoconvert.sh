@@ -4,13 +4,13 @@
 
 # ==== cut ====
 ./uoconvert multis
-mv multis.cfg config/
+cp multis.cfg config/
 
 ./uoconvert tiles
-mv tiles.cfg config/
+cp tiles.cfg config/
 
 ./uoconvert landtiles
-mv landtiles.cfg config/
+cp landtiles.cfg config/
 
 # Mondain's Legacy use "width=7168" here
 ./uoconvert map     realm=britannia mapid=0 usedif=1 width=6144 height=4096
@@ -28,9 +28,9 @@ mv landtiles.cfg config/
 # ./uoconvert maptile realm=ilshenar
 
 # malas
-./uoconvert map     realm=malas mapid=3 usedif=1 width=2560 height=2048
-./uoconvert statics realm=malas
-./uoconvert maptile realm=malas
+#./uoconvert map     realm=malas mapid=3 usedif=1 width=2560 height=2048
+#./uoconvert statics realm=malas
+#./uoconvert maptile realm=malas
 
 # ./uoconvert map     realm=tokuno mapid=4 usedif=1 width=1448 height=1448
 # ./uoconvert statics realm=tokuno
