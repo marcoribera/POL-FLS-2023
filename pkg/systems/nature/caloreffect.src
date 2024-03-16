@@ -66,6 +66,10 @@ program calor(params)
                 dif := dif - 60;
             endif
 
+            if (GetObjProperty(who, "chardata").kit == "Adaptável")
+                dif := dif - 60;
+            endif
+
             var survivalBonus := cint(AP_GetSkill(who, SURVIVAL)/2);
             dif := dif - survivalBonus;
 

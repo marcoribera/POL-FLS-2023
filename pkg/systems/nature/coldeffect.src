@@ -60,6 +60,10 @@ program neve(params)
                 dif := dif - 60;
             endif
 
+            if (GetObjProperty(who, "chardata").kit == "Adaptável")
+                dif := dif - 60;
+            endif
+
             if ( GetObjProperty(who, "chardata").povo == "Aquilrano")
                 dif := dif + 30;
             endif
