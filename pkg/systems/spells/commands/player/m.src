@@ -19,7 +19,7 @@ program magia(who, spellname)
 	if(chardata.magia == "kitahster" || GetObjProperty(who, "advclass") == "kitahster")
         cfg := ReadConfigFile(":spells:config/sangriaspells");
 		spellinfo.+magic_path := "Sangria";
-	elseif (TemHabilidade(who, "Sensibilidade Arcana") || chardata.kit == "Natureza Arcana")
+	elseif (TemHabilidade(who, "Sensibilidade Arcana"))
         cfg := ReadConfigFile(":spells:config/tricksterspells");
         spellinfo.+magic_path := "Trickster";
     else
@@ -63,7 +63,7 @@ program magia(who, spellname)
 	endforeach
 
 	var circle_spell := cint(GetConfigString(elem, "Circle"));
-	if ( !(TemHabilidade(who, "Sensibilidade Arcana")) || !(chardata.kit == "Natureza Arcana"))
+	if ( !(TemHabilidade(who, "Sensibilidade Arcana")))
 		if ( !spellbook && !(GetObjProperty(who, "advclass") == "kitahster" && circle_spell == 0))
 			SendSysMessageEx(who, "Voce nao possui a magia " + spellname + " nos seu grimorio.", SSM_FAIL);
 			return;
