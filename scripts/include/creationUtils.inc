@@ -50,7 +50,7 @@ const LESTE_ID := 0x9EE;
 
 var CULTURA := struct{AIGLANA := "Aiglana", HAROLOTH := "Har'oloth", LESTE := "Povos do Leste", BJORSKA := "Björska", ALURIEL := "Alüriel", BADURAN := "Badûran", GULTHRAK := "Gulthrak", POLKINEA := "Polkinea"};
 var RACA := struct{ANAO := "Anão", DROW := "Drow", ELFO := "Elfo", ORC := "Orc", HUMANO :="Humano", POLSKI := "Polski"};
-var BACKGROUNDS := struct{DOMESTIC_WORK := "Mestre do Lar", METAL_WORK := "Ferreiro aprendiz", GATHERING := "Coletor de recursos", PICK_POCKETING := "Rato de rua", MECHANICAL_APITUDE := "Aventureiro", HANDLE_ANIMAL := "Domador de Feras", SURVIVAL := "Caçador", MEDICINE := "Curandeiro itinerante", WOOD_WORK := "Marceneiro"};
+var BACKGROUNDS := struct{DOMESTIC_WORK := "Mestre do Lar", METAL_WORK := "Ferreiro aprendiz", GATHERING := "Coletor", PICK_POCKETING := "Rato de rua", MECHANICAL_APITUDE := "Aventureiro", HANDLE_ANIMAL := "Domador de Feras", SURVIVAL := "Caçador", MEDICINE := "Curandeiro itinerante", WOOD_WORK := "Marceneiro"};
 var CULTURAL_BACKGROUNDS := struct{ "Aiglana" := "Legionário", "Har'oloth" := "Véu de Idrith", "Polkinea" := "Pés Leves", "Alüriel" := "Templo da Mente", "Björska" := "Escaramuçador", "Gulthrak" := "Brutamontes", "Badûran" := "Filho da Montanha", "Povos do Leste" := "Andarilho"};
 
 function getCultureByPictureId(culture_id)
@@ -252,15 +252,18 @@ function backgroundGump(who, culture_pic)
 
     var all_backgrounds := BACKGROUNDS;
     VAR cultural_bg := backgroundByCulture(who);
-
+    var cfg := ReadConfigFile(":charactercreation:config/backgrounds");
     foreach bg in (all_backgrounds)
         GFHTMLArea(gump, x, y+116, 192, 24, "<BASEFONT color=#{}>{}".format(color, bg), 1, 0);
+        GFToolTipText(gump, cfg[bg].Desc);
         GFRadioButton(gump, x+201, y+116, 0x9C4E, 0x9C4F, 0, 200+i);
         sleepms(2);
         y += 26;
         i++;
     endforeach
     GFHTMLArea(gump, x, y+116, 192, 24, "<BASEFONT color=#{}>{}".format(color, cultural_bg), 1, 0);
+    GFToolTipText(gump, cfg[cultural_bg].Desc);
+
     GFRadioButton(gump, x+201, y+116, 0x9C4E, 0x9C4F, 0, 200+i);
 
     GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 200);
@@ -288,7 +291,7 @@ function kitGump(who, culture_pic, kits)
 
     var chardata := GetObjProperty(who, "chardata");
     var race := chardata.race;
-    var color := "#000000";
+    var color := "#FFD700";
     var class := chardata.classe;
     var bg := chardata.background;
 
@@ -313,7 +316,12 @@ function kitGump(who, culture_pic, kits)
 
 	foreach kit in kits
         var kit_name := kit.nome;
+        var kit_desc := kit.desc;
+        var kit_adv := kit.Vantagens;
+        
         GFHTMLArea(gump, x, y+151, 192, 24, "<BASEFONT color=#{}>{}".format(color, kit_name), 1, 0);
+        GFTooltipText(gump, "{}<br><BASEFONT color=#FFD700>".format(kit_desc));
+        GFTooltipText(gump, "{}<br><BASEFONT color=#FFD700>".format(kit_adv));
         GFRadioButton(gump, x+201, y+151, 0x9C4E, 0x9C4F, 0, 200+i);
         sleepms(2);
         y += 26;
