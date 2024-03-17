@@ -79,7 +79,7 @@ function CultureGump(who, culture_pic)
     var prev_btn := array{"9909", "9910"};
 
     var gump := GFCreateGump();
-    GFGumpPic(gump, 17, 31, 0x9E6); // background
+    GFGumpPic(gump, 17, 31, 0x9E6);
 
     GFHTMLArea(gump, 346, 56, 192, 40, "<BASEFONT Size=55 Color=#999999 >Escolha sua cultura", 0, 0); //shadow
     GFHTMLArea(gump, 345, 55, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Escolha sua cultura", 0, 0);
@@ -119,17 +119,13 @@ function getCulturalDescriptionByPictureId(culture_id)
 endfunction
 
 function RaceGump(who, culture_pic)
-    var next_btn := array{"9903", "9904"};
-    var prev_btn := array{"9909", "9910"};
-
     var races := getRaceByCulturalId(culture_pic);
     var gump := GFCreateGump();
-    GFGumpPic(gump, 17, 31, 0x9E6); // background
 
     var x := 63;
     var y := 100;
     var i := 1;
-    showGumpInformation(gump, who, culture_pic, x, y);
+    showPreviousGumpInformation(gump, who, culture_pic, x, y);
     var raceText := "Escolha sua raça";
     if (races.size() == 1)
         raceText := "Raça selecionada";
@@ -177,16 +173,13 @@ function getRaceByCulturalId(culture_pic)
 endfunction
 
 function ClassGump(who, culture_pic)
-    var next_btn := array{"9903", "9904"};
-    var prev_btn := array{"9909", "9910"};
     var gump := GFCreateGump();
-    GFGumpPic(gump, 17, 31, 0x9E6); // background
 
     var x := 63;
     var y := 100;
     var i := 1;
 
-    showGumpInformation(gump, who, culture_pic, x, y);
+    showPreviousGumpInformation(gump, who, culture_pic, x, y);
 
     GFHTMLArea(gump, x+16, y+40, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seu caminho", 0, 0); //shadow
     GFHTMLArea(gump, x+15, y+39, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha seu caminho", 0, 0);
@@ -212,16 +205,13 @@ function ClassGump(who, culture_pic)
 endfunction
 
 function backgroundGump(who, culture_pic)
-    var next_btn := array{"9903", "9904"};
-    var prev_btn := array{"9909", "9910"};
     var gump := GFCreateGump();
-    GFGumpPic(gump, 17, 31, 0x9E6); // background
 
     var x := 63;
     var y := 100;
     var i := 1;
 
-    showGumpInformation(gump, who, culture_pic, x, y);
+    showPreviousGumpInformation(gump, who, culture_pic, x, y);
 
     GFHTMLArea(gump, x+16, y+96, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seu passado", 0, 0); //shadow
     GFHTMLArea(gump, x+15, y+95, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha seu passado", 0, 0);
@@ -256,16 +246,13 @@ function backgroundByCulture(who)
 endfunction
 
 function kitGump(who, culture_pic, kits)
-    var next_btn := array{"9903", "9904"};
-    var prev_btn := array{"9909", "9910"};
     var gump := GFCreateGump();
-    GFGumpPic(gump, 17, 31, 0x9E6); // background
 
     var x := 63;
     var y := 100;
     var i := 1;
 
-    showGumpInformation(gump, who, culture_pic, x, y);
+    showPreviousGumpInformation(gump, who, culture_pic, x, y);
 
     GFHTMLArea(gump, x+21, y+136, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seu Kit", 0, 0); //shadow
     GFHTMLArea(gump, x+20, y+135, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha seu Kit", 0, 0);
@@ -340,12 +327,15 @@ function listKits(who, chardata)
     return kits;
 endfunction
 
-function showGumpInformation(byref gump, who, culture_pic := 0, x, y)
+function showPreviousGumpInformation(byref gump, who, culture_pic := 0, x, y)
+    GFGumpPic(gump, 17, 31, 0x9E6);
+
     var chardata := GetObjProperty(who, "chardata");
     var race := chardata.race;
     var color := "#FFD700";
     var class := chardata.classe;
     var bg := chardata.background;
+    var kit := chardata.kit;
 
     if (race)
         GFHTMLArea(gump, x+21, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 >Raça selecionada", 0, 0); //shadow
@@ -370,4 +360,77 @@ function showGumpInformation(byref gump, who, culture_pic := 0, x, y)
         GFHTMLArea(gump, x+20, y+81, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Passado selecionado", 0, 0);
         GFHTMLArea(gump, x+16, y+101, 192, 24, "<BASEFONT color=#{}>{}".format(color, bg), 1, 0);
     endif
+
+    if (kit)
+        GFHTMLArea(gump, x+21, y+132, 192, 40, "<BASEFONT Size=55 Color=#999999 > Kit selecionado", 0, 0); //shadow
+        GFHTMLArea(gump, x+20, y+131, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Kit selecionado", 0, 0);
+        GFHTMLArea(gump, x+16, y+151, 192, 24, "<BASEFONT color=#{}>{}".format(color, kit), 1, 0);
+    endif
+endfunction
+
+function skillGump(who, culture_pic)
+    var gump := GFCreateGump();
+    var chardata := GetObjProperty(who, "chardata");
+    var minus_btn := {0x9F7, 0x9F6};
+    var plus_btn := {0x9F9, 0x9F8};
+    var x := 63;
+    var y := 100;
+    var i := 1;
+
+    showPreviousGumpInformation(gump, who, culture_pic, x, y);
+    x := 555;
+    y := 100;
+    GFHTMLArea(gump, x+1, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha suas skills", 0, 0); //shadow
+    GFHTMLArea(gump, x, y-25, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha suas skills", 0, 0);
+	var cfg;
+	var elem;
+
+	cfg := ReadConfigFile(":charactercreation:config/classes");
+	elem := FindConfigElem(cfg, cstr(chardata.classe) );
+
+	var primarias    := GetConfigStringArray(elem, "P");
+	var secundarias  := GetConfigStringArray(elem, "S");
+	var terciarias   := GetConfigStringArray(elem, "T");
+	var quaternarias := GetConfigStringArray(elem, "Q");
+
+    x+=10;
+    foreach skill in primarias
+        GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#0000CC >{}".format(skill), 1, 0);
+        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 100+i);
+        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 110+i);
+        sleepms(2);
+        y += 26;
+        i++;
+    endforeach
+    y+=10;
+    foreach skill in secundarias
+        GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#007A23 >{}".format(skill), 1, 0);
+        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+i);
+        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 210+i);
+        sleepms(2);
+        y += 26;
+        i++;
+    endforeach
+    y+=10;
+    foreach skill in terciarias
+        GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#FFE700 >{}".format(skill), 1, 0);
+        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 300+i);
+        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 310+i);
+        sleepms(2);
+        y += 26;
+        i++;
+    endforeach
+    y+=10;
+    foreach skill in quaternarias
+        GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#CC0000 >{}".format(skill), 1, 0);
+        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 400+i);
+        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 410+i);
+        sleepms(2);
+        y += 26;
+        i++;
+    endforeach
+
+    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 500);
+
+    return GFSendGump(who, gump);
 endfunction
