@@ -60,7 +60,7 @@ function SkillCheck(mobile, attrib_name, difficulty, award_diff:=0, advance_flag
         effective_skill += AP_GetSkill(mobile, MAGICLORE) / 3;
     endif
 
-    var chardata := GetObjProperty(who, "chardata");
+    var chardata := GetObjProperty(mobile, "chardata");
     if (chardata.kit == "Oito olhos" && attrib_name == AWARENESS)
         effective_skill += 25;
     endif

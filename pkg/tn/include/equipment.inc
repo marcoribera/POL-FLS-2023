@@ -48,10 +48,10 @@ function SetEquipmentMods(who, item)
 	if (item.isa(POLCLASS_WEAPON))
 		item.speed_mod := CInt(GetObjProperty(item,"attackspeedbonus"));
 	endif
-
+    var chardata := GetObjProperty(who, "chardata");
 	var penalty  := CInt(itemdesc[item.objtype].DexPenalty);
     var isScutum := {0x1B76, 0x1B77, 0xc68d};
-    if (chardata.kit == "Força da Legião" && item.objtype in isScutum)
+    if (chardata.kit == "Força da Legião" && (item.objtype in isScutum))
         penalty /= 2;
     endif
 	var penaltyBonus := Cint(getObjProperty(item, "penaltybonus"));
