@@ -50,7 +50,7 @@ const LESTE_ID := 0x9EE;
 
 var CULTURA := struct{AIGLANA := "Aiglana", HAROLOTH := "Har'oloth", LESTE := "Povos do Leste", BJORSKA := "Björska", ALURIEL := "Alüriel", BADURAN := "Badûran", GULTHRAK := "Gulthrak", POLKINEA := "Polkinea"};
 var RACA := struct{ANAO := "Anão", DROW := "Drow", ELFO := "Elfo", ORC := "Orc", HUMANO :="Humano", POLSKI := "Polski"};
-var BACKGROUNDS := struct{DOMESTIC_WORK := "Mestre do Lar", METAL_WORK := "Ferreiro aprendiz", GATHERING := "Explorador de recursos", PICK_POCKETING := "Rato de rua", MECHANICAL_APITUDE := "Aventureiro", HANDLE_ANIMAL := "Domador de Feras", SURVIVAL := "Caçador", MEDICINE := "Curandeiro itinerante", WOOD_WORK := "Marceneiro"};
+var BACKGROUNDS := struct{DOMESTIC_WORK := "Mestre do Lar", METAL_WORK := "Ferreiro aprendiz", GATHERING := "Coletor de recursos", PICK_POCKETING := "Rato de rua", MECHANICAL_APITUDE := "Aventureiro", HANDLE_ANIMAL := "Domador de Feras", SURVIVAL := "Caçador", MEDICINE := "Curandeiro itinerante", WOOD_WORK := "Marceneiro"};
 var CULTURAL_BACKGROUNDS := struct{ "Aiglana" := "Legionário", "Har'oloth" := "Véu de Idrith", "Polkinea" := "Pés Leves", "Alüriel" := "Templo da Mente", "Björska" := "Escaramuçador", "Gulthrak" := "Brutamontes", "Badûran" := "Filho da Montanha", "Povos do Leste" := "Andarilho"};
 
 function getCultureByPictureId(culture_id)
@@ -276,7 +276,7 @@ function backgroundByCulture(who)
     return CULTURAL_BACKGROUNDS[culture];
 endfunction
 
-function kitGump(who, culture_pic)
+function kitGump(who, culture_pic, kits)
     var next_btn := array{"9903", "9904"};
     var prev_btn := array{"9909", "9910"};
     var gump := GFCreateGump();
@@ -308,9 +308,6 @@ function kitGump(who, culture_pic)
     GFHTMLArea(gump, x+20, y+81, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Passado selecionado", 0, 0);
     GFHTMLArea(gump, x+16, y+101, 192, 24, "<BASEFONT color=#{}>{}".format(color, bg), 1, 0);
 
-	var cfg := ReadConfigFile(":charactercreation:config/kits");
-	var kits := listKits(who, chardata);
-
     GFHTMLArea(gump, x+21, y+136, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seu Kit", 0, 0); //shadow
     GFHTMLArea(gump, x+20, y+135, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha seu Kit", 0, 0);
 
@@ -322,6 +319,8 @@ function kitGump(who, culture_pic)
         y += 26;
         i++;
 	endforeach
+
+    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 200);
 
     return GFSendGump(who, gump);
 endfunction
@@ -353,8 +352,7 @@ function listKits(who, chardata)
 		var racas := GetConfigStringArray( elem, "Raca" );
 		var culturas := GetConfigStringArray( elem, "Cultura" );
 		var classes := GetConfigStringArray( elem, "Classe" );
-        print(racas.size());
-        print(chardata.race);
+
 		if ((racas.size() >= 1) && !(chardata.race in racas))
 			canadd := 0;
 		endif

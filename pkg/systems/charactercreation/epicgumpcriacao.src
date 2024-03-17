@@ -165,14 +165,23 @@ endfunction
 function kitSelection(who, culture_pic)
     var btn_value;
     var chardata := GetObjProperty(who, "chardata");
-    while (1)
-        var input := kitGump(who, culture_pic);
+    var kits := listKits(who, chardata);
+    var i := 1;
+    
+    while(1)
+        var input := kitGump(who, culture_pic, kits);
         foreach key in (input.keys)
             btn_value := key;
         endforeach
+        if (btn_value > 200)
+            chardata.+kit := kits[btn_value-200].Nome;
+            break;
+        else
+            SendSysMessageEX(who, "Escolha seu kit", SSM_FAIL);
+        endif
     endwhile
 
     SetObjProperty(who, "chardata", chardata);
-    SendSysMessageEX(who, "Seu passado é "+chardata.kit, SSM_INFO);
+    SendSysMessageEX(who, "Seu kit é "+chardata.kit, SSM_INFO);
 endfunction
 
