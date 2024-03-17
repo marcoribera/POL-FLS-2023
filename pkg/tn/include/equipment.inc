@@ -50,6 +50,10 @@ function SetEquipmentMods(who, item)
 	endif
 
 	var penalty  := CInt(itemdesc[item.objtype].DexPenalty);
+    var isScutum := {0x1B76, 0x1B77, 0xc68d};
+    if (chardata.kit == "Força da Legião" && item.objtype in isScutum)
+        penalty /= 2;
+    endif
 	var penaltyBonus := Cint(getObjProperty(item, "penaltybonus"));
 	penalty := penalty - penaltyBonus;
 	if (penalty < 0)

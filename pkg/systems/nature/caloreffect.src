@@ -70,6 +70,10 @@ program calor(params)
                 dif := dif - 60;
             endif
 
+            if (GetObjProperty(who, "chardata").kit == "Cria do Deserto")
+                dif := dif - 90;
+            endif
+
             var survivalBonus := cint(AP_GetSkill(who, SURVIVAL)/2);
             dif := dif - survivalBonus;
 
