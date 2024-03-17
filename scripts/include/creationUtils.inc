@@ -129,6 +129,7 @@ function RaceGump(who, culture_pic)
     var x := 63;
     var y := 100;
     var i := 1;
+    showGumpInformation(gump, who, culture_pic, x, y);
     var raceText := "Escolha sua raça";
     if (races.size() == 1)
         raceText := "Raça selecionada";
@@ -136,8 +137,6 @@ function RaceGump(who, culture_pic)
     GFHTMLArea(gump, x+21, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 > "+raceText, 0, 0); //shadow
     GFHTMLArea(gump, x+20, y-25, 192, 40, "<BASEFONT Size=55 Color=#ffffff > "+raceText, 0, 0);
     
-    GFHTMLArea(gump, 346, 66, 192, 40, "<BASEFONT Size=55 Color=#999999 >Cultura selecionada", 0, 0); //shadow
-    GFHTMLArea(gump, 345, 65, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Cultura selecionada", 0, 0);
 
     foreach race in races
         var color := "#000000";
@@ -187,12 +186,7 @@ function ClassGump(who, culture_pic)
     var y := 100;
     var i := 1;
 
-    var raceText := "Raça selecionada";
-    GFHTMLArea(gump, x+21, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 > "+raceText, 0, 0); //shadow
-    GFHTMLArea(gump, x+20, y-25, 192, 40, "<BASEFONT Size=55 Color=#ffffff > "+raceText, 0, 0);
-    
-    GFHTMLArea(gump, 346, 66, 192, 40, "<BASEFONT Size=55 Color=#999999 >Cultura selecionada", 0, 0); //shadow
-    GFHTMLArea(gump, 345, 65, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Cultura selecionada", 0, 0);
+    showGumpInformation(gump, who, culture_pic, x, y);
 
     GFHTMLArea(gump, x+16, y+40, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seu caminho", 0, 0); //shadow
     GFHTMLArea(gump, x+15, y+39, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha seu caminho", 0, 0);
@@ -202,11 +196,8 @@ function ClassGump(who, culture_pic)
 		"Caminho do Subterfúgio",
 		"Caminho da Sabedoria"
     };
-    var race := GetObjProperty(who, "chardata").race;
-    var color := "#000000";
-    GFHTMLArea(gump, x, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, race), 1, 0);
     foreach class in (all_classes)
-        GFHTMLArea(gump, x, y+65, 192, 24, "<BASEFONT color=#{}>{}".format(color, class), 1, 0);
+        GFHTMLArea(gump, x, y+65, 192, 24, "<BASEFONT color=#000000>{}".format(class), 1, 0);
         GFRadioButton(gump, x+201, y+65, 0x9C4E, 0x9C4F, 0, 200+i);
 
         sleepms(2);
@@ -230,22 +221,7 @@ function backgroundGump(who, culture_pic)
     var y := 100;
     var i := 1;
 
-    var chardata := GetObjProperty(who, "chardata");
-    var race := chardata.race;
-    var color := "#000000";
-    var class := chardata.classe;
-
-    GFHTMLArea(gump, x+21, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 >Raça selecionada", 0, 0); //shadow
-    GFHTMLArea(gump, x+20, y-25, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Raça selecionada", 0, 0);
-    GFHTMLArea(gump, x+16, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, race), 1, 0);
-    
-    GFHTMLArea(gump, 346, 66, 192, 40, "<BASEFONT Size=55 Color=#999999 >Cultura selecionada", 0, 0); //shadow
-    GFHTMLArea(gump, 345, 65, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Cultura selecionada", 0, 0);
-    GFGumpPic(gump, 298, 100, culture_pic);
-
-    GFHTMLArea(gump, x+21, y+29, 192, 40, "<BASEFONT Size=55 Color=#999999 > Classe selecionada", 0, 0); //shadow
-    GFHTMLArea(gump, x+20, y+30, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Classe selecionada", 0, 0);
-    GFHTMLArea(gump, x+16, y+51, 192, 24, "<BASEFONT color=#{}>{}".format(color, class), 1, 0);
+    showGumpInformation(gump, who, culture_pic, x, y);
 
     GFHTMLArea(gump, x+16, y+96, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seu passado", 0, 0); //shadow
     GFHTMLArea(gump, x+15, y+95, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha seu passado", 0, 0);
@@ -254,14 +230,14 @@ function backgroundGump(who, culture_pic)
     VAR cultural_bg := backgroundByCulture(who);
     var cfg := ReadConfigFile(":charactercreation:config/backgrounds");
     foreach bg in (all_backgrounds)
-        GFHTMLArea(gump, x, y+116, 192, 24, "<BASEFONT color=#{}>{}".format(color, bg), 1, 0);
+        GFHTMLArea(gump, x, y+116, 192, 24, "<BASEFONT color=#ffffff>{}".format(bg), 1, 0);
         GFToolTipText(gump, cfg[bg].Desc);
         GFRadioButton(gump, x+201, y+116, 0x9C4E, 0x9C4F, 0, 200+i);
         sleepms(2);
         y += 26;
         i++;
     endforeach
-    GFHTMLArea(gump, x, y+116, 192, 24, "<BASEFONT color=#{}>{}".format(color, cultural_bg), 1, 0);
+    GFHTMLArea(gump, x, y+116, 192, 24, "<BASEFONT color=#ffffff>{}".format(cultural_bg), 1, 0);
     GFToolTipText(gump, cfg[cultural_bg].Desc);
 
     GFRadioButton(gump, x+201, y+116, 0x9C4E, 0x9C4F, 0, 200+i);
@@ -289,27 +265,7 @@ function kitGump(who, culture_pic, kits)
     var y := 100;
     var i := 1;
 
-    var chardata := GetObjProperty(who, "chardata");
-    var race := chardata.race;
-    var color := "#FFD700";
-    var class := chardata.classe;
-    var bg := chardata.background;
-
-    GFHTMLArea(gump, x+21, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 >Raça selecionada", 0, 0); //shadow
-    GFHTMLArea(gump, x+20, y-25, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Raça selecionada", 0, 0);
-    GFHTMLArea(gump, x+16, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, race), 1, 0);
-    
-    GFHTMLArea(gump, 346, 66, 192, 40, "<BASEFONT Size=55 Color=#999999 >Cultura selecionada", 0, 0); //shadow
-    GFHTMLArea(gump, 345, 65, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Cultura selecionada", 0, 0);
-    GFGumpPic(gump, 298, 100, culture_pic);
-
-    GFHTMLArea(gump, x+21, y+29, 192, 40, "<BASEFONT Size=55 Color=#999999 > Classe selecionada", 0, 0); //shadow
-    GFHTMLArea(gump, x+20, y+30, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Classe selecionada", 0, 0);
-    GFHTMLArea(gump, x+16, y+51, 192, 24, "<BASEFONT color=#{}>{}".format(color, class), 1, 0);
-
-    GFHTMLArea(gump, x+21, y+82, 192, 40, "<BASEFONT Size=55 Color=#999999 > Passado selecionado", 0, 0); //shadow
-    GFHTMLArea(gump, x+20, y+81, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Passado selecionado", 0, 0);
-    GFHTMLArea(gump, x+16, y+101, 192, 24, "<BASEFONT color=#{}>{}".format(color, bg), 1, 0);
+    showGumpInformation(gump, who, culture_pic, x, y);
 
     GFHTMLArea(gump, x+21, y+136, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seu Kit", 0, 0); //shadow
     GFHTMLArea(gump, x+20, y+135, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha seu Kit", 0, 0);
@@ -319,9 +275,9 @@ function kitGump(who, culture_pic, kits)
         var kit_desc := kit.desc;
         var kit_adv := kit.Vantagens;
         
-        GFHTMLArea(gump, x, y+151, 192, 24, "<BASEFONT color=#{}>{}".format(color, kit_name), 1, 0);
-        GFTooltipText(gump, "{}<br><BASEFONT color=#FFD700>".format(kit_desc));
-        GFTooltipText(gump, "{}<br><BASEFONT color=#FFD700>".format(kit_adv));
+        GFHTMLArea(gump, x, y+151, 192, 24, "<BASEFONT color=#ffffff >{}".format(kit_name), 1, 0);
+        GFTooltipText(gump, "{}<br><BASEFONT color=#ffffff>".format(kit_desc));
+        GFTooltipText(gump, "{}<br><BASEFONT color=#ffffff>".format(kit_adv));
         GFRadioButton(gump, x+201, y+151, 0x9C4E, 0x9C4F, 0, 200+i);
         sleepms(2);
         y += 26;
@@ -382,4 +338,36 @@ function listKits(who, chardata)
 	endforeach
 
     return kits;
+endfunction
+
+function showGumpInformation(byref gump, who, culture_pic := 0, x, y)
+    var chardata := GetObjProperty(who, "chardata");
+    var race := chardata.race;
+    var color := "#FFD700";
+    var class := chardata.classe;
+    var bg := chardata.background;
+
+    if (race)
+        GFHTMLArea(gump, x+21, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 >Raça selecionada", 0, 0); //shadow
+        GFHTMLArea(gump, x+20, y-25, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Raça selecionada", 0, 0);
+        GFHTMLArea(gump, x+16, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, race), 1, 0);
+    endif
+
+    if (culture_pic)
+        GFHTMLArea(gump, 346, 66, 192, 40, "<BASEFONT Size=55 Color=#999999 >Cultura selecionada", 0, 0); //shadow
+        GFHTMLArea(gump, 345, 65, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Cultura selecionada", 0, 0);
+        GFGumpPic(gump, 298, 100, culture_pic);
+    endif
+
+    if (class)
+        GFHTMLArea(gump, x+21, y+29, 192, 40, "<BASEFONT Size=55 Color=#999999 > Classe selecionada", 0, 0); //shadow
+        GFHTMLArea(gump, x+20, y+30, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Classe selecionada", 0, 0);
+        GFHTMLArea(gump, x+16, y+51, 192, 24, "<BASEFONT color=#{}>{}".format(color, class), 1, 0);
+    endif
+
+    if (bg)
+        GFHTMLArea(gump, x+21, y+82, 192, 40, "<BASEFONT Size=55 Color=#999999 > Passado selecionado", 0, 0); //shadow
+        GFHTMLArea(gump, x+20, y+81, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Passado selecionado", 0, 0);
+        GFHTMLArea(gump, x+16, y+101, 192, 24, "<BASEFONT color=#{}>{}".format(color, bg), 1, 0);
+    endif
 endfunction
