@@ -254,8 +254,8 @@ function kitGump(who, culture_pic, kits)
 
     showPreviousGumpInformation(gump, who, culture_pic, x, y);
 
-    GFHTMLArea(gump, x+21, y+136, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seu Kit", 0, 0); //shadow
-    GFHTMLArea(gump, x+20, y+135, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha seu Kit", 0, 0);
+    GFHTMLArea(gump, x+21, y+136, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha sua Característica", 0, 0); //shadow
+    GFHTMLArea(gump, x+20, y+135, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha sua Característica", 0, 0);
 
 	foreach kit in kits
         var kit_name := kit.nome;
@@ -336,34 +336,33 @@ function showPreviousGumpInformation(byref gump, who, culture_pic := 0, x, y)
     var class := chardata.classe;
     var bg := chardata.background;
     var kit := chardata.kit;
-
     if (race)
-        GFHTMLArea(gump, x+21, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 >Raça selecionada", 0, 0); //shadow
-        GFHTMLArea(gump, x+20, y-25, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Raça selecionada", 0, 0);
+        GFHTMLArea(gump, x+86, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 > Raça", 0, 0); //shadow
+        GFHTMLArea(gump, x+85, y-25, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Raça", 0, 0);
         GFHTMLArea(gump, x+16, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, race), 1, 0);
     endif
 
     if (culture_pic)
-        GFHTMLArea(gump, 346, 66, 192, 40, "<BASEFONT Size=55 Color=#999999 >Cultura selecionada", 0, 0); //shadow
-        GFHTMLArea(gump, 345, 65, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Cultura selecionada", 0, 0);
+        GFHTMLArea(gump, 346, 66, 192, 40, "<BASEFONT Size=55 Color=#999999 > Cultura selecionada", 0, 0); //shadow
+        GFHTMLArea(gump, 345, 65, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Cultura selecionada", 0, 0);
         GFGumpPic(gump, 298, 100, culture_pic);
     endif
 
     if (class)
-        GFHTMLArea(gump, x+21, y+29, 192, 40, "<BASEFONT Size=55 Color=#999999 > Classe selecionada", 0, 0); //shadow
-        GFHTMLArea(gump, x+20, y+30, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Classe selecionada", 0, 0);
+        GFHTMLArea(gump, x+81, y+29, 192, 40, "<BASEFONT Size=55 Color=#999999 > Classe", 0, 0); //shadow
+        GFHTMLArea(gump, x+80, y+30, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Classe", 0, 0);
         GFHTMLArea(gump, x+16, y+51, 192, 24, "<BASEFONT color=#{}>{}".format(color, class), 1, 0);
     endif
 
     if (bg)
-        GFHTMLArea(gump, x+21, y+82, 192, 40, "<BASEFONT Size=55 Color=#999999 > Passado selecionado", 0, 0); //shadow
-        GFHTMLArea(gump, x+20, y+81, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Passado selecionado", 0, 0);
+        GFHTMLArea(gump, x+81, y+82, 192, 40, "<BASEFONT Size=55 Color=#999999 > Passado", 0, 0); //shadow
+        GFHTMLArea(gump, x+80, y+81, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Passado", 0, 0);
         GFHTMLArea(gump, x+16, y+101, 192, 24, "<BASEFONT color=#{}>{}".format(color, bg), 1, 0);
     endif
 
     if (kit)
-        GFHTMLArea(gump, x+21, y+132, 192, 40, "<BASEFONT Size=55 Color=#999999 > Kit selecionado", 0, 0); //shadow
-        GFHTMLArea(gump, x+20, y+131, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Kit selecionado", 0, 0);
+        GFHTMLArea(gump, x+61, y+132, 192, 40, "<BASEFONT Size=55 Color=#999999 > Característica", 0, 0); //shadow
+        GFHTMLArea(gump, x+60, y+131, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Característica", 0, 0);
         GFHTMLArea(gump, x+16, y+151, 192, 24, "<BASEFONT color=#{}>{}".format(color, kit), 1, 0);
     endif
 endfunction

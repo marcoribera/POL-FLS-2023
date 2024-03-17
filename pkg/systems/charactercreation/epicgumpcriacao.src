@@ -20,7 +20,7 @@ program epicCreationGump(who)
     classSelection(who, culture_pic);
     backgroundSelection(who, culture_pic);
     kitSelection(who, culture_pic);
-    //skillSelection(who, culture_pic);
+    skillSelection(who, culture_pic);
 endprogram
 
 function culturalSelection(who)
