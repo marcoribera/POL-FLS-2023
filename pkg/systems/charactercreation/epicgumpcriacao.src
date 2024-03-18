@@ -19,7 +19,7 @@ program epicCreationGump(who)
     racialSelection(who, culture_pic);
     classSelection(who, culture_pic);
     backgroundSelection(who, culture_pic);
-    kitSelection(who, culture_pic);
+    traitSelection(who, culture_pic);
     skillSelection(who, culture_pic);
 endprogram
 
@@ -163,7 +163,7 @@ function backgroundSelection(who, culture_pic)
     SendSysMessageEX(who, "Seu passado é "+chardata.background, SSM_INFO);
 endfunction
 
-function kitSelection(who, culture_pic)
+function traitSelection(who, culture_pic)
     var btn_value;
     var chardata := GetObjProperty(who, "chardata");
     var kits := listKits(who, chardata);
@@ -175,15 +175,15 @@ function kitSelection(who, culture_pic)
             btn_value := key;
         endforeach
         if (btn_value > 200)
-            chardata.+kit := kits[btn_value-200].Nome;
+            chardata.+trait := kits[btn_value-200].Nome;
             break;
         else
-            SendSysMessageEX(who, "Escolha seu kit", SSM_FAIL);
+            SendSysMessageEX(who, "Escolha sua característica", SSM_FAIL);
         endif
     endwhile
 
     SetObjProperty(who, "chardata", chardata);
-    SendSysMessageEX(who, "Seu kit é "+chardata.kit, SSM_INFO);
+    SendSysMessageEX(who, "Sua característica é "+chardata.trait, SSM_INFO);
 endfunction
 
 function skillSelection(who, culture_pic)

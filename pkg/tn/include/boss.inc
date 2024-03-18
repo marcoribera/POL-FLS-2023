@@ -531,6 +531,22 @@ function CreateBossStructGump(who, byref boss)
 	//return 0;
 endfunction
 
+function showHurtDescription(npc)
+    var currentHealth := AP_GetVital(npc, HITS) / CInt(AP_GetVitalMaximumValue(npc, HITS));
+    
+    if (currentHealth >= 0.75 && currentHealth < 1.0)
+        return "<BASEFONT color=#3366FF>Levemente Ferido";
+    elseif (currentHealth >= 0.50 && currentHealth < 0.75)
+        return "<BASEFONT color=#007A23>Ferido";
+    elseif (currentHealth >= 0.25 && currentHealth < 0.50)
+        return "<BASEFONT color=#FFE700>Gravemente Ferido";
+    elseif (currentHealth > 0.0 && currentHealth < 0.25 )
+        return "<BASEFONT color=#CC0000>Próximo da morte";
+    else
+        return "";
+    endif
+endfunction
+
   //transforma um npc em boss
 function SetBoss(npc, boss)
 
