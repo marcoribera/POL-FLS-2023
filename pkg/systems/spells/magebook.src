@@ -1,0 +1,89 @@
+use uo;
+use os;
+use polsys;
+
+include "include/client";
+include "include/sysEvent";
+include ":tn:tngumps";
+include "include/say";
+include ":attributes:attributes";
+include "include/tnmagery";
+include ":timeUtils:time";
+
+const SCHOOL_SELECTION_GUMP_ID := 1000;
+const SPELL_SELECTION_GUMP_ID := 2000;
+const MAX_SPELLS_PER_PAGE := 10; // Assumindo que queremos limitar o número de magias por página para manter o Gump organizado
+
+// Estrutura de dados para as escolas e suas magias
+var schools := {
+    "aradalorë",
+    "evocatium",
+    "kaijin",
+    "velkyn"
+};
+
+program magebookSpells(who, item)
+    DisplaySchoolSelectionGump(who);
+endprogram
+
+function DisplaySchoolSelectionGump(who)
+    var gump := GFCreateGump(0, 0, 300, 200, 0, 0, "Selecione uma Escola de Magia");
+
+    var y := 20;
+    var count := 1;
+    foreach school in schools
+    {
+        GFAddButton(gump, 20, y, 260, 20, SCHOOL_SELECTION_GUMP_ID + count, school.capitalize());
+        y += 25;
+        count += 1;
+    }
+
+    GFSendGump(who, gump);
+endfunction
+
+function returnSpellListByScholl(school)
+   var spellscfg;
+
+   if(Lower(school) == "aradalorë")
+    spellscfg := ReadConfigFile(":spells:config/aradalorespells");
+   elseif(Lower(school) == "evocatium")
+    spellscfg := ReadConfigFile(":spells:config/evocatiumspells");
+   elseif(Lower(school) == "kaijin")
+    spellscfg := ReadConfigFile(":spells:config/kaijinspells");
+   elseif(Lower(school) == "velkyn")
+    spellscfg := ReadConfigFile(":spells:config/velkynspells");
+   endif
+
+   return LoadSpellList(spellscfg, who);
+endfunction
+
+function DisplaySpellSelectionGump(who, school)
+    var spells := returnSpellListByScholl(school);
+    var gump := GFCreateGump(0, 0, 300, 200 + spells.size() * 25, 0, 0, "Selecione uma Magia");
+
+    var y := 20;
+    foreach spell in spells
+    {
+        GFAddButton(gump, 20, y, 260, 20, SPELL_SELECTION_GUMP_ID + spells.find(spell), spell);
+        y += 25;
+    }
+
+    GFSendGump(who, gump);
+endfunction
+
+event EVENT_GUMP_BUTTON(buttonId)
+{
+    if (buttonId >= SCHOOL_SELECTION_GUMP_ID && buttonId < SPELL_SELECTION_GUMP_ID)
+    {
+        var schoolIndex := buttonId - SCHOOL_SELECTION_GUMP_ID;
+        var school := schools.keys()[schoolIndex];
+        DisplaySpellSelectionGump(who, school);
+    }
+    else if (buttonId >= SPELL_SELECTION_GUMP_ID)
+    {
+        var spellIndex := buttonId - SPELL_SELECTION_GUMP_ID;
+        var school := GetCurrentSchool(who); // Esta função precisa ser implementada para determinar a escola atual baseada na seleção anterior
+        var spell := schools[school][spellIndex];
+        MemorizeSpell(who, spell); // Implemente a lógica para memorizar a magia aqui
+    }
+}
