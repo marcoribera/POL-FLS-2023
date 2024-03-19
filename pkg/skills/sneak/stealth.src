@@ -48,6 +48,9 @@ program skill_Stealth( who )
 	endif
 
 	var baseSteps := qtdSteps(who, skill);
+    if (GetObjProperty(who, "chardata").kit == "Desapercebido")
+        baseSteps := Cint(baseSteps * 1.5);
+    endif
 
 	if (temHabilidade(who, "Furtividade Aprimorada"))
 		baseSteps:= baseSteps*2;

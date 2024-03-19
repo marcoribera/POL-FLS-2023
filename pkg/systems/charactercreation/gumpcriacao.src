@@ -1561,7 +1561,7 @@ program createchar(who)
                 CreateItemInBackpack(who, 0x144f, 1);
                 CreateItemInBackpack(who, 0x144e, 1);
             endif
-        elseif (chardata.povo == "Vanirio")
+        elseif (chardata.povo == "Vanirio" || chardata.povo == "Drow")
             if (ganheispell == 0)
 				var gump4 := GFCreateGump();
                 GFDisposable(gump4, 0);

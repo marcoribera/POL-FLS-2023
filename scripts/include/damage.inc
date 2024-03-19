@@ -577,7 +577,9 @@ function DamageFLS(defender, dmg, type := DMG_FORCED, source := 0, spell := "")
 	endif
 
   	DisplayDamage(defender, totaldmg, source);
-
+    if (GetObjProperty(defender, "chardata").kit == "Defensor Anão")
+        totaldmg -= Cint(AP_GetSkill(defender, PARRY) / 30);
+    endif
 	ApplyRawDamage(defender, totaldmg);
 
 

@@ -19,7 +19,8 @@ program epicCreationGump(who)
     racialSelection(who, culture_pic);
     classSelection(who, culture_pic);
     backgroundSelection(who, culture_pic);
-    kitSelection(who, culture_pic);
+    traitSelection(who, culture_pic);
+    skillSelection(who, culture_pic);
 endprogram
 
 function culturalSelection(who)
@@ -162,17 +163,67 @@ function backgroundSelection(who, culture_pic)
     SendSysMessageEX(who, "Seu passado é "+chardata.background, SSM_INFO);
 endfunction
 
-function kitSelection(who, culture_pic)
+function traitSelection(who, culture_pic)
     var btn_value;
     var chardata := GetObjProperty(who, "chardata");
-    while (1)
-        var input := kitGump(who, culture_pic);
+    var kits := listKits(who, chardata);
+    var i := 1;
+
+    while(1)
+        var input := kitGump(who, culture_pic, kits);
         foreach key in (input.keys)
             btn_value := key;
         endforeach
+        if (btn_value > 200)
+            chardata.+trait := kits[btn_value-200].Nome;
+            break;
+        else
+            SendSysMessageEX(who, "Escolha sua característica", SSM_FAIL);
+        endif
     endwhile
 
     SetObjProperty(who, "chardata", chardata);
-    SendSysMessageEX(who, "Seu passado é "+chardata.kit, SSM_INFO);
+    SendSysMessageEX(who, "Sua característica é "+chardata.trait, SSM_INFO);
 endfunction
 
+function skillSelection(who, culture_pic)
+    var btn_value;
+    var chardata := GetObjProperty(who, "chardata");
+    var i := 1;
+    var points := 0;
+    var max_points := 20;
+    var cfg := ReadConfigFile(":charactercreation:config/classes");
+	var elem := FindConfigElem(cfg, cstr(chardata.classe) );
+
+	var primarias    := GetConfigStringArray(elem, "P");
+	var secundarias  := GetConfigStringArray(elem, "S");
+	var terciarias   := GetConfigStringArray(elem, "T");
+	var quaternarias := GetConfigStringArray(elem, "Q");
+
+    chardata.+Skills := dictionary;
+    while(1)
+        var input := skillGump(who, culture_pic);
+        foreach key in (input.keys)
+            btn_value := key;
+        endforeach
+        print("btn_value: "+btn_value);
+        print("primarias[btn_value-100]: "+primarias[btn_value-100]);
+        if (btn_value >= 100 && btn_value < 200)
+            if (btn_value < 110)
+                chardata.Skills.append(primarias[btn_value-100]);
+                chardata.Skills.primarias[btn_value-100] -= 1;
+                points--;
+            else
+                chardata.Skills.append(primarias[btn_value-110]);
+                chardata.Skills.primarias[btn_value-110] += 1;
+                points++;
+            endif
+            print("Skills: "+chardata.Skills);
+            print("Primarias: "+chardata.Skills.primarias[btn_value-100]);
+            print("points: "+points);
+        endif
+    endwhile
+
+    SetObjProperty(who, "chardata", chardata);
+    SendSysMessageEX(who, "Você definiu suas skills", SSM_INFO);
+endfunction

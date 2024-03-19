@@ -129,13 +129,13 @@ function MiningLoop(who, tool, my_x, my_y, targx, targy, my_facing)
 		endif
 		return 1;*/
 	endif
-
+    var chardata := GetObjProperty(who, "chardata");
 	if ( ore_amount > 0 )
 		if (ore_type != 999) //999 eh quando nao passou na chance de raridade do minerio
 
 			if ( SkillCheck(who, GATHERING, difficulty) > 0)
 				var amt := Cint(AP_GetSkill(who, GATHERING)/20);
-				if(TemHabilidade(who, "Minerador Talentoso"))
+				if(TemHabilidade(who, "Minerador Talentoso") || chardata.kit == "Cavar Buracos")
 					amt := amt + 2;
 				endif
 				if (amt <= 0)
