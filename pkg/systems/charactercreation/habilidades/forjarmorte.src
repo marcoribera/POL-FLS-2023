@@ -18,7 +18,7 @@ program manobra(attacker)
 	var x := attacker.x;
 	var y := attacker.y;
 	var z := attacker.z;
-
+    var r := attacker.realm;
 	var mana := AP_GetVital(attacker, MANA);
 	var hits := AP_GetVital(attacker, HITS);
 	var stamina := AP_GetVital(attacker, STAMINA);
@@ -32,7 +32,7 @@ program manobra(attacker)
 	attacker.squelch(-1);
 	var ressrobe := GetEquipmentByLayer(attacker, 0x16);
 	DestroyItem(ressrobe);
-	var e := MoveObjectToLocation(attacker, x, y, z, attacker.realm, MOVEOBJECT_FORCELOCATION);
+	var e := MoveObjectToLocation(attacker, x, y, z, r, MOVEOBJECT_FORCELOCATION);
 	var corpse := attacker.getCorpse();
 
 	while( attacker.connected )
