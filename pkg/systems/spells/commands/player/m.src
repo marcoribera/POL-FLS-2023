@@ -14,14 +14,19 @@ program magia(who, spellname)
 		return 0;
 	endif
     var chardata := GetObjProperty(who, "chardata");
+	var myrace := GetObjProperty(who, "raca");
 
 	var cfg;
+	var cantrip_cfg := ReadConfigFile(":spells:config/cantripspells");
 	if(chardata.magia == "kitahster" || GetObjProperty(who, "advclass") == "kitahster")
         cfg := ReadConfigFile(":spells:config/sangriaspells");
 		spellinfo.+magic_path := "Sangria";
 	elseif (TemHabilidade(who, "Sensibilidade Arcana"))
         cfg := ReadConfigFile(":spells:config/tricksterspells");
         spellinfo.+magic_path := "Trickster";
+	elseif ( chardata.magia == "spellcaster" )
+		cfg := ReadConfigFile( ":spells:config/spellcaster" );
+		spellinfo.+magic_path := "spellcaster";
     else
 		cfg := ReadConfigFile(":spells:allspells");
     endif
@@ -37,6 +42,19 @@ program magia(who, spellname)
 		endif
 		id := id + 1;
 	endforeach
+
+	if (!achou && (myrace == "elfo" || myrace == "drow"))
+		id := 1;
+		achou := 0;
+		foreach spell in ( GetConfigIntKeys(cantrip_cfg) )
+			elem := FindConfigElem(cantrip_cfg, id);
+			if ( Lower(GetConfigString(elem, "Name")) == Lower(spellname))
+				achou := 1;
+				break;
+			endif
+			id := id + 1;
+		endforeach
+	endif
 
 	if (!achou)
 		SendSysMessageEx(who, "A magia " + spellname + " nao existe.", SSM_FAIL);
@@ -64,7 +82,7 @@ program magia(who, spellname)
 
 	var circle_spell := cint(GetConfigString(elem, "Circle"));
 	if ( !(TemHabilidade(who, "Sensibilidade Arcana")))
-		if ( !spellbook && !(GetObjProperty(who, "advclass") == "kitahster" && circle_spell == 0))
+		if ( !spellbook && circle_spell != 0)
 			SendSysMessageEx(who, "Voce nao possui a magia " + spellname + " nos seu grimorio.", SSM_FAIL);
 			return;
 		endif
