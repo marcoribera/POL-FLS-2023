@@ -13,13 +13,15 @@ include ":timeUtils:time";
 const SCHOOL_SELECTION_GUMP_ID := 1000;
 const SPELL_SELECTION_GUMP_ID := 2000;
 const MAX_SPELLS_PER_PAGE := 10; // Assumindo que queremos limitar o número de magias por página para manter o Gump organizado
+const SPELL_SLOTS := 20;
 
 // Estrutura de dados para as escolas e suas magias
 var schools := {
-    "aradalorë",
-    "evocatium",
-    "kaijin",
-    "velkyn"
+    "Aradalore",
+    "Evocatium",
+    "Kaijin",
+    "Velkyn",
+    "Ahtaleloreth"
 };
 
 program magebookSpells(who, item)
@@ -28,7 +30,7 @@ endprogram
 
 function DisplaySchoolSelectionGump(who)
     var gump := GFCreateGump(0, 0, 300, 200, 0, 0, "Selecione uma Escola de Magia");
-
+    var school := "Aradalore";
     var y := 20;
     var count := 1;
     foreach school in schools
@@ -37,53 +39,113 @@ function DisplaySchoolSelectionGump(who)
         y += 25;
         count += 1;
     }
-
-    GFSendGump(who, gump);
+    
+    //TODO Precisa pegar a escola de acordo com a seleção
+    CreateClericGump(who, returnSpellListByScholl(school), 20);
 endfunction
 
 function returnSpellListByScholl(school)
-   var spellscfg;
+    var spell_list := array{};
+    var spellscfg;
 
-   if(Lower(school) == "aradalorë")
-    spellscfg := ReadConfigFile(":spells:config/aradalorespells");
-   elseif(Lower(school) == "evocatium")
-    spellscfg := ReadConfigFile(":spells:config/evocatiumspells");
-   elseif(Lower(school) == "kaijin")
-    spellscfg := ReadConfigFile(":spells:config/kaijinspells");
-   elseif(Lower(school) == "velkyn")
-    spellscfg := ReadConfigFile(":spells:config/velkynspells");
+    if(Lower(school) == Lower("Aradalore"))
+        spellscfg := ReadConfigFile(":spells:config/aradalorespells");
+    elseif(Lower(school) == Lower("Evocatium"))
+        spellscfg := ReadConfigFile(":spells:config/evocatiumspells");
+    elseif(Lower(school) == Lower("Kaijin"))
+        spellscfg := ReadConfigFile(":spells:config/kaijinspells");
+    elseif(Lower(school) == Lower("Velkyn"))
+        spellscfg := ReadConfigFile(":spells:config/velkynspells");
+    elseif(Lower(school) == Lower("Ahtaleloreth"))
+        spellscfg := ReadConfigFile(":spells:config/ahtaleloreth");
+    endif
+
+    foreach spell in (GetConfigIntKeys(spellscfg))
+        spell := FindConfigElem(spellscfg, spell);
+        spell_list.append(spell);
+        sleepms(2);
+   endforeach
+
+    return spell_list;
+endfunction
+
+function CreateClericGump(who, spell_list, available_slots)
+   var gump := GFCreateGump();
+   var size := spell_list.Size();
+   if (size >= 1)
+      size := size * 26 - (8 * 26); // Cantrips
+   else
+      size := 0;
+   endif
+	GFResizePic(gump, 17, 31, 9390, 359, 125+size);
+	// GFHtmlShadowed(gump, 115, 70, 192, 20, "#feb98e ", "<BASEFONT Size=5>Lista de Bençãos");
+	GFHTMLArea(gump, 114, 69, 192, 20, "<BASEFONT Size=5 Color=#999999 >Ukshar", 0, 0); //shadow
+	GFHTMLArea(gump, 116, 71, 192, 20, "<BASEFONT Size=5 Color=#999999 >Ukshar", 0, 0); //shadow
+	GFHTMLArea(gump, 115, 70, 192, 20, "<BASEFONT Size=5 Color=#ffffff >Ukshar", 0, 0);
+	GFGumpPic(gump, 63, 91, 1469);
+	GFGumpPic(gump, 80, 91, 1469);
+	GFTextLine(gump, 63, 100, 0, "Rituais Xamânicos");
+	GFTextLine(gump, 259, 100, 0, "Slots");
+	GFTextLine(gump, 304, 100, 0, "Receber");
+	GFGumpPic(gump, 38, 103, 9773, 0);
+	GFGumpPic(gump, 296, 0, 9000, 0);
+
+   var y := 121;
+   foreach spell in spell_list
+      var color := "a745a7";
+      if (spell.circle != 0)
+        GFHTMLArea(gump, 63, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, spell.name), 1, 0);
+        GFToolTipText(gump, "<BASEFONT color=#{}>{}<br><BASEFONT color=#FFFFFF>".format(color, spell.desc));
+        GFHTMLArea(gump, 259, y, 34, 24, "<center>{}".format(spell.circle), 1, 0);
+        if (available_slots >= spell.circle)
+            GFAddButton(gump, 319, y+4, 10006, 10006, GF_CLOSE_BTN, 200+_spell_iter);
+        else
+            GFGumpPic(gump, 319, y+5, 10006, 1891);
+        endif
+        sleepms(2);
+        y += 26;
+      endif
+   endforeach
+
+   return GFSendGump(who, gump);
+endfunction
+
+function StoreSpell(who, spellinfo, byref shaman_list, byref available_slots)
+   if (available_slots-spellinfo.circle < 0)
+      SendSysMessageEx(who, "Sem slots suficientes para memorizar..", SSM_FAIL);
+      return 0;
+   elseif (!AP_ConsumeVital(who, MANA, 5*spellinfo.circle))
+      SendSysMessageEx(who, "Voce nao consegue se concentrar em sua oracao.", SSM_FAIL);
+      sleep(2);
+      return 0;
    endif
 
-   return LoadSpellList(spellscfg, who);
+   var new_spell := struct{
+      "id"         := spellinfo.SpellId,
+      "name"       := spellinfo.name,
+      "powerwords" := spellinfo.powerwords,
+      "circle"     := spellinfo.circle,
+      "time"       := AddTimeTo(polcore().systime, 20, "minutes"),
+      "flavortext" := spellinfo.flavortext,
+      "used"       := 0
+   };
+
+   available_slots -= spellinfo.circle;
+   shaman_list.append(new_spell);
+   SetObjProperty(who, "shaman_list", shaman_list);
+   SendSysMessageEx(who, "Obteve a bencao de Grunntam.", SSM_INFO);
+   return 1;
 endfunction
 
-function DisplaySpellSelectionGump(who, school)
-    var spells := returnSpellListByScholl(school);
-    var gump := GFCreateGump(0, 0, 300, 200 + spells.size() * 25, 0, 0, "Selecione uma Magia");
+function RemoveUsedSpells(who, byref shaman_list, byref available_slots)
+   foreach spell in shaman_list
+      if (spell.used && polcore().systime > spell.time)
+         var index := FindInArray(shaman_list, spell);
+         shaman_list.Erase(index);
+         available_slots += spell.circle;
+      endif
+      sleepms(2);
+   endforeach
 
-    var y := 20;
-    foreach spell in spells
-    {
-        GFAddButton(gump, 20, y, 260, 20, SPELL_SELECTION_GUMP_ID + spells.find(spell), spell);
-        y += 25;
-    }
-
-    GFSendGump(who, gump);
+   SetObjProperty(who, "shaman_list", shaman_list);
 endfunction
-
-event EVENT_GUMP_BUTTON(buttonId)
-{
-    if (buttonId >= SCHOOL_SELECTION_GUMP_ID && buttonId < SPELL_SELECTION_GUMP_ID)
-    {
-        var schoolIndex := buttonId - SCHOOL_SELECTION_GUMP_ID;
-        var school := schools.keys()[schoolIndex];
-        DisplaySpellSelectionGump(who, school);
-    }
-    else if (buttonId >= SPELL_SELECTION_GUMP_ID)
-    {
-        var spellIndex := buttonId - SPELL_SELECTION_GUMP_ID;
-        var school := GetCurrentSchool(who); // Esta função precisa ser implementada para determinar a escola atual baseada na seleção anterior
-        var spell := schools[school][spellIndex];
-        MemorizeSpell(who, spell); // Implemente a lógica para memorizar a magia aqui
-    }
-}
