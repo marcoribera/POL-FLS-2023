@@ -25,12 +25,20 @@ var schools := {
 };
 
 program magebookSpells(who, item)
+    var magia := GetObjProperty(who, "chardata").magia;
+    var spells := GetObjProperty(who, "spellcaster_spells");
+
+    if (magia != "spellcaster")
+        SendSysMessageEx(who, "Você não sabe ler esse livro.", SSM_INFO);
+        return;
+    endif
+
     DisplaySchoolSelectionGump(who);
 endprogram
 
 function DisplaySchoolSelectionGump(who)
     var gump := GFCreateGump(0, 0, 300, 200, 0, 0, "Selecione uma Escola de Magia");
-    var school := "Aradalore";
+    var school;
     var y := 20;
     var count := 1;
     foreach school in schools
@@ -40,6 +48,18 @@ function DisplaySchoolSelectionGump(who)
         count += 1;
     }
     
+    var input := GFSendGump(who, gump);
+    if (input[0] == 1001 )
+        school := "Aradalore";
+	elseif (input[0] == 1002)
+        school := "Evocatium";
+    elseif (input[0] == 1003)
+        school := "Kaijin";
+    elseif (input[0] == 1004)
+        school := "Velkyn";
+    elseif (input[0] == 1005)
+        school := "Ahtaleloreth";
+	endif
     //TODO Precisa pegar a escola de acordo com a seleção
     CreateClericGump(who, returnSpellListByScholl(school), 20);
 endfunction
