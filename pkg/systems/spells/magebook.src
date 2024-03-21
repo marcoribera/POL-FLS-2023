@@ -15,7 +15,7 @@ const SPELL_BTN := 200;
 
 program orderSpells( who, item )
   var magia := GetObjProperty( who, "chardata" ).magia;
-  if ( magia != "Spellcaster" )
+  if ( magia != "spellcaster" )
     SendSysMessageEx( who, "Você não entende esse livro.", SSM_INFO );
     return;
   endif
