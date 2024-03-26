@@ -21,7 +21,7 @@ program orderSpells( who, item )
   endif
   var mlore := cint( AP_GetSkill( who, MAGICLORE ) );
   var cfg := ReadConfigFile( ":spells:config/spellcaster" );
-  var cleric_slots := Cint( mlore / 5 );
+  var spell_caster_slots := Cint( mlore / 5 );
 
   var spellcaster_list := GetObjProperty( who, "spellcaster_list" );
   if ( !spellcaster_list )
@@ -71,7 +71,7 @@ program orderSpells( who, item )
     sleepms( 2 );
   endforeach
 
-  var available_slots := cleric_slots - slots_used;
+  var available_slots := spell_caster_slots - slots_used;
   var canceled := 0;
   while ( !canceled )
     RemoveUsedSpells( who, spellcaster_list, available_slots );
@@ -155,6 +155,7 @@ function StoreSpell( who, spellinfo, byref spellcaster_list, byref available_slo
                            "name" := spellinfo.name,
                            "powerwords" := spellinfo.powerwords,
                            "circle" := spellinfo.circle,
+                           "spelltype" := spellinfo.spelltype,
                            "time" := AddTimeTo(
                            polcore().systime,
                            20,
