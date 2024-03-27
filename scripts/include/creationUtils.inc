@@ -245,7 +245,7 @@ function backgroundByCulture(who)
     return CULTURAL_BACKGROUNDS[culture];
 endfunction
 
-function kitGump(who, culture_pic, kits)
+function traitGump(who, culture_pic, traits)
     var gump := GFCreateGump();
 
     var x := 63;
@@ -257,14 +257,14 @@ function kitGump(who, culture_pic, kits)
     GFHTMLArea(gump, x+21, y+136, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha sua Característica", 0, 0); //shadow
     GFHTMLArea(gump, x+20, y+135, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha sua Característica", 0, 0);
 
-	foreach kit in kits
-        var kit_name := kit.nome;
-        var kit_desc := kit.desc;
-        var kit_adv := kit.Vantagens;
+	foreach trait in traits
+        var trait_name := trait.nome;
+        var trait_desc := trait.desc;
+        var trait_adv := trait.Vantagens;
         
-        GFHTMLArea(gump, x, y+151, 192, 24, "<BASEFONT color=#ffffff >{}".format(kit_name), 1, 0);
-        GFTooltipText(gump, "{}<br><BASEFONT color=#ffffff>".format(kit_desc));
-        GFTooltipText(gump, "{}<br><BASEFONT color=#ffffff>".format(kit_adv));
+        GFHTMLArea(gump, x, y+151, 192, 24, "<BASEFONT color=#ffffff >{}".format(trait_name), 1, 0);
+        GFTooltipText(gump, "{}<br><BASEFONT color=#ffffff>".format(trait_desc));
+        GFTooltipText(gump, "{}<br><BASEFONT color=#ffffff>".format(trait_adv));
         GFRadioButton(gump, x+201, y+151, 0x9C4E, 0x9C4F, 0, 200+i);
         sleepms(2);
         y += 26;
@@ -290,13 +290,13 @@ function GetSkillValueDesc(skill)
 
 endfunction
 
-function listKits(who, chardata)
+function listTraits(who, chardata)
 
-	var cfg := ReadConfigFile(":charactercreation:config/kits");
+	var cfg := ReadConfigFile(":charactercreation:config/traits");
 	var keys := GetConfigStringKeys( cfg );
 
-	var kits := array;
-	var selectedkit := 1;
+	var traits := array;
+	var selectedtrait := 1;
 	foreach key in keys
 		var elem  := FindConfigElem(cfg, key);
 		var canadd := 1;
@@ -315,16 +315,16 @@ function listKits(who, chardata)
 		endif
 
 		if (canadd)
-			var kit  := struct;
-			kit.+nome := GetconfigString(elem, "Nome");
-			kit.+desc := GetconfigString(elem, "Desc");
-			kit.+vantagens := GetConfigString( elem, "Vantagens" );
-			kit.+desvantagens := GetConfigString( elem, "Desvantagens" );
-			kits.append(kit);
+			var trait  := struct;
+			trait.+nome := GetconfigString(elem, "Nome");
+			trait.+desc := GetconfigString(elem, "Desc");
+			trait.+vantagens := GetConfigString( elem, "Vantagens" );
+			trait.+desvantagens := GetConfigString( elem, "Desvantagens" );
+			traits.append(trait);
 		endif
 	endforeach
 
-    return kits;
+    return traits;
 endfunction
 
 function showPreviousGumpInformation(byref gump, who, culture_pic := 0, x, y)
@@ -335,7 +335,7 @@ function showPreviousGumpInformation(byref gump, who, culture_pic := 0, x, y)
     var color := "#FFD700";
     var class := chardata.classe;
     var bg := chardata.background;
-    var kit := chardata.kit;
+    var trait := chardata.trait;
     if (race)
         GFHTMLArea(gump, x+86, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 > Raça", 0, 0); //shadow
         GFHTMLArea(gump, x+85, y-25, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Raça", 0, 0);
@@ -360,10 +360,10 @@ function showPreviousGumpInformation(byref gump, who, culture_pic := 0, x, y)
         GFHTMLArea(gump, x+16, y+101, 192, 24, "<BASEFONT color=#{}>{}".format(color, bg), 1, 0);
     endif
 
-    if (kit)
+    if (trait)
         GFHTMLArea(gump, x+61, y+132, 192, 40, "<BASEFONT Size=55 Color=#999999 > Característica", 0, 0); //shadow
         GFHTMLArea(gump, x+60, y+131, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Característica", 0, 0);
-        GFHTMLArea(gump, x+16, y+151, 192, 24, "<BASEFONT color=#{}>{}".format(color, kit), 1, 0);
+        GFHTMLArea(gump, x+16, y+151, 192, 24, "<BASEFONT color=#{}>{}".format(color, trait), 1, 0);
     endif
 endfunction
 
@@ -381,55 +381,59 @@ function skillGump(who, culture_pic)
     y := 100;
     GFHTMLArea(gump, x+1, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha suas skills", 0, 0); //shadow
     GFHTMLArea(gump, x, y-25, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha suas skills", 0, 0);
-	var cfg;
-	var elem;
+    var cfg;
+    var elem;
 
-	cfg := ReadConfigFile(":charactercreation:config/classes");
-	elem := FindConfigElem(cfg, cstr(chardata.classe) );
+    cfg := ReadConfigFile(":charactercreation:config/classes");
+    elem := FindConfigElem(cfg, cstr(chardata.classe));
 
-	var primarias    := GetConfigStringArray(elem, "P");
-	var secundarias  := GetConfigStringArray(elem, "S");
-	var terciarias   := GetConfigStringArray(elem, "T");
-	var quaternarias := GetConfigStringArray(elem, "Q");
+    var primarias    := GetConfigStringArray(elem, "P");
+    var secundarias  := GetConfigStringArray(elem, "S");
+    var terciarias   := GetConfigStringArray(elem, "T");
+    var quaternarias := GetConfigStringArray(elem, "Q");
 
     x+=10;
+    // Botões para habilidades primárias
     foreach skill in primarias
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#0000CC >{}".format(skill), 1, 0);
-        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 100+i);
-        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 110+i);
+        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+GetSkillIdFromName(skill));
+        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
         sleepms(2);
         y += 26;
         i++;
     endforeach
     y+=10;
+    // Botões para habilidades secundárias
     foreach skill in secundarias
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#007A23 >{}".format(skill), 1, 0);
-        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+i);
-        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 210+i);
+        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+GetSkillIdFromName(skill));
+        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
         sleepms(2);
         y += 26;
         i++;
     endforeach
     y+=10;
+    // Botões para habilidades terciárias
     foreach skill in terciarias
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#FFE700 >{}".format(skill), 1, 0);
-        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 300+i);
-        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 310+i);
+        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+GetSkillIdFromName(skill));
+        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
         sleepms(2);
         y += 26;
         i++;
     endforeach
     y+=10;
+    // Botões para habilidades quaternárias
     foreach skill in quaternarias
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#CC0000 >{}".format(skill), 1, 0);
-        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 400+i);
-        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 410+i);
+        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+GetSkillIdFromName(skill));
+        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
         sleepms(2);
         y += 26;
         i++;
     endforeach
 
-    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 500);
+    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 500); // Botão de fechar
 
     return GFSendGump(who, gump);
 endfunction

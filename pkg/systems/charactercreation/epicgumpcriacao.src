@@ -166,16 +166,16 @@ endfunction
 function traitSelection(who, culture_pic)
     var btn_value;
     var chardata := GetObjProperty(who, "chardata");
-    var kits := listKits(who, chardata);
+    var traits := listTraits(who, chardata);
     var i := 1;
 
     while(1)
-        var input := kitGump(who, culture_pic, kits);
+        var input := traitGump(who, culture_pic, traits);
         foreach key in (input.keys)
             btn_value := key;
         endforeach
         if (btn_value > 200)
-            chardata.+trait := kits[btn_value-200].Nome;
+            chardata.+trait := traits[btn_value-200].Nome;
             break;
         else
             SendSysMessageEX(who, "Escolha sua característica", SSM_FAIL);
@@ -190,16 +190,7 @@ function skillSelection(who, culture_pic)
     var btn_value;
     var chardata := GetObjProperty(who, "chardata");
     var i := 1;
-    var points := 0;
-    var max_points := 20;
-    var cfg := ReadConfigFile(":charactercreation:config/classes");
-	var elem := FindConfigElem(cfg, cstr(chardata.classe) );
-
-	var primarias    := GetConfigStringArray(elem, "P");
-	var secundarias  := GetConfigStringArray(elem, "S");
-	var terciarias   := GetConfigStringArray(elem, "T");
-	var quaternarias := GetConfigStringArray(elem, "Q");
-
+    var points := 20;
     chardata.+Skills := dictionary;
     while(1)
         var input := skillGump(who, culture_pic);
@@ -207,21 +198,28 @@ function skillSelection(who, culture_pic)
             btn_value := key;
         endforeach
         print("btn_value: "+btn_value);
-        print("primarias[btn_value-100]: "+primarias[btn_value-100]);
-        if (btn_value >= 100 && btn_value < 200)
-            if (btn_value < 110)
-                chardata.Skills.append(primarias[btn_value-100]);
-                chardata.Skills.primarias[btn_value-100] -= 1;
-                points--;
-            else
-                chardata.Skills.append(primarias[btn_value-110]);
-                chardata.Skills.primarias[btn_value-110] += 1;
-                points++;
-            endif
-            print("Skills: "+chardata.Skills);
-            print("Primarias: "+chardata.Skills.primarias[btn_value-100]);
-            print("points: "+points);
+        print("GetSkillNameFromId+: "+GetSkillNameFromId(btn_value-200));
+        print("GetSkillNameFromId-: "+GetSkillNameFromId(btn_value-100));
+        if ((points-skillCost) < 0 )
+            // nao tem 
         endif
+        if (btn_value >= 200 && btn_value < 500)
+            chardata.Skills.+GetSkillNameFromId(btn_value-200);
+            if (chardata.Skills[GetSkillNameFromId(btn_value-200)] < 1)
+                chardata.Skills[GetSkillNameFromId(btn_value-200)] := 0;
+            endif
+            chardata.Skills[GetSkillNameFromId(btn_value-200)] += 1;
+            points++;
+        elseif (btn_value >= 100 && btn_value < 200)
+            chardata.Skills.+GetSkillNameFromId(btn_value-100);
+            if (chardata.Skills[GetSkillNameFromId(btn_value-100)] < 1)
+                chardata.Skills[GetSkillNameFromId(btn_value-100)] := 0;
+            endif
+            chardata.Skills[GetSkillNameFromId(btn_value-100)] -= 1;
+            points--;
+        endif
+            print("Skills: "+chardata.Skills);
+            print("points: "+points);
     endwhile
 
     SetObjProperty(who, "chardata", chardata);

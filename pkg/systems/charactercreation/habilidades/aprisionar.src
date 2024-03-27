@@ -25,7 +25,8 @@ program HitScript(who)
 	endif
 
     if(!targ.isA(POLCLASS_MOBILE))
-        SendSysMEssage(who, "Alvo Invalido.");
+        SendSysMessage(who, "Alvo Invalido.");
+        return 0;
     endif
 
     PerformAction(who, ANIM_CAST_DIR);
