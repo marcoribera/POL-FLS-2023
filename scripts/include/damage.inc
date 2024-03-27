@@ -306,12 +306,12 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 		tatics := CDbl(AP_GetSkill(who, MEDICINE))/100.0; //Aplica bonus de medicine na chance de critico quando é Medico de Combate
 		SkillCheck(who, MAGICLORE, -1);
 	 elseif (GetObjProperty(who, "kit") == "Ranger")
-		// tatics := CDbl(AP_GetSkill(who, TACTICS))/100.0; //Aplica bonus de tactics na chance de critico quando não é nenhum caso específico
-		// SkillCheck(who, TACTICS, -1);
-		 if(categoriaDefender == "GiantAnimal" || categoriaDefender == "Animal" || categoriaDefender == "EvilAnimal" || categoriaDefender == "Snow" || categoriaDefender == "Mount" || categoriaDefender == "Plantas" || categoriaDefender == "Terathan" || categoriaDefender == "Dragon")
-			 tatics := tatics + CDbl(AP_GetSkill(who, SURVIVAL))/150.0; //Aplica bonus de Survival se forem criaturas selvagens ou dragões
-			 SkillCheck(who, SURVIVAL, -1);
-		 endif
+		tatics := CDbl(AP_GetSkill(who, TACTICS))/100.0; //Aplica bonus de tactics na chance de critico quando não é nenhum caso específico
+		SkillCheck(who, TACTICS, -1);
+		if(categoriaDefender == "GiantAnimal" || categoriaDefender == "Animal" || categoriaDefender == "EvilAnimal" || categoriaDefender == "Snow" || categoriaDefender == "Mount" || categoriaDefender == "Plantas" || categoriaDefender == "Terathan" || categoriaDefender == "Dragon")
+			tatics := tatics + CDbl(AP_GetSkill(who, SURVIVAL))/150.0; //Aplica bonus de Survival se forem criaturas selvagens ou dragões
+			SkillCheck(who, SURVIVAL, -1);
+		endif
 	else
 		tatics := CDbl(AP_GetSkill(who, TACTICS))/100.0; //Armazena o valor da skill que afeta dano
 	endif
