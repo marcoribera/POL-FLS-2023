@@ -396,8 +396,8 @@ function skillGump(who, culture_pic)
     // Botões para habilidades primárias
     foreach skill in primarias
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#0000CC >{}".format(skill), 1, 0);
-        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+GetSkillIdFromName(skill));
-        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
+        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
+        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 120+GetSkillIdFromName(skill));
         sleepms(2);
         y += 26;
         i++;
@@ -407,7 +407,7 @@ function skillGump(who, culture_pic)
     foreach skill in secundarias
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#007A23 >{}".format(skill), 1, 0);
         GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+GetSkillIdFromName(skill));
-        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
+        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 220+GetSkillIdFromName(skill));
         sleepms(2);
         y += 26;
         i++;
@@ -416,8 +416,8 @@ function skillGump(who, culture_pic)
     // Botões para habilidades terciárias
     foreach skill in terciarias
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#FFE700 >{}".format(skill), 1, 0);
-        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+GetSkillIdFromName(skill));
-        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
+        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 300+GetSkillIdFromName(skill));
+        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 320+GetSkillIdFromName(skill));
         sleepms(2);
         y += 26;
         i++;
@@ -426,8 +426,8 @@ function skillGump(who, culture_pic)
     // Botões para habilidades quaternárias
     foreach skill in quaternarias
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#CC0000 >{}".format(skill), 1, 0);
-        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+GetSkillIdFromName(skill));
-        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
+        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 400+GetSkillIdFromName(skill));
+        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 420+GetSkillIdFromName(skill));
         sleepms(2);
         y += 26;
         i++;

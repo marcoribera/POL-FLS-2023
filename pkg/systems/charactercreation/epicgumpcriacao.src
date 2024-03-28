@@ -197,26 +197,71 @@ function skillSelection(who, culture_pic)
         foreach key in (input.keys)
             btn_value := key;
         endforeach
-        print("btn_value: "+btn_value);
+        print("btn_value"+btn_value);
         print("GetSkillNameFromId+: "+GetSkillNameFromId(btn_value-200));
         print("GetSkillNameFromId-: "+GetSkillNameFromId(btn_value-100));
-        if ((points-skillCost) < 0 )
-            // nao tem 
+        //if ((points-skillCost) < 0 )
+        //    // nao tem 
+        //endif
+        if (btn_value >= 100 && btn_value < 120)
+            chardata.Skills.+GetSkillNameFromId(btn_value-100);
+            if (chardata.Skills[GetSkillNameFromId(btn_value-100)] < 1)
+                chardata.Skills[GetSkillNameFromId(btn_value-100)] := 0;
+            endif
+            chardata.Skills[GetSkillNameFromId(btn_value-100)] += 1;
+            points++;
+        elseif (btn_value >= 120 && btn_value < 200)
+            chardata.Skills.+GetSkillNameFromId(btn_value-120);
+            if (chardata.Skills[GetSkillNameFromId(btn_value-120)] > 3)
+                chardata.Skills[GetSkillNameFromId(btn_value-120)] := 3;
+            endif
+            chardata.Skills[GetSkillNameFromId(btn_value-120)] -= 1;
+            points--;
         endif
-        if (btn_value >= 200 && btn_value < 500)
+        if (btn_value >= 200 && btn_value < 220)
             chardata.Skills.+GetSkillNameFromId(btn_value-200);
             if (chardata.Skills[GetSkillNameFromId(btn_value-200)] < 1)
                 chardata.Skills[GetSkillNameFromId(btn_value-200)] := 0;
             endif
             chardata.Skills[GetSkillNameFromId(btn_value-200)] += 1;
-            points++;
-        elseif (btn_value >= 100 && btn_value < 200)
-            chardata.Skills.+GetSkillNameFromId(btn_value-100);
-            if (chardata.Skills[GetSkillNameFromId(btn_value-100)] < 1)
-                chardata.Skills[GetSkillNameFromId(btn_value-100)] := 0;
+            points += 2;
+        elseif (btn_value >= 220 && btn_value < 300)
+            chardata.Skills.+GetSkillNameFromId(btn_value-220);
+            if (chardata.Skills[GetSkillNameFromId(btn_value-220)] < 1)
+                chardata.Skills[GetSkillNameFromId(btn_value-220)] := 0;
             endif
-            chardata.Skills[GetSkillNameFromId(btn_value-100)] -= 1;
-            points--;
+            chardata.Skills[GetSkillNameFromId(btn_value-220)] -= 1;
+            points -= 2;
+        endif
+        if (btn_value >= 300 && btn_value < 320)
+            chardata.Skills.+GetSkillNameFromId(btn_value-300);
+            if (chardata.Skills[GetSkillNameFromId(btn_value-300)] < 1)
+                chardata.Skills[GetSkillNameFromId(btn_value-300)] := 0;
+            endif
+            chardata.Skills[GetSkillNameFromId(btn_value-300)] += 1;
+            points += 3;
+        elseif (btn_value >= 320 && btn_value < 400)
+            chardata.Skills.+GetSkillNameFromId(btn_value-320);
+            if (chardata.Skills[GetSkillNameFromId(btn_value-320)] < 1)
+                chardata.Skills[GetSkillNameFromId(btn_value-320)] := 0;
+            endif
+            chardata.Skills[GetSkillNameFromId(btn_value-320)] -= 1;
+            points -= 3;
+        endif
+        if (btn_value >= 400 && btn_value < 420)
+            chardata.Skills.+GetSkillNameFromId(btn_value-400);
+            if (chardata.Skills[GetSkillNameFromId(btn_value-400)] < 1)
+                chardata.Skills[GetSkillNameFromId(btn_value-400)] := 0;
+            endif
+            chardata.Skills[GetSkillNameFromId(btn_value-400)] += 1;
+            points += 4;
+        elseif (btn_value >= 420 && btn_value < 500)
+            chardata.Skills.+GetSkillNameFromId(btn_value-420);
+            if (chardata.Skills[GetSkillNameFromId(btn_value-420)] < 1)
+                chardata.Skills[GetSkillNameFromId(btn_value-420)] := 0;
+            endif
+            chardata.Skills[GetSkillNameFromId(btn_value-420)] -= 1;
+            points -= 4;
         endif
             print("Skills: "+chardata.Skills);
             print("points: "+points);
