@@ -336,6 +336,7 @@ function showPreviousGumpInformation(byref gump, who, culture_pic := 0, x, y)
     var class := chardata.classe;
     var bg := chardata.background;
     var trait := chardata.trait;
+    var skills := chardata.Skills;
     if (race)
         GFHTMLArea(gump, x+86, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 > Raça", 0, 0); //shadow
         GFHTMLArea(gump, x+85, y-25, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Raça", 0, 0);
@@ -364,6 +365,17 @@ function showPreviousGumpInformation(byref gump, who, culture_pic := 0, x, y)
         GFHTMLArea(gump, x+61, y+132, 192, 40, "<BASEFONT Size=55 Color=#999999 > Característica", 0, 0); //shadow
         GFHTMLArea(gump, x+60, y+131, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Característica", 0, 0);
         GFHTMLArea(gump, x+16, y+151, 192, 24, "<BASEFONT color=#{}>{}".format(color, trait), 1, 0);
+    endif
+
+    if (skills)
+        GFHTMLArea(gump, x+81, y+182, 192, 40, "<BASEFONT Size=55 Color=#999999 > Skills", 0, 0); //shadow
+        GFHTMLArea(gump, x+80, y+181, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Skills", 0, 0);
+        //foreach skill in (skills.keys())
+        //    if (skills[skill] > 0)
+        //        GFHTMLArea(gump, x+16, y+201, 192, 24, "<BASEFONT color=#{}>{} | {}".format(color, skill, GetSkillValueDesc(skills[skill])), 1, 0); //shadow
+        //        y+=30;
+        //    endif
+        //endforeach
     endif
 endfunction
 
@@ -454,7 +466,25 @@ function skillGump(who, culture_pic, byref chardata)
         y += 26;
         i++;
     endforeach
-
+    var count := 0;
+    var skills := chardata.Skills;
+    y := 300;
+    x := 73;
+    var color := "FFFFFF";
+    foreach skill in (skills.keys())
+        if (skills[skill] == 3)
+            color := "0000CC";
+        elseif (skills[skill] == 2)
+            color := "007A23";
+        elseif (skills[skill] == 1)
+            color := "FFE700";
+        endif
+        if (skills[skill] > 0)
+            GFHTMLArea(gump, x, y, 192, 24, "<BASEFONT color=#{}>{} | {}".format(color, skill, GetSkillValueDesc(skills[skill])), 1, 0); //shadow
+            y+=30;
+        endif
+    endforeach
+    SetObjProperty(who, "chardata", chardata);
     GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 500); // Botão de fechar
 
     return GFSendGump(who, gump);
