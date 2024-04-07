@@ -367,9 +367,9 @@ function showPreviousGumpInformation(byref gump, who, culture_pic := 0, x, y)
     endif
 endfunction
 
-function skillGump(who, culture_pic)
+function skillGump(who, culture_pic, byref chardata)
     var gump := GFCreateGump();
-    var chardata := GetObjProperty(who, "chardata");
+    //var chardata := GetObjProperty(who, "chardata");
     var minus_btn := {0x9F7, 0x9F6};
     var plus_btn := {0x9F9, 0x9F8};
     var x := 63;
@@ -391,43 +391,65 @@ function skillGump(who, culture_pic)
     var secundarias  := GetConfigStringArray(elem, "S");
     var terciarias   := GetConfigStringArray(elem, "T");
     var quaternarias := GetConfigStringArray(elem, "Q");
+    var value := 1;
 
     x+=10;
     // Botões para habilidades primárias
     foreach skill in primarias
+        print("SkillVal: "+chardata.Skills[skill]);
+        print("Points: "+chardata.points);
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#0000CC >{}".format(skill), 1, 0);
-        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
-        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 120+GetSkillIdFromName(skill));
+        if (chardata.Skills[skill] >= 1)
+            GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
+        endif
+        if (chardata.Skills[skill] < 3 && !((chardata.points - value) < 0))
+            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 120+GetSkillIdFromName(skill));
+        endif
         sleepms(2);
         y += 26;
         i++;
     endforeach
     y+=10;
     // Botões para habilidades secundárias
+    value := 2;
     foreach skill in secundarias
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#007A23 >{}".format(skill), 1, 0);
-        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+GetSkillIdFromName(skill));
-        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 220+GetSkillIdFromName(skill));
+        if (chardata.Skills[skill] >= 1)
+            GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+GetSkillIdFromName(skill));
+        endif
+        if (chardata.Skills[skill] < 3 && !((chardata.points - value) < 0))
+            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 220+GetSkillIdFromName(skill));
+        endif
         sleepms(2);
         y += 26;
         i++;
     endforeach
     y+=10;
     // Botões para habilidades terciárias
+    value := 3;
     foreach skill in terciarias
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#FFE700 >{}".format(skill), 1, 0);
-        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 300+GetSkillIdFromName(skill));
-        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 320+GetSkillIdFromName(skill));
+        if (chardata.Skills[skill] >= 1)
+            GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 300+GetSkillIdFromName(skill));
+        endif
+        if (chardata.Skills[skill] < 3 && !((chardata.points - value) < 0))
+            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 320+GetSkillIdFromName(skill));
+        endif
         sleepms(2);
         y += 26;
         i++;
     endforeach
     y+=10;
     // Botões para habilidades quaternárias
+    value := 4;
     foreach skill in quaternarias
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#CC0000 >{}".format(skill), 1, 0);
-        GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 400+GetSkillIdFromName(skill));
-        GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 420+GetSkillIdFromName(skill));
+        if (chardata.Skills[skill] >= 1)
+            GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 400+GetSkillIdFromName(skill));
+        endif
+        if (chardata.Skills[skill] < 3 && !((chardata.points - value) < 0))
+            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 420+GetSkillIdFromName(skill));
+        endif
         sleepms(2);
         y += 26;
         i++;
