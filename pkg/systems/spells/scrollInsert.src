@@ -48,6 +48,8 @@ endprogram
 
 function addScroll(who, book, rune)
 	var rune_list := GetObjProperty(book, "spells");
+	var mlore := cint( AP_GetSkill( who, MAGICLORE ) );
+	var spell_caster_slots := Cint( mlore / 5 );
 	if (rune_list == error)
 		rune_list := array;
 	endif
