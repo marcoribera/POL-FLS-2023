@@ -164,9 +164,8 @@ function backgroundSelection(who, culture_pic)
             chardata.+background := backgroundByCulture(who);
             chardata.+bgBonus := culturalTraitBonus(who, chardata);
             if (chardata.culture == CULTURA.BADURAN)
-                chardata.bgBonus2 := METALWORKING;
+                chardata.+bgBonus2 := METALWORKING;
             endif
-
             break;
         else
             SendSysMessageEX(who, "Escolha seu histórico", SSM_FAIL);

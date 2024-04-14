@@ -415,6 +415,11 @@ function skillGump(who, culture_pic, byref chardata)
                 break;
             endif
             skill := chardata.bgBonus;
+            if (chardata.bgBonus2)
+                i -= 1;
+                skill := chardata.bgBonus2;
+                chardata.Erase("bgBonus2");
+            endif
         endif
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#0000CC >{}".format(skill), 1, 0);
         if (chardata.Skills[skill] >= 1)
@@ -464,6 +469,9 @@ function skillGump(who, culture_pic, byref chardata)
     value := 4;
     foreach skill in quaternarias
         if (skill == chardata.bgBonus)
+            continue;
+        endif
+        if (chardata.background == CULTURAL_BACKGROUNDS[chardata.culture] && skill == METALWORKING)
             continue;
         endif
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#CC0000 >{}".format(skill), 1, 0);
