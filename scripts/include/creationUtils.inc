@@ -382,7 +382,6 @@ endfunction
 
 function skillGump(who, culture_pic, byref chardata)
     var gump := GFCreateGump();
-    //var chardata := GetObjProperty(who, "chardata");
     var minus_btn := {0x9F7, 0x9F6};
     var plus_btn := {0x9F9, 0x9F8};
     var pri_allowed := howManyPrimarias(chardata);
@@ -400,7 +399,6 @@ function skillGump(who, culture_pic, byref chardata)
 
     cfg := ReadConfigFile(":charactercreation:config/classes");
     elem := FindConfigElem(cfg, cstr(chardata.classe));
-
     var primarias    := GetConfigStringArray(elem, "P");
     var secundarias  := GetConfigStringArray(elem, "S");
     var terciarias   := GetConfigStringArray(elem, "T");
@@ -408,7 +406,16 @@ function skillGump(who, culture_pic, byref chardata)
     var value := 1;
 
     x+=10;
-    foreach skill in primarias
+    for (i := 1; i <= primarias.size()+1; i++)
+        var skill := primarias[i];
+
+        if (i == primarias.size()+1)
+            if (chardata.bgBonus in primarias)
+                i++;
+                break;
+            endif
+            skill := chardata.bgBonus;
+        endif
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#0000CC >{}".format(skill), 1, 0);
         if (chardata.Skills[skill] >= 1)
             GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
@@ -418,11 +425,13 @@ function skillGump(who, culture_pic, byref chardata)
         endif
         sleepms(2);
         y += 26;
-        i++;
-    endforeach
+    endfor
     y+=10;
     value := 2;
     foreach skill in secundarias
+        if (skill == chardata.bgBonus)
+            continue;
+        endif
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#007A23 >{}".format(skill), 1, 0);
         if (chardata.Skills[skill] >= 1)
             GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+GetSkillIdFromName(skill));
@@ -437,6 +446,9 @@ function skillGump(who, culture_pic, byref chardata)
     y+=10;
     value := 3;
     foreach skill in terciarias
+        if (skill == chardata.bgBonus)
+            continue;
+        endif
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#FFE700 >{}".format(skill), 1, 0);
         if (chardata.Skills[skill] >= 1)
             GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 300+GetSkillIdFromName(skill));
@@ -451,6 +463,9 @@ function skillGump(who, culture_pic, byref chardata)
     y+=10;
     value := 4;
     foreach skill in quaternarias
+        if (skill == chardata.bgBonus)
+            continue;
+        endif
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#CC0000 >{}".format(skill), 1, 0);
         if (chardata.Skills[skill] >= 1)
             GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 400+GetSkillIdFromName(skill));
@@ -486,7 +501,7 @@ function skillGump(who, culture_pic, byref chardata)
     SetObjProperty(who, "chardata", chardata);
     GFHTMLArea(gump, 345, 515, 192, 40, "<BASEFONT Size=55 Color=#999999 > Pontos restantes", 0, 0);
     GFHTMLArea(gump, 346, 516, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Pontos restantes", 0, 0); //shadow
-    GFHTMLArea(gump, 400, 536, 135, 24, "<BASEFONT color=#FFE700 >{}".format(chardata.points), 0, 0);
+    GFHTMLArea(gump, 400, 536, 35, 20, "<BASEFONT color=#FFE700 >{}".format(chardata.points), 1, 0);
     GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 500); // Botão de fechar
 
     return GFSendGump(who, gump);
@@ -498,4 +513,25 @@ function howManyPrimarias(chardata)
     endif
 
     return 2;
+endfunction
+
+function culturalTraitBonus(who, byref chardata)
+    var culturalBg := chardata.background;
+    if (culturalBg == "Legionário")
+        return chardata.+bgBonus := PARRY;
+    elseif (culturalBg == "Véu de Idrith")
+        return chardata.+bgBonus := AWARENESS;
+    elseif (culturalBg == "Pés Leves")
+        return chardata.+bgBonus := SNEAK;
+    elseif (culturalBg == "Templo da Mente")
+        return chardata.+bgBonus := MAGICLORE;
+    elseif (culturalBg == "Escaramuçador")
+        return chardata.+bgBonus := RANGEDCOMBAT;
+    elseif (culturalBg == "Brutamontes")
+        return chardata.+bgBonus := TACTICS;
+    elseif (culturalBg == "Filho da Montanha")
+        return chardata.+bgBonus := GATHERING;
+    elseif (culturalBg == "Andarilho")
+        return chardata.+bgBonus := MELEECOMBAT1H;
+    endif
 endfunction
