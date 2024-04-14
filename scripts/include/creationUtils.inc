@@ -386,7 +386,6 @@ function skillGump(who, culture_pic, byref chardata)
     var minus_btn := {0x9F7, 0x9F6};
     var plus_btn := {0x9F9, 0x9F8};
     var pri_allowed := howManyPrimarias(chardata);
-    print("allowed: "+pri_allowed);
 
     var x := 63;
     var y := 100;
@@ -409,10 +408,7 @@ function skillGump(who, culture_pic, byref chardata)
     var value := 1;
 
     x+=10;
-    // Botões para habilidades primárias
     foreach skill in primarias
-        print("SkillVal: "+chardata.Skills[skill]);
-        print("Points: "+chardata.points);
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#0000CC >{}".format(skill), 1, 0);
         if (chardata.Skills[skill] >= 1)
             GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
@@ -425,7 +421,6 @@ function skillGump(who, culture_pic, byref chardata)
         i++;
     endforeach
     y+=10;
-    // Botões para habilidades secundárias
     value := 2;
     foreach skill in secundarias
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#007A23 >{}".format(skill), 1, 0);
@@ -440,7 +435,6 @@ function skillGump(who, culture_pic, byref chardata)
         i++;
     endforeach
     y+=10;
-    // Botões para habilidades terciárias
     value := 3;
     foreach skill in terciarias
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#FFE700 >{}".format(skill), 1, 0);
@@ -455,7 +449,6 @@ function skillGump(who, culture_pic, byref chardata)
         i++;
     endforeach
     y+=10;
-    // Botões para habilidades quaternárias
     value := 4;
     foreach skill in quaternarias
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#CC0000 >{}".format(skill), 1, 0);
@@ -489,7 +482,6 @@ function skillGump(who, culture_pic, byref chardata)
             y+=30;
         endif
     endforeach
-    print("Primarias: "+chardata.Primarias);
     
     SetObjProperty(who, "chardata", chardata);
     GFHTMLArea(gump, 345, 515, 192, 40, "<BASEFONT Size=55 Color=#999999 > Pontos restantes", 0, 0);
