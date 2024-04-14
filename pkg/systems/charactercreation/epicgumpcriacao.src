@@ -191,6 +191,7 @@ function skillSelection(who, culture_pic)
     var chardata := GetObjProperty(who, "chardata");
     var i := 1;
     chardata.+points := 20;
+    if (chardata.trait == "Sabe-Tudo") chardata.points += 5; endif
     chardata.+Skills := dictionary;
     var points := chardata.points;
     while(1)
