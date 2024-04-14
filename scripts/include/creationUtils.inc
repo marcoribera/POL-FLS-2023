@@ -331,6 +331,7 @@ function showPreviousGumpInformation(byref gump, who, culture_pic := 0, x, y)
     GFGumpPic(gump, 17, 31, 0x9E6);
 
     var chardata := GetObjProperty(who, "chardata");
+    chardata.+Primarias;
     var race := chardata.race;
     var color := "#FFD700";
     var class := chardata.classe;
@@ -384,10 +385,12 @@ function skillGump(who, culture_pic, byref chardata)
     //var chardata := GetObjProperty(who, "chardata");
     var minus_btn := {0x9F7, 0x9F6};
     var plus_btn := {0x9F9, 0x9F8};
+    var pri_allowed := howManyPrimarias(chardata);
+    print("allowed: "+pri_allowed);
+
     var x := 63;
     var y := 100;
     var i := 1;
-
     showPreviousGumpInformation(gump, who, culture_pic, x, y);
     x := 555;
     y := 100;
@@ -414,7 +417,7 @@ function skillGump(who, culture_pic, byref chardata)
         if (chardata.Skills[skill] >= 1)
             GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
         endif
-        if (chardata.Skills[skill] < 3 && !((chardata.points - value) < 0))
+        if ((chardata.points - value >= 0) && (chardata.Skills[skill] < 3) && ((chardata.Primarias < pri_allowed) || (chardata.Skills[skill] < 2 && chardata.points - value >= 0))) 
             GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 120+GetSkillIdFromName(skill));
         endif
         sleepms(2);
@@ -429,7 +432,7 @@ function skillGump(who, culture_pic, byref chardata)
         if (chardata.Skills[skill] >= 1)
             GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+GetSkillIdFromName(skill));
         endif
-        if (chardata.Skills[skill] < 3 && !((chardata.points - value) < 0))
+        if ((chardata.points - value >= 0) && (chardata.Skills[skill] < 3) && ((chardata.Primarias < pri_allowed) || (chardata.Skills[skill] < 2 && chardata.points - value >= 0))) 
             GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 220+GetSkillIdFromName(skill));
         endif
         sleepms(2);
@@ -444,7 +447,7 @@ function skillGump(who, culture_pic, byref chardata)
         if (chardata.Skills[skill] >= 1)
             GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 300+GetSkillIdFromName(skill));
         endif
-        if (chardata.Skills[skill] < 3 && !((chardata.points - value) < 0))
+        if ((chardata.points - value >= 0) && (chardata.Skills[skill] < 3) && ((chardata.Primarias < pri_allowed) || (chardata.Skills[skill] < 2 && chardata.points - value >= 0))) 
             GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 320+GetSkillIdFromName(skill));
         endif
         sleepms(2);
@@ -459,7 +462,7 @@ function skillGump(who, culture_pic, byref chardata)
         if (chardata.Skills[skill] >= 1)
             GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 400+GetSkillIdFromName(skill));
         endif
-        if (chardata.Skills[skill] < 3 && !((chardata.points - value) < 0))
+        if ((chardata.points - value >= 0) && (chardata.Skills[skill] < 3) && ((chardata.Primarias < pri_allowed) || (chardata.Skills[skill] < 2 && chardata.points - value >= 0))) 
             GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 420+GetSkillIdFromName(skill));
         endif
         sleepms(2);
@@ -471,8 +474,10 @@ function skillGump(who, culture_pic, byref chardata)
     y := 300;
     x := 73;
     var color := "FFFFFF";
+    chardata.Primarias := 0;
     foreach skill in (skills.keys())
         if (skills[skill] == 3)
+            chardata.Primarias++;
             color := "0000CC";
         elseif (skills[skill] == 2)
             color := "007A23";
@@ -484,8 +489,21 @@ function skillGump(who, culture_pic, byref chardata)
             y+=30;
         endif
     endforeach
+    print("Primarias: "+chardata.Primarias);
+    
     SetObjProperty(who, "chardata", chardata);
+    GFHTMLArea(gump, 345, 515, 192, 40, "<BASEFONT Size=55 Color=#999999 > Pontos restantes", 0, 0);
+    GFHTMLArea(gump, 346, 516, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Pontos restantes", 0, 0); //shadow
+    GFHTMLArea(gump, 400, 536, 135, 24, "<BASEFONT color=#FFE700 >{}".format(chardata.points), 0, 0);
     GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 500); // Botão de fechar
 
     return GFSendGump(who, gump);
+endfunction
+
+function howManyPrimarias(chardata)
+    if (chardata.trait == "Sabe-Tudo")
+        return 1;
+    endif
+
+    return 2;
 endfunction

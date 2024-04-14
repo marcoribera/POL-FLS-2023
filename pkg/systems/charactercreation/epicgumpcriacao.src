@@ -229,10 +229,6 @@ function skillSelection(who, culture_pic)
             chardata.Skills[GetSkillNameFromId(btn_value-200)] -= 1;
             chardata.points += 2;
         elseif (btn_value >= 220 && btn_value < 300)
-            //if ((chardata.points - 2) < 0)
-            //    SendSysMessageEX(who, "Você não tem pontos suficientes!", SSM_FAIL);
-            //    return;
-            //endif
             chardata.Skills.+GetSkillNameFromId(btn_value-220);
             if (chardata.Skills[GetSkillNameFromId(btn_value-220)] < 1)
                 chardata.Skills[GetSkillNameFromId(btn_value-220)] := 0;
@@ -277,7 +273,7 @@ function skillSelection(who, culture_pic)
             chardata.Skills[GetSkillNameFromId(btn_value-420)] += 1;
             chardata.points -= 4;
         endif
-            print("Skills: "+chardata.Skills);
+
             print("chardata.points: "+chardata.points);
     endwhile
 
