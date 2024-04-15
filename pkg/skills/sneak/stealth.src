@@ -48,7 +48,7 @@ program skill_Stealth( who )
 	endif
 
 	var baseSteps := qtdSteps(who, skill);
-    if (GetObjProperty(who, "chardata").kit == "Desapercebido")
+    if (GetObjProperty(who, "chardata").trait == "Desapercebido")
         baseSteps := Cint(baseSteps * 1.5);
     endif
 

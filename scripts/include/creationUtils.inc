@@ -368,16 +368,25 @@ function showPreviousGumpInformation(byref gump, who, culture_pic := 0, x, y)
         GFHTMLArea(gump, x+16, y+151, 192, 24, "<BASEFONT color=#{}>{}".format(color, trait), 1, 0);
     endif
 
-    if (skills)
-        GFHTMLArea(gump, x+81, y+182, 192, 40, "<BASEFONT Size=55 Color=#999999 > Skills", 0, 0); //shadow
-        GFHTMLArea(gump, x+80, y+181, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Skills", 0, 0);
-        //foreach skill in (skills.keys())
-        //    if (skills[skill] > 0)
-        //        GFHTMLArea(gump, x+16, y+201, 192, 24, "<BASEFONT color=#{}>{} | {}".format(color, skill, GetSkillValueDesc(skills[skill])), 1, 0); //shadow
-        //        y+=30;
-        //    endif
-        //endforeach
-    endif
+if (GetObjProperty(who, "skill") == 1)
+    GFHTMLArea(gump, x+81, y+182, 192, 40, "<BASEFONT Size=55 Color=#999999 > Skills", 0, 0); //shadow
+    GFHTMLArea(gump, x+80, y+181, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Skills", 0, 0);
+
+    foreach skill in (skills.keys())
+        var color := "";
+        if (skills[skill] == 3)
+            color := "0000CC";
+        elseif (skills[skill] == 2)
+            color := "007A23";
+        elseif (skills[skill] == 1)
+            color := "FFE700";
+        endif
+
+        GFHTMLArea(gump, x+16, y+201, 192, 24, "<BASEFONT color=#{}>{} | {}".format(color, skill, GetSkillValueDesc(skills[skill])), 1, 0); //shadow
+        y += 30;
+    endforeach
+endif
+
 endfunction
 
 function skillGump(who, culture_pic, byref chardata)
@@ -471,7 +480,7 @@ function skillGump(who, culture_pic, byref chardata)
         if (skill == chardata.bgBonus)
             continue;
         endif
-        if (chardata.background == CULTURAL_BACKGROUNDS[chardata.culture] && skill == METALWORKING)
+        if (chardata.background == "Filho da Montanha" && skill == METALWORKING )
             continue;
         endif
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#CC0000 >{}".format(skill), 1, 0);
@@ -510,6 +519,7 @@ function skillGump(who, culture_pic, byref chardata)
     GFHTMLArea(gump, 345, 515, 192, 40, "<BASEFONT Size=55 Color=#999999 > Pontos restantes", 0, 0);
     GFHTMLArea(gump, 346, 516, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Pontos restantes", 0, 0); //shadow
     GFHTMLArea(gump, 400, 536, 35, 20, "<BASEFONT color=#FFE700 >{}".format(chardata.points), 1, 0);
+
     GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 500); // Botão de fechar
 
     return GFSendGump(who, gump);
@@ -542,4 +552,16 @@ function culturalTraitBonus(who, byref chardata)
     elseif (culturalBg == "Andarilho")
         return chardata.+bgBonus := MELEECOMBAT1H;
     endif
+endfunction
+
+function attributeGump(who, culture_pic)
+    var gump := GFCreateGump();
+
+    var x := 63;
+    var y := 100;
+    var i := 1;
+
+    showPreviousGumpInformation(gump, who, culture_pic, x, y);
+    return GFSendGump(who, gump);
+
 endfunction

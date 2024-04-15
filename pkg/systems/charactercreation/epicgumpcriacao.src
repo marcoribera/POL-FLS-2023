@@ -21,6 +21,7 @@ program epicCreationGump(who)
     backgroundSelection(who, culture_pic);
     traitSelection(who, culture_pic);
     skillSelection(who, culture_pic);
+    attributeSelection(who, culture_pic);
 endprogram
 
 function culturalSelection(who)
@@ -157,7 +158,7 @@ function backgroundSelection(who, culture_pic)
             chardata.+bgBonus := SURVIVAL;
             break;
         elseif (btn_value == 209) 
-            chardata.+background := BACKGROUNDS.WOODWORKING;
+            chardata.+background := BACKGROUNDS.WOOD_WORK;
                 chardata.+bgBonus := WOODWORKING;
             break;
         elseif (btn_value == 210) 
@@ -205,6 +206,7 @@ function skillSelection(who, culture_pic)
     var i := 1;
     chardata.+points := 20;
     if (chardata.trait == "Sabe-Tudo") chardata.points += 5; endif
+    if (chardata.race == "Humano") chardata.points += 2; endif
     chardata.+Skills := dictionary;
     var points := chardata.points;
     while(1)
@@ -271,9 +273,34 @@ function skillSelection(who, culture_pic)
             endif
             chardata.Skills[GetSkillNameFromId(btn_value-420)] += 1;
             chardata.points -= 4;
+        elseif (btn_value == 500)
+            SetObjProperty(who, "chardata", chardata);
+            SetObjProperty(who, "skill", 1);
+            SendSysMessageEX(who, "Você definiu suas skills", SSM_INFO);
+            break;
         endif
     endwhile
+endfunction
 
-    SetObjProperty(who, "chardata", chardata);
-    SendSysMessageEX(who, "Você definiu suas skills", SSM_INFO);
+function attributeSelection(who, culture_pic)
+    var btn_value;
+    var chardata := GetObjProperty(who, "chardata");
+    var traits := listTraits(who, chardata);
+    var i := 1;
+
+    //while(1)
+        var input := attributeGump(who, culture_pic);
+    //    foreach key in (input.keys)
+    //        btn_value := key;
+    //    endforeach
+    //    if (btn_value > 200)
+    //        chardata.+trait := traits[btn_value-200].Nome;
+    //        break;
+    //    else
+    //        SendSysMessageEX(who, "Escolha sua característica", SSM_FAIL);
+    //    endif
+    //endwhile
+
+    //SetObjProperty(who, "chardata", chardata);
+    SendSysMessageEX(who, "Você selecionou seus atributos", SSM_INFO);
 endfunction
