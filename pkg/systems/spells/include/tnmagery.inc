@@ -631,7 +631,7 @@ function WritespellInfo(who, byref spellinfo)
         cfg := ReadConfigFile(":spells:config/cantripspells");
 	elseif(spellinfo.magic_path == "Sangria")
         cfg := ReadConfigFile(":spells:config/sangriaspells");
-	elseif (GetObjProperty(who, "chardata").magia == "spellcaster")
+	elseif (GetObjProperty(who, "chardata").magia == "spellcaster" && spellinfo.magic_path == "spellcaster")
         cfg := ReadConfigFile(":spells:config/spellcaster");
 	elseif(spellinfo.magic_path == "Trickster" || TemHabilidade(who, "Sensibilidade Arcana"))
         cfg := ReadConfigFile(":spells:config/tricksterspells");
