@@ -26,6 +26,8 @@ program cria(item)
 		spellcfg := ReadConfigFile(":spells:config/sangriaspells");
 	elseif(spelltype_item == "Mage")
 		spellcfg := ReadConfigFile(":spells:config/allspells");
+	elseif(spelltype_item == "spellcaster")
+		spellcfg := ReadConfigFile(":spells:config/spellcaster");
 	else
 		Syslog("Erro ao criar pergaminho");
 		return 0;
@@ -36,12 +38,24 @@ program cria(item)
 	foreach key in keys
 		var spelllvl := GetConfigInt( FindconfigElem(spellcfg, key), "Circle" );
 		var spelltype := GetConfigString( FindconfigElem(spellcfg, key), "Type" );
+		var school := GetConfigString( FindconfigElem(spellcfg, key), "School" );
 		if ( (spelllvl == lvl) && ( spelltype == "Mesum"))
 			var unico := GetConfigInt( FindConfigElem(spellcfg, key), "Unico" );
 			if (!unico)
 				randomspells.append(key);
 			endif
 		elseif( (spelllvl == lvl) && ( spelltype == "Sangria"))
+			randomspells.append(key);
+		elseif(spelltype == "spellcaster")
+			if(school == "Kaijin")
+				item.color := 0xA8;
+			elseif(school == "Evocatium")
+				item.color := 0x85;
+			elseif(school == "Velkyn")
+				item.color := 0xF;
+			elseif(school == "Ahtaleloreth")
+				item.color := 0x319;
+			endif
 			randomspells.append(key);
 		endif
 	endforeach
