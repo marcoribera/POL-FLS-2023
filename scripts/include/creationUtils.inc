@@ -304,7 +304,7 @@ function listTraits(who, chardata)
 		var culturas := GetConfigStringArray( elem, "Cultura" );
 		var classes := GetConfigStringArray( elem, "Classe" );
 
-		if ((racas.size() >= 1) && !(chardata.race in racas))
+		if ((racas.size() >= 1) && !(chardata.raca in racas))
 			canadd := 0;
 		endif
 		if ((classes.size()>=1) && !(chardata.classe in classes))
@@ -332,7 +332,7 @@ function showPreviousGumpInformation(byref gump, who, culture_pic := 0, x, y)
 
     var chardata := GetObjProperty(who, "chardata");
     chardata.+Primarias;
-    var race := chardata.race;
+    var race := chardata.raca;
     var color := "#FFD700";
     var class := chardata.classe;
     var bg := chardata.background;

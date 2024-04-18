@@ -62,31 +62,31 @@ function racialSelection(who, culture_pic)
             btn_value := key;
         endforeach
         if (btn_value == 201)
-            chardata.race := RACA.ANAO;
+            chardata.raca := RACA.ANAO;
             break;
         elseif (btn_value == 202) 
-            chardata.race := RACA.DROW;
+            chardata.raca := RACA.DROW;
             break;
         elseif (btn_value == 203) 
-            chardata.race := RACA.ELFO;
+            chardata.raca := RACA.ELFO;
             break;
         elseif (btn_value == 204) 
-            chardata.race := RACA.HUMANO;
+            chardata.raca := RACA.HUMANO;
             break;
         elseif (btn_value == 205) 
-            chardata.race := RACA.ORC;
+            chardata.raca := RACA.ORC;
             break;
         elseif (btn_value == 206) 
-            chardata.race := RACA.POLSKI;
+            chardata.raca := RACA.POLSKI;
             break;
         elseif (chardata.culture == CULTURA.AIGLANA || chardata.culture == CULTURA.LESTE)
             SendSysMessageEX(who, "Escolha sua raça!", SSM_FAIL);
         else
-            chardata.race := getRaceByCulturalId(culture_pic)[1];
+            chardata.raca := getRaceByCulturalId(culture_pic)[1];
             break;
         endif
     endwhile
-    SendSysMessageEX(who, "Voce será um "+chardata.race, SSM_INFO);
+    SendSysMessageEX(who, "Voce será um "+chardata.raca, SSM_INFO);
 
     SetObjProperty(who, "chardata", chardata);
 endfunction
@@ -206,7 +206,7 @@ function skillSelection(who, culture_pic)
     var i := 1;
     chardata.+points := 20;
     if (chardata.trait == "Sabe-Tudo") chardata.points += 5; endif
-    if (chardata.race == "Humano") chardata.points += 2; endif
+    if (chardata.raca == "Humano") chardata.points += 2; endif
     chardata.+Skills := dictionary;
     var points := chardata.points;
     while(1)

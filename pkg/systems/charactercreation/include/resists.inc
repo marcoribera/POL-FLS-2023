@@ -116,7 +116,7 @@ function GetResist(who, resist)
 		valor := valor + CInt(GetObjProperty(who, "#VontadeMod"));
 
 		// Aplica modificadores de vantagens raciais
-		if ((GetObjProperty(who, "chardata")).race == RACA.ELFO)
+		if ((GetObjProperty(who, "chardata")).raca == RACA.ELFO)
 		//if (vantagem == "Vontade de Ferro" || who.npctemplate)
 			valor := valor + 20; // +200% do VALOR_REFERENCIA
 		endif
@@ -165,7 +165,7 @@ function CheckResist(who, resist, dif, mod := 0)
 		return 1;
 
 	//Quando é Zharkiano e estiver Bloodied ativa a habilidade racial "Segunda chance"
-	elseif ((GetObjProperty(who, "chardata")).race == RACA.HUMANO && IsBloodied(who))
+	elseif ((GetObjProperty(who, "chardata")).raca == RACA.HUMANO && IsBloodied(who))
 		dado := RandomInt(40) + 1;
 		if (dado + valor + mod >= dif)
 			SendSysMessageEx(who, "Humanos são insistentes!", SSM_INFO);
