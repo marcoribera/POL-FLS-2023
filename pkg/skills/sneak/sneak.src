@@ -6,6 +6,7 @@ include ":charactercreation:habilidades";
 include "include/say";
 include ":tn:cooldown";
 include "include/facings";
+include "include/creationUtils";
 
 program skill_Hide(who)
 
