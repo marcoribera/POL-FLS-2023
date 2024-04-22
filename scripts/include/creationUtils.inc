@@ -1,3 +1,6 @@
+include ":attributes:attributes";
+
+
 const aiglaText := "Os Aiglanos são um povo astuto e inclusivo, conhecido por sua capital Aquileia. Sua bandeira apresenta uma águia dourada em um fundo vermelho, simbolizando a seleção dos capazes. Eles são um povo mestiço, com variação de tom de pele, altura e tipo de cabelo. São disciplinados, valorizam a história e fazem do exercício físico um hábito.
 Historicamente, os Aiglanos prosperaram apesar dos desafios, aprendendo com suas fraquezas e remodelando-se. Passaram de um pequeno vilarejo para uma República, com um sistema político fechado. A ascensão do Imperador Crassus trouxe um período de bonança, com reformas militares e de governo que expandiram o poder do império.
 A religião Aiglana é flexível, absorvendo divindades dos povos conquistados através do ritual de evocatio. Os costumes incluem uma nobreza intocável, lealdade à legião e pagamento dos legionários durante campanhas.
@@ -413,17 +416,19 @@ function skillGump(who, culture_pic, byref chardata)
     var terciarias   := GetConfigStringArray(elem, "T");
     var quaternarias := GetConfigStringArray(elem, "Q");
     var value := 1;
-
+    var btn_value;
     x+=10;
     for (i := 1; i <= primarias.size()+1; i++)
         var skill := primarias[i];
-
+        btn_value := GetSkillIdFromName(skill);
         if (i == primarias.size()+1)
             if (chardata.bgBonus in primarias)
                 i++;
                 break;
             endif
             skill := chardata.bgBonus;
+            btn_value := GetSkillIdFromName(skill);
+
             if (chardata.bgBonus2)
                 i -= 1;
                 skill := chardata.bgBonus2;
@@ -432,10 +437,10 @@ function skillGump(who, culture_pic, byref chardata)
         endif
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#0000CC >{}".format(skill), 1, 0);
         if (chardata.Skills[skill] >= 1)
-            GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 100+GetSkillIdFromName(skill));
+            GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 100+btn_value);
         endif
         if ((chardata.points - value >= 0) && (chardata.Skills[skill] < 3) && ((chardata.Primarias < pri_allowed) || (chardata.Skills[skill] < 2 && chardata.points - value >= 0))) 
-            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 120+GetSkillIdFromName(skill));
+            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 120+btn_value);
         endif
         sleepms(2);
         y += 26;
@@ -446,12 +451,14 @@ function skillGump(who, culture_pic, byref chardata)
         if (skill == chardata.bgBonus)
             continue;
         endif
+
+        btn_value := GetSkillIdFromName(skill);
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#007A23 >{}".format(skill), 1, 0);
         if (chardata.Skills[skill] >= 1)
-            GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+GetSkillIdFromName(skill));
+            GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+btn_value);
         endif
         if ((chardata.points - value >= 0) && (chardata.Skills[skill] < 3) && ((chardata.Primarias < pri_allowed) || (chardata.Skills[skill] < 2 && chardata.points - value >= 0))) 
-            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 220+GetSkillIdFromName(skill));
+            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 220+btn_value);
         endif
         sleepms(2);
         y += 26;
@@ -463,12 +470,14 @@ function skillGump(who, culture_pic, byref chardata)
         if (skill == chardata.bgBonus)
             continue;
         endif
+
+        btn_value := GetSkillIdFromName(skill);
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#FFE700 >{}".format(skill), 1, 0);
         if (chardata.Skills[skill] >= 1)
-            GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 300+GetSkillIdFromName(skill));
+            GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 300+btn_value);
         endif
         if ((chardata.points - value >= 0) && (chardata.Skills[skill] < 3) && ((chardata.Primarias < pri_allowed) || (chardata.Skills[skill] < 2 && chardata.points - value >= 0))) 
-            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 320+GetSkillIdFromName(skill));
+            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 320+btn_value);
         endif
         sleepms(2);
         y += 26;
@@ -483,12 +492,14 @@ function skillGump(who, culture_pic, byref chardata)
         if (chardata.background == "Filho da Montanha" && skill == METALWORKING )
             continue;
         endif
+
+        btn_value := GetSkillIdFromName(skill);
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#CC0000 >{}".format(skill), 1, 0);
         if (chardata.Skills[skill] >= 1)
-            GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 400+GetSkillIdFromName(skill));
+            GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 400+btn_value);
         endif
         if ((chardata.points - value >= 0) && (chardata.Skills[skill] < 3) && ((chardata.Primarias < pri_allowed) || (chardata.Skills[skill] < 2 && chardata.points - value >= 0))) 
-            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 420+GetSkillIdFromName(skill));
+            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 420+btn_value);
         endif
         sleepms(2);
         y += 26;
