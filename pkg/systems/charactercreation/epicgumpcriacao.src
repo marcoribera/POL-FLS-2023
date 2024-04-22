@@ -22,6 +22,7 @@ program epicCreationGump(who)
     traitSelection(who, culture_pic);
     skillSelection(who, culture_pic);
     attributeSelection(who, culture_pic);
+    religionSelection(who);
 endprogram
 
 function culturalSelection(who)
@@ -337,4 +338,33 @@ function attributeSelection(who, culture_pic)
             break;
        endif
     endwhile
+endfunction
+
+function religionSelection(who)
+    var chardata := GetObjProperty(who, "chardata");
+    var religion_pic := BOKK_BHARAZ;
+    var btn_value;
+    while (1)
+        var input := ReligionGump(who, religion_pic);
+        btn_value := input[0]; 
+
+        if (btn_value == 201)
+            religion_pic++;
+        elseif (btn_value == 210) 
+            religion_pic--;
+        else
+            break;
+        endif
+
+        if (religion_pic < 0x9EF)
+            religion_pic := 0x9F5;
+        elseif (religion_pic > 0x9F5)
+            religion_pic := 0x9EF;
+        endif
+    endwhile
+    chardata.+religion := getReligionByPictureId(religion_pic);
+    SetObjProperty(who, "chardata", chardata);
+
+    SendSysMessageEX(who, "Sua religião será "+chardata.religion, SSM_INFO);
+    return religion_pic;
 endfunction

@@ -42,6 +42,33 @@ Curiosidades sobre os Orcs incluem seu uso de armaduras feitas de couro, ossos e
 Na adolescência, os Orcs são submetidos a ritos de passagem no deserto e enfrentam os perigos das dunas. A presença de forasteiros no deserto era comum, mas os Orcs geralmente não forneciam ajuda, exceto em situações de perigo contra os Aklats.
 Alguns Orcs vivem sem tribo, considerados perigosos por não seguirem as tradições. Eles se esforçam para resolver conflitos na Arena de Sangue, mesmo fora do deserto, mantendo um código de honra entre eles.";
 
+const veneratioText := "A Veneratio é a religião dos Aiglanos, caracterizada pela adoração a uma variedade de divindades, incluindo o Demiurgo, o criador do universo. Os Aiglanos praticam rituais de adoração, fazem oferendas e honram os templos das divindades para garantir proteção e prosperidade. Eles valorizam a tradição, a história e o serviço à comunidade, 'enquanto mantêm uma atitude inclusiva em relação às crenças dos outros povos. Para ser fiel à sua religião, os personagens devem demonstrar devoção às divindades, respeitar as tradições, servir à comunidade e aceitar a diversidade religiosa.";
+const loreText := "Os elfos, conhecidos como Quendi, são um povo antigo e sábio, intrinsecamente ligado à natureza e à magia. Sua sociedade é marcada pela reverência à deusa Alora Larethian, a Luz Eterna, que os abençoou com a magia e os uniu em tempos de discórdia. Os elfos vivem em harmonia com a natureza, preservando-a e celebrando suas tradições ancestrais. São reservados em relação a estranhos, valorizando a sabedoria, a contemplação e a harmonia. Apesar de serem hábeis guerreiros, sua verdadeira força reside na magia, sendo dotados de uma conexão única com a energia cósmica. A rixa histórica com os anões é alimentada pela diferença de visão em relação à tecnologia, sendo os elfos avessos a qualquer interferência que perturbe a natureza.";
+const bokk_bharazText := "A religião dos Anões é centrada na adoração de um poderoso deus criador e no culto aos seus antepassados ilustres, que são reverenciados como figuras dignas de orgulho e louvor. Entre esses ancestrais estão Galgrumir, o primeiro anão, Killi, conhecida como a mãe da agricultura e da cerveja, Thorgrim, famoso por suas habilidades na marcenaria, e outros.
+No jogo, os jogadores devem adotar uma postura respeitosa em relação à religião Anã, mostrando devoção ao deus criador e reconhecendo a importância dos antepassados em suas vidas. Isso pode se refletir em ações como oferecer orações aos deuses antes de empreender aventuras ou buscar a orientação dos ancestrais em momentos de dificuldade.
+Além disso, os jogadores podem incorporar aspectos da cultura Anã em seus comportamentos in-game, como valorizar o trabalho árduo e a habilidade na forja, respeitar as tradições e costumes ancestrais, e demonstrar lealdade aos seus companheiros de equipe. Cantarolar antigas músicas Anãs ou entoar cânticos em honra aos deuses também pode contribuir para a imersão na religião e cultura Anãs dentro do jogo.";
+const eluithorthText := "Respeito ao sacrifício: Demonstre valorizar a ideia de sacrificar interesses pessoais pelo bem da comunidade.
+Foco no bem coletivo: Busque soluções que beneficiem não só você, mas também seu grupo ou comunidade.
+Entendimento da dualidade: Reconheça que a alegria está intrinsecamente ligada à tristeza, e explore como os momentos difíceis podem levar ao crescimento.
+Aceitação do destino: Encare os desafios com resignação, confiando que seus sacrifícios contribuirão para um propósito maior.
+Devoção à deusa Idrith: Mostre reverência pela deusa através de orações, rituais ou seguindo os princípios éticos associados a ela.
+Ao adotar esses princípios em sua interpretação, você mergulhará mais profundamente na cultura e religião dos Drows, tornando sua experiência de jogo mais rica e imersiva.";
+const halleuadText := "Os Björske são um povo tradicional do norte do continente de Eora, conhecidos por sua pele alva e cabelos que variam do preto ao loiro e ruivo. São orgulhosos, valentes e generosos, transmitindo suas tradições oralmente, reunindo-se em torno de fogueiras para cultuar seus deuses com danças, carne de caça e hidromel.";	
+const kaiText := "
+A religião dos povos do Leste, conhecida como Kai, está profundamente ligada à história e à cultura desses povos. Ela gira em torno do culto ao Deus Dragão, Huangxu, que é visto como o mensageiro divino no plano terreno através do Imperador.
+Para preservar a imersão in-game e compreender melhor essa religião, sugira ao jogador que siga estas diretrizes:
+Lealdade absoluta ao Imperador: Enfatize a importância da lealdade ao Imperador, visto como o portador do Mandato dos Céus concedido pelo Deus Dragão. Isso pode se manifestar através do respeito às ordens e decretos imperiais.
+Respeito aos ensinamentos do Kai: Valorize os ensinamentos do Kai, que enfatizam a lealdade, a sabedoria e o conhecimento. O jogador pode demonstrar isso através de sua conduta, buscando sempre agir de acordo com os princípios éticos e morais da religião.
+Honra e tradição: Destaque a importância da honra e da tradição na religião Kai. Os jogadores podem incorporar isso em seus personagens através de seus códigos de ética e conduta, como o respeito aos mais velhos e a valorização da palavra dada.
+Participação nas práticas religiosas: Encoraje o jogador a participar das práticas religiosas do Kai, como cerimônias de adoração ao Deus Dragão ou rituais de passagem, como a confecção da tatuagem do dragão para os monges.";
+const ushkrarText := "Em um mundo árido e implacável, os orcs se erguem como guerreiros de uma fé singular, moldada pelas vastas extensões do Deserto da Perdição. No coração dessas terras hostis, onde a areia dança ao ritmo dos ventos e a água é tão escassa quanto a esperança, os orcs encontraram sua fé no Grunntam, o Único Caminho.
+No centro dessa crença está Adar Kor Doom, uma entidade mítica que personifica o deserto e seus elementos fundamentais: areia, água e sangue. Para os orcs, o deserto não é apenas um lugar, mas uma divindade que dita suas vidas e desafios.
+Imagine-se diante de um altar rudimentar erguido nas dunas, onde crânios de criaturas aberrantes são ofertados como sacrifício. Sob o sol escaldante, um xamã entoa cânticos ancestrais, evocando a benção de Adar Kor Doom sobre sua tribo. Cada palavra ressoa como um eco das antigas tradições, uma reverência à natureza brutal e indomável do deserto.
+E assim, os orcs caçam as temíveis Aklats, não apenas como uma questão de sobrevivência, mas como um ato sagrado de purificação. Cada criatura abatida é um tributo ao ciclo eterno de vida e morte, uma contribuição para a fertilidade das areias estéreis.
+Nos períodos de chuva, quando o deserto se transforma em um oásis temporário, os orcs celebram com rituais de êxtase e indulgência. Longe das batalhas e caçadas, eles se entregam ao prazer e à comunhão, honrando a dádiva da água que sustenta sua existência.
+Porém, mesmo em meio à brutalidade de sua fé, os orcs têm seus guardiões espirituais. Os Xamãs, sábios e misteriosos, são os intérpretes dos desígnios de Adar Kor Doom. Eles conduzem seus seguidores através dos caminhos áridos do deserto, guiando-os na busca pela força e sabedoria necessárias para enfrentar os desafios do Grunntam.
+Neste mundo implacável e repleto de perigos, a fé dos orcs é uma luz que brilha no horizonte, uma âncora em meio à tempestade de areia. E enquanto as dunas se movem e os ventos uivam, os filhos do Deserto da Perdição permanecem firmes em sua devoção ao Grunntam, prontos para enfrentar qualquer desafio que o destino lhes reserve.";
+
 const AIGLA_ID := 0x9E7;
 const ALURIEL_ID := 0x9E8;
 const BADURAN_ID := 0x9E9;
@@ -51,10 +78,19 @@ const HAROLOTH_ID := 0x9EC;
 const POLKINEA_ID := 0x9ED;
 const LESTE_ID := 0x9EE;
 
+const BOKK_BHARAZ := 0x9EF;
+const ELUITHORTH := 0x9F0;
+const HALLEUAD := 0x9F1;
+const KAI := 0x9F2;
+const LORE := 0x9F3;
+const USHKRAR := 0x9F4;
+const VENERATIO := 0x9F5;
+
 var CULTURA := struct{AIGLANA := "Aiglana", HAROLOTH := "Har'oloth", LESTE := "Povos do Leste", BJORSKA := "Björska", ALURIEL := "Alüriel", BADURAN := "Badûran", GULTHRAK := "Gulthrak", POLKINEA := "Polkinea"};
 var RACA := struct{ANAO := "Anão", DROW := "Drow", ELFO := "Elfo", ORC := "Orc", HUMANO :="Humano", POLSKI := "Polski"};
 var BACKGROUNDS := struct{DOMESTIC_WORK := "Mestre do Lar", METAL_WORK := "Ferreiro aprendiz", GATHERING := "Coletor", PICK_POCKETING := "Rato de rua", MECHANICAL_APITUDE := "Aventureiro", HANDLE_ANIMAL := "Domador de Feras", SURVIVAL := "Caçador", MEDICINE := "Curandeiro itinerante", WOOD_WORK := "Marceneiro"};
 var CULTURAL_BACKGROUNDS := struct{ "Aiglana" := "Legionário", "Har'oloth" := "Véu de Idrith", "Polkinea" := "Pés Leves", "Alüriel" := "Templo da Mente", "Björska" := "Escaramuçador", "Gulthrak" := "Brutamontes", "Badûran" := "Filho da Montanha", "Povos do Leste" := "Andarilho"};
+var RELIGIAO := struct{VENERATIO := "Veneratio", ELUITHORTH := "Eluith'orth", KAI := "Kai", HALLEUAD := "Halleuad", LORE := "Lórё", BOKK_BHARAZ := "Bokk Bharaz", USHKRAR := "Ushkr'ar"};
 
 function getCultureByPictureId(culture_id)
     case (culture_id)
@@ -608,4 +644,65 @@ function attributeGump(who, culture_pic, byref chardata)
     GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 500); // Botão de fechar
 
     return GFSendGump(who, gump);
+endfunction
+
+function ReligionGump(who, religion_pic)
+    var next_btn := array{"9903", "9904"};
+    var prev_btn := array{"9909", "9910"};
+
+    var gump := GFCreateGump();
+    GFGumpPic(gump, 17, 31, 0x9E6);
+
+    GFHTMLArea(gump, 346, 56, 192, 40, "<BASEFONT Size=55 Color=#999999 >Escolha sua religião", 0, 0); //shadow
+    GFHTMLArea(gump, 345, 55, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Escolha sua religião", 0, 0);
+    var x := 63;
+    var y := 100;
+    var i := 0;
+
+    GFHTMLArea(gump, 100, 550, 650, 120, getReligionDescriptionByPictureId(religion_pic), 1, 1);
+    GFAddButton(gump, 543, 300, next_btn[1], next_btn[2], GF_CLOSE_BTN, 201);
+    GFAddButton(gump, 273, 300, prev_btn[1], prev_btn[2], GF_CLOSE_BTN, 210);
+    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 200);
+
+    GFGumpPic(gump, 298, 100, religion_pic);
+
+    return GFSendGump(who, gump);
+endfunction
+
+function getReligionByPictureId(religion_id)
+    case (religion_id)
+        VENERATIO:
+            return RELIGIAO.VENERATIO;
+        LORE:
+            return RELIGIAO.LORE;
+        BOKK_BHARAZ:
+            return RELIGIAO.BOKK_BHARAZ;
+        HALLEUAD:
+            return RELIGIAO.HALLEUAD;
+        KAI:
+            return RELIGIAO.KAI;
+        ELUITHORTH:
+            return RELIGIAO.ELUITHORTH;
+        USHKRAR:
+            return RELIGIAO.USHKRAR;
+    endcase
+endfunction
+
+function getReligionDescriptionByPictureId(culture_id)
+    case (culture_id)
+        VENERATIO:
+            return veneratioText;
+        LORE:
+            return loreText;
+        BOKK_BHARAZ:
+            return bokk_bharazText;
+        HALLEUAD:
+            return halleuadText;
+        KAI:
+            return kaiText;
+        ELUITHORTH:
+            return eluithorthText;
+        USHKRAR:
+            return ushkrarText;
+    endcase
 endfunction
