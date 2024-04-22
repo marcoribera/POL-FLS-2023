@@ -301,22 +301,40 @@ endfunction
 function attributeSelection(who, culture_pic)
     var btn_value;
     var chardata := GetObjProperty(who, "chardata");
+    chardata.+attribute_points := 80;
+    chardata.+str := 40;
+    chardata.+dex := 40;
+    chardata.+int := 40;
     var traits := listTraits(who, chardata);
     var i := 1;
 
-    //while(1)
-        var input := attributeGump(who, culture_pic);
-    //    foreach key in (input.keys)
-    //        btn_value := key;
-    //    endforeach
-    //    if (btn_value > 200)
-    //        chardata.+trait := traits[btn_value-200].Nome;
-    //        break;
-    //    else
-    //        SendSysMessageEX(who, "Escolha sua característica", SSM_FAIL);
-    //    endif
-    //endwhile
-
-    //SetObjProperty(who, "chardata", chardata);
-    SendSysMessageEX(who, "Você selecionou seus atributos", SSM_INFO);
+    while(1)
+        var input := attributeGump(who, culture_pic, chardata);
+       foreach key in (input.keys)
+           btn_value := key;
+       endforeach
+       if (btn_value == 200)
+            chardata.str += 5;
+            chardata.attribute_points -= 5;
+       elseif (btn_value == 201)
+            chardata.str -= 5;
+            chardata.attribute_points += 5; 
+       elseif (btn_value == 210)
+            chardata.dex += 5;
+            chardata.attribute_points -= 5;
+       elseif (btn_value == 211)
+            chardata.dex -= 5;
+            chardata.attribute_points += 5;
+       elseif (btn_value == 220)
+            chardata.int += 5;
+            chardata.attribute_points -= 5;
+       elseif (btn_value == 221)
+            chardata.int -= 5;
+            chardata.attribute_points += 5;
+        else
+            SetObjProperty(who, "chardata", chardata);
+            SendSysMessageEX(who, "Você selecionou seus atributos", SSM_INFO);
+            break;
+       endif
+    endwhile
 endfunction

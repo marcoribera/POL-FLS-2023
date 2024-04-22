@@ -389,12 +389,12 @@ if (GetObjProperty(who, "skill") == 1)
         y += 30;
     endforeach
 endif
-
+    
 endfunction
 
 function skillGump(who, culture_pic, byref chardata)
     var gump := GFCreateGump();
-    var minus_btn := {0x9F7, 0x9F6};
+    var minus_btn := {0x9F6, 0x9F7};
     var plus_btn := {0x9F9, 0x9F8};
     var pri_allowed := howManyPrimarias(chardata);
 
@@ -565,14 +565,47 @@ function culturalTraitBonus(who, byref chardata)
     endif
 endfunction
 
-function attributeGump(who, culture_pic)
+function attributeGump(who, culture_pic, byref chardata)
     var gump := GFCreateGump();
-
     var x := 63;
     var y := 100;
     var i := 1;
-
+    var minus_btn := {0x9F6, 0x9F7};
+    var plus_btn := {0x9F9, 0x9F8};
+    var cost := 5;
     showPreviousGumpInformation(gump, who, culture_pic, x, y);
-    return GFSendGump(who, gump);
+    GFHTMLArea(gump, 555, y, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seus atributos", 0, 0); //shadow
+    GFHTMLArea(gump, 556, y, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Escolha seus atributos", 0, 0);
 
+    GFHTMLArea(gump, 555, y+20, 120, 25, "<BASEFONT color=#FFFFFF >Forca:    {}".format(chardata.str), 1, 0);
+    if (chardata.str > 40)
+        GFAddButton(gump, 675, y+25, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 201);
+    endif
+    if ((chardata.attribute_points - cost >= 0) && (chardata.str <100)) 
+        GFAddButton(gump, 695, y+25, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 200);
+    endif
+
+    GFHTMLArea(gump, 555, y+40, 120, 25, "<BASEFONT color=#FFFFFF >Destreza:  {}".format(chardata.dex), 1, 0);
+    if (chardata.dex > 40)
+        GFAddButton(gump, 675, y+45, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 211);
+    endif
+    if ((chardata.attribute_points - cost >= 0) && (chardata.dex <100)) 
+        GFAddButton(gump, 695, y+45, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 210);
+    endif
+
+    GFHTMLArea(gump, 555, y+60, 120, 25, "<BASEFONT color=#FFFFFF >Inteligencia: {}".format(chardata.int), 1, 0);
+    if (chardata.int > 40)
+        GFAddButton(gump, 675, y+65, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 221);
+    endif
+    if ((chardata.attribute_points - cost >= 0) && (chardata.int <100)) 
+        GFAddButton(gump, 695, y+65, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 220);
+    endif
+
+    GFHTMLArea(gump, 345, 515, 192, 40, "<BASEFONT Size=55 Color=#999999 > Pontos restantes", 0, 0);
+    GFHTMLArea(gump, 346, 516, 192, 40, "<BASEFONT Size=55 Color=#ffffff > Pontos restantes", 0, 0); //shadow
+    GFHTMLArea(gump, 400, 536, 35, 20, "<BASEFONT color=#FFE700 >{}".format(chardata.attribute_points), 1, 0);
+
+    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 500); // Botão de fechar
+
+    return GFSendGump(who, gump);
 endfunction
