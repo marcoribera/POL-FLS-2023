@@ -54,8 +54,7 @@ Aceitação do destino: Encare os desafios com resignação, confiando que seus 
 Devoção à deusa Idrith: Mostre reverência pela deusa através de orações, rituais ou seguindo os princípios éticos associados a ela.
 Ao adotar esses princípios em sua interpretação, você mergulhará mais profundamente na cultura e religião dos Drows, tornando sua experiência de jogo mais rica e imersiva.";
 const halleuadText := "Os Björske são um povo tradicional do norte do continente de Eora, conhecidos por sua pele alva e cabelos que variam do preto ao loiro e ruivo. São orgulhosos, valentes e generosos, transmitindo suas tradições oralmente, reunindo-se em torno de fogueiras para cultuar seus deuses com danças, carne de caça e hidromel.";	
-const kaiText := "
-A religião dos povos do Leste, conhecida como Kai, está profundamente ligada à história e à cultura desses povos. Ela gira em torno do culto ao Deus Dragão, Huangxu, que é visto como o mensageiro divino no plano terreno através do Imperador.
+const kaiText := "A religião dos povos do Leste, conhecida como Kai, está profundamente ligada à história e à cultura desses povos. Ela gira em torno do culto ao Deus Dragão, Huangxu, que é visto como o mensageiro divino no plano terreno através do Imperador.
 Para preservar a imersão in-game e compreender melhor essa religião, sugira ao jogador que siga estas diretrizes:
 Lealdade absoluta ao Imperador: Enfatize a importância da lealdade ao Imperador, visto como o portador do Mandato dos Céus concedido pelo Deus Dragão. Isso pode se manifestar através do respeito às ordens e decretos imperiais.
 Respeito aos ensinamentos do Kai: Valorize os ensinamentos do Kai, que enfatizam a lealdade, a sabedoria e o conhecimento. O jogador pode demonstrar isso através de sua conduta, buscando sempre agir de acordo com os princípios éticos e morais da religião.
@@ -430,8 +429,8 @@ endfunction
 
 function skillGump(who, culture_pic, byref chardata)
     var gump := GFCreateGump();
-    var minus_btn := {0x9F6, 0x9F7};
-    var plus_btn := {0x9F9, 0x9F8};
+    var minus_btn := {0x9F7, 0x9F8};
+    var plus_btn := {0x9F9, 0x9FA};
     var pri_allowed := howManyPrimarias(chardata);
 
     var x := 63;
@@ -606,8 +605,8 @@ function attributeGump(who, culture_pic, byref chardata)
     var x := 63;
     var y := 100;
     var i := 1;
-    var minus_btn := {0x9F6, 0x9F7};
-    var plus_btn := {0x9F9, 0x9F8};
+    var minus_btn := {0x9F7, 0x9F8};
+    var plus_btn := {0x9F9, 0x9FA};
     var cost := 5;
     showPreviousGumpInformation(gump, who, culture_pic, x, y);
     GFHTMLArea(gump, 555, y, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seus atributos", 0, 0); //shadow

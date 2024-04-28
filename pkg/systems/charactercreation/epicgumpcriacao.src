@@ -342,7 +342,7 @@ endfunction
 
 function religionSelection(who)
     var chardata := GetObjProperty(who, "chardata");
-    var religion_pic := BOKK_BHARAZ;
+    var religion_pic := 0x9F6;
     var btn_value;
     while (1)
         var input := ReligionGump(who, religion_pic);
@@ -357,8 +357,8 @@ function religionSelection(who)
         endif
 
         if (religion_pic < 0x9EF)
-            religion_pic := 0x9F5;
-        elseif (religion_pic > 0x9F5)
+            religion_pic := 0x9F6;
+        elseif (religion_pic > 0x9F6)
             religion_pic := 0x9EF;
         endif
     endwhile
