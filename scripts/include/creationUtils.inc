@@ -705,3 +705,240 @@ function getReligionDescriptionByPictureId(culture_id)
             return ushkrarText;
     endcase
 endfunction
+
+function itemInheritance(who)
+var chardata := GetObjProperty(who, "chardata");
+
+// Adicionar itens por caminho e cultura
+genericItems(who);
+armorsByCulture(who);
+weaponsByClassAndCulture(who);
+workingItems(who);
+endfunction
+
+function workingItems(who)
+    var chardata := GetObjProperty(who, "chardata");
+    var skills := chardata.Skills;
+
+    if (skills[WOODWORKING] >= 1)
+        CreateItemInBackpack(who, 0x1035, 1); // saw
+    endif
+    if (skills[METALWORKING] >= 1)
+        CreateItemInBackpack(who, 0x13E3, 1); // smithhammer
+        CreateItemInBackpack(who, 0x5107, 1); // smelting pot
+    endif
+    if (skills[GATHERING] >= 1)
+        CreateItemInBackpack(who, 0x0f43, 1); // hatchet
+        CreateItemInBackpack(who, 0x0e85, 1); // pickaxe
+    endif
+    if (skills[SURVIVAL] >= 1)
+        CreateItemInBackpack(who, 0x13f6, 1); // butcher knife
+        CreateItemInBackpack(who, 0x0ec4, 1); // skinning knife
+    endif
+
+    if (skills[MEDICINE] >= 1)
+        CreateItemInBackpack(who, 0xe21, (skills[MEDICINE] * 40)); // Bandages
+    endif
+
+    if (skills[DomesticWork] >= 1)
+        CreateItemInBackpack(who, 0x0f9d, 1); // sewingkit
+    endif
+
+    if (skills[DomesticWork] >= 1 || skills[MEDICINE] >= 1)
+        CreateItemInBackpack(who, 0xf9e, 1); // Scissors
+    endif
+endfunction
+
+function genericItems(who)
+    var chardata := GetObjProperty(who, "chardata");
+    var skills := chardata.Skills;
+
+    CreateItemInBackpack(who, 0x0F52, 1); // Adaga
+    CreateItemInBackpack(who, 0x1F03, 1); // Roupa
+    CreateItemInBackpack(who, 0x0EED, 100); // Moedas
+    CreateItemInBackpack(who, 0x170D, 1); // Sandals
+    CreateItemInBackpack(who, 0x0F60, 1); // longsword
+endfunction
+
+function weaponsByClassAndCulture(who)
+    var chardata := GetObjProperty(who, "chardata");
+    var skills := chardata.Skills;
+
+    if (chardata.culture == CULTURA.GULTHRAK)
+        if (skills[MELEECOMBAT1H] >= 1)
+            CreateItemInBackpack(who, 0x26C6, 1); // scepter
+        endif
+        if (skills[PARRY] >= 1)
+            CreateItemInBackpack(who, 0x1B78, 1); // shield
+        endif
+        if (skills[MELEECOMBAT2H ] >= 1)
+            CreateItemInBackpack(who, 0x0F4E, 1); // bardiche
+        endif
+    endif
+
+    if (chardata.culture == CULTURA.AIGLANA)
+        if (skills[MELEECOMBAT1H] >= 1)
+            CreateItemInBackpack(who, 0x27EF, 1); // espada curta
+        endif
+        if (skills[PARRY] >= 1)
+            CreateItemInBackpack(who, 0x1B76, 1); // Torre
+        endif
+        if (skills[MELEECOMBAT2H ] >= 1)
+            CreateItemInBackpack(who, 0x1402, 1); // short spear
+        endif
+    endif
+
+    if (chardata.culture == CULTURA.HAROLOTH)
+        if (skills[MELEECOMBAT1H] >= 1)
+            CreateItemInBackpack(who, 0x1401, 1); //kryss
+        endif
+        if (skills[PARRY] >= 1)
+            CreateItemInBackpack(who, 0x1B73, 1); // buckler
+        endif
+        if (skills[MELEECOMBAT2H ] >= 1)
+            CreateItemInBackpack(who, 0x26CB, 1); //crescent
+        endif
+    endif
+
+    if (chardata.culture == CULTURA.POLKINEA)
+        if (skills[MELEECOMBAT1H] >= 1)
+            CreateItemInBackpack(who, 0x1440, 1); //cutlass
+        endif
+        if (skills[PARRY] >= 1)
+            CreateItemInBackpack(who, 0x1B73, 1); // buckler
+        endif
+        if (skills[MELEECOMBAT2H ] >= 1)
+            CreateItemInBackpack(who, 0x0e87, 1); //crescent
+        endif
+    endif
+
+    if (chardata.culture == CULTURA.BJORSKA)
+        if (skills[MELEECOMBAT1H] >= 1)
+            CreateItemInBackpack(who, 0x0f63, 1); // long spear
+        endif
+        if (skills[PARRY] >= 1)
+            CreateItemInBackpack(who, 0x1B7A, 1); // wooden shield
+        endif
+        if (skills[MELEECOMBAT2H ] >= 1)
+            CreateItemInBackpack(who, 0x0f49, 1); // axe
+        endif
+    endif
+
+    if (chardata.culture == CULTURA.LESTE)
+        if (skills[MELEECOMBAT1H] >= 1)
+            CreateItemInBackpack(who, 0x13fe, 1); // wakizashi
+        endif
+        if (skills[PARRY] >= 1)
+            CreateItemInBackpack(who, 0x1B72, 1); // round shield
+        endif
+        if (skills[MELEECOMBAT2H ] >= 1)
+            CreateItemInBackpack(who, 0x27A2, 1); // Katana
+        endif
+    endif
+
+    if (chardata.culture == CULTURA.BADURAN)
+        if (skills[MELEECOMBAT1H] >= 1)
+            CreateItemInBackpack(who, 0x143c, 1); // HAMMERPICK
+        endif
+        if (skills[PARRY] >= 1)
+            CreateItemInBackpack(who, 0x1B74, 1); // Kite shield 
+        endif
+        if (skills[MELEECOMBAT2H ] >= 1)
+            CreateItemInBackpack(who, 0x1438, 1); // warhammer
+        endif
+    endif
+
+    if (chardata.culture == CULTURA.ALURIEL)
+        if (skills[MELEECOMBAT1H] >= 1)
+            CreateItemInBackpack(who, 0x0f5f, 1); // rapiera
+        endif
+        if (skills[PARRY] >= 1)
+            CreateItemInBackpack(who, 0x1B73, 1); // buckler
+        endif
+        if (skills[MELEECOMBAT2H ] >= 1)
+            CreateItemInBackpack(who, 0x26CB, 1); // crescent
+        endif
+        if (skills[RANGEDCOMBAT] >= 1)
+        endif
+    endif
+
+    if (skills[RANGEDCOMBAT] >= 1)
+        if (chardata.culture == CULTURA.ALURIEL)
+            CreateItemInBackpack(who, 0x26CC, 1); // longbow
+            CreateItemInBackpack(who, 0xf3f, 150); // arrows
+        elseif (chardata.culture == CULTURA.BADURAN)
+            CreateItemInBackpack(who, 0x0f4f, 1); // crossbow
+            CreateItemInBackpack(who, 0x1bfb, 150); // bolts
+        else
+            CreateItemInBackpack(who, 0x13B2, 1); // bow
+            CreateItemInBackpack(who, 0xf3f, 150); // arrows
+        endif
+    endif
+
+    CreateItemInBackpack(who, 0x2fb7, 1); // aljava
+endfunction
+
+function armorsByCulture(who)
+var chardata := GetObjProperty(who, "chardata");
+
+if (chardata.culture == CULTURA.GULTHRAK)
+    CreateItemInBackpack(who, 0x144e, 1); // Armadura de ossos
+    CreateItemInBackpack(who, 0x144f, 1); // Armadura de ossos
+    CreateItemInBackpack(who, 0x1450, 1); // Armadura de ossos
+    CreateItemInBackpack(who, 0x1451, 1); // Armadura de ossos
+    CreateItemInBackpack(who, 0x1452, 1); // Armadura de ossos
+endif
+
+if (chardata.culture == CULTURA.BADURAN)
+    CreateItemInBackpack(who, 0x13ec, 1); // Armadura de aneis
+    CreateItemInBackpack(who, 0x13ee, 1); // Armadura de aneis
+    CreateItemInBackpack(who, 0x13f0, 1); // Armadura de aneis
+    CreateItemInBackpack(who, 0x13f2, 1); // Armadura de aneis
+endif
+
+if (chardata.culture == CULTURA.AIGLANOS)
+    CreateItemInBackpack(who, 0x13BE, 1); // Lorica Segmentata
+    CreateItemInBackpack(who, 0x13BF, 1); // Lorica Segmentata
+    CreateItemInBackpack(who, 0x13C0, 1); // Lorica Segmentata
+    CreateItemInBackpack(who, 0x13C1, 1); // Lorica Segmentata
+    CreateItemInBackpack(who, 0x13C2, 1); // Lorica Segmentata
+endif
+
+if (chardata.culture == CULTURA.HAROLOTH)
+    CreateItemInBackpack(who, 0x13D6, 1); // Studded Leather
+    CreateItemInBackpack(who, 0x13D5, 1); // Studded Leather
+    CreateItemInBackpack(who, 0x13D4, 1); // Studded Leather
+    CreateItemInBackpack(who, 0x13DA, 1); // Studded Leather
+    CreateItemInBackpack(who, 0x13DB, 1); // Studded Leather
+endif
+
+if (chardata.culture == CULTURA.POLKINEA)
+    CreateItemInBackpack(who, 0x13C7, 1); // Armadura de couro simples
+    CreateItemInBackpack(who, 0x13CD, 1); // Armadura de couro simples
+    CreateItemInBackpack(who, 0x1DB9, 1); // Armadura de couro simples
+    CreateItemInBackpack(who, 0x13CB, 1); // Armadura de couro simples
+    CreateItemInBackpack(who, 0x13CC, 1); // Armadura de couro simples
+endif
+
+if (chardata.culture == CULTURA.ALURIEL)
+    CreateItemInBackpack(who, 0x13D6, 1); // Studded Leather
+    CreateItemInBackpack(who, 0x13D5, 1); // Studded Leather
+    CreateItemInBackpack(who, 0x13D4, 1); // Studded Leather
+    CreateItemInBackpack(who, 0x13DA, 1); // Studded Leather
+    CreateItemInBackpack(who, 0x13DB, 1); // Studded Leather
+endif
+
+if (chardata.culture == CULTURA.BJORSKA)
+    CreateItemInBackpack(who, 0x13BB, 1); // Cota de malhas
+    CreateItemInBackpack(who, 0x13BE, 1); // Cota de malhas
+    CreateItemInBackpack(who, 0x13BF, 1); // Cota de malhas
+endif
+
+if (chardata.culture == CULTURA.LESTE)
+    CreateItemInBackpack(who, 0x27c6, 1); // Armadura de fibra
+    CreateItemInBackpack(who, 0x2786, 1); // Armadura de fibra
+    CreateItemInBackpack(who, 0x27c9, 1); // Armadura de fibra
+    CreateItemInBackpack(who, 0x277a, 1); // Armadura de fibra
+endif
+
+endfunction
