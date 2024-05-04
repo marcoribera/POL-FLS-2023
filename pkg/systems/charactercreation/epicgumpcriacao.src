@@ -15,6 +15,8 @@ include "include/say";
 include "include/creationUtils";
 
 program epicCreationGump(who)
+    resetCharacter(who);
+
     var culture_pic := culturalSelection(who);
     racialSelection(who, culture_pic);
     classSelection(who, culture_pic);
@@ -367,4 +369,30 @@ function religionSelection(who)
 
     SendSysMessageEX(who, "Sua religião será "+chardata.religion, SSM_INFO);
     return religion_pic;
+endfunction
+
+function resetCharacter(who)
+	if (who.cmdlevel < 2)
+		var equiped := listequippeditems(who);
+		foreach item in  equiped
+			if (item != who.backpack)
+				if ( item.layer != LAYER_HAIR)
+					if (item.layer != LAYER_BEARD)
+						DestroyItem(item);
+					endif
+				endif
+			endif
+		endforeach
+		equiped := enumerateitemsincontainer(who.backpack);
+		foreach item in  equiped
+			DestroyItem(item);
+		endforeach
+		equiped := 0;
+	endif
+
+	//zera as skills
+	foreach attrib in AP_ListAttributesByType()
+		AP_SetTrueSkill(who, attrib, 0);
+		sleepms(10);
+	endforeach
 endfunction
