@@ -709,45 +709,12 @@ endfunction
 function itemInheritance(who)
 var chardata := GetObjProperty(who, "chardata");
 
-// Adicionar itens por caminho e cultura
 genericItems(who);
 armorsByCulture(who);
 weaponsByClassAndCulture(who);
 workingItems(who);
 endfunction
 
-function workingItems(who)
-    var chardata := GetObjProperty(who, "chardata");
-    var skills := chardata.Skills;
-
-    if (skills[WOODWORKING] >= 1)
-        CreateItemInBackpack(who, 0x1035, 1); // saw
-    endif
-    if (skills[METALWORKING] >= 1)
-        CreateItemInBackpack(who, 0x13E3, 1); // smithhammer
-        CreateItemInBackpack(who, 0x5107, 1); // smelting pot
-    endif
-    if (skills[GATHERING] >= 1)
-        CreateItemInBackpack(who, 0x0f43, 1); // hatchet
-        CreateItemInBackpack(who, 0x0e85, 1); // pickaxe
-    endif
-    if (skills[SURVIVAL] >= 1)
-        CreateItemInBackpack(who, 0x13f6, 1); // butcher knife
-        CreateItemInBackpack(who, 0x0ec4, 1); // skinning knife
-    endif
-
-    if (skills[MEDICINE] >= 1)
-        CreateItemInBackpack(who, 0xe21, (skills[MEDICINE] * 40)); // Bandages
-    endif
-
-    if (skills[DomesticWork] >= 1)
-        CreateItemInBackpack(who, 0x0f9d, 1); // sewingkit
-    endif
-
-    if (skills[DomesticWork] >= 1 || skills[MEDICINE] >= 1)
-        CreateItemInBackpack(who, 0xf9e, 1); // Scissors
-    endif
-endfunction
 
 function genericItems(who)
     var chardata := GetObjProperty(who, "chardata");
@@ -755,9 +722,12 @@ function genericItems(who)
 
     CreateItemInBackpack(who, 0x0F52, 1); // Adaga
     CreateItemInBackpack(who, 0x1F03, 1); // Roupa
-    CreateItemInBackpack(who, 0x0EED, 100); // Moedas
+	CreateItemInBackpack(who, 0xba63, 100); //moedas de cobre
     CreateItemInBackpack(who, 0x170D, 1); // Sandals
     CreateItemInBackpack(who, 0x0F60, 1); // longsword
+    CreateItemInBackpack(who, 0x152e, 1); // short pants
+    CreateItemInBackpack(who, 0x1517, 1); // shirt
+    CreateItemInBackpack(who, 3940, 1); // torch
 endfunction
 
 function weaponsByClassAndCulture(who)
@@ -863,15 +833,16 @@ function weaponsByClassAndCulture(who)
     endif
 
     if (skills[RANGEDCOMBAT] >= 1)
+        var ammo_amount := skills[RANGEDCOMBAT] * 80;
         if (chardata.culture == CULTURA.ALURIEL)
             CreateItemInBackpack(who, 0x26CC, 1); // longbow
-            CreateItemInBackpack(who, 0xf3f, 150); // arrows
+            CreateItemInBackpack(who, 0xf3f, ammo_amount); // arrows
         elseif (chardata.culture == CULTURA.BADURAN)
             CreateItemInBackpack(who, 0x0f4f, 1); // crossbow
-            CreateItemInBackpack(who, 0x1bfb, 150); // bolts
+            CreateItemInBackpack(who, 0x1bfb, ammo_amount); // bolts
         else
             CreateItemInBackpack(who, 0x13B2, 1); // bow
-            CreateItemInBackpack(who, 0xf3f, 150); // arrows
+            CreateItemInBackpack(who, 0xf3f, ammo_amount); // arrows
         endif
     endif
 
@@ -879,66 +850,154 @@ function weaponsByClassAndCulture(who)
 endfunction
 
 function armorsByCulture(who)
-var chardata := GetObjProperty(who, "chardata");
+    var chardata := GetObjProperty(who, "chardata");
 
-if (chardata.culture == CULTURA.GULTHRAK)
-    CreateItemInBackpack(who, 0x144e, 1); // Armadura de ossos
-    CreateItemInBackpack(who, 0x144f, 1); // Armadura de ossos
-    CreateItemInBackpack(who, 0x1450, 1); // Armadura de ossos
-    CreateItemInBackpack(who, 0x1451, 1); // Armadura de ossos
-    CreateItemInBackpack(who, 0x1452, 1); // Armadura de ossos
-endif
+    if (chardata.culture == CULTURA.GULTHRAK)
+        CreateItemInBackpack(who, 0x144e, 1); // Armadura de ossos
+        CreateItemInBackpack(who, 0x144f, 1); // Armadura de ossos
+        CreateItemInBackpack(who, 0x1450, 1); // Armadura de ossos
+        CreateItemInBackpack(who, 0x1451, 1); // Armadura de ossos
+        CreateItemInBackpack(who, 0x1452, 1); // Armadura de ossos
+    endif
 
-if (chardata.culture == CULTURA.BADURAN)
-    CreateItemInBackpack(who, 0x13ec, 1); // Armadura de aneis
-    CreateItemInBackpack(who, 0x13ee, 1); // Armadura de aneis
-    CreateItemInBackpack(who, 0x13f0, 1); // Armadura de aneis
-    CreateItemInBackpack(who, 0x13f2, 1); // Armadura de aneis
-endif
+    if (chardata.culture == CULTURA.BADURAN)
+        CreateItemInBackpack(who, 0x13ec, 1); // Armadura de aneis
+        CreateItemInBackpack(who, 0x13ee, 1); // Armadura de aneis
+        CreateItemInBackpack(who, 0x13f0, 1); // Armadura de aneis
+        CreateItemInBackpack(who, 0x13f2, 1); // Armadura de aneis
+    endif
 
-if (chardata.culture == CULTURA.AIGLANOS)
-    CreateItemInBackpack(who, 0x13BE, 1); // Lorica Segmentata
-    CreateItemInBackpack(who, 0x13BF, 1); // Lorica Segmentata
-    CreateItemInBackpack(who, 0x13C0, 1); // Lorica Segmentata
-    CreateItemInBackpack(who, 0x13C1, 1); // Lorica Segmentata
-    CreateItemInBackpack(who, 0x13C2, 1); // Lorica Segmentata
-endif
+    if (chardata.culture == CULTURA.AIGLANOS)
+        CreateItemInBackpack(who, 0x13BE, 1); // Lorica Segmentata
+        CreateItemInBackpack(who, 0x13BF, 1); // Lorica Segmentata
+        CreateItemInBackpack(who, 0x13C0, 1); // Lorica Segmentata
+        CreateItemInBackpack(who, 0x13C1, 1); // Lorica Segmentata
+        CreateItemInBackpack(who, 0x13C2, 1); // Lorica Segmentata
+    endif
 
-if (chardata.culture == CULTURA.HAROLOTH)
-    CreateItemInBackpack(who, 0x13D6, 1); // Studded Leather
-    CreateItemInBackpack(who, 0x13D5, 1); // Studded Leather
-    CreateItemInBackpack(who, 0x13D4, 1); // Studded Leather
-    CreateItemInBackpack(who, 0x13DA, 1); // Studded Leather
-    CreateItemInBackpack(who, 0x13DB, 1); // Studded Leather
-endif
+    if (chardata.culture == CULTURA.HAROLOTH)
+        CreateItemInBackpack(who, 0x13D6, 1); // Studded Leather
+        CreateItemInBackpack(who, 0x13D5, 1); // Studded Leather
+        CreateItemInBackpack(who, 0x13D4, 1); // Studded Leather
+        CreateItemInBackpack(who, 0x13DA, 1); // Studded Leather
+        CreateItemInBackpack(who, 0x13DB, 1); // Studded Leather
+    endif
 
-if (chardata.culture == CULTURA.POLKINEA)
-    CreateItemInBackpack(who, 0x13C7, 1); // Armadura de couro simples
-    CreateItemInBackpack(who, 0x13CD, 1); // Armadura de couro simples
-    CreateItemInBackpack(who, 0x1DB9, 1); // Armadura de couro simples
-    CreateItemInBackpack(who, 0x13CB, 1); // Armadura de couro simples
-    CreateItemInBackpack(who, 0x13CC, 1); // Armadura de couro simples
-endif
+    if (chardata.culture == CULTURA.POLKINEA)
+        CreateItemInBackpack(who, 0x13C7, 1); // Armadura de couro simples
+        CreateItemInBackpack(who, 0x13CD, 1); // Armadura de couro simples
+        CreateItemInBackpack(who, 0x1DB9, 1); // Armadura de couro simples
+        CreateItemInBackpack(who, 0x13CB, 1); // Armadura de couro simples
+        CreateItemInBackpack(who, 0x13CC, 1); // Armadura de couro simples
+    endif
 
-if (chardata.culture == CULTURA.ALURIEL)
-    CreateItemInBackpack(who, 0x13D6, 1); // Studded Leather
-    CreateItemInBackpack(who, 0x13D5, 1); // Studded Leather
-    CreateItemInBackpack(who, 0x13D4, 1); // Studded Leather
-    CreateItemInBackpack(who, 0x13DA, 1); // Studded Leather
-    CreateItemInBackpack(who, 0x13DB, 1); // Studded Leather
-endif
+    if (chardata.culture == CULTURA.ALURIEL)
+        CreateItemInBackpack(who, 0x13D6, 1); // Studded Leather
+        CreateItemInBackpack(who, 0x13D5, 1); // Studded Leather
+        CreateItemInBackpack(who, 0x13D4, 1); // Studded Leather
+        CreateItemInBackpack(who, 0x13DA, 1); // Studded Leather
+        CreateItemInBackpack(who, 0x13DB, 1); // Studded Leather
+    endif
 
-if (chardata.culture == CULTURA.BJORSKA)
-    CreateItemInBackpack(who, 0x13BB, 1); // Cota de malhas
-    CreateItemInBackpack(who, 0x13BE, 1); // Cota de malhas
-    CreateItemInBackpack(who, 0x13BF, 1); // Cota de malhas
-endif
+    if (chardata.culture == CULTURA.BJORSKA)
+        CreateItemInBackpack(who, 0x13BB, 1); // Cota de malhas
+        CreateItemInBackpack(who, 0x13BE, 1); // Cota de malhas
+        CreateItemInBackpack(who, 0x13BF, 1); // Cota de malhas
+    endif
 
-if (chardata.culture == CULTURA.LESTE)
-    CreateItemInBackpack(who, 0x27c6, 1); // Armadura de fibra
-    CreateItemInBackpack(who, 0x2786, 1); // Armadura de fibra
-    CreateItemInBackpack(who, 0x27c9, 1); // Armadura de fibra
-    CreateItemInBackpack(who, 0x277a, 1); // Armadura de fibra
-endif
+    if (chardata.culture == CULTURA.LESTE)
+        CreateItemInBackpack(who, 0x27c6, 1); // Armadura de fibra
+        CreateItemInBackpack(who, 0x2786, 1); // Armadura de fibra
+        CreateItemInBackpack(who, 0x27c9, 1); // Armadura de fibra
+        CreateItemInBackpack(who, 0x277a, 1); // Armadura de fibra
+    endif
 
+endfunction
+
+function workingItems(who)
+    var chardata := GetObjProperty(who, "chardata");
+    var skills := chardata.Skills;
+
+    if (skills[WOODWORKING] >= 1)
+        CreateItemInBackpack(who, 0x1035, 1); // saw
+    endif
+    if (skills[METALWORKING] >= 1)
+        CreateItemInBackpack(who, 0x13E3, 1); // smithhammer
+        CreateItemInBackpack(who, 0x5107, 1); // smelting pot
+    endif
+    if (skills[GATHERING] >= 1)
+        CreateItemInBackpack(who, 0x0f43, 1); // hatchet
+        CreateItemInBackpack(who, 0x0e85, 1); // pickaxe
+    endif
+    if (skills[SURVIVAL] >= 1)
+        CreateItemInBackpack(who, 0x13f6, 1); // butcher knife
+        CreateItemInBackpack(who, 0x0ec4, 1); // skinning knife
+    endif
+
+    if (skills[MEDICINE] >= 1)
+        CreateItemInBackpack(who, 0xe21, (skills[MEDICINE] * 40)); // Bandages
+    endif
+
+    if (skills[MECHANICALAPITUDE] >= 1)
+        CreateItemInBackpack(who, 0x1035, (skills[MECHANICALAPITUDE] * 8)); // lockpick
+    endif
+
+    if (skills[DomesticWork] >= 1)
+        CreateItemInBackpack(who, 0x0f9d, 1); // sewingkit
+    endif
+
+    if (skills[DomesticWork] >= 1 || skills[MEDICINE] >= 1)
+        CreateItemInBackpack(who, 0xf9e, 1); // Scissors
+    endif
+endfunction
+
+function attributeBonusByRaceAndTraits(who)
+    var chardata := GetObjProperty(who, "chardata");
+
+    var raca := chardata.race;
+    var final_str := chardata.str;
+    var final_dex := chardata.dex;
+    var final_int := chardata.int;
+
+    if (raca == RACA.ANAO)
+        final_str += 10;
+    elseif (raca == RACA.ELFO)
+        final_int += 10;
+    elseif (raca == RACA.DROW)
+        final_dex += 5;
+        final_int +=5;
+    elseif (raca == RACA.ORC)
+        final_str += 5;
+        final_int +=5;
+    elseif (raca == RACA.POLSKI)
+        final_dex += 10;
+    endif
+
+    if (chardata.trait == "Corpulento")
+        final_int -= 5;
+        final_dex -= 5;
+        final_str += 20;
+	elseif (chardata.trait == "Genio")
+        final_str -= 5;
+        final_dex -= 5;
+        final_int += 20;
+	elseif (chardata.trait == "Agil")
+        final_str -= 5;
+        final_int -= 5;
+        final_dex += 20;
+    elseif (chardata.trait == "Afogado em Mana")
+        final_str -= 10;
+        final_dex -= 10;
+	elseif (chardata.trait == "Robusto")
+        final_str += 20;
+        final_int -= 5;
+	elseif (chardata.trait == "Velho") // Parece que foi removido por alguem
+        final_str -= 10;
+        final_dex -= 10;
+        final_int += 40;
+	endif
+
+    AP_SetTrueStat(who, STRENGTH, final_str);
+    AP_SetTrueStat(who, DEXTERITY, final_dex);
+    AP_SetTrueStat(who, INTELLIGENCE, final_int);
 endfunction

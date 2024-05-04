@@ -26,6 +26,11 @@ program epicCreationGump(who)
     attributeSelection(who, culture_pic);
     religionSelection(who);
     itemInheritance(who);
+
+    SetObjProperty(who, "nome_inicial", who.name);
+    AP_SetVital(who, "Hunger", 0);
+	HealDamage(who, 200);
+	RecalcVitals(who);
 endprogram
 
 function culturalSelection(who)
@@ -67,6 +72,11 @@ function racialSelection(who, culture_pic)
         endforeach
         if (btn_value == 201)
             chardata.raca := RACA.ANAO;
+            if (who.graphic == 400)
+                who.graphic := 1828;
+            else 
+                who.graphic := 1829;
+            endif
             break;
         elseif (btn_value == 202) 
             chardata.raca := RACA.DROW;
@@ -77,8 +87,13 @@ function racialSelection(who, culture_pic)
         elseif (btn_value == 204) 
             chardata.raca := RACA.HUMANO;
             break;
-        elseif (btn_value == 205) 
+        elseif (btn_value == 205)
             chardata.raca := RACA.ORC;
+            if (who.graphic == 400)
+                who.graphic := 1832;
+            else 
+                who.graphic := 1833;
+            endif
             break;
         elseif (btn_value == 206) 
             chardata.raca := RACA.POLSKI;
@@ -90,8 +105,17 @@ function racialSelection(who, culture_pic)
             break;
         endif
     endwhile
-    SendSysMessageEX(who, "Voce será um "+chardata.raca, SSM_INFO);
+    print("raca: "+chardata.raca);
+    if (who.graphic == 400 && (chardata.raca == "Elfo" || chardata.raca == "Drow"))
+        who.graphic := 1830;
+    elseif(who.graphic == 401 && (chardata.raca == "Elfo" || chardata.raca == "Drow"))
+        who.graphic := 1831;
+    endif
+    who.title_race := chardata.raca;
+	who.race := chardata.raca;
 
+
+    SendSysMessageEX(who, "Voce será um "+chardata.raca, SSM_INFO);
     SetObjProperty(who, "chardata", chardata);
 endfunction
 
@@ -118,6 +142,7 @@ function classSelection(who, culture_pic)
     endwhile
 
     SetObjProperty(who, "chardata", chardata);
+	SetObjProperty(who, "classe", chardata.classe);
     SendSysMessageEX(who, "Você escolheu o caminho do "+chardata.classe, SSM_INFO);
 endfunction
 
@@ -300,6 +325,23 @@ function skillSelection(who, culture_pic)
             break;
         endif
     endwhile
+
+    var value;
+	var skillsmap := chardata.Skills;
+	var skillsArray := skillsmap.keys();
+	foreach skill in skillsArray
+		value := 0;
+		if ( chardata.Skills[skill] == 3)
+			value := 40;
+		elseif (chardata.Skills[skill] == 2)
+			value := 20;
+		else
+			value := 0 ;
+		endif
+		if ( AP_GetTrueSkill(who, skill) == 0)
+			AP_SetTrueSkill(who, skill, value);
+		endif
+	endforeach
 endfunction
 
 function attributeSelection(who, culture_pic)
@@ -337,6 +379,8 @@ function attributeSelection(who, culture_pic)
             chardata.attribute_points += 5;
         else
             SetObjProperty(who, "chardata", chardata);
+            attributeBonusByRaceAndTraits(who);
+
             SendSysMessageEX(who, "Você selecionou seus atributos", SSM_INFO);
             break;
        endif
