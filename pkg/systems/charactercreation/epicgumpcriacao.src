@@ -26,6 +26,7 @@ program epicCreationGump(who)
     attributeSelection(who, culture_pic);
     religionSelection(who);
     itemInheritance(who);
+    looksSelection(who);
 
     SetObjProperty(who, "nome_inicial", who.name);
     AP_SetVital(who, "Hunger", 0);
@@ -72,6 +73,7 @@ function racialSelection(who, culture_pic)
         endforeach
         if (btn_value == 201)
             chardata.raca := RACA.ANAO;
+            chardata.+vantagemracial := "Constituicao Ana";
             if (who.graphic == 400)
                 who.graphic := 1828;
             else 
@@ -80,6 +82,7 @@ function racialSelection(who, culture_pic)
             break;
         elseif (btn_value == 202) 
             chardata.raca := RACA.DROW;
+            chardata.+vantagemracial := "Toxina natural";
             break;
         elseif (btn_value == 203) 
             chardata.raca := RACA.ELFO;
@@ -94,6 +97,7 @@ function racialSelection(who, culture_pic)
             else 
                 who.graphic := 1833;
             endif
+            chardata.+vantagemracial := "Resistencia implacavel";
             break;
         elseif (btn_value == 206) 
             chardata.raca := RACA.POLSKI;
@@ -416,49 +420,7 @@ function religionSelection(who)
     return religion_pic;
 endfunction
 
-function resetCharacter(who)
-    resetGender(who);
-    if (GetObjProperty(who, "skill") == 1)
-        EraseObjProperty(who, "skill");
-    endif
-    if (GetObjProperty(who, "chardata"))
-        EraseObjProperty(who, "chardata");
-    endif
-    if (GetObjProperty(who, "classe"))
-        EraseObjProperty(who, "classe");
-    endif
-    if (GetObjProperty(who, "nome_inicial"))
-        EraseObjProperty(who, "nome_inicial");
-    endif
-    if (GetObjProperty(who, "advclass"))
-        EraseObjProperty(who, "advclass");
-    endif
-    
-	// if (who.cmdlevel < 2)
-		var equiped := listequippeditems(who);
-		foreach item in equiped
-			if (item != who.backpack)
-                DestroyItem(item);
-			endif
-		endforeach
-		equiped := enumerateitemsincontainer(who.backpack);
-		foreach item in equiped
-			DestroyItem(item);
-		endforeach
-		equiped := 0;
-	// endif
-
-	//zera as skills
-	foreach attrib in AP_ListAttributesByType()
-		AP_SetTrueSkill(who, attrib, 0);
-		sleepms(10);
-	endforeach
-endfunction
-
-function resetGender(who)
-    if (who.graphic == 1828 || who.graphic == 1830 || who.graphic == 1832 || who.graphic == 1834)
-        who.graphic := 400;
-    elseif (who.graphic == 1829 || who.graphic == 1831 || who.graphic == 1833 || who.graphic == 1835)
-        who.graphic := 401;
-    endif
+function looksSelection(who)
+    var chardata := GetObjProperty(who, "chardata");
+    looksGump(who, chardata);
 endfunction
