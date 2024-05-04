@@ -213,9 +213,9 @@ function escolherCabelo(who, byref disfarce, raca := 0)
 	endif
 endfunction
 
-function escolheCorCabelo(who, byref disfarce, cordocabelo :=  0, povo :=0, retorna := 0)
+function escolheCorCabelo(who, byref disfarce, cordocabelo :=  0, raca :=0, retorna := 0)
 
-	var gump2 := BuildHairDyeGump(cordocabelo, povo);
+	var gump2 := BuildHairDyeGump(cordocabelo, raca);
 	var input2 := GFSendGump(who, gump2);
 
 	if ( input2[0] == 0 || input2[0xA00001] )
@@ -245,14 +245,20 @@ function escolheCorCabelo(who, byref disfarce, cordocabelo :=  0, povo :=0, reto
 
 endfunction
 
-function BuildHairDyeGump(cur_color := 0, povo := 0)
+function BuildHairDyeGump(cur_color := 0, raca := 0)
 	var gump := GFCreateGump();
 
 	GFPage(gump, 0);
 	//GFClosable(gump, 0);
-	GFResizePic(gump, 0, 0, GFCfgConst("Defaults", "BackGround"), 420, 550);
-	GFResizePic(gump, 15, 15, GFCfgConst("Defaults", "ForeGround"), 120, 520);
-	GFResizePic(gump, 140, 15, GFCfgConst("Defaults", "ForeGround"), 265, 486);
+	if (raca == RACA.HUMANO)
+		GFResizePic(gump, 0, 0, GFCfgConst("Defaults", "BackGround"), 420, 550 * 2);
+		GFResizePic(gump, 15, 15, GFCfgConst("Defaults", "ForeGround"), 120, 520 * 2);
+		GFResizePic(gump, 140, 15, GFCfgConst("Defaults", "ForeGround"), 265, 486 * 2);
+	else
+		GFResizePic(gump, 0, 0, GFCfgConst("Defaults", "BackGround"), 420, 550);
+		GFResizePic(gump, 15, 15, GFCfgConst("Defaults", "ForeGround"), 120, 520);
+		GFResizePic(gump, 140, 15, GFCfgConst("Defaults", "ForeGround"), 265, 486);
+	endif
 
 	GFAddButton(gump, 190, 509, 2128, 2129, GF_CLOSE_BTN, 1);
 	GFAddButton(gump, 265, 509, 2119, 2120, GF_CLOSE_BTN, 2);
@@ -260,16 +266,16 @@ function BuildHairDyeGump(cur_color := 0, povo := 0)
 
 	var color_cfg := ReadConfigFile(":hair:config/hairColors");
 	var index_elem;
-	if (povo == "Zharkiano" || povo == "Asanita" || povo == "Anao")
+	if (raca == RACA.HUMANO || raca == RACA.ANAO)
 	  index_elem := color_cfg["Humano"]; // Controls order colors appear.
-    elseif (povo == "Orc")
+    elseif (raca == RACA.ORC)
         index_elem := color_cfg["Orc"];
-    elseif (povo == "Drow")
+    elseif (raca == RACA.DROW)
         index_elem := color_cfg["Drow"];
-	elseif (povo == "Qualquer")
+	elseif (raca == "Qualquer")
 	  index_elem := color_cfg["Index"]; // Controls order colors appear.
 	else
-	  index_elem := color_cfg[povo]; //vanirios, numajene,  aquilrano e thurioes
+	  index_elem := color_cfg[raca]; //vanirios, numajene,  aquilrano e thurioes // EPIC -> ELFOS
 	endif
 
 	var categories := GetConfigStringArray(index_elem, "Category");
@@ -373,7 +379,7 @@ function escolherBarba(who, byref disfarce)
 	endif
 endfunction
 
-function SkinGump(who, byref new_look, povo := 0, sempreretorna := 0)
+function SkinGump(who, byref new_look, raca := 0, sempreretorna := 0)
 
 	var gump := GFCreateGump();
 	GFResizePic(gump, 0, 0, 3600, 300, 420);
@@ -385,13 +391,11 @@ function SkinGump(who, byref new_look, povo := 0, sempreretorna := 0)
 	if ( !skin_cfg )
 		SendSysMessage(who, "Error: Could not open :fls_core:config/skincolors.cfg -> "+skin_cfg.errortext);
 	endif
-	if  (povo == "Thuriao" || povo == "Vanirio" || povo == "Numajene")
-		skin_cfg := skin_cfg["brancos"];
-	elseif (povo == "Aquilrano");
-		skin_cfg := skin_cfg["negros"];
-    elseif (povo == "Drow")
+	if  (raca == RACA.ELFO)
+		skin_cfg := skin_cfg["elfo"];
+    elseif (raca == RACA.DROW)
         skin_cfg := skin_cfg["drow"];
-    elseif (povo == "Orc")
+    elseif (raca == RACA.ORC)
         skin_cfg := skin_cfg["orc"];
 	else
 		skin_cfg := skin_cfg["list"];
