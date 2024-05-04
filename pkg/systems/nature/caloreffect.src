@@ -50,8 +50,12 @@ program calor(params)
                 dif := dif - 15;
             endif
 
-            if ( GetObjProperty(who, "chardata").kit == "Nomade do Deserto")
+            if ( GetObjProperty(who, "chardata").trait == "Nomade do Deserto")
                 dif := dif - 60;
+            endif
+
+            if ( GetObjProperty(who, "chardata").trait == "Adaptável")
+                dif := dif - 30;
             endif
 
             if ( TemHabilidade(who, "Corpo Diamante"))

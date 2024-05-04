@@ -1,4 +1,5 @@
 include ":attributes:attributes";
+include ":disguise:disguise";
 
 
 const aiglaText := "Os Aiglanos são um povo astuto e inclusivo, conhecido por sua capital Aquileia. Sua bandeira apresenta uma águia dourada em um fundo vermelho, simbolizando a seleção dos capazes. Eles são um povo mestiço, com variação de tom de pele, altura e tipo de cabelo. São disciplinados, valorizam a história e fazem do exercício físico um hábito.
@@ -954,7 +955,7 @@ endfunction
 function attributeBonusByRaceAndTraits(who)
     var chardata := GetObjProperty(who, "chardata");
 
-    var raca := chardata.race;
+    var raca := chardata.raca;
     var final_str := chardata.str;
     var final_dex := chardata.dex;
     var final_int := chardata.int;
@@ -1000,4 +1001,96 @@ function attributeBonusByRaceAndTraits(who)
     AP_SetTrueStat(who, STRENGTH, final_str);
     AP_SetTrueStat(who, DEXTERITY, final_dex);
     AP_SetTrueStat(who, INTELLIGENCE, final_int);
+endfunction
+
+function resetCharacter(who)
+    resetGender(who);
+    if (GetObjProperty(who, "skill") == 1)
+        EraseObjProperty(who, "skill");
+    endif
+    if (GetObjProperty(who, "chardata"))
+        EraseObjProperty(who, "chardata");
+    endif
+    if (GetObjProperty(who, "classe"))
+        EraseObjProperty(who, "classe");
+    endif
+    if (GetObjProperty(who, "advclass"))
+        EraseObjProperty(who, "advclass");
+    endif
+    if (GetObjProperty(who, "raca"))
+        EraseObjProperty(who, "raca");
+    endif
+
+	if (who.cmdlevel < 2)
+		var equiped := listequippeditems(who);
+		foreach item in equiped
+			if (item != who.backpack)
+                DestroyItem(item);
+			endif
+		endforeach
+		equiped := enumerateitemsincontainer(who.backpack);
+		foreach item in equiped
+			DestroyItem(item);
+		endforeach
+		equiped := 0;
+	endif
+
+	//zera as skills
+	foreach attrib in AP_ListAttributesByType()
+		AP_SetTrueSkill(who, attrib, 0);
+		sleepms(10);
+	endforeach
+endfunction
+
+function resetGender(who)
+    if (who.graphic == 1828 || who.graphic == 1830 || who.graphic == 1832 || who.graphic == 1834)
+        who.graphic := 400;
+    elseif (who.graphic == 1829 || who.graphic == 1831 || who.graphic == 1833 || who.graphic == 1835)
+        who.graphic := 401;
+    endif
+endfunction
+
+function looksGump(who, chardata)
+	var disfarce := struct;
+    disfarce.+barba := "";
+    disfarce.+cabelo := "";
+    disfarce.+corcabelo := -1;
+    disfarce.+corbarba := -1;
+    disfarce.+corpele := -1;
+
+    escolherCabelo(who, disfarce, chardata.raca);
+    escolheCorCabelo(who, disfarce, 0, chardata.raca, 1);
+    if (chardata.raca == "Humano" && chardata.raca != "Orc")
+        escolherBarba(who, disfarce);
+    endif
+    SkinGump(who, disfarce, chardata.raca, 1);
+
+    who.color := disfarce.corpele;
+    who.truecolor := disfarce.corpele;
+
+    var mybarba := GetEquipmentByLayer(who, LAYER_BEARD);
+    var newbarba := CreateItemAtLocation(who.x, who.y, who.z, disfarce.barba, 1, who.realm);
+
+    newbarba.color := 1109;
+
+    newbarba.color := disfarce.corcabelo;
+    if (mybarba)
+        DestroyItem(mybarba);
+    endif
+    var result := EquipItem(who, newbarba);
+
+    var myhair := GetEquipmentByLayer(who, LAYER_HAIR);
+    var newhair := CreateItemAtLocation(who.x, who.y, who.z, disfarce.cabelo, 1, who.realm);
+
+    newhair.color := 1109;
+
+    newhair.color := disfarce.corcabelo;
+    var result2 := DestroyItem(myhair);
+    result := EquipItem(who, newhair);
+
+	if (YesNo(who, "Deseja manter esta aparência?" , "Sim.", "Não."))
+		return 1;
+	else
+		looksGump(who, chardata);
+	endif
 endfunction
