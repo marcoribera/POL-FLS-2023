@@ -105,10 +105,10 @@ function racialSelection(who, culture_pic)
             break;
         endif
     endwhile
-    print("raca: "+chardata.raca);
-    if (who.graphic == 400 && (chardata.raca == "Elfo" || chardata.raca == "Drow"))
+
+    if (who.graphic == 400 && (chardata.raca == RACA.ELFO || chardata.raca == RACA.DROW))
         who.graphic := 1830;
-    elseif(who.graphic == 401 && (chardata.raca == "Elfo" || chardata.raca == "Drow"))
+    elseif(who.graphic == 401 && (chardata.raca == RACA.ELFO || chardata.raca == RACA.DROW))
         who.graphic := 1831;
     endif
     who.title_race := chardata.raca;
@@ -417,27 +417,48 @@ function religionSelection(who)
 endfunction
 
 function resetCharacter(who)
-	if (who.cmdlevel < 2)
+    resetGender(who);
+    if (GetObjProperty(who, "skill") == 1)
+        EraseObjProperty(who, "skill");
+    endif
+    if (GetObjProperty(who, "chardata"))
+        EraseObjProperty(who, "chardata");
+    endif
+    if (GetObjProperty(who, "classe"))
+        EraseObjProperty(who, "classe");
+    endif
+    if (GetObjProperty(who, "nome_inicial"))
+        EraseObjProperty(who, "nome_inicial");
+    endif
+    if (GetObjProperty(who, "advclass"))
+        EraseObjProperty(who, "advclass");
+    endif
+    
+	// if (who.cmdlevel < 2)
 		var equiped := listequippeditems(who);
-		foreach item in  equiped
+		foreach item in equiped
 			if (item != who.backpack)
-				if ( item.layer != LAYER_HAIR)
-					if (item.layer != LAYER_BEARD)
-						DestroyItem(item);
-					endif
-				endif
+                DestroyItem(item);
 			endif
 		endforeach
 		equiped := enumerateitemsincontainer(who.backpack);
-		foreach item in  equiped
+		foreach item in equiped
 			DestroyItem(item);
 		endforeach
 		equiped := 0;
-	endif
+	// endif
 
 	//zera as skills
 	foreach attrib in AP_ListAttributesByType()
 		AP_SetTrueSkill(who, attrib, 0);
 		sleepms(10);
 	endforeach
+endfunction
+
+function resetGender(who)
+    if (who.graphic == 1828 || who.graphic == 1830 || who.graphic == 1832 || who.graphic == 1834)
+        who.graphic := 400;
+    elseif (who.graphic == 1829 || who.graphic == 1831 || who.graphic == 1833 || who.graphic == 1835)
+        who.graphic := 401;
+    endif
 endfunction
