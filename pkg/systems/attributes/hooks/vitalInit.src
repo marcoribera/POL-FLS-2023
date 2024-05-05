@@ -130,8 +130,8 @@ exported function GetStaminaRegenRate(mobile)
 	if (GetObjProperty(mobile, "chardata").culture == CULTURA.AIGLANA)
 		base_regen *= 1.5;
 	endif
-
-	return base_regen + AP_GetVitalRegenRateMod(mobile, "stamina");
+	
+	return Cint(base_regen + AP_GetVitalRegenRateMod(mobile, STAMINA));
 endfunction
 
 exported function GetStaminaMaximumValue(mobile)

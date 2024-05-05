@@ -1100,7 +1100,6 @@ program createchar(who)
 	SetObjProperty(who, "nome_inicial", who.name);
 	who.name := who.title_race;
 
-
 	RecalcVitals(who);
 
 	var primarias := GetPrimarias(who);

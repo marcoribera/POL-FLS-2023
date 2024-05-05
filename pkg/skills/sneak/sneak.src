@@ -112,7 +112,12 @@ program skill_Hide(who)
 	else
 
 		while ( 1 )
-			(GetObjProperty(who, "chardata").race == RACA.POLSKI) ? sleep(2) : sleep(3);
+			if (GetObjProperty(who, "chardata").race == RACA.POLSKI)
+				sleep(2);
+			else
+				sleep(3);
+			endif
+			
 
 			if ( !CanHide(who, orig_x, orig_y) )
 				break;
