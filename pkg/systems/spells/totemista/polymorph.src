@@ -31,7 +31,7 @@ program summontotem(params)
 	PlaySoundEffect(targ, SFX_SPELL_HEAL);
 
 	var cfg;
-	if(recipe.magic_path == "spellcaster" || GetObjProperty(who, "chardata").magia == "spellcaster")
+	if(who.magic_path == "spellcaster" || GetObjProperty(who, "chardata").magia == "spellcaster")
 		cfg  :=  ReadConfigFile(":spells:spellcaster");
 	else
 		cfg  :=  ReadConfigFile(":spells:allspells");
