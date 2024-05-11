@@ -69,6 +69,17 @@ Nos períodos de chuva, quando o deserto se transforma em um oásis temporário,
 Porém, mesmo em meio à brutalidade de sua fé, os orcs têm seus guardiões espirituais. Os Xamãs, sábios e misteriosos, são os intérpretes dos desígnios de Adar Kor Doom. Eles conduzem seus seguidores através dos caminhos áridos do deserto, guiando-os na busca pela força e sabedoria necessárias para enfrentar os desafios do Grunntam.
 Neste mundo implacável e repleto de perigos, a fé dos orcs é uma luz que brilha no horizonte, uma âncora em meio à tempestade de areia. E enquanto as dunas se movem e os ventos uivam, os filhos do Deserto da Perdição permanecem firmes em sua devoção ao Grunntam, prontos para enfrentar qualquer desafio que o destino lhes reserve.";
 
+const storyModeText := "No modo estória, o personagem não pode ser morto e nem matar outros jogadore, ou seja, cortar a cabeça.
+- Ao tentar furtar outro jogador, caso tenha sucesso, receberá moedas aleatórias baseado no PP. As falhas continuam normal.
+- Caso outro jogador, mesmo que seja modo verdadeiro, tente furtar você, ele receberá moedas aleatórias baseado no PP. As falhas continuam normal.
+- Você ainda pode perder seu personagem caso reduza seus DPs para menos que 1
+- Seu rate de UP é normal";
+
+const trueModeText := "No modo verdadeiro, o personagem pode ser morto e pode matar outros jogadores, ou seja, cortar a cabeça.
+- Poderá furtar e ser furtado normalmente.
+- Não pode reclamar que foi morto por outro jogador caso tenha sido dentro do RP. Se você escolheu conflito, você aceitou as consequências.
+- Seu rate de UP é maior";
+
 const AIGLA_ID := 0x9E7;
 const ALURIEL_ID := 0x9E8;
 const BADURAN_ID := 0x9E9;
@@ -1093,4 +1104,48 @@ function looksGump(who, chardata)
 	else
 		looksGump(who, chardata);
 	endif
+endfunction
+
+
+function gameModeGump(who, religion_pic)
+    var next_btn := array{"9903", "9904"};
+    var prev_btn := array{"9909", "9910"};
+
+    var gump := GFCreateGump();
+    GFGumpPic(gump, 17, 31, 0x9E6);
+
+    GFHTMLArea(gump, 326, 56, 192, 40, "<BASEFONT Size=55 Color=#999999 >Escolha seu modo de jogo", 0, 0); //shadow
+    GFHTMLArea(gump, 325, 55, 192, 40, "<BASEFONT Size=55 Color=#ffffff >Escolha seu modo de jogo", 0, 0);
+    var x := 63;
+    var y := 100;
+    var i := 0;
+
+    GFHTMLArea(gump, 100, 550, 650, 120, gameModeDescriptionByPictureId(religion_pic), 1, 1);
+    GFAddButton(gump, 543, 300, next_btn[1], next_btn[2], GF_CLOSE_BTN, 201);
+    GFAddButton(gump, 273, 300, prev_btn[1], prev_btn[2], GF_CLOSE_BTN, 210);
+    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 200);
+
+    GFGumpPic(gump, 298, 100, religion_pic);
+
+    return GFSendGump(who, gump);
+endfunction
+
+function gameModeByPictureId(gameModeId)
+    var trueMode := "True Mode";
+    var storyMode := "Story Mode";
+    case (gameModeId)
+        0x9FC:
+            return trueMode;
+        0x9FB:
+            return storyMode;
+    endcase
+endfunction
+
+function gameModeDescriptionByPictureId(gameModeId)
+    case (gameModeId)
+        0x9FC:
+            return trueModeText;
+        0x9FB:
+            return storyModeText;
+    endcase
 endfunction
