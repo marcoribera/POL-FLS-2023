@@ -657,7 +657,7 @@ function WritespellInfo(who, byref spellinfo)
 	spellinfo.+prayer := GetConfigStringArray( elem, "Prayer" );
     spellinfo.+circle := GetConfigStringArray( elem, "Circle" );
 	spellinfo.+alvo := GetConfigString( elem, "Target" );
-	spellinfo.+type := "Outro";
+	spellinfo.+type := GetConfigString( elem, "Type" );
 	spellinfo.+range := GetConfigString( elem, "Range" );
 	spellinfo.+targtype := GetConfigString( elem, "TargetType" );
 	spellinfo.+mana := GetConfigInt( elem, "Mana" );
@@ -671,6 +671,7 @@ function WritespellInfo(who, byref spellinfo)
 	spellinfo.+flavortext := GetConfigString( elem, "FlavorText" );
 	spellinfo.+cycles := GetConfigInt( elem, "Cycles" );
 	spellinfo.+corruption := GetConfigInt( elem, "Corruption" );
+	spellinfo.+School := GetConfigString( elem, "School" );
 	if (spellinfo.flavortext == error)
 		spellinfo.flavortext := "";
 	else
