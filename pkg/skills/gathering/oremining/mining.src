@@ -183,20 +183,20 @@ function mineraRaroAleatorio(who)
 		CreateItemInBackPack(who, 0x6310, 1); // return 95; //galvorn
 		achou := 1;
 	elseif(rand<0.4)
-		SendSysMessage(who, "Achou um pouco de Helce em meio ao minerios.");
-		CreateItemInBackPack(who, 0x6302, 1); // return 70; //helce
+		SendSysMessage(who, "Achou um pouco de Fulmetium  em meio ao minerios.");
+		CreateItemInBackPack(who, 0x6302, 1); // return 70; //fulmetium
 		achou := 1;
 	elseif(rand<0.6)
-		SendSysMessage(who, "Achou um pouco de Sinque em meio ao minerios.");
-		CreateItemInBackPack(who, 0x6303, 1); // return 70; //sinque
+		SendSysMessage(who, "Achou um pouco de Venetium em meio ao minerios.");
+		CreateItemInBackPack(who, 0x6303, 1); // return 70; //venetium
 		achou := 1;
 	elseif(rand<0.8)
-		SendSysMessage(who, "Achou um pouco de Figin em meio ao minerios.");
-		CreateItemInBackPack(who, 0x6304, 1); // return 70; //figin
+		SendSysMessage(who, "Achou um pouco de Ignium em meio ao minerios.");
+		CreateItemInBackPack(who, 0x6304, 1); // return 70; //ignium
 		achou := 1;
 	elseif(rand<1.0)
-		SendSysMessage(who, "Achou um pouco de Argonil em meio ao minerios.");
-		CreateItemInBackPack(who, 0x6460, 1); // return 70; //argonil
+		SendSysMessage(who, "Achou um pouco de frigutium em meio ao minerios.");
+		CreateItemInBackPack(who, 0x6460, 1); // return 70; //frigutium
 		achou := 1;
 	elseif(rand<1.2)
 		SendSysMessage(who, "Achou um pouco de Litan em meio ao minerios.");
