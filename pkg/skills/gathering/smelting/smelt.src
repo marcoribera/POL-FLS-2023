@@ -34,7 +34,7 @@ program smelt_that_ore (who, item)
      return;
   endif
 
-  if ( (use_on.graphic == 0x19B9) || (use_on.graphic == 0x1bf2) || (use_on.graphic == 0x1bf5) || (use_on.objtype == 0x6075)  || (use_on.graphic == 0x1bdd)  || (use_on.objtype == 0x1bde) || (use_on.objtype == 0x6309))
+  if ( (use_on.graphic == 0x19B9) || (use_on.graphic == 0x1bf2) || (use_on.graphic == 0x1bf5) || (use_on.objtype == 0x6075)  || (use_on.graphic == 0x1bdd)  || (use_on.objtype == 0x1bde) || (use_on.objtype == 0x6309) || (use_on.objtype == 0x6995))
      SmeltOre(who, item, use_on);
   //elseif ((use_on.isa(POLCLASS_WEAPON)) || (use_on.isa(POLCLASS_ARMOR) || (use_on.objtype == 0x5101)))
    //  SmeltItem(who, item, use_on);
@@ -165,6 +165,7 @@ function SmeltOre(who, item, ore)
     0x6992:  ingot := 0x6993; //prata
     0x6305:  ingot := 0x630e; //ouro
     0x6309:  ingot := 0x6309; //aco
+    0x6995:  ingot := 0x6995; //ligas elementais
     0x6301:  ingot := 0x630a; //litan
     0x6314:  ingot := 0x6315; // illyra
     0x6307:  ingot := 0x6310; //galvorn

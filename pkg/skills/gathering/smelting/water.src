@@ -153,6 +153,7 @@ function DeterminaLiga(metals, who)
         0x6993: metais.append("prata");
         0x630a: metais.append("litan");
         0x630e: metais.append("golden");
+        0x6995: metais.append("aco");
      endcase
   endforeach
   print("metais: " + metais);
@@ -166,7 +167,7 @@ function DeterminaLiga(metals, who)
     elseif (("carvao"  in metais ) && ("impuro" in metais))
       return 0x6309; //ferro
     elseif (("carvao"  in metais ) && ("ferro" in metais))
-      return 0x6995; //ferro
+      return 0x6995; //aco
     // elseif (("litan" in metais) && ("estanho" in metais))
     //   return 0x6601; //stalith
     // elseif (("galvorn" in metais) && ("fulmetium" in metais))
@@ -183,18 +184,18 @@ function DeterminaLiga(metals, who)
       return "noIngot";
     endif
   elseif (metais.size() == 3)
-    if (("litan" in metais) && ("estanho" in metais)  && ("ignium" in metais))
-      return 0x6605; //ignarilith
-    elseif (("litan" in metais) && ("estanho" in metais)  && ("frigutium" in metais))
-      return 0x6606; //glacialith
-    elseif (("litan" in metais) && ("estanho" in metais)  && ("venetium" in metais))
-      return 0x6607; //venerilith
-    elseif (("litan" in metais) && ("estanho" in metais)  && ("fulmetium" in metais))
-      return 0x6608; //enerlith
-    elseif (("litan" in metais) && ("estanho" in metais)  && ("ferro" in metais))
-      return 0x6602; //acielith
-    elseif (("cobre" in metais) && ("prata" in metais)  && ("golden" in metais))
-      return 0x6604; //platina
+    if (("aco" in metais) && ("carvao" in metais)  && ("ignium" in metais))
+      return 0x630d; //ignium
+    elseif (("aco" in metais) && ("carvao" in metais)  && ("frigutium" in metais))
+      return 0x6606; //frigutium
+    elseif (("aco" in metais) && ("carvao" in metais)  && ("venetium" in metais))
+      return 0x6607; //venetium
+    elseif (("aco" in metais) && ("carvao" in metais)  && ("fulmetium" in metais))
+      return 0x6608; //fulmetium
+    // elseif (("aco" in metais) && ("carvao" in metais)  && ("ferro" in metais))
+    //   return 0x6602; //acielith
+    // elseif (("cobre" in metais) && ("prata" in metais)  && ("golden" in metais))
+    //   return 0x6604; //platina
     else
       return "noIngot";
     endif

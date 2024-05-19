@@ -443,10 +443,10 @@ function DetermineMiningDifficulty(oretype)
 		0x6300: return 0;  //iron ore
 		0x6301: return 70; //litan
         0x6314: return 82; //illyra
-		0x6302: return 72; //fulmetium
-		0x6303: return 72; //venetium
-		0x6304: return 72; //ignium
-		0x6451: return 72; //frigutium
+		0x6302: return 72; //fulmetita
+		0x6303: return 72; //venetita
+		0x6304: return 72; //ignitita
+		0x6451: return 72; //frigutita
 		0x6307: return 90; //galvorn
 		0x6308: return 90; //mithril
 		0x6450: return 20; //cobre
