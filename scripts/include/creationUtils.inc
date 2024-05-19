@@ -1,7 +1,6 @@
 include ":attributes:attributes";
 include ":disguise:disguise";
 
-
 const aiglaText := "Os Aiglanos são um povo astuto e inclusivo, conhecido por sua capital Aquileia. Sua bandeira apresenta uma águia dourada em um fundo vermelho, simbolizando a seleção dos capazes. Eles são um povo mestiço, com variação de tom de pele, altura e tipo de cabelo. São disciplinados, valorizam a história e fazem do exercício físico um hábito.
 Historicamente, os Aiglanos prosperaram apesar dos desafios, aprendendo com suas fraquezas e remodelando-se. Passaram de um pequeno vilarejo para uma República, com um sistema político fechado. A ascensão do Imperador Crassus trouxe um período de bonança, com reformas militares e de governo que expandiram o poder do império.
 A religião Aiglana é flexível, absorvendo divindades dos povos conquistados através do ritual de evocatio. Os costumes incluem uma nobreza intocável, lealdade à legião e pagamento dos legionários durante campanhas.
@@ -168,7 +167,7 @@ function getCulturalDescriptionByPictureId(culture_id)
     endcase
 endfunction
 
-function RaceGump(who, culture_pic)
+function EpicRaceGump(who, culture_pic)
     var races := getRaceByCulturalId(culture_pic);
     var gump := GFCreateGump();
 
@@ -1071,9 +1070,10 @@ function looksGump(who, chardata)
 
     escolherCabelo(who, disfarce, chardata.raca);
     escolheCorCabelo(who, disfarce, 0, chardata.raca, 1);
-    if (chardata.raca == "Humano" && chardata.raca != "Orc")
+    if (chardata.raca != RACA.ELFO && chardata.raca != RACA.DROW)
         escolherBarba(who, disfarce);
     endif
+
     SkinGump(who, disfarce, chardata.raca, 1);
 
     who.color := disfarce.corpele;

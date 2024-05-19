@@ -8,8 +8,8 @@ include ":tn:tngumps";
 include ":gumps:requestGump";
 include ":attributes:attributes";
 include "include/client";
-include ":disguise:disguise";
 include ":charactercreation:createchar";
+include ":disguise:disguise";
 include ":datafile:datafile";
 include "include/say";
 include "include/creationUtils";
@@ -68,7 +68,7 @@ function racialSelection(who, culture_pic)
     var btn_value;
     var chardata := GetObjProperty(who, "chardata");
     while (1)
-        var input := RaceGump(who, culture_pic);
+        var input := EpicRaceGump(who, culture_pic);
         foreach key in (input.keys)
             btn_value := key;
         endforeach
