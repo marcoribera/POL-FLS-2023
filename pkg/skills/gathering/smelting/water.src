@@ -138,61 +138,69 @@ function DeterminaLiga(metals, who)
 	var metais := array;
   foreach item in metals
      case(Cint(item))
+        0x1bde: metais.append("carvao");
         0x6309: metais.append("ferro");
+        0x62ff: metais.append("impuro");
         0x6465: metais.append("cobre");
         0x6991: metais.append("estanho");
-        0x6460: metais.append("argonil");
+        0x6460: metais.append("frigutium");
         0x6310: metais.append("galvorn");
         0x6311: metais.append("mithril");
         0x6315: metais.append("illyra");
-        0x630b: metais.append("helce");
-        0x630c: metais.append("sinque");
-        0x630d: metais.append("figin");
+        0x630b: metais.append("fulmetium");
+        0x630c: metais.append("venetium");
+        0x630d: metais.append("ignium");
         0x6993: metais.append("prata");
         0x630a: metais.append("litan");
         0x630e: metais.append("golden");
+        0x6995: metais.append("aco");
      endcase
   endforeach
+  print("metais: " + metais);
   if (metais.size() == 2)
-    if (("ferro"  in metais ) && ("estanho" in metais) )
-      return 0x6995; //aco
-    elseif (("prata" in metais) && ("estanho" in metais))
-      return 0x6603; //cristalith
-    elseif (("cobre"  in metais ) && ("estanho" in metais))
+    // if (("ferro"  in metais ) && ("carvao" in metais) ) // TODO: Verificar como fazer barra de ferro aceitavel aqui
+    //   return 0x6995; //aco
+    // elseif (("prata" in metais) && ("estanho" in metais))
+    //   return 0x6603; //cristalith
+    if (("cobre"  in metais ) && ("estanho" in metais))
       return 0x6994; //bronze
-    elseif (("litan" in metais) && ("estanho" in metais))
-      return 0x6601; //stalith
-    elseif (("galvorn" in metais) && ("helce" in metais))
-      return 0x6998; //teslium
-    elseif (("galvorn" in metais) && ("sinque" in metais))
-      return 0x6999; //hissium
-    elseif (("galvorn" in metais) && ("figin" in metais))
-      return 0x6997; //solium
-    elseif (("galvorn" in metais) && ("argonil" in metais))
-      return 0x699A; //icelum
-    elseif (("prata" in metais) && ("helce" in metais))
-      return 0x6609; //lunium
+    elseif (("carvao"  in metais ) && ("impuro" in metais))
+      return 0x6309; //ferro
+    elseif (("carvao"  in metais ) && ("ferro" in metais))
+      return 0x6995; //aco
+    // elseif (("litan" in metais) && ("estanho" in metais))
+    //   return 0x6601; //stalith
+    // elseif (("galvorn" in metais) && ("fulmetium" in metais))
+    //   return 0x6998; //teslium
+    // elseif (("galvorn" in metais) && ("venetium" in metais))
+    //   return 0x6999; //hissium
+    // elseif (("galvorn" in metais) && ("ignium" in metais))
+    //   return 0x6997; //solium
+    // elseif (("galvorn" in metais) && ("frigutium" in metais))
+    //   return 0x699A; //icelum
+    // elseif (("prata" in metais) && ("fulmetium" in metais))
+    //   return 0x6609; //lunium
     else
       return "noIngot";
     endif
   elseif (metais.size() == 3)
-    if (("litan" in metais) && ("estanho" in metais)  && ("figin" in metais))
-      return 0x6605; //ignarilith
-    elseif (("litan" in metais) && ("estanho" in metais)  && ("argonil" in metais))
-      return 0x6606; //glacialith
-    elseif (("litan" in metais) && ("estanho" in metais)  && ("sinque" in metais))
-      return 0x6607; //venerilith
-    elseif (("litan" in metais) && ("estanho" in metais)  && ("helce" in metais))
-      return 0x6608; //enerlith
-    elseif (("litan" in metais) && ("estanho" in metais)  && ("ferro" in metais))
-      return 0x6602; //acielith
-    elseif (("cobre" in metais) && ("prata" in metais)  && ("golden" in metais))
-      return 0x6604; //platina
+    if (("aco" in metais) && ("carvao" in metais)  && ("ignium" in metais))
+      return 0x630d; //ignium
+    elseif (("aco" in metais) && ("carvao" in metais)  && ("frigutium" in metais))
+      return 0x6606; //frigutium
+    elseif (("aco" in metais) && ("carvao" in metais)  && ("venetium" in metais))
+      return 0x6607; //venetium
+    elseif (("aco" in metais) && ("carvao" in metais)  && ("fulmetium" in metais))
+      return 0x6608; //fulmetium
+    // elseif (("aco" in metais) && ("carvao" in metais)  && ("ferro" in metais))
+    //   return 0x6602; //acielith
+    // elseif (("cobre" in metais) && ("prata" in metais)  && ("golden" in metais))
+    //   return 0x6604; //platina
     else
       return "noIngot";
     endif
   elseif (metais.size() == 5)
-    if(("mithril" in metais) && ("helce" in metais) && ("sinque" in metais) && ("figin" in metais) && ("argonil" in metais))
+    if(("mithril" in metais) && ("fulmetium" in metais) && ("venetium" in metais) && ("ignium" in metais) && ("frigutium" in metais))
       return 0x699B; //oricalcum
     else
       return "noIngot";
@@ -215,20 +223,20 @@ function smeltaImpurezasRaras(who, amt)
       CreateItemInBackPack(who, 0x6310, CInt(amt/40)); // return 90; //galvorn
       achou := 1;
     elseif(rand<0.4)
-      SendSysMessage(who, "Achou um pouco de Helce em meio ao minerios.");
-      CreateItemInBackPack(who, 0x630b, CInt(amt/40)); // return 80; //helce
+      SendSysMessage(who, "Achou um pouco de Fulmetium  em meio ao minerios.");
+      CreateItemInBackPack(who, 0x630b, CInt(amt/40)); // return 80; //fulmetium
       achou := 1;
     elseif(rand<0.6)
-      SendSysMessage(who, "Achou um pouco de Sinque em meio ao minerios.");
-      CreateItemInBackPack(who, 0x630c, CInt(amt/40)); // return 80; //sinque
+      SendSysMessage(who, "Achou um pouco de Venetium em meio ao minerios.");
+      CreateItemInBackPack(who, 0x630c, CInt(amt/40)); // return 80; //venetium
       achou := 1;
     elseif(rand<0.8)
-      SendSysMessage(who, "Achou um pouco de Figin em meio ao minerios.");
-      CreateItemInBackPack(who, 0x630d, CInt(amt/40)); // return 80; //figin
+      SendSysMessage(who, "Achou um pouco de Ignium em meio ao minerios.");
+      CreateItemInBackPack(who, 0x630d, CInt(amt/40)); // return 80; //ignium
       achou := 1;
     elseif(rand<1.0)
-      SendSysMessage(who, "Achou um pouco de Argonil em meio ao minerios.");
-      CreateItemInBackPack(who, 0x6460, CInt(amt/40)); // return 80; //argonil
+      SendSysMessage(who, "Achou um pouco de frigutium em meio ao minerios.");
+      CreateItemInBackPack(who, 0x6460, CInt(amt/40)); // return 80; //frigutium
       achou := 1;
     elseif(rand<1.2)
       SendSysMessage(who, "Achou um pouco de litan em meio ao minerios.");

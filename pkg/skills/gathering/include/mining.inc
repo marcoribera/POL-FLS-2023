@@ -340,11 +340,11 @@ function GetResourceId(oreToSearch)
 
 		"litan": return 0x6301;
 
-		"helce": return 0x6302;
+		"Fulmetium ": return 0x6302;
 
-		"sinque": return 0x6303;
+		"Venetium": return 0x6303;
 
-		"figin": return 0x6304;
+		"Ignium": return 0x6304;
 
 		"ouro": return 0x6305;
 
@@ -354,7 +354,7 @@ function GetResourceId(oreToSearch)
 
 		"mithril": return 0x6308; //TN USED
 
-		"argonil": return 0x6451; //TN USED
+		"frigutium": return 0x6451; //TN USED
 
         "illyra": return 0x6314;
 
@@ -442,14 +442,15 @@ function DetermineMiningDifficulty(oretype)
 
 		0x6300: return 0;  //iron ore
 		0x6301: return 70; //litan
-        0x6314: return 72; //illyra
-		0x6302: return 80; //helce
-		0x6303: return 80; //sinque
-		0x6304: return 80; //figin
-		0x6451: return 80; //argonil
+        0x6314: return 82; //illyra
+		0x6302: return 72; //fulmetita
+		0x6303: return 72; //venetita
+		0x6304: return 72; //ignitita
+		0x6451: return 72; //frigutita
 		0x6307: return 90; //galvorn
 		0x6308: return 90; //mithril
 		0x6450: return 20; //cobre
+		0x6309: return 60; //barra de ferro pra aco
 
 		0x6992: return 50; //prata
  		0x6990: return 30; //estanho

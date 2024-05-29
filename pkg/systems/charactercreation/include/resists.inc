@@ -2,6 +2,7 @@ include ":attributes:attributes";
 include ":tn:cooldown";
 include ":charactercreation:habilidades";
 include "include/say";
+include "include/creationUtils";
 
 const FORTITUDE := "Fortitude";
 const REFLEXOS := "Reflexos";
@@ -116,7 +117,7 @@ function GetResist(who, resist)
 		valor := valor + CInt(GetObjProperty(who, "#VontadeMod"));
 
 		// Aplica modificadores de vantagens raciais
-		if (vantagem == "Vontade de Ferro")
+		if ((GetObjProperty(who, "chardata")).raca == RACA.ELFO)
 		//if (vantagem == "Vontade de Ferro" || who.npctemplate)
 			valor := valor + 20; // +200% do VALOR_REFERENCIA
 		endif
@@ -165,10 +166,10 @@ function CheckResist(who, resist, dif, mod := 0)
 		return 1;
 
 	//Quando é Zharkiano e estiver Bloodied ativa a habilidade racial "Segunda chance"
-	elseif ((GetObjProperty(who, "chardata")).povo == "Zharkiano" && IsBloodied(who))
+	elseif ((GetObjProperty(who, "chardata")).raca == RACA.HUMANO && IsBloodied(who))
 		dado := RandomInt(40) + 1;
 		if (dado + valor + mod >= dif)
-			SendSysMessageEx(who, "Zharkia esta do seu lado!", SSM_INFO);
+			SendSysMessageEx(who, "Humanos são insistentes!", SSM_INFO);
 			return 1;
 		endif
     elseif((GetObjProperty(who, "chardata")).vantagemracial == "Toxina natural" && resist == FORTITUDE)
@@ -180,13 +181,18 @@ function CheckResist(who, resist, dif, mod := 0)
     elseif(GetObjProperty(who, "chardata").vantagemracial == "Constituicao Ana" && resist == VONTADE)
         mod += 30; 
 		if (dado + valor + mod >= dif)
-			SendSysMessageEx(who, "Sua constituicao ana o salvou da magia", SSM_INFO);
+			SendSysMessageEx(who, "Sua constituição anã o salvou da magia", SSM_INFO);
 			return 1;
 		endif
-
+    elseif(GetObjProperty(who, "chardata").culture == CULTURA.POLKINEA)
+		dado := RandomInt(40) + 1;
+		if (dado + valor + mod >= dif)
+			SendSysMessageEx(who, "Um polski sempre pode contar com a própria sorte", SSM_INFO);
+			return 1;
+		endif
 	//Não passando no teste de resistência, informa ao pobre infeliz.
 	else
-		SendSysMessageEx(who, "Falhou no teste de resistencia", SSM_INFO);
+		SendSysMessageEx(who, "Falhou no teste de resistência", SSM_INFO);
 		return 0;
 	endif
 endfunction

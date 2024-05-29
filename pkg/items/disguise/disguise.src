@@ -355,7 +355,7 @@ function disguiseSelf(who, kit, byref disfarce);
 		disguiseSelf(who, kit, disfarce);
 	elseif ( input[0] == 12)
 
-		var gump2 := BuildHairDyeGump(corcabelo, GetObjProperty(who, "chardata").povo);
+		var gump2 := BuildHairDyeGump(corcabelo, GetObjProperty(who, "chardata").povo, who);
 		var input2 := GFSendGump(who, gump2);
 
 		if ( input2[0] == 0 || input2[CANCEL_BTN] )
@@ -373,7 +373,7 @@ function disguiseSelf(who, kit, byref disfarce);
 		endforeach
 		disguiseSelf(who, kit, disfarce);
 	elseif ( input[0] == 13)
-		var gump2 := BuildHairDyeGump(corbarba, GetObjProperty(who, "chardata").povo);
+		var gump2 := BuildHairDyeGump(corbarba, GetObjProperty(who, "chardata").povo, who);
 		var input2 := GFSendGump(who, gump2);
 
 		if ( input2[0] == 0 || input2[CANCEL_BTN] )

@@ -6,21 +6,28 @@ function TabelaMaterialResistMod(item) //objtype do material: return {FISICO, FI
     case(material)
         //////////METAL
         //TIER 1
-        "0x6309": return {0,0,0,0,0,0}; //FERRO
+        // "0x6309": return {0,0,0,0,0,0}; //FERRO
+        "0x6309": return {1,0,0,0,0,10}; //FERRO
         "0x6993": return {-2,0,0,0,0,-10}; //PRATA LUNAR
         "0x6991": return {-2,0,0,0,0,-20}; //ESTANHO
         "0x6465": return {-2,1,0,0,0,-10}; //COBRE
-        "0x6995": return {1,0,0,0,0,10}; //AÇO
-        "0x6994": return {-1,1,0,0,0,0}; //BRONZE
+        // "0x6995": return {1,0,0,0,0,10}; //AÇO
+        "0x6995": return {2,0,0,0,0,0}; //AÇO
+        // "0x6994": return {-1,1,0,0,0,0}; //BRONZE
+        "0x6994": return {0,0,0,0,0,0}; //BRONZE
         "0x630e": return {-4,0,0,0,0,-40}; //OURO
 
         //TIER 2
         "0x630a": return {2,0,0,0,0,0}; //LITAN
         "0x6315": return {3,3,3,3,3,35}; // ILLYRA
-        "0x630d": return {1,4,0,0,0,20}; //FIGIN
-        "0x6460": return {1,0,4,0,0,20}; //ARGONIL
-        "0x630c": return {1,0,0,4,0,20}; //SINQUE
-        "0x630b": return {1,0,0,0,4,20}; //HELCE
+        // "0x630d": return {1,4,0,0,0,20}; //IGNIUM
+        "0x630d": return {2,0,0,0,0,20}; //IGNIUM
+        // "0x6460": return {1,0,4,0,0,20}; //frigutium
+        "0x6460": return {2,0,0,0,0,20}; //frigutium
+        // "0x630c": return {1,0,0,4,0,20}; //SINQUE
+        "0x630c": return {2,0,0,0,0,20}; //VENETIUM
+        // "0x630b": return {1,0,0,0,4,20}; //HELCE
+        "0x630b": return {2,0,0,0,0,20}; //FULMINATIUM
         "0x6602": return {2,1,1,1,1,20}; //ACIELITH
         "0x6603": return {-1,0,0,0,0,-30}; //CRISTALITH
         "0x6601": return {1,0,0,0,0,80}; //STALITH
@@ -154,7 +161,7 @@ function TabelaMaterialDamageMod(item) //objtype do material: return {FISICO, FI
         "0x630a": return {-20,5,5,5,5,0}; //LITAN
         "0x6315": return {-30,15,15,15,15,30}; // ILLYRA
         "0x630d": return {-20,40,0,0,0,20}; //FIGIN
-        "0x6460": return {-20,0,40,0,0,20}; //ARGONIL
+        "0x6460": return {-20,0,40,0,0,20}; //frigutium
         "0x630c": return {-20,0,0,40,0,20}; //SINQUE
         "0x630b": return {-20,0,0,0,40,20}; //HELCE
         "0x6602": return {-10,0,0,0,0,20}; //ACIELITH
@@ -293,7 +300,7 @@ function TabelaMaterialMod(item) //objtype do material: return {FISICO, FIRE, CO
         "0x630a": //LITAN
         "0x6315": // ILLYRA
         "0x630d": //FIGIN
-        "0x6460": //ARGONIL
+        "0x6460": //frigutium
         "0x630c": //SINQUE
         "0x630b": //HELCE
         "0x6602": //ACIELITH

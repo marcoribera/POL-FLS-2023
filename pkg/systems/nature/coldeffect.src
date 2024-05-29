@@ -48,23 +48,27 @@ program neve(params)
                 dif := dif + 15;
             endif
 
-            if ( GetObjProperty(who, "chardata").kit == "Nomade do Deserto")
+            if ( GetObjProperty(who, "chardata").trait == "Nomade do Deserto")
                 dif := dif + 30; // Quatro níveis mais difícil
+            endif
+
+            if ( GetObjProperty(who, "chardata").trait == "Adaptável")
+                dif := dif - 30;
             endif
 
             if ( TemHabilidade(who, "Corpo Diamante"))
                 dif := dif - 60;
             endif
-
-            if ( GetObjProperty(who, "chardata").povo == "Thuriao")
+            
+            if (GetObjProperty(who, "chardata").culture == CULTURA.BJORSKA)
                 dif := dif - 60;
             endif
 
-            if (GetObjProperty(who, "chardata").kit == "Adaptável")
-                dif := dif - 60;
+            if (GetObjProperty(who, "chardata").culture == CULTURA.LESTE)
+                dif := dif - 30;
             endif
 
-            if ( GetObjProperty(who, "chardata").povo == "Aquilrano")
+            if ( GetObjProperty(who, "chardata").culture == CULTURA.GULTHRAK)
                 dif := dif + 30;
             endif
 

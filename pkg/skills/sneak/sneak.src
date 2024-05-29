@@ -6,6 +6,7 @@ include ":charactercreation:habilidades";
 include "include/say";
 include ":tn:cooldown";
 include "include/facings";
+include "include/creationUtils";
 
 program skill_Hide(who)
 
@@ -41,17 +42,16 @@ program skill_Hide(who)
 			var check := SkillCheck(who, SURVIVAL, -1);
 			var diff;
 	
-					var region := GetRegionName(who);
-					if(region != "aghaja" && region != "zharkia")
-						diff := diff - 50;
-						if (diff <= 0)
-							diff := 5;
-						endif
-					else
-					diff := 50;
-					endif
+			var region := GetRegionName(who);
+			if(region != "aghaja" && region != "zharkia")
+				diff := diff - 50;
+				if (diff <= 0)
+					diff := 5;
+				endif
+			else
+			diff := 50;
+			endif
 									
-
 			if ( GetObjProperty(who, "forjoumorte") == 1 )
 				diff := diff - 50;
 					if (diff <= 0)
@@ -112,7 +112,12 @@ program skill_Hide(who)
 	else
 
 		while ( 1 )
-			sleep(2);
+			if (GetObjProperty(who, "chardata").race == RACA.POLSKI)
+				sleep(2);
+			else
+				sleep(3);
+			endif
+			
 
 			if ( !CanHide(who, orig_x, orig_y) )
 				break;
@@ -139,7 +144,7 @@ program skill_Hide(who)
                 endif
 			endif
             var chardata := GetObjProperty(who, "chardata");
-            if (chardata.kit == "Sorrateiro")
+            if (chardata.trait == "Sorrateiro")
                 diff := -25;
                 if (diff <= 0)
                     diff := 5;

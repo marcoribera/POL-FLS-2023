@@ -8,13 +8,15 @@ include ":tn:tngumps";
 include ":gumps:requestGump";
 include ":attributes:attributes";
 include "include/client";
-include ":disguise:disguise";
 include ":charactercreation:createchar";
+include ":disguise:disguise";
 include ":datafile:datafile";
 include "include/say";
 include "include/creationUtils";
 
 program epicCreationGump(who)
+    resetCharacter(who);
+
     var culture_pic := culturalSelection(who);
     racialSelection(who, culture_pic);
     classSelection(who, culture_pic);
@@ -22,6 +24,15 @@ program epicCreationGump(who)
     traitSelection(who, culture_pic);
     skillSelection(who, culture_pic);
     attributeSelection(who, culture_pic);
+    religionSelection(who);
+    gameModeSelection(who);
+    itemInheritance(who);
+    looksSelection(who);
+
+    SetObjProperty(who, "nome_inicial", who.name);
+    AP_SetVital(who, "Hunger", 0);
+	HealDamage(who, 200);
+	RecalcVitals(who);
 endprogram
 
 function culturalSelection(who)
@@ -57,37 +68,59 @@ function racialSelection(who, culture_pic)
     var btn_value;
     var chardata := GetObjProperty(who, "chardata");
     while (1)
-        var input := RaceGump(who, culture_pic);
+        var input := EpicRaceGump(who, culture_pic);
         foreach key in (input.keys)
             btn_value := key;
         endforeach
         if (btn_value == 201)
-            chardata.race := RACA.ANAO;
+            chardata.raca := RACA.ANAO;
+            chardata.+vantagemracial := "Constituicao Ana";
+            if (who.graphic == 400)
+                who.graphic := 1828;
+            else 
+                who.graphic := 1829;
+            endif
             break;
         elseif (btn_value == 202) 
-            chardata.race := RACA.DROW;
+            chardata.raca := RACA.DROW;
+            chardata.+vantagemracial := "Toxina natural";
             break;
         elseif (btn_value == 203) 
-            chardata.race := RACA.ELFO;
+            chardata.raca := RACA.ELFO;
             break;
         elseif (btn_value == 204) 
-            chardata.race := RACA.HUMANO;
+            chardata.raca := RACA.HUMANO;
             break;
-        elseif (btn_value == 205) 
-            chardata.race := RACA.ORC;
+        elseif (btn_value == 205)
+            chardata.raca := RACA.ORC;
+            if (who.graphic == 400)
+                who.graphic := 1832;
+            else 
+                who.graphic := 1833;
+            endif
+            chardata.+vantagemracial := "Resistencia implacavel";
             break;
         elseif (btn_value == 206) 
-            chardata.race := RACA.POLSKI;
+            chardata.raca := RACA.POLSKI;
             break;
         elseif (chardata.culture == CULTURA.AIGLANA || chardata.culture == CULTURA.LESTE)
             SendSysMessageEX(who, "Escolha sua raça!", SSM_FAIL);
         else
-            chardata.race := getRaceByCulturalId(culture_pic)[1];
+            chardata.raca := getRaceByCulturalId(culture_pic)[1];
             break;
         endif
     endwhile
-    SendSysMessageEX(who, "Voce será um "+chardata.race, SSM_INFO);
 
+    if (who.graphic == 400 && (chardata.raca == RACA.ELFO || chardata.raca == RACA.DROW))
+        who.graphic := 1830;
+    elseif(who.graphic == 401 && (chardata.raca == RACA.ELFO || chardata.raca == RACA.DROW))
+        who.graphic := 1831;
+    endif
+    who.title_race := chardata.raca;
+	who.race := chardata.raca;
+
+
+    SendSysMessageEX(who, "Voce será um "+chardata.raca, SSM_INFO);
     SetObjProperty(who, "chardata", chardata);
 endfunction
 
@@ -114,6 +147,7 @@ function classSelection(who, culture_pic)
     endwhile
 
     SetObjProperty(who, "chardata", chardata);
+	SetObjProperty(who, "classe", chardata.classe);
     SendSysMessageEX(who, "Você escolheu o caminho do "+chardata.classe, SSM_INFO);
 endfunction
 
@@ -206,7 +240,7 @@ function skillSelection(who, culture_pic)
     var i := 1;
     chardata.+points := 20;
     if (chardata.trait == "Sabe-Tudo") chardata.points += 5; endif
-    if (chardata.race == "Humano") chardata.points += 2; endif
+    if (chardata.raca == "Humano") chardata.points += 2; endif
     chardata.+Skills := dictionary;
     var points := chardata.points;
     while(1)
@@ -215,100 +249,208 @@ function skillSelection(who, culture_pic)
             btn_value := key;
         endforeach
         if (btn_value >= 100 && btn_value < 120)
-            var btn_value := GetSkillNameFromId(btn_value-100);
-            chardata.Skills.+btn_value;
-            if (chardata.Skills[btn_value] > 3)
-                chardata.Skills[btn_value] := 3;
+            var skill := GetSkillNameFromId(btn_value-100);
+            chardata.Skills.+skill;
+            if (chardata.Skills[skill] > 3)
+                chardata.Skills[skill] := 3;
             endif
-            chardata.Skills[btn_value] -= 1;
+            chardata.Skills[skill] -= 1;
             chardata.points++;
         elseif (btn_value >= 120 && btn_value < 200)
-            var btn_value := GetSkillNameFromId(btn_value-120);
-            chardata.Skills.+btn_value;
-            if (chardata.Skills[btn_value] < 1)
-                chardata.Skills[btn_value] := 0;
+            var skill := GetSkillNameFromId(btn_value-120);
+
+            chardata.Skills.+skill;
+            if (chardata.Skills[skill] < 1)
+                chardata.Skills[skill] := 0;
             endif
-            chardata.Skills[btn_value] += 1;
+            chardata.Skills[skill] += 1;
             chardata.points--;
         endif
         if (btn_value >= 200 && btn_value < 220)
-            var btn_value := GetSkillNameFromId(btn_value-200);
-            chardata.Skills.+btn_value;
-            if (chardata.Skills[btn_value] < 1)
-                chardata.Skills[btn_value] := 0;
+            var skill := GetSkillNameFromId(btn_value-200);
+
+            chardata.Skills.+skill;
+            if (chardata.Skills[skill] < 1)
+                chardata.Skills[skill] := 0;
             endif
-            chardata.Skills[btn_value] -= 1;
+            chardata.Skills[skill] -= 1;
             chardata.points += 2;
         elseif (btn_value >= 220 && btn_value < 300)
-            var btn_value := GetSkillNameFromId(btn_value-220);
-            chardata.Skills.+btn_value;
-            if (chardata.Skills[btn_value] < 1)
-                chardata.Skills[btn_value] := 0;
+            var skill := GetSkillNameFromId(btn_value-220);
+
+            chardata.Skills.+skill;
+            if (chardata.Skills[skill] < 1)
+                chardata.Skills[skill] := 0;
             endif
-            chardata.Skills[btn_value] += 1;
+            chardata.Skills[skill] += 1;
             chardata.points -= 2;
         endif
         if (btn_value >= 300 && btn_value < 320)
-            var btn_value := GetSkillNameFromId(btn_value-300);
-            chardata.Skills.+btn_value;
-            if (chardata.Skills[btn_value] < 1)
-                chardata.Skills[btn_value] := 0;
+            var skill := GetSkillNameFromId(btn_value-300);
+
+            chardata.Skills.+skill;
+            if (chardata.Skills[skill] < 1)
+                chardata.Skills[skill] := 0;
             endif
-            chardata.Skills[btn_value] -= 1;
+            chardata.Skills[skill] -= 1;
             chardata.points += 3;
         elseif (btn_value >= 320 && btn_value < 400)
-            var btn_value := GetSkillNameFromId(btn_value-320);
-            chardata.Skills.+btn_value;
-            if (chardata.Skills[btn_value] < 1)
-                chardata.Skills[btn_value] := 0;
+            var skill := GetSkillNameFromId(btn_value-320);
+
+            chardata.Skills.+skill;
+            if (chardata.Skills[skill] < 1)
+                chardata.Skills[skill] := 0;
             endif
-            chardata.Skills[btn_value] += 1;
+            chardata.Skills[skill] += 1;
             chardata.points -= 3;
         endif
         if (btn_value >= 400 && btn_value < 420)
-            var btn_value := GetSkillNameFromId(btn_value-400);
-            chardata.Skills.+btn_value;
-            if (chardata.Skills[btn_value] < 1)
-                chardata.Skills[btn_value] := 0;
+            var skill := GetSkillNameFromId(btn_value-400);
+
+            chardata.Skills.+skill;
+            if (chardata.Skills[skill] < 1)
+                chardata.Skills[skill] := 0;
             endif
-            chardata.Skills[btn_value] -= 1;
+            chardata.Skills[skill] -= 1;
             chardata.points += 4;
         elseif (btn_value >= 420 && btn_value < 500)
-            var btn_value := GetSkillNameFromId(btn_value-420);
-            chardata.Skills.+btn_value;
-            if (chardata.Skills[btn_value] < 1)
-                chardata.Skills[btn_value] := 0;
+            var skill := GetSkillNameFromId(btn_value-420);
+
+            chardata.Skills.+skill;
+            if (chardata.Skills[skill] < 1)
+                chardata.Skills[skill] := 0;
             endif
-            chardata.Skills[btn_value] += 1;
+            chardata.Skills[skill] += 1;
             chardata.points -= 4;
         elseif (btn_value == 500)
+            chardata["Skills"].Erase("skill");
             SetObjProperty(who, "chardata", chardata);
             SetObjProperty(who, "skill", 1);
             SendSysMessageEX(who, "Você definiu suas skills", SSM_INFO);
             break;
         endif
     endwhile
+
+    var value;
+	var skillsmap := chardata.Skills;
+	var skillsArray := skillsmap.keys();
+	foreach skill in skillsArray
+		value := 0;
+		if ( chardata.Skills[skill] == 3)
+			value := 40;
+		elseif (chardata.Skills[skill] == 2)
+			value := 20;
+		else
+			value := 0 ;
+		endif
+		if ( AP_GetTrueSkill(who, skill) == 0)
+			AP_SetTrueSkill(who, skill, value);
+		endif
+	endforeach
 endfunction
 
 function attributeSelection(who, culture_pic)
     var btn_value;
     var chardata := GetObjProperty(who, "chardata");
+    chardata.+attribute_points := 80;
+    chardata.+str := 40;
+    chardata.+dex := 40;
+    chardata.+int := 40;
     var traits := listTraits(who, chardata);
     var i := 1;
 
-    //while(1)
-        var input := attributeGump(who, culture_pic);
-    //    foreach key in (input.keys)
-    //        btn_value := key;
-    //    endforeach
-    //    if (btn_value > 200)
-    //        chardata.+trait := traits[btn_value-200].Nome;
-    //        break;
-    //    else
-    //        SendSysMessageEX(who, "Escolha sua característica", SSM_FAIL);
-    //    endif
-    //endwhile
+    while(1)
+        var input := attributeGump(who, culture_pic, chardata);
+       foreach key in (input.keys)
+           btn_value := key;
+       endforeach
+       if (btn_value == 200)
+            chardata.str += 5;
+            chardata.attribute_points -= 5;
+       elseif (btn_value == 201)
+            chardata.str -= 5;
+            chardata.attribute_points += 5; 
+       elseif (btn_value == 210)
+            chardata.dex += 5;
+            chardata.attribute_points -= 5;
+       elseif (btn_value == 211)
+            chardata.dex -= 5;
+            chardata.attribute_points += 5;
+       elseif (btn_value == 220)
+            chardata.int += 5;
+            chardata.attribute_points -= 5;
+       elseif (btn_value == 221)
+            chardata.int -= 5;
+            chardata.attribute_points += 5;
+        else
+            SetObjProperty(who, "chardata", chardata);
+            attributeBonusByRaceAndTraits(who);
 
-    //SetObjProperty(who, "chardata", chardata);
-    SendSysMessageEX(who, "Você selecionou seus atributos", SSM_INFO);
+            SendSysMessageEX(who, "Você selecionou seus atributos", SSM_INFO);
+            break;
+       endif
+    endwhile
+endfunction
+
+function religionSelection(who)
+    var chardata := GetObjProperty(who, "chardata");
+    var religion_pic := 0x9F6;
+    var btn_value;
+    while (1)
+        var input := ReligionGump(who, religion_pic);
+        btn_value := input[0]; 
+
+        if (btn_value == 201)
+            religion_pic++;
+        elseif (btn_value == 210) 
+            religion_pic--;
+        else
+            break;
+        endif
+
+        if (religion_pic < 0x9EF)
+            religion_pic := 0x9F6;
+        elseif (religion_pic > 0x9F6)
+            religion_pic := 0x9EF;
+        endif
+    endwhile
+    chardata.+religion := getReligionByPictureId(religion_pic);
+    SetObjProperty(who, "chardata", chardata);
+
+    SendSysMessageEX(who, "Sua religião será "+chardata.religion, SSM_INFO);
+    return religion_pic;
+endfunction
+
+function gameModeSelection(who)
+    var chardata := GetObjProperty(who, "chardata");
+    var game_mode_pic := 0x9FB;
+    var btn_value;
+    while (1)
+        var input := gameModeGump(who, game_mode_pic);
+        btn_value := input[0]; 
+
+        if (btn_value == 201)
+            game_mode_pic++;
+        elseif (btn_value == 210) 
+            game_mode_pic--;
+        else
+            break;
+        endif
+
+        if (game_mode_pic < 0x9FB)
+            game_mode_pic := 0x9FC;
+        elseif (game_mode_pic > 0x9FC)
+            game_mode_pic := 0x9FB;
+        endif
+    endwhile
+    chardata.+game_mode := gameModeByPictureId(game_mode_pic);
+    SetObjProperty(who, "chardata", chardata);
+
+    SendSysMessageEX(who, "Seu modo de jogo será "+chardata.game_mode, SSM_INFO);
+    return game_mode_pic;
+endfunction
+
+function looksSelection(who)
+    var chardata := GetObjProperty(who, "chardata");
+    looksGump(who, chardata);
 endfunction

@@ -3,7 +3,7 @@ use uo;
 use util;
 use cfgfile;
 include ":alchemy:alchemy";
-include ":tn:tnutil";
+include "include/utils";
 
 program drink_blue (who, potion)
 	EraseObjProperty(who, "IsMeditating");
