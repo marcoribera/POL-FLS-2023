@@ -78,6 +78,7 @@ endprogram
 Const OBJ_BLANK_SCROLL := 0xE34;
 Const OBJ_RECIPE_SLIP := 0x6116;
 Const OBJ_RECIPE_SLIP_SANGRIA := 0x2050;
+Const OBJ_RECIPE_SLIP_SPELLCASTER := 0x2055;
 
 function copyrecipe(who, recipe)
 	writeSpellInfo(who, recipe);
@@ -98,6 +99,8 @@ function copyrecipe(who, recipe)
 
 			if(recipe.magic_path == "Sangria")
 				item := createiteminbackpack(who, OBJ_RECIPE_SLIP_SANGRIA, 1);
+			elseif(recipe.magic_path == "spellcaster")
+				item := createiteminbackpack(who, OBJ_RECIPE_SLIP_SPELLCASTER, 1);
 			else
 				item := createiteminbackpack(who, OBJ_RECIPE_SLIP, 1);
 			endif
@@ -164,8 +167,10 @@ function CreateBookGump(book, who)
 	//GFAddButton(book_gump, 125, 15, 2472, 2473, GF_CLOSE_BTN, 50);
 	if(GetObjProperty(book, "NecroBook"))
 		GFHTMLArea(book_gump, 135, 22, 100, 18, "Livro de Mesum");
-	else
+	elseif(GetObjProperty(book, "SangriaBook"))
 		GFHTMLArea(book_gump, 135, 22, 100, 18, "Livro da Sangria");
+	else
+		GFHTMLArea(book_gump, 135, 22, 100, 18, "Livro da Magia");
 	endif
 	
 	GFAddButton(book_gump, 393, 14, 2206, 2206, GF_PAGE_BTN, 2);

@@ -30,8 +30,12 @@ program summontotem(params)
 	//Efeito da magia
 	PlaySoundEffect(targ, SFX_SPELL_HEAL);
 
-
-	var cfg  :=  ReadConfigFile(":spells:allspells");
+	var cfg;
+	if(who.magic_path == "spellcaster" || GetObjProperty(who, "chardata").magia == "spellcaster")
+		cfg  :=  ReadConfigFile(":spells:spellcaster");
+	else
+		cfg  :=  ReadConfigFile(":spells:allspells");
+	endif
 	var elem := FindConfigElem(cfg, spellid);
 	var graphic := getConfigInt(elem, "graphic");
 

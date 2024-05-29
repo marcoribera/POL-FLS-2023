@@ -622,13 +622,18 @@ endfunction
 
 function WritespellInfo(who, byref spellinfo)
 	var cfg;
+	var myrace := Lower(GetObjProperty(who, "raca"));
 
     if (GetObjProperty(who, "chardata").magia == "Shaman")
         cfg := ReadConfigFile(":spells:config/shamanspells");
         spellinfo.used := 1;
+	elseif ((myrace == "elfo" || myrace == "drow") && spellinfo.magic_path == "cantripspells")
+        cfg := ReadConfigFile(":spells:config/cantripspells");
 	elseif(spellinfo.magic_path == "Sangria")
         cfg := ReadConfigFile(":spells:config/sangriaspells");
-    elseif(spellinfo.magic_path == "Trickster")
+	elseif (GetObjProperty(who, "chardata").magia == "spellcaster" && spellinfo.magic_path == "spellcaster")
+        cfg := ReadConfigFile(":spells:config/spellcaster");
+	elseif(spellinfo.magic_path == "Trickster" || TemHabilidade(who, "Sensibilidade Arcana"))
         cfg := ReadConfigFile(":spells:config/tricksterspells");
 	else
 		cfg := ReadConfigFile(":spells:config/allspells");
@@ -652,7 +657,7 @@ function WritespellInfo(who, byref spellinfo)
 	spellinfo.+prayer := GetConfigStringArray( elem, "Prayer" );
     spellinfo.+circle := GetConfigStringArray( elem, "Circle" );
 	spellinfo.+alvo := GetConfigString( elem, "Target" );
-	spellinfo.+type := "Outro";
+	spellinfo.+type := GetConfigString( elem, "Type" );
 	spellinfo.+range := GetConfigString( elem, "Range" );
 	spellinfo.+targtype := GetConfigString( elem, "TargetType" );
 	spellinfo.+mana := GetConfigInt( elem, "Mana" );
@@ -666,6 +671,9 @@ function WritespellInfo(who, byref spellinfo)
 	spellinfo.+flavortext := GetConfigString( elem, "FlavorText" );
 	spellinfo.+cycles := GetConfigInt( elem, "Cycles" );
 	spellinfo.+corruption := GetConfigInt( elem, "Corruption" );
+	if(spellinfo.spelltype == "spellcaster")
+		spellinfo.+School := GetConfigString( elem, "School" );
+	endif
 	if (spellinfo.flavortext == error)
 		spellinfo.flavortext := "";
 	else
