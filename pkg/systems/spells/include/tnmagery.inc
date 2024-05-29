@@ -671,7 +671,9 @@ function WritespellInfo(who, byref spellinfo)
 	spellinfo.+flavortext := GetConfigString( elem, "FlavorText" );
 	spellinfo.+cycles := GetConfigInt( elem, "Cycles" );
 	spellinfo.+corruption := GetConfigInt( elem, "Corruption" );
-	spellinfo.+School := GetConfigString( elem, "School" );
+	if(spellinfo.spelltype == "spellcaster")
+		spellinfo.+School := GetConfigString( elem, "School" );
+	endif
 	if (spellinfo.flavortext == error)
 		spellinfo.flavortext := "";
 	else
