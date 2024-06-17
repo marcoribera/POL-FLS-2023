@@ -60,6 +60,17 @@ program book( who, book )
 	if ( spells[spell] )
 	  copyrecipe( who, spells[spell] );
 	endif
+  elseif ( result[0] < 900 && result[0] > 800 )
+	if ( yesno( who, "Você quer esquecer o feitiço?" ) )
+	  var spell := result[0] - 800;
+	  var spells := GetObjProperty( book, "spells" );
+	  if ( spells[spell] )
+		spells.erase( spell );
+		SetObjProperty( book, "spells", spells );
+		SendSysMessageEx( who, "Você esqueceu a magia.", SSM_INFO );
+	  endif
+	  return 0;
+	endif
   else
 
 	var spell := result[0] - 100;
@@ -157,9 +168,9 @@ function CreateBookGump( book, who )
 	GFAddButton(book_gump, 370, 187, 2231, 2231, GF_PAGE_BTN, 8);
 	GFAddButton(book_gump, 405, 187, 2232, 2232, GF_PAGE_BTN, 9); */
   // GFHTMLArea(book_gump,  140, 40, 80, 18, "Charges:");
-  //	GFHTMLArea(book_gump,  300, 40, 100, 18, "Max Charges:");
-  //	GFHTMLArea(book_gump,  220, 40, 80, 18, charges);
-  //	GFHTMLArea(book_gump,  400, 40, 100, 18, max_charges);
+  // GFHTMLArea(book_gump,  300, 40, 100, 18, "Max Charges:");
+  // GFHTMLArea(book_gump,  220, 40, 80, 18, charges);
+  // GFHTMLArea(book_gump,  400, 40, 100, 18, max_charges);
   // End Page 0 Setup
 
   // Begin Page 1 Setup
@@ -265,6 +276,10 @@ function CreateBookGump( book, who )
 		  GFTextCrop( book_gump, 180, 35, 100, 18, 995, "Copiar" );
 		  GFAddButton( book_gump, 160, 38, 2103, 2104, GF_CLOSE_BTN, 900 + rune_pos );
 		endif
+
+		GFTextCrop( book_gump, 320, 194, 200, 17, 995, "Esquecer" );
+		GFAddButton( book_gump, 300, 198, 2103, 2104, GF_CLOSE_BTN, 800 + rune_pos );
+
 		GFHTMLArea( book_gump, 140, 60, 120, 140, cstr( rune_entry.description ), 0, 1 );
 
 	  endif
@@ -302,6 +317,9 @@ function CreateBookGump( book, who )
 		  GFTextCrop( book_gump, 320, 35, 150, 17, 995, "Copiar" );
 		  GFAddButton( book_gump, 300, 38, 2103, 2104, GF_CLOSE_BTN, 900 + rune_pos );
 		endif
+
+		GFTextCrop( book_gump, 320, 194, 200, 17, 995, "Esquecer" );
+		GFAddButton( book_gump, 300, 198, 2103, 2104, GF_CLOSE_BTN, 800 + rune_pos );
 
 		GFHTMLArea( book_gump, 300, 60, 120, 140, cstr( rune_entry.description ), 0, 1 );
 
