@@ -123,6 +123,27 @@ function getCultureByPictureId(culture_id)
     endcase
 endfunction
 
+function getCraftCultureByPictureId(culture_id)
+    case (culture_id)
+        AIGLA_ID:
+            return "Aiglana";
+        ALURIEL_ID:
+            return "Aluriel";
+        BADURAN_ID:
+            return "Baduran";
+        BJORSKA_ID:
+            return "Bjorska";
+        GULTHRAK_ID:
+            return "Gulthrak";
+        HAROLOTH_ID:
+            return "Haroloth";
+        POLKINEA_ID:
+            return "Polkinea";
+        LESTE_ID:
+            return "Leste";
+    endcase
+endfunction
+
 function CultureGump(who, culture_pic)
     var next_btn := array{"9903", "9904"};
     var prev_btn := array{"9909", "9910"};

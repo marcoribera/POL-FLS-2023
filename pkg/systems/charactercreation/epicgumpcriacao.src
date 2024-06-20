@@ -58,6 +58,7 @@ function culturalSelection(who)
         endif
     endwhile
     chardata.+culture := getCultureByPictureId(culture_pic);
+    chardata.+crafting := getCraftCultureByPictureId(culture_pic);
     SetObjProperty(who, "chardata", chardata);
 
     SendSysMessageEX(who, "Sua cultura será "+chardata.culture, SSM_INFO);

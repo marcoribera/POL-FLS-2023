@@ -95,13 +95,11 @@ function CreateRecipeItem(container, recipename)
 	else
 		return 0;
 	endif
-	
 
 endfunction
 
 function CreateRecipe(container, recipe)
 
-	
 	var itm := CreateItemInContainer(container, "recipe1", 1);
 	
 	if (itm)
