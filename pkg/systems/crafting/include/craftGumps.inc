@@ -198,10 +198,10 @@ function GFCraftNewPage(who, byref gump, skill_config, MenuName, skill_name)
 	var ButtonX2 := 480;
   	var itens := GetConfigStringArray(skill_config[MenuName], "Item");
 	var chardata := GetObjProperty(who, "chardata");
-	var povo := chardata.povo;
+	var povo := chardata.crafting;
 	if (povo != error)
-		if (povo == "" || povo == "Asanita")
-			povo := "Zharkiano";
+		if (povo == "")
+			povo := "Aiglana";
 		endif
 		var racialitems := GetConfigStringArray(skill_config[MenuName], povo);
 		if (racialitems != error)
