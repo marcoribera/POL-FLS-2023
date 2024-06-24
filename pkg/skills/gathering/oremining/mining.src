@@ -135,7 +135,7 @@ function MiningLoop(who, tool, my_x, my_y, targx, targy, my_facing)
 
 			if ( SkillCheck(who, GATHERING, difficulty) > 0)
 				var amt := Cint(AP_GetSkill(who, GATHERING)/20);
-				if(TemHabilidade(who, "Minerador Talentoso") || chardata.kit == "Cavar Buracos")
+				if(TemHabilidade(who, "Minerador Talentoso") || chardata.trait == "Cavar Buracos")
 					amt := amt + 2;
 				endif
 				if (amt <= 0)
