@@ -92,9 +92,9 @@ exported function GetManaMaximumValue(mobile)
 
 	if ( !vital_points )
 		vital_points := CInt(AP_GetTrueStat(mobile, "Intelligence")) * 100;
-		if (GetObjProperty(mobile, "chardata").kit == "Conexão com Alora")
+		if (GetObjProperty(mobile, "chardata").trait == "Conexão com Alora")
 			vital_points := vital_points + 1000;
-		elseif (GetObjProperty(mobile, "chardata").kit == "Afogado em Mana")
+		elseif (GetObjProperty(mobile, "chardata").trait == "Afogado em Mana")
 			vital_points := vital_points + 4000;
 		endif
 	endif

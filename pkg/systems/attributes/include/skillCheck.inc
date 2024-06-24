@@ -61,7 +61,7 @@ function SkillCheck(mobile, attrib_name, difficulty, award_diff:=0, advance_flag
     endif
 
     var chardata := GetObjProperty(mobile, "chardata");
-    if (chardata.kit == "Oito olhos" && attrib_name == AWARENESS)
+    if (chardata.trait == "Oito olhos" && attrib_name == AWARENESS)
         effective_skill += 25;
     endif
 

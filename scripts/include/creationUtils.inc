@@ -23,7 +23,10 @@ Sua história remonta a tribos antigas que enfrentaram grande fome e ataques dos
 A religião dos Björske, chamada Haulleuad, é centrada no culto ao Sol e à Lua, representando força, proteção e fertilidade. O pai, Duw, o Deus Sol, e a mãe, Lleuad, a Lua, são adorados em festivais e rituais que celebram a natureza e os ciclos da vida.
 Os Björske são guerreiros habilidosos, especialmente montados, utilizando cavalaria e formação de escudos em combate. São conhecidos por sua fúria e tradição, valorizando a força e a fertilidade. Sua cultura valoriza a oralidade e a música, enquanto sua língua nativa é o Björ e também falam o Comum.";
 
-const alurielText := "TO BE ANNOUNCED";
+const alurielText := "Os elfos são uma raça antiga e majestosa, abençoados por Alora Larethian, a Luz Eterna. Com vida longa, chegando até 300 anos e ocasionalmente ultrapassando 700 anos, os elfos possuem uma perspectiva única e contemplativa sobre a vida e o mundo ao seu redor. Eles são esbeltos e ágeis, com pele clara, cabelos e olhos predominantemente claros, refletindo sua conexão com a natureza e a magia.
+A sociedade élfica é profundamente ligada à natureza e às tradições. Eles veem a terra como uma extensão de si mesmos e se dedicam a protegê-la. Mestres na criação de artefatos sustentáveis, os elfos utilizam técnicas que não prejudicam o meio ambiente. Suas histórias e conhecimentos são preservados através da poesia e celebrações sazonais, destacando a reverência pelas tradições.
+Elfos são contemplativos, meditando e refletindo antes de tomar decisões importantes. Essa característica os torna resistentes a mudanças, especialmente aquelas que perturbam a natureza. A religião dos elfos gira em torno de Alora Larethian, deusa da beleza e da magia, cuja presença é celebrada com festas e canções. A bênção de Alora confere aos elfos grande habilidade em magia, facilitando seu uso e tornando-os excelentes magos.
+Os elfos mantêm uma rivalidade histórica com os anões devido à sua aversão à tecnologia. Acreditam que a pureza de suas obras, inspiradas pela natureza, supera qualquer criação tecnológica. Essa rivalidade se reflete em sua atitude reservada e, por vezes, hostil em relação aos avanços tecnológicos e aos estrangeiros.";
 
 const polkineaText := "Os Polski são um povo diverso e tranquilo, com uma estatura média de 90 centímetros e um corpo rechonchudo que varia de 20 a 30 quilogramas. Sua pele bronzeada pode variar de tons mais escuros a mais claros, e traços distintos podem indicar a linhagem familiar. Eles valorizam o conforto e a simplicidade em suas vestimentas e casas, mas têm orgulho de se vestirem bem.
 Os Polski cultivam as terras de Colhesol há centenas de anos, preferindo manter-se à parte dos problemas dos povos maiores. São conhecidos por seu amor pela comida, fumo e bebidas, bem como pela paz e tranquilidade da vida no campo. Suas habilidades em cultivo e culinária são notáveis, e eles desenvolveram um comércio de especiarias e condimentos.
@@ -1021,7 +1024,7 @@ function attributeBonusByRaceAndTraits(who)
         final_str -= 10;
         final_dex -= 10;
 	elseif (chardata.trait == "Robusto")
-        final_str += 20;
+        final_str += 25;
         final_int -= 5;
 	elseif (chardata.trait == "Velho") // Parece que foi removido por alguem
         final_str -= 10;
