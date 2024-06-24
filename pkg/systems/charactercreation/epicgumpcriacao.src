@@ -76,11 +76,6 @@ function racialSelection(who, culture_pic)
         if (btn_value == 201)
             chardata.raca := RACA.ANAO;
             chardata.+vantagemracial := "Constituicao Ana";
-            if (who.graphic == 400)
-                who.graphic := 1828;
-            else 
-                who.graphic := 1829;
-            endif
             break;
         elseif (btn_value == 202) 
             chardata.raca := RACA.DROW;
@@ -94,11 +89,6 @@ function racialSelection(who, culture_pic)
             break;
         elseif (btn_value == 205)
             chardata.raca := RACA.ORC;
-            if (who.graphic == 400)
-                who.graphic := 1832;
-            else 
-                who.graphic := 1833;
-            endif
             chardata.+vantagemracial := "Resistencia implacavel";
             break;
         elseif (btn_value == 206) 
@@ -116,10 +106,18 @@ function racialSelection(who, culture_pic)
         who.graphic := 1830;
     elseif(who.graphic == 401 && (chardata.raca == RACA.ELFO || chardata.raca == RACA.DROW))
         who.graphic := 1831;
+    elseif (who.graphic == 400 && (chardata.raca == RACA.ORC))
+        who.graphic := 1832;
+    elseif (who.graphic == 401 && (chardata.raca == RACA.ORC))
+        who.graphic := 1833;
+    elseif(who.graphic == 400 && (chardata.raca == RACA.ANAO))
+        who.graphic := 1828;
+    elseif(who.graphic == 401 && (chardata.raca == RACA.ANAO))
+        who.graphic := 1829;
     endif
+
     who.title_race := chardata.raca;
 	who.race := chardata.raca;
-
 
     SendSysMessageEX(who, "Voce será um "+chardata.raca, SSM_INFO);
     SetObjProperty(who, "chardata", chardata);

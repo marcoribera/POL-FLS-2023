@@ -27,7 +27,7 @@ function GetResist(who, resist)
 	var chardata := GetObjProperty(who, "chardata");
 	var classe := chardata.classe;
 	var vantagem := chardata.vantagemracial;
-	var kit := chardata.kit;
+	var kit := chardata.trait;
 	var valor := 0;
 
 	EraseResist(who, resist);//Para uso da barra de status, apaga o que tem para calcular de novo
