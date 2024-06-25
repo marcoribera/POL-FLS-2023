@@ -488,7 +488,7 @@ function skillGump(who, culture_pic, byref chardata)
     var value := 1;
     var btn_value;
     x+=10;
-    for (i := 1; i <= primarias.size()+1; i++)
+    for (i := 1; i <= primarias.size()+2; i++)
         var skill := primarias[i];
         btn_value := GetSkillIdFromName(skill);
         if (i == primarias.size()+1)
@@ -498,19 +498,29 @@ function skillGump(who, culture_pic, byref chardata)
             endif
             skill := chardata.bgBonus;
             btn_value := GetSkillIdFromName(skill);
-
             if (chardata.bgBonus2)
                 i -= 1;
                 skill := chardata.bgBonus2;
                 chardata.Erase("bgBonus2");
             endif
+         endif
+        if (i == primarias.size()+2 && chardata.bgBonus2)
+            if (chardata.bgBonus2 in primarias)
+                i++;
+                break;
+            endif
+            skill := chardata.bgBonus2;
+            btn_value := GetSkillIdFromName(skill);
+        endif
+        if (skill == error)
+            continue;
         endif
         GFHTMLArea(gump, x, y-4, 135, 24, "<BASEFONT color=#0000CC >{}".format(skill), 1, 0);
         if (chardata.Skills[skill] >= 1)
             GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 100+btn_value);
         endif
         if ((chardata.points - value >= 0) && (chardata.Skills[skill] < 3) && ((chardata.Primarias < pri_allowed) || (chardata.Skills[skill] < 2 && chardata.points - value >= 0))) 
-            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 120+btn_value);
+            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 130+btn_value);
         endif
         sleepms(2);
         y += 26;
@@ -528,7 +538,7 @@ function skillGump(who, culture_pic, byref chardata)
             GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 200+btn_value);
         endif
         if ((chardata.points - value >= 0) && (chardata.Skills[skill] < 3) && ((chardata.Primarias < pri_allowed) || (chardata.Skills[skill] < 2 && chardata.points - value >= 0))) 
-            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 220+btn_value);
+            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 230+btn_value);
         endif
         sleepms(2);
         y += 26;
@@ -547,7 +557,7 @@ function skillGump(who, culture_pic, byref chardata)
             GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 300+btn_value);
         endif
         if ((chardata.points - value >= 0) && (chardata.Skills[skill] < 3) && ((chardata.Primarias < pri_allowed) || (chardata.Skills[skill] < 2 && chardata.points - value >= 0))) 
-            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 320+btn_value);
+            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 330+btn_value);
         endif
         sleepms(2);
         y += 26;
@@ -569,7 +579,7 @@ function skillGump(who, culture_pic, byref chardata)
             GFAddButton(gump, x+138, y-2, minus_btn[1], minus_btn[2], GF_CLOSE_BTN, 400+btn_value);
         endif
         if ((chardata.points - value >= 0) && (chardata.Skills[skill] < 3) && ((chardata.Primarias < pri_allowed) || (chardata.Skills[skill] < 2 && chardata.points - value >= 0))) 
-            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 420+btn_value);
+            GFAddButton(gump, x+158, y-2, plus_btn[1], plus_btn[2], GF_CLOSE_BTN, 430+btn_value);
         endif
         sleepms(2);
         y += 26;
@@ -696,7 +706,7 @@ function ReligionGump(who, religion_pic)
     GFHTMLArea(gump, 100, 550, 650, 120, getReligionDescriptionByPictureId(religion_pic), 1, 1);
     GFAddButton(gump, 543, 300, next_btn[1], next_btn[2], GF_CLOSE_BTN, 201);
     GFAddButton(gump, 273, 300, prev_btn[1], prev_btn[2], GF_CLOSE_BTN, 210);
-    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 200);
+    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 500);
 
     GFGumpPic(gump, 298, 100, religion_pic);
 

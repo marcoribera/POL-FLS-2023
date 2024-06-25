@@ -347,7 +347,7 @@ function skillSelection(who, culture_pic)
 		elseif (chardata.Skills[skill] == 2)
 			value := 20;
 		else
-			value := 0 ;
+			value := 0;
 		endif
 		if ( AP_GetTrueSkill(who, skill) == 0)
 			AP_SetTrueSkill(who, skill, value);
