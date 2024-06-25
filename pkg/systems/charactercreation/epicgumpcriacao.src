@@ -247,7 +247,6 @@ function skillSelection(who, culture_pic)
         foreach key in (input.keys)
             btn_value := key;
         endforeach
-        print("btn_value:"+btn_value);
         if (btn_value >= 100 && btn_value < 130)
             var skill := GetSkillNameFromId(btn_value-100);
             chardata.Skills.+skill;
@@ -315,11 +314,10 @@ function skillSelection(who, culture_pic)
             chardata.points += 4;
         elseif (btn_value >= 430 && btn_value < 500)
             var skill := GetSkillNameFromId(btn_value-430);
-            print("skill:"+skill);
+
             chardata.Skills.+skill;
             if (chardata.Skills[skill] < 1)
                 chardata.Skills[skill] := 0;
-                print("chardata.Skills[skill]:"+chardata.Skills[skill]);
             endif
             chardata.Skills[skill] += 1;
             chardata.points -= 4;
