@@ -272,6 +272,8 @@ function BuildHairDyeGump(cur_color := 0, raca := 0, who)
         index_elem := color_cfg["Drow"];
 	elseif (raca == "Elfo")
         index_elem := color_cfg["Elfo"];
+	elseif (raca == "Anão")
+        index_elem := color_cfg["Anao"];
 	elseif (raca == "Qualquer")
 	  index_elem := color_cfg["Index"]; // Controls order colors appear.
 	else

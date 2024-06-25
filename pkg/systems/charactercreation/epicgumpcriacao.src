@@ -110,9 +110,9 @@ function racialSelection(who, culture_pic)
         who.graphic := 1832;
     elseif (who.graphic == 401 && (chardata.raca == RACA.ORC))
         who.graphic := 1833;
-    elseif(who.graphic == 400 && (chardata.raca == RACA.ANAO))
+    elseif(who.graphic == 400 && (chardata.raca == RACA.ANAO || chardata.raca == RACA.POLSKI))
         who.graphic := 1828;
-    elseif(who.graphic == 401 && (chardata.raca == RACA.ANAO))
+    elseif(who.graphic == 401 && (chardata.raca == RACA.ANAO || chardata.raca == RACA.POLSKI))
         who.graphic := 1829;
     endif
 
@@ -247,7 +247,8 @@ function skillSelection(who, culture_pic)
         foreach key in (input.keys)
             btn_value := key;
         endforeach
-        if (btn_value >= 100 && btn_value < 120)
+        print("btn_value:"+btn_value);
+        if (btn_value >= 100 && btn_value < 130)
             var skill := GetSkillNameFromId(btn_value-100);
             chardata.Skills.+skill;
             if (chardata.Skills[skill] > 3)
@@ -255,8 +256,8 @@ function skillSelection(who, culture_pic)
             endif
             chardata.Skills[skill] -= 1;
             chardata.points++;
-        elseif (btn_value >= 120 && btn_value < 200)
-            var skill := GetSkillNameFromId(btn_value-120);
+        elseif (btn_value >= 130 && btn_value < 200)
+            var skill := GetSkillNameFromId(btn_value-130);
 
             chardata.Skills.+skill;
             if (chardata.Skills[skill] < 1)
@@ -265,7 +266,7 @@ function skillSelection(who, culture_pic)
             chardata.Skills[skill] += 1;
             chardata.points--;
         endif
-        if (btn_value >= 200 && btn_value < 220)
+        if (btn_value >= 200 && btn_value < 230)
             var skill := GetSkillNameFromId(btn_value-200);
 
             chardata.Skills.+skill;
@@ -274,8 +275,8 @@ function skillSelection(who, culture_pic)
             endif
             chardata.Skills[skill] -= 1;
             chardata.points += 2;
-        elseif (btn_value >= 220 && btn_value < 300)
-            var skill := GetSkillNameFromId(btn_value-220);
+        elseif (btn_value >= 230 && btn_value < 300)
+            var skill := GetSkillNameFromId(btn_value-230);
 
             chardata.Skills.+skill;
             if (chardata.Skills[skill] < 1)
@@ -284,7 +285,7 @@ function skillSelection(who, culture_pic)
             chardata.Skills[skill] += 1;
             chardata.points -= 2;
         endif
-        if (btn_value >= 300 && btn_value < 320)
+        if (btn_value >= 300 && btn_value < 330)
             var skill := GetSkillNameFromId(btn_value-300);
 
             chardata.Skills.+skill;
@@ -293,8 +294,8 @@ function skillSelection(who, culture_pic)
             endif
             chardata.Skills[skill] -= 1;
             chardata.points += 3;
-        elseif (btn_value >= 320 && btn_value < 400)
-            var skill := GetSkillNameFromId(btn_value-320);
+        elseif (btn_value >= 330 && btn_value < 400)
+            var skill := GetSkillNameFromId(btn_value-330);
 
             chardata.Skills.+skill;
             if (chardata.Skills[skill] < 1)
@@ -303,7 +304,7 @@ function skillSelection(who, culture_pic)
             chardata.Skills[skill] += 1;
             chardata.points -= 3;
         endif
-        if (btn_value >= 400 && btn_value < 420)
+        if (btn_value >= 400 && btn_value < 430)
             var skill := GetSkillNameFromId(btn_value-400);
 
             chardata.Skills.+skill;
@@ -312,17 +313,23 @@ function skillSelection(who, culture_pic)
             endif
             chardata.Skills[skill] -= 1;
             chardata.points += 4;
-        elseif (btn_value >= 420 && btn_value < 500)
-            var skill := GetSkillNameFromId(btn_value-420);
-
+        elseif (btn_value >= 430 && btn_value < 500)
+            var skill := GetSkillNameFromId(btn_value-430);
+            print("skill:"+skill);
             chardata.Skills.+skill;
             if (chardata.Skills[skill] < 1)
                 chardata.Skills[skill] := 0;
+                print("chardata.Skills[skill]:"+chardata.Skills[skill]);
             endif
             chardata.Skills[skill] += 1;
             chardata.points -= 4;
         elseif (btn_value == 500)
             chardata["Skills"].Erase("skill");
+            foreach skill in (chardata.Skills)
+                if (skill == 0) 
+                    chardata["Skills"].Erase("skill");
+                endif
+            endforeach
             SetObjProperty(who, "chardata", chardata);
             SetObjProperty(who, "skill", 1);
             SendSysMessageEX(who, "Você definiu suas skills", SSM_INFO);
