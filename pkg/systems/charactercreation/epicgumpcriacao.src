@@ -329,16 +329,11 @@ function skillSelection(who, culture_pic)
             chardata.points -= 4;
         elseif (btn_value == 500)
             chardata["Skills"].Erase("skill");
-            foreach skill in (chardata.Skills)
-                if (skill == 0) 
-                    chardata.Skills.Erase("skill");
-                endif
-                if (skill == 3)
-                    pri_count++;
-                endif
-                if (skill > 3 || skill < 0)
-                    SendSysMessageEX(who, "Compra de skill inválida", SSM_FAIL);
-                    DisconnectClient(who);
+            var skillsmap := chardata.Skills;
+            var skillsArray := skillsmap.keys();
+            foreach skill in skillsArray
+                if (chardata.Skills[skill] == 0)
+                    chardata.Skills.Erase(skill);
                 endif
             endforeach
             if (pri_count > pri_allowed)
