@@ -152,6 +152,7 @@ function CultureGump(who, culture_pic)
     var prev_btn := array{"9909", "9910"};
 
     var gump := GFCreateGump();
+    GFClosable(gump, 0);
     GFGumpPic(gump, 17, 31, 0x9E6);
 
     GFHTMLArea(gump, 346, 56, 192, 40, "<BASEFONT Size=55 Color=#999999 >Escolha sua cultura", 0, 0); //shadow
@@ -194,6 +195,7 @@ endfunction
 function EpicRaceGump(who, culture_pic)
     var races := getRaceByCulturalId(culture_pic);
     var gump := GFCreateGump();
+    GFClosable(gump, 0);
 
     var x := 63;
     var y := 100;
@@ -247,6 +249,7 @@ endfunction
 
 function ClassGump(who, culture_pic)
     var gump := GFCreateGump();
+    GFClosable(gump, 0);
 
     var x := 63;
     var y := 100;
@@ -279,6 +282,7 @@ endfunction
 
 function backgroundGump(who, culture_pic)
     var gump := GFCreateGump();
+    GFClosable(gump, 0);
 
     var x := 63;
     var y := 100;
@@ -320,6 +324,7 @@ endfunction
 
 function traitGump(who, culture_pic, traits)
     var gump := GFCreateGump();
+    GFClosable(gump, 0);
 
     var x := 63;
     var y := 100;
@@ -464,6 +469,7 @@ endfunction
 
 function skillGump(who, culture_pic, byref chardata)
     var gump := GFCreateGump();
+    GFClosable(gump, 0);
     var minus_btn := {0x9F7, 0x9F8};
     var plus_btn := {0x9F9, 0x9FA};
     var pri_allowed := howManyPrimarias(chardata);
@@ -647,6 +653,7 @@ endfunction
 
 function attributeGump(who, culture_pic, byref chardata)
     var gump := GFCreateGump();
+    GFClosable(gump, 0);
     var x := 63;
     var y := 100;
     var i := 1;
@@ -695,6 +702,7 @@ function ReligionGump(who, religion_pic)
     var prev_btn := array{"9909", "9910"};
 
     var gump := GFCreateGump();
+    GFClosable(gump, 0);
     GFGumpPic(gump, 17, 31, 0x9E6);
 
     GFHTMLArea(gump, 346, 56, 192, 40, "<BASEFONT Size=55 Color=#999999 >Escolha sua religião", 0, 0); //shadow
@@ -1146,6 +1154,7 @@ function gameModeGump(who, religion_pic)
     var prev_btn := array{"9909", "9910"};
 
     var gump := GFCreateGump();
+    GFClosable(gump, 0);
     GFGumpPic(gump, 17, 31, 0x9E6);
 
     GFHTMLArea(gump, 326, 56, 192, 40, "<BASEFONT Size=55 Color=#999999 >Escolha seu modo de jogo", 0, 0); //shadow

@@ -236,12 +236,14 @@ endfunction
 function skillSelection(who, culture_pic)
     var btn_value;
     var chardata := GetObjProperty(who, "chardata");
+    var pri_allowed := howManyPrimarias(chardata);
     var i := 1;
     chardata.+points := 20;
     if (chardata.trait == "Sabe-Tudo") chardata.points += 5; endif
     if (chardata.raca == "Humano") chardata.points += 2; endif
     chardata.+Skills := dictionary;
     var points := chardata.points;
+    var pri_count := 0;
     while(1)
         if (chardata.points < 0)
             SendSysMessageEX(who, "Compra de habilidade inválida", SSM_FAIL);
@@ -329,9 +331,22 @@ function skillSelection(who, culture_pic)
             chardata["Skills"].Erase("skill");
             foreach skill in (chardata.Skills)
                 if (skill == 0) 
-                    chardata["Skills"].Erase("skill");
+                    chardata.Skills.Erase("skill");
+                endif
+                if (skill == 3)
+                    pri_count++;
+                endif
+                if (skill > 3 || skill < 0)
+                    SendSysMessageEX(who, "Compra de skill inválida", SSM_FAIL);
+                    DisconnectClient(who);
                 endif
             endforeach
+            if (pri_count > pri_allowed)
+                SendSysMessageEX(who, "Você ultrapassou o número de primárias permitidas", SSM_FAIL);
+                pri_count := 0;
+                DisconnectClient(who);
+            endif
+
             SetObjProperty(who, "chardata", chardata);
             SetObjProperty(who, "skill", 1);
             SendSysMessageEX(who, "Você definiu suas skills", SSM_INFO);
@@ -391,6 +406,11 @@ function attributeSelection(who, culture_pic)
             chardata.int -= 5;
             chardata.attribute_points += 5;
         else
+            if (chardata.attribute_points < 0)
+                SendSysMessageEX(who, "Compra de atributo inválida", SSM_FAIL);
+                DisconnectClient(who);
+            endif
+
             SetObjProperty(who, "chardata", chardata);
             attributeBonusByRaceAndTraits(who);
 
