@@ -498,11 +498,11 @@ function skillGump(who, culture_pic, byref chardata)
             endif
             skill := chardata.bgBonus;
             btn_value := GetSkillIdFromName(skill);
-            if (chardata.bgBonus2)
-                i -= 1;
-                skill := chardata.bgBonus2;
-                chardata.Erase("bgBonus2");
-            endif
+            // if (chardata.bgBonus2)
+            //     i -= 1;
+            //     skill := chardata.bgBonus2;
+            //     chardata.Erase("bgBonus2");
+            // endif
          endif
         if (i == primarias.size()+2 && chardata.bgBonus2)
             if (chardata.bgBonus2 in primarias)
