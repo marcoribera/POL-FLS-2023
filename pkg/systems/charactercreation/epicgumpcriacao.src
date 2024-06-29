@@ -243,6 +243,10 @@ function skillSelection(who, culture_pic)
     chardata.+Skills := dictionary;
     var points := chardata.points;
     while(1)
+        if (chardata.points < 0)
+            SendSysMessageEX(who, "Compra de habilidade inválida", SSM_FAIL);
+            DisconnectClient(who);
+        endif
         var input := skillGump(who, culture_pic, chardata);
         foreach key in (input.keys)
             btn_value := key;
