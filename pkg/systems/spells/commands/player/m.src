@@ -13,15 +13,8 @@ program magia( who, spellname )
   endif
 
   var chardata := GetObjProperty( who, "chardata" );
-  var myrace := Lower( GetObjProperty( who, "raca" ) );
   var cfgFile := GetSpellConfigFilePath( chardata, who );
   var spellInfo := FindSpellInConfig( spellname, cfgFile );
-
-  // Caso não encontre a magia no arquivo de configuração principal, procura nos Cantrips
-  if ( !spellInfo && ( myrace == "elfo" || myrace == "drow" ) )
-    spellInfo := FindSpellInConfig( spellname, ":spells:config/cantripspells" );
-    spellinfo.+magic_path := "cantripspells";
-  endif
 
   if ( !spellInfo )
     SendSysMessageEx( who, "A magia " + spellname + " nao existe.", SSM_FAIL );
@@ -35,11 +28,7 @@ program magia( who, spellname )
                       SSM_FAIL );
     return;
   endif
-
-  var script := Start_Script( ":spells:cast_spell", { who,
-                                                      spellInfo,
-                                                      spellBookInfo.booktype }
-                              );
+  var script := Start_Script( ":spells:cast_spell", { who, spellInfo, spellBookInfo.booktype });
   if ( script.errortext )
     SendSysMessage( who, "Error - Could not start spell starter ->" + script.errortext );
     return 0;
@@ -47,14 +36,13 @@ program magia( who, spellname )
 endprogram
 
 function GetSpellConfigFilePath( chardata, who )
-  if ( chardata.magia == "kitahster" || GetObjProperty( who, "advclass" ) == "kitahster" )
-    return ":spells:config/sangriaspells";
-  elseif ( TemHabilidade( who, "Sensibilidade Arcana" ) )
+  if ( TemHabilidade( who, "Sensibilidade Arcana" ) )
     return ":spells:config/tricksterspells";
-  elseif ( chardata.magia == "spellcaster" )
-    return ":spells:config/spellcaster";
+  elseif( chardata.trait == "Natureza Arcana" )
+    return ":spells:config/cantripspells";
   endif
-  return ":spells:allspells";
+ 
+   return ":spells:config/spellcaster";
 endfunction
 
 function FindSpellInConfig( spellname, cfgFile )
@@ -66,7 +54,12 @@ function FindSpellInConfig( spellname, cfgFile )
                          "circle" -> GetConfigInt(
                          elem,
                          "Circle" ),
-                         "name" -> spellname };
+                         "name" -> spellname,
+                         "script" -> GetConfigString( elem, "SpellScript"),
+                         "type" -> GetConfigString( elem, "Type"),
+                         "powerwords" -> GetConfigString( elem, "PowerWords"),
+                         "school" -> GetConfigString( elem, "School")
+                         };
     endif
   endforeach
   return 0;
