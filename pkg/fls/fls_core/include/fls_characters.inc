@@ -97,7 +97,7 @@ endfunction
 
 function HaveReverseVision(who)
 
-	if (GetObjProperty(who, "chardata").povo == "Drow")
+	if (GetObjProperty(who, "chardata").raca == "Drow")
 		return 1;
 	elseif (cint(GetObjProperty(who, "reversevision")) == 1)
 		return 1;
@@ -121,8 +121,9 @@ function ReverseLight(player)
 	var darkness := cint(config.darkness);
 
 	var light := cint(getglobalproperty("lightlevel"));
-
-	if (player.x >= 3749 && player.y >= 0 && player.x <= 6141 && player.y <= 4000)
+	if (player.realm == "britannia")
+		player.setlightlevel(0, 9000); // Is in a dungeon
+	elseif(player.x >= 4390 && player.y >= 0 && player.x <= 6100 && player.y <= 4095)
 		player.setlightlevel(0, 9000); // Is in a dungeon
 	else
 		var newlight := abs(darkness - light);
