@@ -1,5 +1,6 @@
 include ":attributes:attributes";
 include ":disguise:disguise";
+include ":charactercreation:createchar";
 
 const aiglaText := "Os Aiglanos são um povo astuto e inclusivo, conhecido por sua capital Aquileia. Sua bandeira apresenta uma águia dourada em um fundo vermelho, simbolizando a seleção dos capazes. Eles são um povo mestiço, com variação de tom de pele, altura e tipo de cabelo. São disciplinados, valorizam a história e fazem do exercício físico um hábito.
 Historicamente, os Aiglanos prosperaram apesar dos desafios, aprendendo com suas fraquezas e remodelando-se. Passaram de um pequeno vilarejo para uma República, com um sistema político fechado. A ascensão do Imperador Crassus trouxe um período de bonança, com reformas militares e de governo que expandiram o poder do império.
@@ -1002,6 +1003,30 @@ function workingItems(who)
     if (skills[DomesticWork] >= 1 || skills[MEDICINE] >= 1)
         CreateItemInBackpack(who, 0xf9e, 1); // Scissors
     endif
+
+    if (skills[ALCHEMY] == 2)
+		var book := createiteminbackpack(who, "alchemybook");
+        book.newbie := 1;
+		setobjproperty(book, "serialid", who.serial);
+		setobjproperty(book, "marked",who.name + " - " + who.acctname);
+
+        var recipes := array;
+		recipes := CreateVeryBasicRecipes();
+		var basic_book := createiteminbackpack(who, "alchemybook");
+		setobjproperty(basic_book, "recipes", recipes);
+	elseif (skills[ALCHEMY] == 3)
+		var book1:= CreateItemInBackpack(who, "alchemybook");
+		setobjproperty(book1, "serialid", who.serial);
+		setobjproperty(book1, "marked",who.name + " - " + who.acctname);
+        book1.newbie := 1;
+        var recipes := array;
+		recipes := CreateBasicRecipes();
+		var book2 := createiteminbackpack(who, "alchemybook");
+        book2.newbie := 1;
+		setobjproperty(book2, "recipes", recipes);
+		setobjproperty(book2, "serialid",who.serial);
+		setobjproperty(book2, "marked",who.name + " - " + who.acctname);
+	endif
 endfunction
 
 function attributeBonusByRaceAndTraits(who)
@@ -1191,4 +1216,43 @@ function gameModeDescriptionByPictureId(gameModeId)
         0x9FB:
             return storyModeText;
     endcase
+endfunction
+
+function pathOfWisdomGump(who, culture_pic)
+    var gump := GFCreateGump();
+    GFClosable(gump, 0);
+
+    var x := 63;
+    var y := 100;
+    var i := 1;
+    showPreviousGumpInformation(gump, who, culture_pic, x, y);
+    x := 555;
+    y := 100;
+    GFHTMLArea(gump, x+1, y-24, 192, 40, "<BASEFONT Size=55 Color=#999999 > Escolha seu caminho", 0, 0); //shadow
+    GFHTMLArea(gump, x, y-25, 192, 400, "<BASEFONT Size=55 Color=#ffffff > Escolha seu caminho", 0, 0);
+
+    var wisdomPaths := array{"Mago", "Alquimista"};
+    var chardata := GetObjProperty(who, "chardata");
+    var culture := chardata.culture;
+    if (culture == CULTURA.GULTHRAK)
+        wisdomPaths.append("Xamã");
+    elseif (culture == CULTURA.BADURAN)
+        wisdomPaths.append("Martelo Divino");
+        wisdomPaths.append("Engenheiro");
+    elseif (culture == CULTURA.AIGLANA)
+        wisdomPaths.append("Augur");
+    elseif (culture == CULTURA.HAROLOTH && who.graphic == 1831)
+        wisdomPaths.append("Clériga de Idrith");
+    endif
+    foreach path in wisdomPaths
+        var color := "#000000";
+        GFHTMLArea(gump, x, y, 192, 24, "<BASEFONT color=#{}>{}".format(color, path), 1, 0);
+        GFRadioButton(gump, x+201, y, 0x9C4E, 0x9C4F, 0, 200+i);
+        sleepms(2);
+        y += 26;
+        i++;
+    endforeach
+
+    GFAddButton(gump, 653, 680, 4005, 4007, GF_CLOSE_BTN, 200); // Botão de fechar
+    return GFSendGump(who, gump);
 endfunction
