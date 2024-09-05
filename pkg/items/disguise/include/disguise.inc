@@ -6,7 +6,7 @@ include "include/say";
 include ":tn:tngumps";
 include "include/client";
 include ":charactercreation:habilidades";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 
 
 function removeDisguise(who)

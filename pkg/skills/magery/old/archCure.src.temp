@@ -5,8 +5,8 @@ include "include/eventID";
 include "include/sound";
 include "include/tileEffects";
 include ":attributes:attributes";
-include ":timedscripts:timedScripts";
-include ":timedscripts:poisonUtil";
+include ":timedScripts:timedScripts";
+include ":timedScripts:poisonUtil";
 
 program archCure(parms)
   var caster := parms.caster;

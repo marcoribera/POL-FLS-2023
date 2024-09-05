@@ -8,7 +8,7 @@ use os;
 use util;
 use cfgfile;
 
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include ":fls_core:packets";
 include "include/say";
 include ":spells:tnmagery";

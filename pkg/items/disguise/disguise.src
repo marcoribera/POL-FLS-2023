@@ -9,7 +9,7 @@ include "include/say";
 include ":tn:tngumps";
 include "include/client";
 include ":charactercreation:habilidades";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 
 //TODO: Criar constantes para os ID dos botões
 

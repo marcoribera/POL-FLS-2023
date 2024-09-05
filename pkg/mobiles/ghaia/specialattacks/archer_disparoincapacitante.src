@@ -19,7 +19,7 @@ include ":combat:combat";
 include ":blood:blood";
 include "include/damage";
 include "include/say";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 
 program tironojoelho(params)
 	var attacker	:= params[1];

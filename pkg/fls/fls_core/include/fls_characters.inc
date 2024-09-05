@@ -6,6 +6,40 @@ include ":brainai:npcUtil";
 include ":attributes:attributes";
 include ":fls_core:fls_chargumps_ex";
 
+function checkGender(object)
+	var gender := 0;
+	if (object.graphic)
+		case (object.graphic)
+			400:
+			605: // elf
+				gender := 1;
+			401:
+			606: // elf
+				gender := 2;
+		endcase
+	elseif (object.corpsetype)
+		case (object.graphic)
+			400:
+			605: // elf
+			403:
+			607: // elf
+				gender := 1;
+			401:
+			606: // elf
+			404:
+			608: // elf
+				gender := 2;
+		endcase
+	elseif (object.gender)
+		if (gender == 0)
+			gender := 1;
+		else
+			gender := 2;
+		endif
+	endif
+
+	return gender;
+endfunction
 
 function EquipRaceSkin(who)
 
@@ -131,24 +165,6 @@ function ReverseLight(player)
 		player.setlightlevel(newlight, 9000);
 	endif
 
-endfunction
-
-function GetClass(who)
-	var classe := GetObjProperty(who, "classe");
-	if (!classe)
-		return 0;
-	else
-		return classe;
-	endif
-endfunction
-
-function GetRace(who)
-	var raca := GetObjProperty(who, "raca");
-	if (!raca)
-		return 0;
-	else
-		return raca;
-	endif
 endfunction
 
 function GetRaceCfgElem(race_name)

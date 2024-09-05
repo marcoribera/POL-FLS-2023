@@ -6,7 +6,7 @@ include "include/sounds";
 include "include/say";
 include ":attributes:attributes";
 include ":attributes:skills";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include "include/damage";
 include ":charactercreation:resists";
 

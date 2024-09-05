@@ -19,6 +19,29 @@
 ////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////
 
+
+enum GUMPID_LIST
+    GUMPID_SKILLLIST   := 0x000010,
+    GUMPID_EMAIL_INDEX := 0x000011,
+    GUMPID_TNGUMPS     := 0x000015,
+    GUMPID_CREATECHAR  := 0x000016,
+    GUMPID_CRAFTING    := 0x000017,
+    GUMPID_FICHARP     := 0x000018,
+    GUMPID_RECIPES     := 0x000019,
+	 GUMPID_CLERICBUY     := 0x00001A,
+	 GUMPID_SPELLRECIPE   := 0x00001B,
+	 GUMPID_CLERICSPELL   := 0x00001C,
+	 GUMPID_MERCHANTBUY   := 0x00001D,
+	 GUMPID_MERCHANTSELL  := 0x00001E,
+	 GUMPID_GRIMORIO  := 0x000020,
+	 GUMPID_RUNEBOOK  := 0x000021,
+	 GUMPID_WORLDSAVE  := 0x000022,
+	 GUMPID_ALCHEMYBOOk := 0x000023,
+    GUMPID_BARD := 0x000024,
+    GUMPID_DISGUISE := 0x000025,
+    GUMPID_EXPBAR := 0x000026
+endenum
+
 ////
 // Soundeffects
 // The first section is just an enum of existing sounds,
@@ -953,12 +976,6 @@ const FONT_SMALL_LIGHT  :=  0x09;   // Small light letters.
 // Const XMFCOLOR_TURQUOISEGREEN :=10000;
 
 
-////
-//
-///?
-const GUMPID_TNGUMPS     := 0x000015;
-
-////
 // Creature IDs ( hardcoded graphic IDs )
 ///
 const CID_ZERO				:= 0x000;  // Not used.

@@ -35,7 +35,7 @@ include "include/damage";
 include ":charactercreation:habilidades";
 include ":tn:cooldown";
 include ":tn:combat";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include ":fls_core:packets";
 include ":faccao:faccao";
 include ":combat:include/mainHitScript";

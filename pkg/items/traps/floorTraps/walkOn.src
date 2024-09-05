@@ -18,7 +18,7 @@ include ":charactercreation:habilidades";
 include ":charactercreation:resists";
 include "include/sysEvent";
 include "include/eventID";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 
 program TrapWalkOn(mobile, trap)
 	if ( mobile.dead )

@@ -7,42 +7,44 @@
  *
  */
 use uo;
+use math;
+use util;
 
-include ":timeutils:settings";
+include ":timeUtils:settings";
 
 enum TIME_UNITS
 	// Base unit: Millisecond
-	MIL_SECOND	:= 1000,
-	MIL_MINUTE	:= MIL_SECOND * 60,
-	MIL_HOUR	:= MIL_MINUTE * 60,
-	MIL_DAY		:= MIL_HOUR * 24,
-	MIL_WEEK	:= MIL_DAY * 7,
-	MIL_MONTH	:= MIL_DAY * 30,
-	MIL_YEAR	:= MIL_MONTH * 12,
+	MIL_SECOND := 1000,
+	MIL_MINUTE := MIL_SECOND * 60,
+	MIL_HOUR	  := MIL_MINUTE * 60,
+	MIL_DAY    := MIL_HOUR * 24,
+	MIL_WEEK	  := MIL_DAY * 7,
+	MIL_MONTH  := MIL_DAY * 30,
+	MIL_YEAR	  := MIL_MONTH * 12,
 
 	// Base unit: Second
-	SEC_MINUTE  	:= 60,
-	SEC_HOUR	:= SEC_MINUTE * 60,
-	SEC_DAY	 	:= SEC_HOUR * 24,
-	SEC_WEEK	:= SEC_DAY * 7,
-	SEC_MONTH	:= SEC_DAY * 30,
-	SEC_YEAR	:= SEC_DAY * 365,
+	SEC_MINUTE := 60,
+	SEC_HOUR	  := SEC_MINUTE * 60,
+	SEC_DAY    := SEC_HOUR * 24,
+	SEC_WEEK	  := SEC_DAY * 7,
+	SEC_MONTH  := SEC_DAY * 30,
+	SEC_YEAR	  := SEC_DAY * 365,
 
 	// SleepMs value to prevent RunAway
 	NO_RUNAWAY  := 10
 endenum
 
 enum TIME_HELPERS
-	SECONDS_IN_MINUTE	:= 60,		// (60)
-	SECONDS_IN_HOUR		:= 3600,	// (SECONDS_IN_MINUTE * 60)
-	SECONDS_IN_DAY		:= 86400,	// (SECONDS_IN_HOUR * 24)
-	SECONDS_IN_WEEK		:= 604800,	// (SECONDS_IN_DAY * 7)
-	SECONDS_IN_YEAR		:= 31536000,	// (SECONDS_IN_DAY * 365)
-	MINUTES_IN_HOUR		:= 60,		// (60)
-	MINUTES_IN_DAY		:= 1440,	// (MINUTES_IN_HOUR * 24)
-	MINUTES_IN_WEEK		:= 10080,	// (MINUTES_IN_DAY * 7 )
-	HOURS_IN_DAY		:= 24,		// (24)
-	HOURS_IN_WEEK		:= 168		// (HOURS_IN_DAY * 7)
+	SECONDS_IN_MINUTE	 := 60,		// (60)
+	SECONDS_IN_HOUR    := 3600,	// (SECONDS_IN_MINUTE * 60)
+	SECONDS_IN_DAY     := 86400,	// (SECONDS_IN_HOUR * 24)
+	SECONDS_IN_WEEK    := 604800,	// (SECONDS_IN_DAY * 7)
+	SECONDS_IN_YEAR    := 31536000,	// (SECONDS_IN_DAY * 365)
+	MINUTES_IN_HOUR    := 60,		// (60)
+	MINUTES_IN_DAY     := 1440,	// (MINUTES_IN_HOUR * 24)
+	MINUTES_IN_WEEK    := 10080,	// (MINUTES_IN_DAY * 7 )
+	HOURS_IN_DAY       := 24,		// (24)
+	HOURS_IN_WEEK      := 168		// (HOURS_IN_DAY * 7)
 endenum
 
 /*
@@ -59,7 +61,7 @@ endenum
  *
  */
 function GetMonthName(month)
-	var mon_nam := {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+	var mon_nam := {"Jan", "Fev", "Mar", "Abr", "Maio", "Jun", "Jul", "Aug", "Set", "Out", "Nov", "Dez"};
 
 	if( month > 12 || month <= 0 )
 		return error{"errortext":="Month '" + CStr(month) + "' out of range."};
@@ -153,25 +155,25 @@ function GetTimeStruct(time)
 	time := time + CInt(TIME_GetSettingsCfgElem("Settings").TimeZone) * SECONDS_IN_HOUR;
 
 	// UNIX time starts at 01/01/1970 00:00:00
-	ts := struct;
-	ts.+stamp	:= time;
-	ts.+year	:= 1970;
-	ts.+month	:= 1;
-	ts.+day		:= 1;
-	ts.+hour	:= 0;
-	ts.+minute	:= 0;
-	ts.+second	:= 0;
+	ts := struct{};
+	ts.+stamp  := time;
+	ts.+year	  := 1970;
+	ts.+month  := 1;
+	ts.+day    := 1;
+	ts.+hour	  := 0;
+	ts.+minute := 0;
+	ts.+second := 0;
 
 	// ts_off is the offset from 1/1/1970 to the last call; this avoids using like 35 iterations everytime this is called
 	if(!ts_off)
 		ts_off := struct;
 		ts_off.+year	:= 1970;
-		ts_off.+month   := 1;
-		ts_off.+sum	 := 0;
+		ts_off.+month  := 1;
+		ts_off.+sum	 	:= 0;
 	elseif(ts_off.sum < time) // Avoid "time warps"
-		ts.year := ts_off.year;
+		ts.year 	:= ts_off.year;
 		ts.month := ts_off.month;
-		time := time - ts_off.sum;
+		time 		:= time - ts_off.sum;
 	else
 		timewarp := 1;
 	endif
@@ -252,7 +254,7 @@ endfunction
 
 
 /*
- * AddTimeStamp(what)
+ * GetTimeStamp(what)
  *
  * Purpose
  * Adds a timestamp to a string.
@@ -261,15 +263,32 @@ endfunction
  * what:	The string to be timestamped
  *
  * Return value
- * The string with an added timestamp at the beginning
+ * Transform a polsys time to timestamp
  *
  */
-function AddTimeStamp(what)
-	var ts := GetTimeStruct(GetTime());
-
-	return(FormatTime(ts, "[<MON> <DAY> <YY> <HH>:<MM>:<SS>]: ") + what);
+function GetTimeStamp(what := 0, timestamp := "%d/%m/%Y %H:%M:%S")
+	if(!what)
+		what := GetTime();
+	endif
+	var ts := StrFormatTime(timestamp, what);
+	return ts;
 endfunction
 
+/*
+ * GetTimeBetween(old_time, new_time, type)
+ *
+ * Purpose
+ * Get difference in "type" between two dates
+ *
+ * Parameters
+ * old_time:	Time to be calculated
+ * new_time:	Time to be calculated
+ * type:	Time type, can be "years", "days", "minutes", "seconds", "weeks"
+ *
+ * Return value
+ * The difference number in "type"
+ *
+ */
 function GetTimeBetween(old_time, new_time, type := "days")
 	var diff_calc;
 	if (type == "days")
@@ -291,4 +310,43 @@ function GetTimeBetween(old_time, new_time, type := "days")
 
 	var diff := Floor((new_time - old_time)/diff_calc);
 	return diff;
+endfunction
+
+/*
+ * AddTimeTo(time, amount, type)
+ *
+ * Purpose
+ * Add seconds, hours to time
+ *
+ * Parameters
+ * time:	Time to be calculated
+ * amount:	Amount of time
+ * type:	Time type, can be "years", "days", "minutes", "seconds", "weeks"
+ *
+ * Return value
+ * The difference number in "type"
+ *
+ */
+function AddTimeTo(time, amount, type := "days")
+	var diff_calc;
+	if (type["day"])
+		diff_calc := SECONDS_IN_DAY;
+	elseif (type["hour"])
+		diff_calc := SECONDS_IN_HOUR;
+	elseif (type["second"])
+		diff_calc := 1;
+	elseif (type["year"])
+		diff_calc := SECONDS_IN_YEAR;
+	elseif (type["minute"])
+		diff_calc := SECONDS_IN_MINUTE;
+	elseif (type["week"])
+		diff_calc := SECONDS_IN_WEEK;
+	else
+		print("Wrong type for AddTimeTo: {}".format(type) );
+		return time;
+	endif
+	amount := amount * diff_calc;
+
+	var result := time + amount;
+	return result;
 endfunction

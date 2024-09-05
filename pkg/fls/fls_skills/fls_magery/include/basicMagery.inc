@@ -4,7 +4,7 @@ use uo;
 use os;
 
 include ":attributes:attributes";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 
 function ManterMagia(magia, mage, mobile)
 

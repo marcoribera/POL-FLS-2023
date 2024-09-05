@@ -5,7 +5,7 @@ use cfgfile;
 use storage;
 
 include ":containers:merchantUtil";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include ":death:death";
 include ":mounts:mounts";
 include ":taming:taming";

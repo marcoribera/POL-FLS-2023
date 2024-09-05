@@ -11,7 +11,7 @@ include ":attributes:attributes";
 include ":brainai:npcUtil";
 include ":blood:blood";
 include ":combat:settings";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include "include/client";
 include "include/facings";
 include "include/damage";

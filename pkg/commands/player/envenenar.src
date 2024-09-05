@@ -7,7 +7,7 @@ include "include/client";
 include ":itemutils:canAccess";
 include ":attributes:attributeConstants";
 include ":attributes:attributes";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include ":fls_core:fls_characters";
 include "include/say";
 include ":charactercreation:habilidades";

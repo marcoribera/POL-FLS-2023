@@ -3,7 +3,7 @@ use vitals;
 use os;
 
 include ":attributes:attributes";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include "include/damage";
 include "include/say";
 include "include/client";

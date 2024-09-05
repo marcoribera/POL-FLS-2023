@@ -9,7 +9,7 @@ use os;
 use math;
 
 include ":attributes:attributes";
-include ":timedscripts:poisonUtil";
+include ":timedScripts:poisonUtil";
 include "include/say";
 include ":taming:taming";
 include ":tn:cooldown";

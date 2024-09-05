@@ -6,7 +6,7 @@ include "include/sound";
 include "include/tileEffects";
 include ":attributes:attributes";
 include ":magery:reflect";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 
 const EVID_DISCHARGE := 0x123457;
 

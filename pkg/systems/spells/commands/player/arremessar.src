@@ -3,7 +3,7 @@ use os;
 use math;
 use vitals;
 
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include "include/say";
 include ":mounts:mounts";
 include ":attributes:attributes";

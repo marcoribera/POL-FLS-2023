@@ -9,7 +9,7 @@ use math;
 include "include/client";
 include "include/say";
 include "include/damage";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include ":charactercreation:habilidades";
 include ":charactercreation:resists";
 

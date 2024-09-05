@@ -9,7 +9,7 @@ use uo;
 
 include ":timeutils:time";
 include ":coords:innFunctions";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 
 program core_logoffTest(who)
 	// Send event to the 'timed scripts' package to run log off scripts.

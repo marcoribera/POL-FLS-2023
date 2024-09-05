@@ -6,7 +6,7 @@ include ":taming:taming";
 include ":tn:tngumps";
 include "include/client";
 include "include/damage";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 
 program controlenatureza(who)
 

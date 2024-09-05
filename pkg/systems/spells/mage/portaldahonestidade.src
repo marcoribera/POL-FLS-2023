@@ -3,7 +3,7 @@ use os;
 use vitals;
 
 include ":attributes:attributes";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include ":fls_magery:spells";
 include ":fls_magery:spellSounds";
 include "include/client";

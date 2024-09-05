@@ -36,10 +36,10 @@ CONST START_CONTROLLER			:= 0x1;
  *
  */
 function TS_GetCfgFile()
-	var cfg := ReadConfigFile(":timedscripts:timedScripts");
+	var cfg := ReadConfigFile(":timedScripts:timedScripts");
 
 	if ( cfg.errortext )
-		print("Error::TS_GetSettingsCfgFile() - Unable to open [:timedscripts:timedScripts] ->"+cfg.errortext);
+		print("Error::TS_GetSettingsCfgFile() - Unable to open [:timedScripts:timedScripts] ->"+cfg.errortext);
 	endif
 
 	return cfg;
@@ -121,7 +121,7 @@ function TS_StartController(mobile)
 		return error{"errortext":="Error::TS_StartController() - Controller is already running."};
 	endif
 
-	var script := Start_Script(":timedscripts:timerControl", mobile);
+	var script := Start_Script(":timedScripts:timerControl", mobile);
 	if ( script.errortext )
 		print("Error::TS_StartController() ->"+script.errortext);
 	endif

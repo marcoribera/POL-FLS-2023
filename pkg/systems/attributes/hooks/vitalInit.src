@@ -4,7 +4,7 @@ use util;
 include ":attributes:attributes";
 include ":brainAI:npcUtil";
 include ":charactercreation:habilidades";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include ":food:include/hunger";
 
 program Install()

@@ -1,6 +1,6 @@
 use uo;
 
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 
 program reset(who)
 

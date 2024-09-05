@@ -1,0 +1,233 @@
+
+use os;
+use uo;
+
+include "include/arrays";
+include ":attributes:attributes";
+include ":timeUtils:time";
+
+program Install()
+    return 1;
+endprogram
+
+// Documenting the isRace function
+// This function checks if the character associated with the given object belongs to the specified race
+// Parameters:
+//   who - the object for which the race is to be checked
+//   race - the race to be checked for the character
+exported function isRace(who, race)
+	var chardata := GetObjProperty(who, "chardata");
+
+	if (Lower(chardata.raca) == Lower(race))
+		return 1;
+	endif
+
+	return 0;
+endfunction
+
+// Documenting the getRace function
+// This function retrieves the race of the character associated with the given object
+// Parameters:
+//   who - the object for which the race is to be retrieved
+// Returns:
+//   The race of the character associated with the given object
+exported function getRace(who)
+	var chardata := GetObjProperty(who, "chardata");
+   var race := chardata.raca;
+
+	return race;
+endfunction
+
+exported function GetExp(who)
+	var chardata := GetObjProperty(who, "chardata");
+   if (!chardata) chardata := dictionary{}; endif
+	return cint(chardata.exppoints);
+endfunction
+
+exported function GetTotalExp(who)
+	var chardata := GetObjProperty(who, "chardata");
+   if (!chardata) chardata := dictionary{}; endif
+	return cint(chardata.exppoints);
+endfunction
+
+exported function SetExp(who, points)
+	var chardata := GetObjProperty(who, "chardata");
+   if (!chardata) chardata := dictionary{}; endif
+   chardata.exppoints := cint(points);
+
+   SetObjProperty(who, "chardata", chardata);
+	return 1;
+endfunction
+
+exported function storeExp(who, points)
+	var chardata := GetObjProperty(who, "chardata");
+   if (!chardata) chardata := dictionary{}; endif
+
+   var exppoints := cint(chardata.exppoints) - points;
+   chardata.storedexp := cint(chardata.storedexp) + points;
+   chardata.exppoints := cint(exppoints);
+
+   SetObjProperty(who, "chardata", chardata);
+	return 1;
+endfunction
+
+exported function Getvitalpoints(who)
+	var chardata := GetObjProperty(who, "chardata");
+	var vitalpoints := chardata["vitalpoints"];
+	if (vitalpoints == error || !vitalpoints)
+		Setvitalpoints(who, 0);
+		vitalpoints := 0;
+	endif
+
+	return vitalpoints;
+endfunction
+
+exported function Setvitalpoints(who, points := 1)
+   set_critical(1);
+	var chardata := GetObjProperty(who, "chardata");
+   if (!chardata)
+      return;
+   endif
+
+	if (!chardata["vitalpoints"])
+      chardata.vitalpoints := 0;
+	endif
+
+	chardata["vitalpoints"] += points;
+   if (chardata.vitalpoints < 0)
+      chardata.vitalpoints := 0;
+      Syslog("User "+who.name+" Got -1 Talent Points");
+   endif
+	SetObjProperty(who, "chardata", chardata);
+	return 1;
+   set_critical(0);
+endfunction
+
+exported function GetAchievement(who, select := 0)
+	var achievements := GetObjProperty(who, "achievements");
+	if (achievements == error || !achievements)
+		achievements := struct;
+	endif
+
+	if (select)
+		if (!achievements[select])
+			achievements := 0;
+		else
+			achievements := achievements[select];
+		endif
+	endif
+
+	return achievements;
+endfunction
+
+exported function SetAchievement(who, achievement, plus := 1)
+	var achievements := GetObjProperty(who, "achievements");
+	if (achievements == error || !achievements)
+		achievements := struct;
+	endif
+
+	achievements[achievement] := cint(achievements[achievement]) + plus;
+
+	SetObjProperty(who, "achievements", achievements);
+endfunction
+
+exported function GetLifeTime(who, original := 0)
+	var chardata := GetObjProperty(who, "chardata");
+	var lifetime;
+	if (original)
+		lifetime := chardata["lifetime"];
+	else
+		lifetime := chardata["lifetime"] - chardata["lifetime_penalty"];
+	endif
+
+	return lifetime;
+endfunction
+
+exported function SetLifeTime(who, clock)
+	var chardata := GetObjProperty(who, "chardata");
+
+	chardata["lifetime"] := chardata["lifetime"] + clock;
+
+	SetObjProperty(who, "chardata", chardata);
+	return 1;
+endfunction
+
+exported function ReduceLifeTime(who, time, type)
+	var chardata := GetObjProperty(who, "chardata");
+	var lifetime_penalty := AddTimeTo(cint(chardata["lifetime_penalty"]), time, type);
+
+	chardata["lifetime_penalty"] := lifetime_penalty;
+
+	SetObjProperty(who, "chardata", chardata);
+	return 1;
+endfunction
+
+exported function IncreaseLifeTime(who, time, type)
+	var chardata := GetObjProperty(who, "chardata");
+	var lifetime_penalty := AddTimeTo(1, time, type);
+
+	chardata["lifetime_penalty"] -= lifetime_penalty;
+
+	SetObjProperty(who, "chardata", chardata);
+	return 1;
+endfunction
+
+exported function getToughness(who)
+	return AP_GetTrueSkill(who, "Toughness") * 4;
+endfunction
+
+exported function setToughness(who, plus := 1)
+	var toughness := AP_GetTrueSkill(who, "Toughness");
+   toughness += plus;
+   AP_SetTrueSkill(who, "Toughness", toughness);
+endfunction
+
+
+// exported function getMaxExp(who)
+//    var lvl := getlevel(who);
+
+//    if (lvl < 5 )
+//       return lvl * 400;
+//    elseif (lvl < 10)
+//       return lvl * 750;
+//    endif
+
+//    return lvl * 1100;
+// endfunction
+
+exported function Caracteristica(who, carac)
+	var chardata := GetObjProperty(who, "chardata");
+	if (chardata == error || !chardata)
+		chardata := struct;
+	endif
+
+   return cint(chardata.carac[carac]);
+endfunction
+
+exported function getClass(who)
+	var chardata := GetObjProperty(who, "chardata");
+   if (chardata)
+      return chardata.classes[1].id;
+   endif   
+   return "None";
+endfunction
+
+exported function isCaster(who)
+	var chardata := GetObjProperty(who, "chardata");
+   if (chardata)
+      if (chardata.classes[1].id == "Elementalista" || chardata.classes[1].id == "Mago do V�u" )
+         return 1;
+      endif
+   endif   
+
+   return 0;
+endfunction
+
+exported function getName(who)
+   var name := who.name;
+   if (name["Desconhecid"] || name["Fantasminha"])
+      name := GetObjProperty(who, "realname");
+   endif
+   
+   return name;
+endfunction

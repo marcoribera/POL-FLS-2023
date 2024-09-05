@@ -3,7 +3,7 @@ use uo;
 include "include/say";
 include ":merchants:item_template";
 include ":tn:boss";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 
 function ConfigureEvent(who)
 	var evento := struct;

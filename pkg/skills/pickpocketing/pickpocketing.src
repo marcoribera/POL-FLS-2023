@@ -15,7 +15,7 @@ include ":attributes:attributes";
 include "include/facings";
 include "include/say";
 include ":tn:npcutil";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include ":tn:boss";
 
 program skill_Stealing(mobile)

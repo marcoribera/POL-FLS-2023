@@ -7,7 +7,7 @@ include ":spells:tnmagery";
 include "include/client";
 include "include/sounds";
 include "include/say";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include ":tn:cooldown";
 include "include/damage";
 

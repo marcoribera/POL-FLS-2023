@@ -7,7 +7,7 @@ include ":brainAI:npcNerves";
 include ":brainAI:npcCommands";
 include ":brainAI:commonFunctions";
 include ":attributes:attributes";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 
 program BrainNerve(params)
 	var npc		:= params[1];

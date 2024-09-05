@@ -2,7 +2,7 @@ use cfgfile;
 use uo;
  include ":attributes:attributes";
 include "include/say";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include ":loot:magicLoot";
 //include "include/damage";
 include ":charactercreation:habilidades";

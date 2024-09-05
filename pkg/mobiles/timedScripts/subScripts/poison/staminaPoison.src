@@ -2,7 +2,7 @@ use uo;
 use os;
 
 include ":attributes:attributes";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include "include/damage";
 
 program default_poison(params)

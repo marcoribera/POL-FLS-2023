@@ -14,7 +14,7 @@ include ":mounts:mounts";
 include ":tn:cooldown";
 include "include/say";
 include ":attributes:attributes";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include ":fls_magery:spells";
 include ":fls_magery:spellSounds";
 include "include/client";

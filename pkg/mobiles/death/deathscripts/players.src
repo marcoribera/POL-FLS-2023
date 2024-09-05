@@ -4,7 +4,7 @@ use os;
 use util;
 
 include ":attributes:attributes";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include ":death:death";
 include ":mounts:mounts";
 include ":death:settings";

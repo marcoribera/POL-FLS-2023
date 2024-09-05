@@ -10,7 +10,7 @@ include "include/facings";
 include "include/utils";
 include "include/damage";
 include ":attributes:attributes";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 
 program animateSword(params)
 	var who := params[1];

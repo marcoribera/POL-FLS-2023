@@ -8,7 +8,7 @@ use util;
 
 include ":attributes:attributes";
 include "include/client";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include ":fls_core:packets";
 include "include/say";
 include ":blood:blood";

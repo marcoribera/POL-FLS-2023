@@ -11,7 +11,7 @@ include ":gumps:requestGump";
 include ":gumps:gumps";
 include ":tn:tngumps";
 include "include/damage";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include ":traps:traps";
 include ":levers:lever";
 include ":tn:boss";

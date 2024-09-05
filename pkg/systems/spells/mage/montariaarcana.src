@@ -5,7 +5,7 @@ include ":spells:tnmagery";
 include "include/client";
 include "include/sounds";
 include "include/say";
-include ":timedscripts:timedScripts";
+include ":timedScripts:timedScripts";
 include "include/sysEvent";
 include "include/eventID";
 
